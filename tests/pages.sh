@@ -56,6 +56,33 @@ debe_responder  /proyecto/no-existe     404
 debe_contener   /proyecto/no-existe     'href="/"'
 debe_responder  /data/site.json         403
 
+# --- /restaurantes (Tarea 7)
+debe_responder  /restaurantes  200
+debe_contener   /restaurantes  'Presencia'
+debe_contener   /restaurantes  'Vende directo'
+no_debe_contener /restaurantes 'Apps de delivery'
+debe_contener   /restaurantes  'id="pruebas"'
+debe_contener   /restaurantes  'href="/proyecto/restaurante-a"'
+debe_contener   /restaurantes  'href="/"'
+no_debe_contener /restaurantes 'href="/demos/'
+no_debe_contener /restaurantes 'integración directa'
+no_debe_contener /restaurantes 'Servicio empresas'
+debe_contener   /restaurantes  'og-restaurantes.jpg'
+debe_contener   /restaurantes  'text=Hola%20Julio%2C%20tengo%20un%20local%20y%20quiero%20vender%20m%C3%A1s.'
+
+# Peso de /restaurantes sin contar Bootstrap: HTML + CSS/JS propios + imágenes locales < 300 KB
+peso_total() {
+  local html total url
+  html=$(curl -s "$BASE$1")
+  total=${#html}
+  for url in $(printf '%s' "$html" | grep -oE '(src|href)="/[^"]+\.(css|js|webp|jpg|png|svg)"' | sed -E 's/^(src|href)="//; s/"$//' | sort -u); do
+    total=$((total + $(curl -s "$BASE$url" | wc -c)))
+  done
+  echo "$total"
+}
+PESO=$(peso_total /restaurantes)
+[ "$PESO" -lt 307200 ] && pasa "/restaurantes pesa $PESO bytes (< 300 KB)" || falla "/restaurantes pesa $PESO bytes (>= 300 KB)"
+
 echo
 echo "$OK ok / $FAIL fallas"
 [ "$FAIL" -eq 0 ]
