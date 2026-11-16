@@ -4,9 +4,11 @@ window.addEventListener('scroll', () => {
   nav?.classList.toggle('shadow-sm', window.scrollY > 12);
 });
 
-document.querySelectorAll('a[href^="#"]').forEach((link) => {
+document.querySelectorAll('a[href^="#"], a[href^="/#"]').forEach((link) => {
   link.addEventListener('click', (event) => {
-    const target = document.querySelector(link.getAttribute('href'));
+    const href = link.getAttribute('href');
+    if (href.startsWith('/#') && window.location.pathname !== '/') return;
+    const target = document.querySelector(href.replace(/^\//, ''));
     if (!target) return;
 
     event.preventDefault();
@@ -40,6 +42,21 @@ document.querySelectorAll('[data-tilt-card]').forEach((card) => {
   card.addEventListener('mouseleave', () => {
     card.style.setProperty('--tilt-x', '0deg');
     card.style.setProperty('--tilt-y', '0deg');
+  });
+});
+
+// Filtro de proyectos por categoría, sin recargar.
+document.querySelectorAll('[data-filtro]').forEach((chip) => {
+  chip.addEventListener('click', () => {
+    const filtro = chip.dataset.filtro;
+    document.querySelectorAll('[data-filtro]').forEach((other) => {
+      const activo = other === chip;
+      other.classList.toggle('is-active', activo);
+      other.setAttribute('aria-pressed', activo ? 'true' : 'false');
+    });
+    document.querySelectorAll('[data-project-grid] .project-card').forEach((card) => {
+      card.hidden = filtro !== 'todos' && card.dataset.categoria !== filtro;
+    });
   });
 });
 

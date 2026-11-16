@@ -11,6 +11,7 @@ $canonicalUrl = absolute_url($canonical ?? '/');
   <title><?= e($title) ?></title>
   <meta name="description" content="<?= e($description) ?>">
   <link rel="canonical" href="<?= e($canonicalUrl) ?>">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_CL">
   <meta property="og:title" content="<?= e($title) ?>">

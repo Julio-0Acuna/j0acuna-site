@@ -1,174 +1,137 @@
 <?php
-require __DIR__ . '/includes/data.php';
+require_once __DIR__ . '/includes/view.php';
 
 $site = portfolio_load_site();
 $projects = portfolio_visible_projects($site);
+$featured = portfolio_featured_projects($site);
+$categories = portfolio_categories_in_use($site);
+$services = portfolio_visible_services($site, 'todos');
+$mosaic = array_slice(array_values(array_filter($featured, static fn (array $p): bool => $p['image_url'] !== '')), 0, 3);
+$waGeneral = $site['links']['whatsapp'] !== '' ? wa_link($site['links']['whatsapp'], $site['profile']['whatsapp_mensaje']) : '';
+
+render_partial('head', [
+    'title' => $site['profile']['name'] . ' | Páginas web y sistemas para negocios',
+    'description' => $site['profile']['tagline'],
+    'og_image' => 'assets/img/og/og-inicio.jpg',
+    'canonical' => '/',
+]);
+render_partial('nav', ['site' => $site]);
 ?>
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?= htmlspecialchars($site['profile']['name']) ?> | Portafolio</title>
-  <meta name="description" content="<?= htmlspecialchars($site['profile']['tagline']) ?>">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
-</head>
-<body>
-  <nav class="navbar navbar-expand-lg fixed-top portfolio-nav">
+<main>
+  <section id="inicio" class="hero-section">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="#inicio"><?= htmlspecialchars($site['profile']['name']) ?></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Abrir menu">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="#proyectos">Proyectos</a></li>
-          <li class="nav-item"><a class="nav-link" href="#habilidades">Habilidades</a></li>
-          <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-          <li class="nav-item"><a class="nav-link" href="admin/login.php">Admin</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <main>
-    <section id="inicio" class="hero-section">
-      <div class="container">
-        <div class="row align-items-center g-5">
-          <div class="col-lg-7">
-            <p class="eyebrow mb-3"><?= htmlspecialchars($site['profile']['role']) ?></p>
-            <h1><?= htmlspecialchars($site['profile']['headline']) ?></h1>
-            <p class="lead mt-4"><?= htmlspecialchars($site['profile']['bio']) ?></p>
-            <div class="hero-actions mt-4">
-              <a class="minimal-btn minimal-btn-light" href="#proyectos"><span>Ver proyectos</span></a>
-              <a class="minimal-btn minimal-btn-ghost" href="#contacto"><span>Contactame</span></a>
-            </div>
+      <div class="row align-items-center g-5">
+        <div class="<?= $mosaic ? 'col-lg-7' : 'col-lg-9' ?>">
+          <p class="eyebrow mb-3"><?= e($site['profile']['role']) ?></p>
+          <h1><?= e($site['profile']['headline']) ?></h1>
+          <p class="lead mt-4"><?= e($site['profile']['bio']) ?></p>
+          <div class="hero-actions mt-4">
+            <?php if ($waGeneral !== ''): ?>
+              <a class="minimal-btn minimal-btn-light" href="<?= e($waGeneral) ?>" target="_blank" rel="noopener"><span>Escríbeme por WhatsApp</span></a>
+            <?php endif; ?>
+            <a class="minimal-btn minimal-btn-ghost" href="#proyectos"><span>Ver proyectos</span></a>
           </div>
+        </div>
+        <?php if ($mosaic): ?>
           <div class="col-lg-5">
-            <div class="code-window" data-tilt-card>
-              <div class="window-bar">
-                <span></span><span></span><span></span>
-                <small>portfolio.php</small>
-              </div>
-              <pre><code><span class="code-muted">&lt;?php</span>
-$developer = "<?= htmlspecialchars($site['profile']['name']) ?>";
-$stack = ["PHP", "CSS", "JavaScript"];
-
-if ($idea-&gt;needsWeb()) {
-    return buildPortfolio(
-        clean: true,
-        admin: "secure",
-        motion: "fluid"
-    );
-}</code></pre>
-              <div class="terminal-line">
-                <span class="status-dot"></span>
-                <span>deploy-ready desde <?= htmlspecialchars($site['profile']['location']) ?></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="proyectos" class="section-band">
-      <div class="container reveal">
-        <div class="section-heading">
-          <p class="eyebrow">Trabajo reciente</p>
-          <h2>Proyectos desarrollados</h2>
-        </div>
-        <div class="project-viewer" data-project-viewer>
-          <button class="viewer-btn viewer-btn-prev" type="button" data-viewer-prev aria-label="Proyecto anterior">‹</button>
-          <div class="project-track" data-project-track tabindex="0" aria-label="Viewer horizontal de proyectos">
-          <?php foreach ($projects as $project): ?>
-              <article class="project-card reveal">
-                <?php if (!empty($project['image_url'])): ?>
-                  <img class="project-image" src="<?= htmlspecialchars($project['image_url']) ?>" alt="Vista conceptual de <?= htmlspecialchars($project['title']) ?>">
-                <?php else: ?>
-                  <div class="project-thumb">
-                    <span>&lt;/&gt;</span>
-                    <strong><?= htmlspecialchars(strtoupper(substr($project['title'], 0, 2))) ?></strong>
-                  </div>
-                <?php endif; ?>
-                <div class="project-body">
-                  <span class="badge text-bg-light"><?= htmlspecialchars($project['category']) ?></span>
-                  <h3><?= htmlspecialchars($project['title']) ?></h3>
-                  <p><?= htmlspecialchars($project['description']) ?></p>
-                  <div class="tech-list">
-                    <?php foreach ($project['technologies'] as $tech): ?>
-                      <span><?= htmlspecialchars($tech) ?></span>
-                    <?php endforeach; ?>
-                  </div>
-                </div>
-                <div class="project-actions">
-                  <?php if (!empty($project['demo_url'])): ?>
-                    <a class="minimal-link" href="<?= htmlspecialchars($project['demo_url']) ?>" target="_blank" rel="noopener">Demo</a>
-                  <?php endif; ?>
-                  <?php if (!empty($project['repo_url'])): ?>
-                    <a class="minimal-link" href="<?= htmlspecialchars($project['repo_url']) ?>" target="_blank" rel="noopener">Codigo</a>
-                  <?php endif; ?>
-                </div>
-              </article>
-          <?php endforeach; ?>
-          </div>
-          <button class="viewer-btn viewer-btn-next" type="button" data-viewer-next aria-label="Proyecto siguiente">›</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="habilidades" class="skills-section">
-      <div class="container reveal">
-        <div class="row align-items-start g-5">
-          <div class="col-lg-5">
-            <p class="eyebrow">Stack</p>
-            <h2>Tecnologias y enfoque</h2>
-            <p><?= htmlspecialchars($site['profile']['approach']) ?></p>
-          </div>
-          <div class="col-lg-7">
-            <div class="skills-grid">
-              <?php foreach ($site['skills'] as $skill): ?>
-                <span><?= htmlspecialchars($skill) ?></span>
+            <div class="hero-mosaic hero-mosaic-<?= count($mosaic) ?>">
+              <?php foreach ($mosaic as $p): ?>
+                <a href="<?= e(project_url($p)) ?>"><img src="<?= e(asset($p['image_url'])) ?>" alt="<?= e($p['title']) ?>" width="1200" height="750"></a>
               <?php endforeach; ?>
             </div>
           </div>
-        </div>
+        <?php endif; ?>
       </div>
-    </section>
-
-    <section id="contacto" class="contact-section">
-      <div class="container reveal">
-        <div class="contact-shell">
-          <div>
-            <p class="eyebrow">Contacto</p>
-            <h2>Conversemos sobre tu proximo proyecto</h2>
-            <p><?= htmlspecialchars($site['profile']['contact_text']) ?></p>
-          </div>
-          <div class="contact-actions">
-            <a class="minimal-btn minimal-btn-dark" href="mailto:<?= htmlspecialchars($site['links']['email']) ?>"><span>Email</span></a>
-            <a class="minimal-btn minimal-btn-outline" href="<?= htmlspecialchars($site['links']['github']) ?>" target="_blank" rel="noopener"><span>GitHub</span></a>
-            <a class="minimal-btn minimal-btn-outline" href="<?= htmlspecialchars($site['links']['linkedin']) ?>" target="_blank" rel="noopener"><span>LinkedIn</span></a>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <strong><?= htmlspecialchars($site['profile']['name']) ?></strong>
-        <span>&copy; <?= date('Y') ?> Portafolio administrable en PHP</span>
-      </div>
-      <nav aria-label="Enlaces del footer">
-        <a href="<?= htmlspecialchars($site['links']['github']) ?>" target="_blank" rel="noopener">GitHub</a>
-        <a href="<?= htmlspecialchars($site['links']['linkedin']) ?>" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="admin/login.php">Admin</a>
-      </nav>
     </div>
-  </footer>
+  </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/main.js"></script>
-</body>
-</html>
+  <?php if ($services): ?>
+    <section id="servicios" class="section-band">
+      <div class="container reveal">
+        <div class="section-heading">
+          <p class="eyebrow">Servicios</p>
+          <h2>Qué puedo hacer por tu negocio</h2>
+        </div>
+        <div class="service-grid">
+          <?php foreach ($services as $service): ?>
+            <?php render_partial('service-card', ['service' => $service, 'site' => $site]); ?>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </section>
+  <?php endif; ?>
+
+  <?php if ($featured): ?>
+    <section id="destacados" class="section-band section-alt">
+      <div class="container reveal">
+        <div class="section-heading">
+          <p class="eyebrow">Destacados</p>
+          <h2>Proyectos que hablan por mí</h2>
+        </div>
+        <div class="project-grid project-grid-featured">
+          <?php foreach ($featured as $project): ?>
+            <?php render_partial('project-card', ['project' => $project]); ?>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </section>
+  <?php endif; ?>
+
+  <section id="proyectos" class="section-band">
+    <div class="container reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Trabajo realizado</p>
+        <h2>Todos los proyectos</h2>
+      </div>
+      <?php if (count($categories) > 1): ?>
+        <div class="filter-bar" role="group" aria-label="Filtrar proyectos por categoría">
+          <button type="button" class="filter-chip is-active" data-filtro="todos" aria-pressed="true">Todos</button>
+          <?php foreach ($categories as $category): ?>
+            <button type="button" class="filter-chip" data-filtro="<?= e($category['id']) ?>" aria-pressed="false"><?= e($category['nombre']) ?></button>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
+      <div class="project-grid" data-project-grid>
+        <?php foreach ($projects as $project): ?>
+          <?php render_partial('project-card', ['project' => $project]); ?>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </section>
+
+  <section id="como-trabajo" class="section-band section-alt">
+    <div class="container reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Cómo trabajo</p>
+        <h2>Simple, en tres pasos</h2>
+      </div>
+      <ol class="steps">
+        <li><strong>Conversamos</strong><span>Me cuentas cómo funciona tu negocio y qué necesitas.</span></li>
+        <li><strong>Te envío una propuesta</strong><span>Qué se hace, cuánto demora y cuánto cuesta, por escrito.</span></li>
+        <li><strong>Lo publico y te enseño a usarlo</strong><span>Queda en línea y sabes manejarlo desde el primer día.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="contacto" class="contact-section">
+    <div class="container reveal">
+      <div class="contact-shell">
+        <div>
+          <p class="eyebrow">Contacto</p>
+          <h2>Conversemos sobre tu próximo proyecto</h2>
+          <p><?= e($site['profile']['contact_text']) ?></p>
+        </div>
+        <div class="contact-actions">
+          <?php if ($waGeneral !== ''): ?>
+            <a class="minimal-btn minimal-btn-dark" href="<?= e($waGeneral) ?>" target="_blank" rel="noopener"><span>WhatsApp</span></a>
+          <?php endif; ?>
+          <a class="minimal-btn minimal-btn-outline" href="mailto:<?= e($site['links']['email']) ?>"><span>Correo</span></a>
+          <a class="minimal-btn minimal-btn-outline" href="<?= e($site['links']['linkedin']) ?>" target="_blank" rel="noopener"><span>LinkedIn</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<?php
+render_partial('whatsapp-fab', ['site' => $site, 'mensaje' => $site['profile']['whatsapp_mensaje']]);
+render_partial('footer', ['site' => $site]);
