@@ -41,6 +41,21 @@ debe_contener   /  'https://wa.me/56973537642'
 debe_contener   /  'Carnicería «Don Ramón» &amp; Cía'
 no_debe_contener / 'Proyecto oculto'
 
+# --- Detalle de proyecto (Tarea 6)
+debe_responder  /proyecto/restaurante-a  200
+debe_contener   /proyecto/restaurante-a  'Carnicería «Don Ramón» &amp; Cía'
+debe_contener   /proyecto/restaurante-a  'text=Hola%20Julio%2C%20vi%20el%20proyecto%20%C2%AB'
+debe_contener   /proyecto/restaurante-a  'El problema'
+debe_contener   /proyecto/restaurante-a  'Don Ramón</'
+no_debe_contener /proyecto/restaurante-a 'href="assets/'
+no_debe_contener /proyecto/restaurante-a 'src="assets/'
+debe_contener   /proyecto/gestion-b      'Cliente confidencial'
+no_debe_contener /proyecto/gestion-b     'El problema'
+debe_responder  /proyecto/oculto        404
+debe_responder  /proyecto/no-existe     404
+debe_contener   /proyecto/no-existe     'href="/"'
+debe_responder  /data/site.json         403
+
 echo
 echo "$OK ok / $FAIL fallas"
 [ "$FAIL" -eq 0 ]

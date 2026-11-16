@@ -800,6 +800,124 @@ body::before {
   color: var(--muted);
 }
 
+.detail-page {
+  padding: 7.5rem 0 5rem;
+}
+
+.detail-back {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: #5eead4;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.detail-header h1,
+.detail-page > .container > h1 {
+  margin: 0.5rem 0 1rem;
+  color: #f8fafc;
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.02;
+}
+
+.detail-lead {
+  max-width: 760px;
+  color: rgba(229, 237, 247, 0.82);
+  font-size: 1.15rem;
+}
+
+.detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detail-meta li {
+  padding: 0.35rem 0.75rem;
+  color: #cbd5e1;
+  background: rgba(15, 23, 42, 0.82);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.detail-credit {
+  margin-top: 1rem;
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
+.detail-gallery {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  margin: 2.5rem 0;
+}
+
+.detail-gallery img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.detail-gallery-1 img {
+  aspect-ratio: auto;
+  max-height: 560px;
+}
+
+.detail-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  margin-top: 2rem;
+}
+
+.detail-section {
+  margin-bottom: 2rem;
+}
+
+.detail-section h2,
+.detail-aside h2 {
+  color: #f8fafc;
+  font-size: 1.3rem;
+  font-weight: 850;
+}
+
+.detail-section p,
+.detail-list li {
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.detail-aside {
+  align-self: start;
+  padding: 1.4rem;
+  background: rgba(16, 26, 43, 0.92);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+}
+
+@media (max-width: 991.98px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .whatsapp-fab {
   position: fixed;
   right: 1rem;
