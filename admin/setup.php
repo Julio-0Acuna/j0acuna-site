@@ -1,13 +1,20 @@
 <?php
 require __DIR__ . '/../includes/auth.php';
 
+require_once __DIR__ . '/../includes/setup_guard.php';
+
 $configured = admin_is_configured();
 $message = '';
 $error = '';
 
+if (!$configured && !admin_setup_allowed($configured, (string) ($_SERVER['REMOTE_ADDR'] ?? ''))) {
+    http_response_code(403);
+    exit('El acceso de administrador solo se puede crear desde el equipo local.');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($configured) {
-        $error = 'El administrador ya fue configurado. Borra data/admin.json solo si necesitas reiniciar el acceso.';
+        $error = 'El administrador ya fue configurado. Para reiniciar el acceso, restaura data/admin.json desde el respaldo.';
     } else {
         $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
         $password = (string) ($_POST['password'] ?? '');

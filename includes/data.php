@@ -168,6 +168,56 @@ function portfolio_visible_services(array $site, string $para): array
     return portfolio_sort_by_order($list, 'titulo');
 }
 
+/**
+ * Aplica lo enviado por el panel sin borrar lo que el formulario no conoce:
+ * perfil y enlaces se mezclan; cada proyecto se mezcla sobre el existente con su id;
+ * servicios y categorías no se tocan. `published` es casilla: si no viene, queda en false.
+ */
+function portfolio_apply_admin_post(array $site, array $post): array
+{
+    $trim = static fn ($v): string => trim((string) $v);
+
+    if (isset($post['profile']) && is_array($post['profile'])) {
+        $site['profile'] = array_replace($site['profile'], array_map($trim, $post['profile']));
+    }
+    if (isset($post['links']) && is_array($post['links'])) {
+        $site['links'] = array_replace($site['links'], array_map($trim, $post['links']));
+    }
+    if (array_key_exists('skills', $post)) {
+        $site['skills'] = array_values(array_filter(array_map('trim', explode(',', (string) $post['skills']))));
+    }
+
+    $existing = [];
+    foreach ($site['projects'] as $project) {
+        $existing[$project['id']] = $project;
+    }
+
+    $projects = [];
+    foreach (($post['projects'] ?? []) as $sent) {
+        $title = $trim($sent['title'] ?? '');
+        if ($title === '') {
+            continue;
+        }
+        $id = $trim($sent['id'] ?? '') ?: portfolio_slug($title);
+        $merged = $existing[$id] ?? [];
+        foreach (['category', 'description', 'image_url', 'demo_url', 'repo_url'] as $field) {
+            if (array_key_exists($field, $sent)) {
+                $merged[$field] = $trim($sent[$field]);
+            }
+        }
+        if (array_key_exists('technologies', $sent)) {
+            $merged['technologies'] = array_values(array_filter(array_map('trim', explode(',', (string) $sent['technologies']))));
+        }
+        $merged['id'] = $id;
+        $merged['title'] = $title;
+        $merged['published'] = !empty($sent['published']);
+        $projects[] = portfolio_normalize_project($merged);
+    }
+    $site['projects'] = $projects;
+
+    return $site;
+}
+
 function portfolio_load_admin(): array
 {
     if (!file_exists(PORTFOLIO_ADMIN_FILE)) {
