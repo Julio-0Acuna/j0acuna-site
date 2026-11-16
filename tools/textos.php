@@ -1,6 +1,11 @@
 <?php
 // Uso: tools/php.sh tools/textos.php > ../docs/textos-para-revisar.md
 // Exporta perfil, servicios y proyectos en Markdown para que Julio los revise.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 require_once __DIR__ . '/../includes/view.php';
 
 $s = portfolio_load_site();
