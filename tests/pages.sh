@@ -29,7 +29,7 @@ no_debe_contener() {
   curl -s "$BASE$1" | grep -qF -- "$2" && falla "$1 contiene $2 y no debería" || pasa "$1 no contiene $2"
 }
 
-# --- Portada (Tarea 5)
+# --- Generales: valen con datos de prueba y con el contenido real
 debe_responder  /  200
 debe_contener   /  'id="servicios"'
 debe_contener   /  'id="destacados"'
@@ -37,36 +37,18 @@ debe_contener   /  'data-filtro="restaurantes"'
 no_debe_contener / 'data-filtro="ejemplos"'
 no_debe_contener / 'admin/login.php'
 no_debe_contener / 'href="assets/'
+no_debe_contener / 'src="assets/'
 debe_contener   /  'https://wa.me/56973537642'
-debe_contener   /  'Carnicería «Don Ramón» &amp; Cía'
-no_debe_contener / 'Proyecto oculto'
-
-# --- Detalle de proyecto (Tarea 6)
-debe_responder  /proyecto/restaurante-a  200
-debe_contener   /proyecto/restaurante-a  'Carnicería «Don Ramón» &amp; Cía'
-debe_contener   /proyecto/restaurante-a  'text=Hola%20Julio%2C%20vi%20el%20proyecto%20%C2%AB'
-debe_contener   /proyecto/restaurante-a  'El problema'
-debe_contener   /proyecto/restaurante-a  'Don Ramón</'
-no_debe_contener /proyecto/restaurante-a 'href="assets/'
-no_debe_contener /proyecto/restaurante-a 'src="assets/'
-debe_contener   /proyecto/gestion-b      'Cliente confidencial'
-no_debe_contener /proyecto/gestion-b     'El problema'
-debe_responder  /proyecto/oculto        404
 debe_responder  /proyecto/no-existe     404
 debe_contener   /proyecto/no-existe     'href="/"'
 debe_responder  /data/site.json         403
-
-# --- /restaurantes (Tarea 7)
 debe_responder  /restaurantes  200
 debe_contener   /restaurantes  'Presencia'
 debe_contener   /restaurantes  'Vende directo'
-no_debe_contener /restaurantes 'Apps de delivery'
 debe_contener   /restaurantes  'id="pruebas"'
-debe_contener   /restaurantes  'href="/proyecto/restaurante-a"'
 debe_contener   /restaurantes  'href="/"'
 no_debe_contener /restaurantes 'href="/demos/'
 no_debe_contener /restaurantes 'integración directa'
-no_debe_contener /restaurantes 'Servicio empresas'
 debe_contener   /restaurantes  'og-restaurantes.jpg'
 debe_contener   /restaurantes  'text=Hola%20Julio%2C%20tengo%20un%20local%20y%20quiero%20vender%20m%C3%A1s.'
 
@@ -82,6 +64,44 @@ peso_total() {
 }
 PESO=$(peso_total /restaurantes)
 [ "$PESO" -lt 307200 ] && pasa "/restaurantes pesa $PESO bytes (< 300 KB)" || falla "/restaurantes pesa $PESO bytes (>= 300 KB)"
+
+if [ -z "${SITE_JSON:-}" ]; then
+# --- Solo con datos de prueba (tests/fixtures/site.json)
+debe_contener   /  'Carnicería «Don Ramón» &amp; Cía'
+no_debe_contener / 'Proyecto oculto'
+debe_responder  /proyecto/restaurante-a  200
+debe_contener   /proyecto/restaurante-a  'Carnicería «Don Ramón» &amp; Cía'
+debe_contener   /proyecto/restaurante-a  'text=Hola%20Julio%2C%20vi%20el%20proyecto%20%C2%AB'
+debe_contener   /proyecto/restaurante-a  'El problema'
+debe_contener   /proyecto/restaurante-a  'Don Ramón</'
+no_debe_contener /proyecto/restaurante-a 'href="assets/'
+no_debe_contener /proyecto/restaurante-a 'src="assets/'
+debe_contener   /proyecto/gestion-b      'Cliente confidencial'
+no_debe_contener /proyecto/gestion-b     'El problema'
+debe_responder  /proyecto/oculto        404
+no_debe_contener /restaurantes 'Apps de delivery'
+debe_contener   /restaurantes  'href="/proyecto/restaurante-a"'
+no_debe_contener /restaurantes 'Servicio empresas'
+else
+# --- Solo con el contenido real (data/site.json)
+debe_responder  /proyecto/ridelsip-cl    200
+debe_contener   /proyecto/ridelsip-cl    'RIDEL-SIP SpA'
+no_debe_contener /proyecto/ridelsip-cl   'src="assets/'
+debe_responder  /proyecto/alertaoficial  404
+debe_responder  /proyecto/mibusca-brasil 404
+no_debe_contener /                       'AlertaOficial'
+debe_contener   /restaurantes  'Apps de delivery'
+debe_contener   /restaurantes  'Premium'
+debe_contener   /restaurantes  'href="/proyecto/sistema-pedidos-multi-app"'
+no_debe_contener /restaurantes 'Sistemas a medida'
+no_debe_contener /proyecto/intranet-agencia           'MAVT'
+no_debe_contener /proyecto/paneles-duenos-restaurantes 'MAVT'
+no_debe_contener /proyecto/marca-propia-agencia       'MAVT'
+debe_contener   /proyecto/sistema-pedidos-multi-app   'Desarrollado para MAVT'
+debe_responder  /sitemap.xml  200
+debe_responder  /robots.txt   200
+debe_responder  /favicon.svg  200
+fi
 
 echo
 echo "$OK ok / $FAIL fallas"

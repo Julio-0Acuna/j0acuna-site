@@ -369,7 +369,9 @@ body::before {
 }
 
 .project-image {
+  display: block;
   width: 100%;
+  height: auto;
   aspect-ratio: 16 / 9;
   object-fit: cover;
   border-bottom: 1px solid rgba(148, 163, 184, 0.18);
