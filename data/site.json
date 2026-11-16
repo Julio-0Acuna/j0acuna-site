@@ -1,0 +1,211 @@
+{
+    "profile": {
+        "name": "Julio Acuna",
+        "role": "Desarrollador web",
+        "headline": "Programo interfaces limpias, veloces y listas para crecer.",
+        "tagline": "Portafolio personal de programacion y desarrollo web.",
+        "bio": "Soy Julio, desarrollo soluciones web con PHP, CSS y JavaScript, cuidando la logica, la experiencia visual y la administracion del contenido.",
+        "approach": "Trabajo como si cada proyecto fuera un sistema vivo: estructura clara, componentes reutilizables, interacciones fluidas y codigo que se pueda mantener.",
+        "location": "Chile",
+        "contact_text": "Puedes revisar mis redes o escribirme directamente para colaborar."
+    },
+    "links": {
+        "email": "tu-email@example.com",
+        "github": "https://github.com/Julio-0Acuna/",
+        "linkedin": "https://www.linkedin.com/in/julio-0acuna/"
+    },
+    "skills": [
+        "PHP",
+        "JavaScript",
+        "CSS",
+        "Bootstrap",
+        "MySQL",
+        "Python",
+        "Java",
+        "JDBC",
+        "POO",
+        "DAO",
+        "Hyperledger Fabric",
+        "Blockchain",
+        "Git",
+        "Responsive Design"
+    ],
+    "projects": [
+        {
+            "id": "ridelsip-cl",
+            "title": "Ridelsip.cl",
+            "category": "Pagina web",
+            "description": "Pagina web desarrollada para Ridelsip.cl, enfocada en presencia digital, contenido claro y experiencia responsive.",
+            "technologies": [
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "Responsive Design"
+            ],
+            "image_url": "",
+            "demo_url": "https://ridelsip.cl",
+            "repo_url": "",
+            "published": true
+        },
+        {
+            "id": "suitechile-cl",
+            "title": "Suitechile.cl",
+            "category": "Pagina web",
+            "description": "Pagina web desarrollada para Suitechile.cl, pensada para mostrar servicios, informacion comercial y navegacion clara.",
+            "technologies": [
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "Responsive Design"
+            ],
+            "image_url": "",
+            "demo_url": "https://suitechile.cl",
+            "repo_url": "",
+            "published": true
+        },
+        {
+            "id": "obrascivilesmys-cl",
+            "title": "obrascivilesmys.cl",
+            "category": "Pagina web",
+            "description": "Pagina web desarrollada para obrascivilesmys.cl, orientada a presentar servicios, proyectos y contacto profesional.",
+            "technologies": [
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "Responsive Design"
+            ],
+            "image_url": "",
+            "demo_url": "https://obrascivilesmys.cl",
+            "repo_url": "",
+            "published": true
+        },
+        {
+            "id": "mibusca-brasil",
+            "title": "MiBusca-Brasil",
+            "category": "Proyecto web",
+            "description": "MiBusca Brasil, repositorio publico orientado a una solucion de busqueda o plataforma web.",
+            "technologies": [
+                "Web",
+                "Repositorio publico",
+                "En preparacion"
+            ],
+            "image_url": "assets/img/projects/mibusca-brasil.png",
+            "demo_url": "",
+            "repo_url": "https://github.com/Julio-0Acuna/MiBusca-Brasil",
+            "published": true
+        },
+        {
+            "id": "bibliotecaoop",
+            "title": "BibliotecaOOP",
+            "category": "Python + MySQL",
+            "description": "Sistema de gestion de biblioteca desarrollado en Python utilizando Programacion Orientada a Objetos y MySQL. Permite administrar usuarios y libros, realizar prestamos y devoluciones mediante Stored Procedures, y controlar el stock de manera segura y estructurada.",
+            "technologies": [
+                "Python",
+                "MySQL",
+                "POO",
+                "Stored Procedures"
+            ],
+            "image_url": "assets/img/projects/bibliotecaoop.png",
+            "demo_url": "",
+            "repo_url": "https://github.com/Julio-0Acuna/BibliotecaOOP",
+            "published": true
+        },
+        {
+            "id": "mini-pos",
+            "title": "mini_pos",
+            "category": "Python + MySQL",
+            "description": "Sistema de ventas desarrollado en Python con MySQL para administrar productos, registrar ventas, controlar inventario, calcular IVA automaticamente y validar stock usando POO, arquitectura por capas y transacciones.",
+            "technologies": [
+                "Python",
+                "MySQL",
+                "POO",
+                "Arquitectura por capas"
+            ],
+            "image_url": "assets/img/projects/mini-pos.png",
+            "demo_url": "",
+            "repo_url": "https://github.com/Julio-0Acuna/mini_pos",
+            "published": true
+        },
+        {
+            "id": "src",
+            "title": "SRC",
+            "category": "Python",
+            "description": "Sistema de Reservas de Citas desarrollado en Python utilizando Programacion Orientada a Objetos y arquitectura por capas con DAO y Service.",
+            "technologies": [
+                "Python",
+                "POO",
+                "DAO",
+                "Service Layer"
+            ],
+            "image_url": "assets/img/projects/src.png",
+            "demo_url": "",
+            "repo_url": "https://github.com/Julio-0Acuna/SRC",
+            "published": true
+        },
+        {
+            "id": "supermercado-backend",
+            "title": "supermercado-backend",
+            "category": "Java + MySQL",
+            "description": "Sistema de gestion de supermercado desarrollado en Java con JDBC y MySQL, enfocado en control de inventario, gestion de ventas y automatizacion de reglas de negocio a nivel de base de datos.",
+            "technologies": [
+                "Java",
+                "JDBC",
+                "MySQL",
+                "Backend"
+            ],
+            "image_url": "assets/img/projects/supermercado-backend.png",
+            "demo_url": "",
+            "repo_url": "https://github.com/Julio-0Acuna/supermercado-backend",
+            "published": true
+        },
+        {
+            "id": "supermercadocaja",
+            "title": "SupermercadoCaja",
+            "category": "Java + MySQL",
+            "description": "Sistema de caja registradora desarrollado en Java con JDBC y MySQL, incluyendo control automatico de stock, calculo de impuestos y generacion de ticket en archivo TXT.",
+            "technologies": [
+                "Java",
+                "RenderScript",
+                "JDBC",
+                "MySQL",
+                "TXT"
+            ],
+            "image_url": "assets/img/projects/supermercadocaja.png",
+            "demo_url": "",
+            "repo_url": "https://github.com/Julio-0Acuna/SupermercadoCaja",
+            "published": true
+        },
+        {
+            "id": "bancobackend",
+            "title": "bancoBackend",
+            "category": "Java + MySQL",
+            "description": "Sistema bancario de consola desarrollado en Java aplicando POO e integracion con base de datos MySQL mediante JDBC. Incluye autenticacion, gestion de cuentas, transacciones y reportes.",
+            "technologies": [
+                "Java",
+                "JDBC",
+                "MySQL",
+                "POO"
+            ],
+            "image_url": "assets/img/projects/bancobackend.png",
+            "demo_url": "",
+            "repo_url": "https://github.com/Julio-0Acuna/bancoBackend",
+            "published": true
+        },
+        {
+            "id": "hyperledger-fabric-lab",
+            "title": "Hyperledger Fabric Lab",
+            "category": "Blockchain",
+            "description": "Proyecto orientado a redes blockchain permissionadas con Hyperledger Fabric, smart contracts, identidades, canales y registro de transacciones. Queda preparado para vincular el repositorio cuando lo publiques en GitHub.",
+            "technologies": [
+                "Hyperledger Fabric",
+                "Blockchain",
+                "Smart Contracts",
+                "Docker"
+            ],
+            "image_url": "assets/img/projects/hyperledger-fabric-lab.png",
+            "demo_url": "",
+            "repo_url": "",
+            "published": true
+        }
+    ]
+}

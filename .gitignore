@@ -1,0 +1,6 @@
+data/admin.json
+data/sessions/
+data/login_attempts*
+assets/img/projects/*.png
+.superpowers/
+deploy/
