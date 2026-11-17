@@ -1,0 +1,347 @@
+/* Kumo · Multi-page · barra de omakase: tinta negra, papel washi y sello bermellón */
+.ku {
+  --sumi: #0f0e0d;
+  --sumi-2: #171513;
+  --sumi-3: #22201c;
+  --washi: #ede7dc;
+  --washi-2: #aaa398;
+  --kinari: #f2ede4;
+  --kinari-2: #e7e0d3;
+  --tinta: #1a1816;
+  --gris: #625c53;
+  --shu: #c23d27;
+  --shu-claro: #ec7a62;
+  --linea: rgba(237, 231, 220, .14);
+  --linea-clara: rgba(26, 24, 22, .14);
+  --demo-tinta: var(--washi);
+  --demo-suave: var(--washi-2);
+  --demo-fondo: var(--sumi);
+  --demo-superficie: var(--sumi-2);
+  --demo-borde: var(--linea);
+  --demo-acento: var(--shu);
+  --demo-radio: 0;
+  --demo-sombra: none;
+  --demo-fuente-titulos: "Shippori Mincho", "Yu Mincho", Georgia, serif;
+  --demo-foco: var(--shu-claro);
+  margin: 0;
+  background: var(--sumi);
+  color: var(--washi);
+  font-family: "Zen Kaku Gothic New", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.75;
+}
+.ku h1, .ku h2, .ku h3 { font-family: "Shippori Mincho", "Yu Mincho", Georgia, serif; font-weight: 500; line-height: 1.2; margin: 0; letter-spacing: .01em; }
+.ku h1 em, .ku h2 em { font-style: normal; color: var(--shu-claro); }
+.ku h1 { font-size: clamp(2.4rem, 8.4vw, 4.4rem); }
+.ku h2 { font-size: clamp(1.9rem, 6vw, 3rem); }
+:where(.ku) a { color: inherit; }
+.ku :focus-visible { outline: 2px solid var(--shu-claro); outline-offset: 3px; }
+.ku-ancho { width: min(1180px, 100% - 32px); margin-inline: auto; }
+.ku-sobre { margin: 0 0 14px; font-size: .74rem; font-weight: 500; letter-spacing: .3em; text-transform: uppercase; color: var(--shu-claro); }
+.ku-centro { text-align: center; margin-top: 48px; }
+.ku-pequeno { font-size: .88rem; color: var(--washi-2); }
+.ku-vertical {
+  writing-mode: vertical-rl; margin: 0; font-family: "Shippori Mincho", serif; font-size: 1rem; letter-spacing: .5em;
+  color: var(--washi-2);
+}
+
+/* Sello bermellón (logo) */
+.ku-sello {
+  display: inline-grid; place-items: center; flex: none; width: 40px; height: 40px;
+  background: var(--shu); color: #fbf3ea; border-radius: 3px;
+  font-family: "Shippori Mincho", serif; font-weight: 700; font-size: 1.45rem; line-height: 1;
+  box-shadow: inset 0 0 0 2px rgba(251, 243, 234, .28);
+}
+.ku-sello--grande { width: 64px; height: 64px; font-size: 2.3rem; }
+@media (min-width: 900px) { .ku-sello--foto { right: -14px; bottom: 28px; } }
+.ku-sello--foto { position: absolute; right: 12px; bottom: 20px; width: 72px; height: 72px; font-size: 2.6rem; transform: rotate(-4deg); box-shadow: inset 0 0 0 3px rgba(251, 243, 234, .3), 0 14px 30px rgba(0, 0, 0, .35); }
+
+/* Botones: rectos, con una línea que se alarga */
+.ku-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 14px;
+  min-height: 52px; padding: 13px 26px; border: 1px solid var(--shu); border-radius: 0;
+  background: var(--shu); color: #fff; text-decoration: none; cursor: pointer;
+  font: 500 .95rem/1.2 "Zen Kaku Gothic New", sans-serif; letter-spacing: .06em;
+  transition: background .25s, border-color .25s, color .25s;
+}
+.ku-btn::after { content: ""; width: 18px; height: 1px; background: currentColor; transition: width .25s ease; }
+.ku-btn:hover { background: #a83220; border-color: #a83220; }
+.ku-btn:hover::after { width: 34px; }
+.ku-btn--linea { background: transparent; color: var(--washi); border-color: rgba(237, 231, 220, .4); }
+.ku-btn--linea:hover { background: rgba(237, 231, 220, .06); border-color: var(--washi); }
+.ku-btn--tinta { background: var(--tinta); border-color: var(--tinta); color: var(--kinari); }
+.ku-btn--tinta:hover { background: var(--shu); border-color: var(--shu); }
+.ku-btn--bloque { width: 100%; }
+.ku-btn--wa { background: #1f7a4a; border-color: #1f7a4a; }
+.ku-btn--wa:hover { background: #18623b; border-color: #18623b; }
+.ku-btn--wa::after { display: none; }
+.ku-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+.ku-acciones--columna { flex-direction: column; align-items: stretch; gap: 12px; }
+.ku-enlace {
+  display: inline-flex; align-items: center; gap: 14px; text-decoration: none; padding: 10px 0;
+  font-size: .95rem; font-weight: 500; letter-spacing: .06em;
+}
+.ku-enlace::before { content: ""; width: 34px; height: 1px; background: var(--shu-claro); transition: width .25s ease; }
+.ku-enlace:hover::before { width: 54px; }
+
+/* Cabecera */
+.ku-cabecera { position: sticky; top: 0; z-index: 50; background: rgba(15, 14, 13, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--linea); }
+.ku-cabecera__fila { display: flex; align-items: center; gap: 22px; min-height: 76px; }
+.ku-logo { display: inline-flex; align-items: center; gap: 14px; text-decoration: none; margin-right: auto; }
+.ku-logo__texto { display: grid; line-height: 1.1; }
+.ku-logo__nombre { font-family: "Shippori Mincho", serif; font-weight: 600; font-size: 1.45rem; letter-spacing: .32em; text-transform: uppercase; }
+.ku-logo__bajada { font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--washi-2); white-space: nowrap; }
+@media (max-width: 400px) { .ku-logo__bajada { letter-spacing: .1em; font-size: .62rem; } .ku-logo { gap: 10px; } }
+.ku-nav { display: none; gap: 30px; }
+.ku-nav a { position: relative; text-decoration: none; padding: 8px 0; font-size: .9rem; letter-spacing: .08em; color: var(--washi-2); transition: color .2s; }
+.ku-nav a:hover { color: var(--washi); }
+.ku-nav a.is-activo { color: var(--washi); }
+.ku-nav a.is-activo::after { content: ""; position: absolute; left: 50%; bottom: -4px; width: 5px; height: 5px; background: var(--shu); transform: translateX(-50%); }
+.ku-carrito {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; text-decoration: none;
+  border: 1px solid var(--linea); font-size: .85rem; letter-spacing: .06em;
+}
+.ku-carrito:hover { border-color: var(--washi-2); }
+.ku-carrito__num { min-width: 22px; height: 22px; padding: 0 6px; display: inline-grid; place-items: center; background: var(--shu); color: #fff; font-size: .75rem; font-weight: 700; letter-spacing: 0; }
+.ku-carrito__num[hidden] { display: none; }
+.ku-menu-movil summary { list-style: none; cursor: pointer; width: 44px; height: 44px; display: grid; align-content: center; gap: 8px; padding: 0 9px; }
+.ku-menu-movil summary::-webkit-details-marker { display: none; }
+.ku-menu-movil summary span { display: block; height: 1.5px; background: var(--washi); transition: transform .25s; }
+.ku-menu-movil[open] summary span:first-child { transform: translateY(4.75px) rotate(45deg); }
+.ku-menu-movil[open] summary span:last-child { transform: translateY(-4.75px) rotate(-45deg); }
+.ku-menu-movil nav {
+  position: absolute; left: 0; right: 0; top: 100%; background: var(--sumi); border-bottom: 1px solid var(--linea);
+  display: grid; padding: 8px 16px 24px; box-shadow: 0 30px 40px rgba(0, 0, 0, .45);
+}
+.ku-menu-movil nav a { display: flex; align-items: baseline; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--linea); text-decoration: none; font-family: "Shippori Mincho", serif; font-size: 1.5rem; }
+.ku-menu-movil nav a.is-activo { color: var(--shu-claro); }
+.ku-menu-movil__kanji { font-size: .95rem; color: var(--shu-claro); width: 1.2em; }
+.ku-menu-movil nav a.ku-menu-movil__reserva { margin-top: 18px; justify-content: center; border: 1px solid var(--shu); background: var(--shu); color: #fff; font-family: "Zen Kaku Gothic New", sans-serif; font-size: 1rem; }
+@media (min-width: 960px) {
+  .ku-menu-movil { display: none; }
+  .ku-nav { display: flex; }
+}
+@media (max-width: 459px) { .ku-carrito__texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } .ku-logo__nombre { font-size: 1.25rem; } .ku-cabecera__fila { gap: 12px; } }
+
+/* Fotos: rectas, sin adornos; leyenda en versalitas */
+.ku-foto { margin: 0; position: relative; }
+.ku-foto img { width: 100%; aspect-ratio: 10 / 7; object-fit: cover; display: block; }
+.ku-foto--alta img { aspect-ratio: 4 / 5; }
+.ku-foto--panorama img { aspect-ratio: 2 / 1; }
+@media (max-width: 640px) { .ku-foto--panorama img { aspect-ratio: 4 / 3; } }
+.ku-foto figcaption { margin-top: 12px; font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: var(--washi-2); }
+
+/* Portada */
+.ku-portada { position: relative; overflow: hidden; }
+.ku-portada__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ku-portada__fila { position: relative; display: flex; align-items: center; gap: 24px; }
+.ku-portada__texto { max-width: 600px; padding: 0 0 64px; }
+.ku-portada h1 { font-size: clamp(2.3rem, 9vw, 4.6rem); line-height: 1.12; }
+.ku-portada h1 em { display: inline-block; margin-top: 6px; font-size: .62em; }
+.ku-portada__bajada { color: var(--washi-2); max-width: 32em; margin: 26px 0 34px; font-size: 1.05rem; }
+.ku-estado { margin: 30px 0 0; font-size: .85rem; letter-spacing: .08em; color: var(--washi-2); display: inline-flex; align-items: center; gap: 10px; }
+.ku-estado::before { content: ""; width: 7px; height: 7px; background: var(--washi-2); }
+.ku-estado.is-abierto::before { background: #6fcf97; }
+.ku-portada__vertical { display: none; }
+@media (max-width: 899px) {
+  .ku-portada__foto { position: relative; height: 62vw; max-height: 460px; }
+  .ku-portada__foto::after { content: ""; position: absolute; inset: 40% 0 0; background: linear-gradient(transparent, var(--sumi)); }
+  .ku-portada__fila { margin-top: -40px; }
+}
+@media (min-width: 900px) {
+  .ku-portada { min-height: min(86vh, 780px); display: flex; align-items: center; }
+  .ku-portada__foto { position: absolute; top: 0; right: 0; bottom: 0; width: 56%; }
+  .ku-portada__foto { -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, .6) 18%, #000 42%); mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, .6) 18%, #000 42%); }
+  .ku-portada__foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(15, 14, 13, .55), transparent 30%); }
+  .ku-portada__fila { width: min(1180px, 100% - 64px); justify-content: space-between; align-self: stretch; }
+  .ku-portada__texto { padding: 72px 0; }
+  .ku-portada__vertical { display: block; align-self: flex-start; margin-top: 72px; color: rgba(237, 231, 220, .8); font-size: 1.05rem; text-shadow: 0 1px 12px rgba(0, 0, 0, .6); }
+}
+
+/* Secciones */
+.ku-seccion { padding: 88px 0; }
+@media (min-width: 900px) { .ku-seccion { padding: 120px 0; } }
+.ku-seccion--sin-arriba { padding-top: 0; }
+.ku-encabezado { margin-bottom: 52px; }
+.ku-encabezado--fila { display: grid; gap: 18px; align-items: end; }
+.ku-encabezado--fila > p { margin: 0; color: var(--washi-2); max-width: 30em; }
+@media (min-width: 900px) { .ku-encabezado--fila { grid-template-columns: 1fr 1fr; } .ku-encabezado--fila > p { justify-self: end; } }
+
+/* Secciones claras (papel) */
+.ku-claro { background: var(--kinari); color: var(--tinta); --demo-tinta: var(--tinta); --demo-suave: var(--gris); --demo-borde: var(--linea-clara); }
+.ku-claro .ku-sobre { color: var(--shu); }
+.ku-claro h1 em, .ku-claro h2 em { color: var(--shu); }
+.ku-claro .ku-encabezado--fila > p, .ku-claro .ku-pequeno { color: var(--gris); }
+.ku-claro :focus-visible { outline-color: var(--shu); }
+.ku-claro .ku-enlace::before { background: var(--shu); }
+.ku-claro .ku-btn--linea { color: var(--tinta); border-color: rgba(26, 24, 22, .4); }
+
+/* Recorrido */
+.ku-ritual { border-bottom: 1px solid var(--linea); padding-bottom: 72px; }
+@media (min-width: 900px) { .ku-ritual { padding-bottom: 96px; } }
+.ku-ritual__lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--linea); }
+@media (min-width: 700px) { .ku-ritual__lista { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .ku-ritual__lista { grid-template-columns: repeat(4, 1fr); } }
+.ku-ritual__lista li { padding: 30px 26px 34px 0; border-bottom: 1px solid var(--linea); }
+@media (min-width: 1000px) { .ku-ritual__lista li { border-bottom: 0; padding: 36px 30px 0 0; } .ku-ritual__lista li + li { border-left: 1px solid var(--linea); padding-left: 30px; } }
+.ku-ritual__num { display: block; font-family: "Shippori Mincho", serif; font-size: 2.6rem; line-height: 1; color: var(--shu-claro); margin-bottom: 18px; }
+.ku-ritual__lista h3 { font-size: 1.5rem; margin-bottom: 8px; }
+.ku-ritual__lista p { margin: 0; color: var(--washi-2); }
+
+/* Experiencias en la barra */
+.ku-experiencias { display: grid; gap: 56px; }
+@media (min-width: 900px) { .ku-experiencias { grid-template-columns: 1fr 1fr; gap: 48px; } .ku-experiencia:nth-child(2) { margin-top: 96px; } }
+.ku-experiencia__texto { padding-top: 26px; }
+.ku-experiencia h3 { font-size: clamp(1.7rem, 5vw, 2.2rem); }
+.ku-experiencia__texto > p { color: var(--washi-2); margin: 12px 0 0; max-width: 32em; }
+.ku-experiencia .ku-experiencia__precio { font-family: "Shippori Mincho", serif; font-size: 1.9rem; color: var(--washi); margin: 18px 0 22px; }
+.ku-experiencia__precio small { font-family: "Zen Kaku Gothic New", sans-serif; font-size: .8rem; letter-spacing: .1em; color: var(--washi-2); }
+
+/* Firmas para llevar */
+.ku-firmas { display: grid; gap: 40px 28px; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); }
+.ku-firma__foto { display: block; overflow: hidden; }
+.ku-firma__foto img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; transition: transform .6s ease; }
+.ku-firma:hover .ku-firma__foto img { transform: scale(1.04); }
+.ku-firma__jp { margin: 18px 0 4px; font-size: .74rem; letter-spacing: .26em; text-transform: uppercase; color: var(--shu); }
+.ku-firma h3 { font-size: 1.6rem; }
+.ku-firma h3 a { text-decoration: none; }
+.ku-firma h3 a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.ku-firma__precio { margin: 4px 0 0; color: var(--gris); font-size: .92rem; }
+
+/* Dos columnas */
+.ku-dos { display: grid; gap: 52px; align-items: center; }
+@media (min-width: 900px) { .ku-dos { grid-template-columns: 1fr 1fr; gap: 96px; } .ku-dos--invertido > :first-child { order: 2; } }
+.ku-prosa p { color: var(--washi-2); max-width: 34em; }
+.ku-claro .ku-prosa p { color: var(--gris); }
+.ku-prosa h2 { margin-bottom: 8px; }
+.ku-lista { list-style: none; margin: 28px 0 0; padding: 0; border-top: 1px solid var(--linea); }
+.ku-lista li { display: flex; align-items: center; gap: 18px; padding: 14px 0; border-bottom: 1px solid var(--linea); }
+.ku-lista span { font-family: "Shippori Mincho", serif; color: var(--shu-claro); font-size: 1.2rem; width: 1.4em; text-align: center; }
+
+/* Titular de páginas internas */
+.ku-titular { padding: 64px 0 52px; }
+.ku-titular__fila { display: flex; justify-content: space-between; gap: 24px; }
+.ku-titular__bajada { color: var(--washi-2); max-width: 36em; margin: 20px 0 0; }
+.ku-titular .ku-vertical { font-size: clamp(2.6rem, 8vw, 4.6rem); letter-spacing: .1em; color: transparent; -webkit-text-stroke: 1px rgba(236, 122, 98, .7); line-height: 1; }
+.ku-titular .ku-estado { margin: 0; }
+
+/* Carta */
+.ku-carta__grid { display: grid; gap: 40px; padding-bottom: 104px; }
+@media (min-width: 980px) { .ku-carta__grid { grid-template-columns: 250px 1fr; gap: 64px; align-items: start; } .ku-carta__lado { position: sticky; top: 104px; } }
+.ku-carta__lado { display: grid; gap: 24px; }
+.ku-indice { display: flex; flex-wrap: wrap; gap: 8px; }
+.ku-indice a { display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border: 1px solid var(--linea); text-decoration: none; font-size: .9rem; }
+.ku-indice a span { font-family: "Shippori Mincho", serif; color: var(--shu-claro); }
+.ku-indice a:hover { border-color: var(--shu-claro); }
+@media (min-width: 980px) {
+  .ku-indice { display: grid; gap: 0; border-top: 1px solid var(--linea); }
+  .ku-indice a { border: 0; border-bottom: 1px solid var(--linea); padding: 12px 0; gap: 16px; }
+  .ku-indice a:hover { border-color: var(--linea); color: var(--shu-claro); }
+}
+.ku-qr-caja { background: var(--kinari); color: var(--tinta); padding: 24px 20px; text-align: center; }
+.ku-qr-caja .ku-sobre { color: var(--shu); }
+.ku-qr .demo-qr__codigo { width: 168px; height: 168px; border-radius: 0; }
+.ku-qr figcaption { font-weight: 500; }
+.ku-qr-caja > p:last-child { font-size: .84rem; color: var(--gris); margin: 12px 0 0; line-height: 1.55; }
+@media (max-width: 979px) { .ku-qr-caja { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; text-align: left; align-items: center; } .ku-qr-caja .ku-sobre { grid-column: 1 / -1; margin: 0; } .ku-qr .demo-qr__codigo { width: 120px; height: 120px; } .ku-qr figcaption { display: none; } }
+.ku-buscar { margin-bottom: 18px; }
+.ku-buscar label { display: block; font-size: .74rem; letter-spacing: .26em; text-transform: uppercase; color: var(--washi-2); margin-bottom: 8px; }
+.ku-buscar__fila { display: flex; border-bottom: 1px solid var(--washi-2); }
+.ku-buscar input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--washi); padding: 12px 2px; font: inherit; font-size: 1.1rem; }
+.ku-buscar input::placeholder { color: #7d776d; }
+.ku-buscar input:focus-visible { outline-offset: 4px; }
+.ku-buscar button { border: 0; background: transparent; color: var(--shu-claro); padding: 0 6px; font: 500 .9rem "Zen Kaku Gothic New", sans-serif; letter-spacing: .1em; cursor: pointer; }
+.ku-sin-resultados { padding: 22px; border: 1px dashed var(--linea); text-align: center; color: var(--washi-2); }
+.ku-categoria { padding-top: 48px; scroll-margin-top: 96px; }
+.ku-categoria__cabeza { display: flex; gap: 20px; align-items: center; padding-bottom: 18px; border-bottom: 1px solid var(--washi-2); }
+.ku-categoria__kanji { flex: none; width: 58px; height: 58px; display: grid; place-items: center; border: 1px solid var(--shu-claro); color: var(--shu-claro); font-family: "Shippori Mincho", serif; font-size: 1.15rem; letter-spacing: .05em; }
+.ku-categoria h2 { font-size: clamp(1.8rem, 5vw, 2.4rem); }
+.ku-categoria__cabeza p { margin: 2px 0 0; color: var(--washi-2); font-size: .92rem; line-height: 1.5; }
+.ku-platos { list-style: none; margin: 0; padding: 0; }
+.ku-plato { display: grid; grid-template-columns: 96px 1fr; gap: 18px; padding: 26px 0; border-bottom: 1px solid var(--linea); scroll-margin-top: 96px; }
+.ku-plato[hidden] { display: none; }
+.ku-plato--sin-foto { grid-template-columns: 1fr; }
+@media (min-width: 600px) { .ku-plato { grid-template-columns: 132px 1fr; gap: 28px; } .ku-plato--sin-foto { grid-template-columns: 1fr; } }
+.ku-plato__foto img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+.ku-plato__jp { margin: 0 0 2px; font-size: .72rem; letter-spacing: .24em; text-transform: uppercase; color: var(--shu-claro); }
+.ku-plato h3 { font-size: 1.5rem; }
+.ku-plato__texto > p:not(.ku-plato__jp) { margin: 6px 0 14px; color: var(--washi-2); font-size: .95rem; line-height: 1.6; }
+.ku-plato__acciones { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.ku-agregar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.ku-agregar select { font: inherit; font-size: .9rem; padding: 8px 10px; min-height: 42px; max-width: 100%; border: 1px solid rgba(237, 231, 220, .3); border-radius: 0; background: var(--sumi-2); color: var(--washi); }
+.ku-agregar__porcion { font-size: .85rem; color: var(--washi-2); }
+.ku-agregar__precio { font-family: "Shippori Mincho", serif; font-size: 1.2rem; font-variant-numeric: tabular-nums; min-width: 72px; }
+.ku-agregar button {
+  min-height: 42px; padding: 8px 20px; border: 1px solid var(--shu); background: var(--shu); color: #fff; cursor: pointer; border-radius: 0;
+  font: 500 .88rem "Zen Kaku Gothic New", sans-serif; letter-spacing: .08em; transition: background .2s;
+}
+.ku-agregar button:hover { background: #a83220; }
+.ku-btn-3d { border-radius: 0; min-height: 42px; border-color: rgba(237, 231, 220, .35); font: 500 .85rem "Zen Kaku Gothic New", sans-serif; letter-spacing: .06em; }
+.ku-btn-3d:hover { border-color: var(--washi); background: rgba(237, 231, 220, .06); }
+.ku-carta__pie { margin-top: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; }
+.ku-carta__pie p { margin: 0; color: var(--washi-2); }
+.ku-carta__pie .ku-carrito__num { margin-left: -6px; }
+
+/* Tarjetas (contacto y pedido) */
+.ku-tarjeta { background: var(--sumi-2); border: 1px solid var(--linea); padding: 30px 26px; }
+.ku-tarjeta h2 { font-size: 1.8rem; margin-bottom: 14px; }
+.ku-tarjeta > p { color: var(--washi-2); }
+.ku-contacto { display: grid; gap: 20px; }
+@media (min-width: 900px) { .ku-contacto { grid-template-columns: repeat(3, 1fr); } }
+.ku-horario { font-size: .95rem; }
+.ku-horario div { padding: 6px 0; border-bottom: 1px solid var(--linea); }
+.ku-horario dt { font-weight: 500; }
+
+/* Google sobre papel */
+.ku .demo-google__intro h2 { font-weight: 500; }
+.ku .demo-google__perfil, .ku .demo-google__mapa, .ku .demo-google__resena { border-radius: 2px; }
+.ku .demo-google__perfil { border-color: var(--linea-clara); }
+
+/* Preguntas */
+.ku-preguntas { max-width: 820px; }
+.ku-pregunta { border-bottom: 1px solid var(--linea); }
+.ku-pregunta:first-child { border-top: 1px solid var(--linea); }
+.ku-pregunta summary { cursor: pointer; list-style: none; position: relative; display: flex; gap: 22px; align-items: baseline; padding: 24px 40px 24px 0; font-family: "Shippori Mincho", serif; font-size: clamp(1.2rem, 3.6vw, 1.5rem); line-height: 1.35; }
+.ku-pregunta summary::-webkit-details-marker { display: none; }
+.ku-pregunta summary::after { content: ""; position: absolute; right: 6px; top: 50%; width: 14px; height: 1px; background: var(--washi); box-shadow: none; }
+.ku-pregunta summary::before { content: ""; position: absolute; right: 12.5px; top: calc(50% - 6.5px); width: 1px; height: 14px; background: var(--washi); transition: transform .25s; }
+.ku-pregunta[open] summary::before { transform: scaleY(0); }
+.ku-pregunta__num { font-family: "Zen Kaku Gothic New", sans-serif; font-size: .78rem; letter-spacing: .14em; color: var(--shu-claro); flex: none; }
+.ku-pregunta p { margin: 0 0 26px 46px; color: var(--washi-2); max-width: 40em; }
+@media (max-width: 600px) { .ku-pregunta p { margin-left: 0; } }
+
+/* Pedido */
+.ku-pedido__form { display: grid; gap: 22px; }
+@media (min-width: 980px) { .ku-pedido__form:not([hidden]) { grid-template-columns: 1.2fr 1fr; align-items: start; } .ku-pedido__total { grid-column: 2; grid-row: 1 / span 2; position: sticky; top: 100px; } }
+.ku-pedido__vacio { text-align: center; padding: 48px 0; display: grid; justify-items: center; gap: 6px; }
+.ku-pedido__vacio p { color: var(--washi-2); }
+.ku-pedido__vacio[hidden], .ku-pedido__form[hidden] { display: none; }
+.ku-pedido__lista { list-style: none; margin: 0 0 16px; padding: 0; }
+.ku .demo-carrito-btn { border-radius: 0; background: transparent; color: var(--washi); }
+.ku-opciones { border: 0; padding: 0; margin: 0 0 18px; display: grid; gap: 10px; }
+.ku-opciones label { display: flex; align-items: center; gap: 12px; padding: 13px 14px; border: 1px solid var(--linea); cursor: pointer; }
+.ku-opciones label:has(input:checked) { border-color: var(--shu-claro); background: rgba(194, 61, 39, .1); }
+.ku-opciones input { accent-color: var(--shu); width: 18px; height: 18px; }
+.ku-campo { display: grid; gap: 6px; margin-bottom: 16px; }
+.ku-campo[hidden] { display: none; }
+.ku-campo label { font-size: .74rem; letter-spacing: .2em; text-transform: uppercase; color: var(--washi-2); }
+.ku-campo small { text-transform: none; letter-spacing: 0; }
+.ku-campo input, .ku-campo select, .ku-campo textarea { font: inherit; padding: 11px 12px; border: 1px solid rgba(237, 231, 220, .26); border-radius: 0; background: var(--sumi); color: var(--washi); width: 100%; }
+.ku-totales { margin: 0 0 22px; }
+.ku-totales div { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--linea); }
+.ku-totales dd { margin: 0; font-variant-numeric: tabular-nums; }
+.ku-totales__total { font-family: "Shippori Mincho", serif; font-size: 1.4rem; border-bottom: 0 !important; }
+.ku-pedido__enviado { margin-top: 16px; }
+.ku-pedido__enviado[hidden] { display: none; }
+
+/* Pie */
+.ku-pie { background: var(--sumi-2); border-top: 1px solid var(--linea); color: var(--washi-2); padding: 72px 0 44px; font-size: .94rem; }
+.ku-pie__grid { display: grid; gap: 40px; margin-bottom: 36px; }
+@media (min-width: 900px) { .ku-pie__grid { grid-template-columns: 1.4fr 1fr 1fr; } }
+.ku-pie p { margin: 0 0 6px; }
+.ku-pie__marca { display: flex; gap: 20px; align-items: flex-start; }
+.ku-pie__nombre { font-family: "Shippori Mincho", serif; font-size: 1.6rem; letter-spacing: .3em; text-transform: uppercase; color: var(--washi); margin-bottom: 8px !important; }
+.ku-pie__titulo { font-size: .72rem; letter-spacing: .26em; text-transform: uppercase; color: var(--shu-claro); margin-bottom: 12px !important; }
+.ku-pie__horario { font-size: .9rem; max-width: 280px; }
+.ku-pie a:hover { color: var(--washi); }
+.ku .demo-carrito-aviso { bottom: 24px; border-radius: 0; background: var(--shu); letter-spacing: .04em; }

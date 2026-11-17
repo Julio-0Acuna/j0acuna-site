@@ -1,0 +1,310 @@
+/* Maki Neón · Simple-page · sushi de barrio con delivery nocturno, letreros de neón */
+.mn {
+  --noche: #0a0b1a;
+  --noche-2: #11132a;
+  --noche-3: #1a1d3c;
+  --rosa: #ff3d8b;
+  --rosa-suave: #ff8ab8;
+  --cian: #2ee6ff;
+  --limon: #f2ff5c;
+  --texto: #f3f1ff;
+  --suave: #aeadcc;
+  --linea: rgba(243, 241, 255, .12);
+  --demo-tinta: var(--texto);
+  --demo-suave: var(--suave);
+  --demo-fondo: var(--noche);
+  --demo-superficie: #ffffff;
+  --demo-borde: rgba(243, 241, 255, .16);
+  --demo-acento: var(--rosa);
+  --demo-radio: 20px;
+  --demo-sombra: 0 0 0 1px rgba(255, 61, 139, .35), 0 18px 50px rgba(0, 0, 0, .45);
+  --demo-fuente-titulos: "Dela Gothic One", "Arial Black", sans-serif;
+  --demo-foco: var(--limon);
+  margin: 0;
+  background: var(--noche);
+  color: var(--texto);
+  font-family: "Zen Maru Gothic", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  padding-bottom: 84px;
+}
+@media (min-width: 760px) { .mn { padding-bottom: 0; } }
+.mn h1, .mn h2, .mn h3 { margin: 0; line-height: 1.08; font-weight: 400; }
+.mn h2 { font-family: "Dela Gothic One", "Arial Black", sans-serif; font-size: clamp(2rem, 7.4vw, 3.4rem); letter-spacing: -.01em; }
+:where(.mn) a { color: inherit; }
+.mn :focus-visible { outline: 3px solid var(--limon); outline-offset: 3px; }
+.mn-envoltura { width: min(1180px, 100% - 32px); margin-inline: auto; }
+.mn-pequeno { font-size: .9rem; color: var(--suave); margin: 14px 0 0; }
+
+/* Texto de neón: tubo blanco con halo de color */
+.mn-neon {
+  color: #fff;
+  text-shadow: 0 0 2px #fff, 0 0 10px var(--rosa), 0 0 22px var(--rosa), 0 0 46px rgba(255, 61, 139, .7);
+}
+.mn-neon--cian { text-shadow: 0 0 2px #fff, 0 0 10px var(--cian), 0 0 22px var(--cian), 0 0 46px rgba(46, 230, 255, .6); }
+
+/* Botones: píldoras con halo */
+.mn-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 12px 24px; border-radius: 999px;
+  background: var(--rosa); color: #14051a; text-decoration: none; border: 2px solid var(--rosa);
+  font-weight: 900; font-size: 1rem; letter-spacing: .01em;
+  box-shadow: 0 0 0 0 rgba(255, 61, 139, .0), 0 8px 28px rgba(255, 61, 139, .35);
+  transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+}
+.mn-btn:hover { transform: translateY(-2px); box-shadow: 0 0 0 6px rgba(255, 61, 139, .18), 0 12px 34px rgba(255, 61, 139, .5); }
+.mn-btn--linea { background: transparent; color: var(--texto); border-color: rgba(243, 241, 255, .45); box-shadow: none; }
+.mn-btn--linea:hover { border-color: var(--cian); color: #fff; box-shadow: 0 0 0 5px rgba(46, 230, 255, .14), 0 0 24px rgba(46, 230, 255, .35); }
+.mn-btn--chico { min-height: 44px; padding: 8px 18px; font-size: .95rem; }
+.mn-btn--noche { background: var(--noche); border-color: var(--noche); color: #fff; box-shadow: 0 10px 30px rgba(10, 11, 26, .35); }
+.mn-btn--noche:hover { box-shadow: 0 0 0 6px rgba(10, 11, 26, .2), 0 12px 34px rgba(10, 11, 26, .45); }
+.mn-btn--linea-oscura { background: transparent; color: var(--noche); border-color: var(--noche); box-shadow: none; }
+.mn-btn--linea-oscura:hover { background: rgba(10, 11, 26, .08); box-shadow: none; }
+.mn-acciones { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Cabecera */
+.mn-top { position: sticky; top: 0; z-index: 50; background: rgba(10, 11, 26, .86); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--linea); }
+.mn-top__fila { display: flex; align-items: center; gap: 18px; min-height: 66px; }
+.mn-marca { text-decoration: none; margin-right: auto; display: grid; line-height: 1; }
+.mn-marca__nombre { font-family: "Dela Gothic One", sans-serif; font-size: 1.45rem; color: #fff; letter-spacing: .01em; margin: 0; }
+.mn-marca__nombre span { color: var(--rosa); text-shadow: 0 0 12px rgba(255, 61, 139, .8); margin-left: .18em; }
+.mn-marca__lugar { font-size: .72rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--cian); margin-top: 5px; }
+.mn-nav { display: none; gap: 26px; font-weight: 700; font-size: .95rem; }
+.mn-nav a { text-decoration: none; padding: 6px 0; color: var(--suave); transition: color .2s, text-shadow .2s; }
+.mn-nav a:hover { color: #fff; text-shadow: 0 0 12px var(--cian); }
+@media (min-width: 900px) { .mn-nav { display: flex; } }
+
+/* Portada */
+.mn-hero {
+  position: relative; overflow: hidden; padding: 40px 0 64px;
+  background:
+    radial-gradient(60% 50% at 85% 20%, rgba(255, 61, 139, .22), transparent 70%),
+    radial-gradient(50% 50% at 0% 100%, rgba(46, 230, 255, .14), transparent 70%),
+    var(--noche);
+}
+.mn-hero::before {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 46%; pointer-events: none; opacity: .35;
+  background:
+    linear-gradient(transparent 0 calc(100% - 1px), rgba(46, 230, 255, .35) 0) 0 0 / 100% 44px,
+    linear-gradient(90deg, transparent 0 calc(100% - 1px), rgba(46, 230, 255, .35) 0) 0 0 / 64px 100%;
+  -webkit-mask-image: linear-gradient(transparent, #000);
+  mask-image: linear-gradient(transparent, #000);
+}
+.mn-hero__grid { position: relative; display: grid; gap: 44px; align-items: center; }
+@media (min-width: 860px) { .mn-hero__grid { grid-template-columns: 1.15fr .85fr; gap: 56px; } .mn-hero { padding: 64px 0 96px; } }
+.mn-estado {
+  display: inline-flex; align-items: center; gap: 10px; margin: 0 0 22px;
+  padding: 7px 16px; border-radius: 999px; border: 1px solid var(--linea); background: rgba(255, 255, 255, .04);
+  font-weight: 700; font-size: .9rem; color: var(--texto);
+}
+.mn-estado span { width: 9px; height: 9px; border-radius: 50%; background: #ff5f6d; box-shadow: 0 0 10px #ff5f6d; flex: none; }
+.mn-estado.is-abierto span { background: #45ffa0; box-shadow: 0 0 10px #45ffa0, 0 0 0 4px rgba(69, 255, 160, .18); animation: mn-latido 1.8s ease-in-out infinite; }
+@keyframes mn-latido { 50% { box-shadow: 0 0 4px #45ffa0, 0 0 0 7px rgba(69, 255, 160, .05); } }
+.mn-hero__titulo { font-family: "Dela Gothic One", "Arial Black", sans-serif; font-size: clamp(3.4rem, 15vw, 6.2rem); line-height: .95; letter-spacing: -.01em; }
+.mn-hero__titulo .mn-neon { display: inline-block; }
+.mn-hero__titulo .mn-neon:first-child { animation: mn-parpadeo 7s linear infinite; }
+@keyframes mn-parpadeo { 0%, 91%, 93%, 95%, 100% { text-shadow: 0 0 2px #fff, 0 0 10px var(--rosa), 0 0 22px var(--rosa), 0 0 46px rgba(255, 61, 139, .7); } 92%, 94% { text-shadow: 0 0 1px #fff, 0 0 4px rgba(255, 61, 139, .5); } }
+.mn-hero__eslogan { font-size: clamp(1.25rem, 4.6vw, 1.7rem); font-weight: 900; margin: 22px 0 10px; color: #fff; }
+.mn-hero__bajada { margin: 0 0 28px; max-width: 33em; color: var(--suave); }
+.mn-datos { list-style: none; margin: 34px 0 0; padding: 22px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; border-top: 1px solid var(--linea); max-width: 520px; }
+.mn-datos li { display: grid; gap: 2px; }
+.mn-datos strong { font-family: "Dela Gothic One", sans-serif; font-weight: 400; font-size: clamp(1.15rem, 4.6vw, 1.5rem); color: var(--limon); }
+.mn-datos span { font-size: .8rem; color: var(--suave); line-height: 1.3; }
+
+.mn-hero__foto { position: relative; justify-self: center; width: min(420px, 82vw); }
+@media (max-width: 859px) {
+  .mn-hero { padding-top: 28px; }
+  .mn-hero__grid { gap: 30px; }
+  .mn-hero__foto { order: -1; width: min(300px, 74vw); }
+  .mn-marco img { aspect-ratio: 1; border-radius: 150px 150px 24px 24px; }
+  .mn-marco::after { border-radius: 150px 150px 24px 24px; inset: 12px -12px -12px 12px; }
+}
+.mn-marco { margin: 0; position: relative; z-index: 1; }
+.mn-marco img {
+  display: block; width: 100%; aspect-ratio: 9 / 11; object-fit: cover; border-radius: 210px 210px 28px 28px;
+  border: 2px solid var(--rosa);
+  box-shadow: 0 0 0 6px rgba(255, 61, 139, .12), 0 0 34px rgba(255, 61, 139, .55), inset 0 0 0 1px #fff;
+}
+.mn-marco::after {
+  content: ""; position: absolute; inset: 18px -18px -18px 18px; z-index: -1;
+  border-radius: 210px 210px 28px 28px; border: 2px solid var(--cian);
+  box-shadow: 0 0 22px rgba(46, 230, 255, .5);
+}
+.mn-kana {
+  display: none; position: absolute; right: -14px; bottom: -34px; z-index: 2;
+  writing-mode: vertical-rl; font-family: "Dela Gothic One", sans-serif; font-size: 3.4rem; line-height: 1;
+  color: transparent; -webkit-text-stroke: 1.5px rgba(46, 230, 255, .7);
+}
+@media (min-width: 1200px) { .mn-kana { display: block; right: auto; bottom: auto; left: -88px; top: 2%; font-size: 4rem; z-index: 0; -webkit-text-stroke-color: rgba(46, 230, 255, .45); } }
+.mn-sticker {
+  position: absolute; z-index: 2; left: -22px; bottom: 34px; margin: 0;
+  width: 112px; height: 112px; border-radius: 50%; display: grid; place-items: center; text-align: center;
+  background: var(--limon); color: var(--noche); transform: rotate(-10deg);
+  font-weight: 900; font-size: .78rem; line-height: 1.15; text-transform: uppercase; letter-spacing: .04em;
+  box-shadow: 0 0 0 5px var(--noche), 0 0 30px rgba(242, 255, 92, .45);
+}
+.mn-sticker strong { font-family: "Dela Gothic One", sans-serif; font-weight: 400; font-size: 1.45rem; display: block; letter-spacing: 0; }
+@media (max-width: 420px) { .mn-sticker { width: 92px; height: 92px; left: -8px; font-size: .66rem; } .mn-sticker strong { font-size: 1.2rem; } }
+
+/* Cinta que corre */
+.mn-cinta { overflow: hidden; background: var(--rosa); color: var(--noche); border-block: 2px solid #fff; }
+.mn-cinta__pista { display: flex; width: max-content; animation: mn-cinta 32s linear infinite; }
+.mn-cinta span { font-family: "Dela Gothic One", sans-serif; font-size: 1.05rem; text-transform: uppercase; letter-spacing: .04em; padding: 12px 0; white-space: nowrap; }
+.mn-cinta span::after { content: "✦"; margin: 0 22px; }
+@keyframes mn-cinta { to { transform: translateX(-50%); } }
+
+/* Secciones */
+.mn-seccion { padding: 72px 0; }
+@media (min-width: 860px) { .mn-seccion { padding: 96px 0; } }
+.mn-cabeza { margin-bottom: 36px; max-width: 640px; }
+.mn-cabeza p:not(.mn-antetitulo) { color: var(--suave); margin: 14px 0 0; }
+.mn-antetitulo { margin: 0 0 10px; font-weight: 900; font-size: .78rem; letter-spacing: .24em; text-transform: uppercase; color: var(--cian); }
+
+/* Rolls */
+.mn-rolls { display: grid; gap: 22px; grid-template-columns: repeat(auto-fill, minmax(min(310px, 100%), 1fr)); }
+@media (max-width: 639px) {
+  .mn-rolls { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 80%; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: -16px; padding: 4px 16px 18px; scroll-padding-inline: 16px; scrollbar-width: none; }
+  .mn-rolls::-webkit-scrollbar { display: none; }
+  .mn-roll { scroll-snap-align: start; }
+}
+.mn-desliza { display: none; }
+@media (max-width: 639px) { .mn-desliza { display: block; margin: 4px 0 0; font-size: .85rem; color: var(--cian); font-weight: 700; } }
+.mn-roll {
+  display: flex; flex-direction: column; background: var(--noche-2); border: 1px solid var(--linea);
+  border-radius: 26px; padding: 12px; transition: border-color .25s, box-shadow .25s, transform .25s;
+}
+.mn-roll:hover { border-color: rgba(255, 61, 139, .6); box-shadow: 0 0 0 1px rgba(255, 61, 139, .4), 0 0 40px rgba(255, 61, 139, .18); transform: translateY(-3px); }
+.mn-roll__foto { position: relative; border-radius: 18px; overflow: hidden; }
+.mn-roll__foto img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; transition: transform .5s ease; }
+.mn-roll:hover .mn-roll__foto img { transform: scale(1.04); }
+.mn-roll__sello {
+  position: absolute; left: 12px; top: 12px; padding: 4px 12px; border-radius: 999px;
+  background: rgba(10, 11, 26, .78); border: 1px solid var(--cian); color: #fff;
+  font-size: .78rem; font-weight: 700; letter-spacing: .04em; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.mn-roll__texto { padding: 16px 8px 12px; flex: 1; }
+.mn-roll h3 { font-family: "Dela Gothic One", sans-serif; font-size: 1.35rem; color: #fff; }
+.mn-roll p { margin: 8px 0 0; color: var(--suave); font-size: .96rem; }
+.mn-precio {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 4px 4px 4px;
+  min-height: 54px; padding: 8px 10px 8px 20px; border-radius: 999px; text-decoration: none;
+  border: 1.5px solid rgba(255, 61, 139, .55); color: #fff; font-weight: 700;
+  transition: background .2s, box-shadow .2s;
+}
+.mn-precio strong { background: var(--rosa); color: #14051a; padding: 7px 16px; border-radius: 999px; font-size: 1.08rem; font-variant-numeric: tabular-nums; }
+.mn-precio:hover { background: rgba(255, 61, 139, .14); box-shadow: 0 0 24px rgba(255, 61, 139, .35); }
+
+/* Combos: letreros con tubo de color */
+.mn-seccion--combos { background: linear-gradient(180deg, var(--noche) 0, var(--noche-2) 100%); }
+.mn-letreros { display: grid; gap: 24px; }
+@media (min-width: 900px) { .mn-letreros { grid-template-columns: repeat(3, 1fr); } }
+.mn-letrero {
+  --tubo: var(--rosa);
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+  border-radius: 28px; background: var(--noche); border: 2px solid var(--tubo);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--tubo) 14%, transparent), 0 0 36px color-mix(in srgb, var(--tubo) 30%, transparent);
+}
+.mn-letrero--cian { --tubo: var(--cian); }
+.mn-letrero--limon { --tubo: var(--limon); }
+.mn-letrero__foto { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; -webkit-mask-image: linear-gradient(#000 60%, transparent); mask-image: linear-gradient(#000 60%, transparent); }
+.mn-letrero__texto { padding: 0 24px 24px; margin-top: -42px; position: relative; flex: 1; display: flex; flex-direction: column; }
+.mn-letrero__piezas { margin: 0 0 8px; align-self: flex-start; padding: 3px 12px; border-radius: 999px; background: var(--tubo); color: var(--noche); font-weight: 900; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+.mn-letrero h3 { font-family: "Dela Gothic One", sans-serif; font-size: 1.7rem; color: #fff; }
+.mn-letrero__texto > p:not([class]) { color: var(--suave); margin: 10px 0 18px; flex: 1; }
+.mn-letrero__pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.mn-letrero__precio { margin: 0; font-family: "Dela Gothic One", sans-serif; font-size: 2rem; color: var(--tubo); text-shadow: 0 0 18px color-mix(in srgb, var(--tubo) 55%, transparent); font-variant-numeric: tabular-nums; }
+.mn-letrero--cian .mn-btn, .mn-letrero--limon .mn-btn { background: var(--tubo); border-color: var(--tubo); color: var(--noche); box-shadow: 0 8px 26px color-mix(in srgb, var(--tubo) 30%, transparent); }
+
+/* Menú */
+.mn-seccion--menu { background: var(--noche-2); border-block: 1px solid var(--linea); }
+.mn-menu { display: grid; gap: 40px; }
+@media (min-width: 980px) { .mn-menu { grid-template-columns: 1fr 300px; align-items: start; } .mn-menu__lado { position: sticky; top: 96px; } }
+.mn-menu__grupos { display: grid; gap: 36px 48px; }
+@media (min-width: 720px) { .mn-menu__grupos { grid-template-columns: 1fr 1fr; } }
+.mn-menu__grupo h3 { font-family: "Dela Gothic One", sans-serif; font-size: 1.2rem; color: var(--cian); padding-bottom: 10px; border-bottom: 2px solid rgba(46, 230, 255, .35); }
+.mn-menu__grupo ul { list-style: none; margin: 0; padding: 0; }
+.mn-menu__grupo li { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--linea); }
+.mn-menu__plato { display: grid; gap: 2px; min-width: 0; }
+.mn-menu__plato strong { font-weight: 700; color: #fff; }
+.mn-menu__plato small { color: var(--suave); font-size: .86rem; line-height: 1.35; }
+.mn-menu__precio { font-weight: 900; color: var(--rosa-suave); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mn-menu__pedir {
+  width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; text-decoration: none;
+  border: 1.5px solid rgba(255, 61, 139, .6); color: #fff; font-size: 1.3rem; font-weight: 700; line-height: 1;
+  transition: background .2s, box-shadow .2s;
+}
+.mn-menu__pedir:hover { background: var(--rosa); color: var(--noche); box-shadow: 0 0 18px rgba(255, 61, 139, .6); }
+.mn-menu__lado { display: grid; gap: 18px; }
+.mn-qr-caja { text-align: center; padding: 24px 20px; border-radius: 26px; background: var(--noche); border: 1px solid var(--linea); }
+.mn-qr .demo-qr__codigo { width: 176px; height: 176px; border-radius: 18px; box-shadow: 0 0 0 4px var(--noche), 0 0 0 6px var(--rosa), 0 0 30px rgba(255, 61, 139, .5); }
+.mn-qr figcaption { color: #fff; font-weight: 700; margin-top: 8px; }
+.mn-qr-caja > p { font-size: .88rem; color: var(--suave); margin: 14px 0 0; }
+.mn-menu__fotos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mn-menu__fotos img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; display: block; }
+
+/* Delivery nocturno */
+.mn-delivery { position: relative; overflow: hidden; padding: 80px 0; isolation: isolate; }
+@media (min-width: 860px) { .mn-delivery { padding: 110px 0; } }
+.mn-delivery__fondo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+.mn-delivery__fondo { object-position: 70% 40%; }
+.mn-delivery::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, rgba(10, 11, 26, .95) 0%, rgba(10, 11, 26, .8) 38%, rgba(10, 11, 26, .42) 100%); }
+.mn-delivery__grid { display: grid; gap: 22px; align-items: start; }
+@media (min-width: 980px) { .mn-delivery__grid { grid-template-columns: 1.2fr 1fr 1fr; gap: 26px; } }
+.mn-pasos { list-style: none; counter-reset: paso; margin: 30px 0 0; padding: 0; display: grid; gap: 14px; }
+.mn-pasos li { counter-increment: paso; display: grid; grid-template-columns: 46px 1fr; grid-template-rows: auto auto; column-gap: 14px; align-items: center; }
+.mn-pasos li::before {
+  content: counter(paso); grid-row: 1 / 3; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
+  border: 2px solid var(--cian); color: #fff; font-family: "Dela Gothic One", sans-serif; box-shadow: 0 0 16px rgba(46, 230, 255, .45);
+}
+.mn-pasos strong { color: #fff; font-size: 1.05rem; }
+.mn-pasos span { color: var(--suave); font-size: .92rem; }
+.mn-vidrio {
+  padding: 24px 22px; border-radius: 24px; background: rgba(17, 19, 42, .72); border: 1px solid rgba(243, 241, 255, .14);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); scroll-margin-top: 90px;
+}
+.mn-vidrio h3 { font-family: "Dela Gothic One", sans-serif; font-size: 1.3rem; color: #fff; margin-bottom: 14px; }
+.mn-estado--linea { margin-bottom: 14px; }
+.mn-horario { font-size: .95rem; }
+.mn-horario div { padding: 6px 0; border-bottom: 1px dashed var(--linea); }
+.mn-horario dd { color: var(--limon); font-weight: 700; }
+.mn-zonas { margin: 0; display: grid; }
+.mn-zonas div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--linea); }
+.mn-zonas dd { margin: 0; font-weight: 700; color: var(--rosa-suave); font-variant-numeric: tabular-nums; }
+
+/* Google sobre fondo de noche */
+.mn-seccion--google { background: var(--noche); }
+.mn .demo-google__intro h2 { font-size: clamp(1.9rem, 6.6vw, 3rem); color: #fff; }
+.mn .demo-google__intro p { color: var(--suave); }
+.mn .demo-google__perfil { border: 0; }
+.mn .demo-google__mapa { border-color: rgba(46, 230, 255, .35); box-shadow: 0 0 30px rgba(46, 230, 255, .15); }
+.mn .demo-google__resena { border-color: transparent; }
+
+/* Cierre */
+.mn-cierre { background: radial-gradient(70% 120% at 85% 50%, #ff7ab3 0%, transparent 60%), linear-gradient(115deg, #ff3d8b 0%, #ff4f97 60%, #e0369f 100%); color: var(--noche); padding: 72px 0; overflow: hidden; }
+.mn-cierre__grid { display: grid; gap: 36px; align-items: center; }
+@media (min-width: 860px) { .mn-cierre__grid { grid-template-columns: 1.3fr .7fr; } }
+.mn-cierre h2 { color: var(--noche); font-size: clamp(2.2rem, 8vw, 3.8rem); }
+.mn-cierre p { font-size: 1.12rem; font-weight: 500; max-width: 30em; margin: 14px 0 26px; }
+.mn-cierre :focus-visible { outline-color: var(--noche); }
+.mn-cierre__foto { width: min(340px, 72vw); aspect-ratio: 1; object-fit: cover; border-radius: 50%; justify-self: center; border: 6px solid var(--noche); box-shadow: 0 30px 60px rgba(10, 11, 26, .35); }
+
+/* Pie */
+.mn-pie { background: #06070f; color: var(--suave); padding: 40px 0 36px; font-size: .95rem; }
+.mn-pie p { margin: 0 0 6px; }
+.mn-pie .mn-marca__nombre { font-size: 1.6rem; margin-bottom: 10px; }
+
+/* Barra fija en el celular */
+.mn-barra {
+  position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 60;
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: 8px; padding: 6px;
+  border-radius: 999px; background: rgba(17, 19, 42, .92); border: 1px solid rgba(255, 61, 139, .45);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .5), 0 0 24px rgba(255, 61, 139, .25);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.mn-barra a { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; border-radius: 999px; text-decoration: none; font-weight: 900; color: #fff; }
+.mn-barra a:first-child { background: var(--rosa); color: #14051a; }
+@media (min-width: 760px) { .mn-barra { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-cinta__pista, .mn-hero__titulo .mn-neon, .mn-estado span { animation: none !important; }
+}
