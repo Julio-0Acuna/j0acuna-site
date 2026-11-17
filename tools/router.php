@@ -3,7 +3,7 @@
 $path = rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/');
 $root = dirname(__DIR__);
 
-if (preg_match('#^/(data|includes|tests|tools)(/|$)#', $path)) {
+if (preg_match('#(^|/)(data|includes|tests|tools)(/|$)#', $path)) {
     http_response_code(403);
     echo 'Forbidden';
     return true;
@@ -38,8 +38,28 @@ if ($path !== '/' && is_file($root . $path)) {
     return false;
 }
 
-if (is_dir($root . $path) && is_file(rtrim($root . $path, '/') . '/index.php')) {
-    require rtrim($root . $path, '/') . '/index.php';
+if ($path !== '/' && is_dir($root . $path)) {
+    $dir = rtrim($root . $path, '/');
+    if (substr($path, -1) !== '/') {
+        header('Location: ' . $path . '/', true, 301);
+        return true;
+    }
+    if (is_file($dir . '/index.php')) {
+        chdir($dir);
+        require $dir . '/index.php';
+        return true;
+    }
+    if (is_file($dir . '/index.html')) {
+        header('Content-Type: text/html; charset=utf-8');
+        readfile($dir . '/index.html');
+        return true;
+    }
+}
+
+// Archivos .php dentro de subcarpetas (ej. /demos/pizzeria/multi/menu.php).
+if (substr($path, -4) === '.php' && is_file($root . $path) && strpos(realpath($root . $path), realpath($root)) === 0) {
+    chdir(dirname($root . $path));
+    require $root . $path;
     return true;
 }
 
