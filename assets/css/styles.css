@@ -495,11 +495,10 @@ body::before {
   grid-template-columns: 1fr auto;
   gap: 2rem;
   align-items: center;
-  padding: 2rem;
-  background: linear-gradient(135deg, rgba(16, 26, 43, 0.98), rgba(7, 17, 31, 0.98));
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.28);
+  padding: 1rem 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 .contact-actions {
