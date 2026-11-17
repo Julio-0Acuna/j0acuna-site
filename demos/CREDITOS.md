@@ -53,6 +53,14 @@ Revisado el 17/11/2026: todas las URL responden 200. Cuando el autor no se pudo 
 | 1472476443507-c7a5948772fc | Dennis Klein | https://unsplash.com/photos/tomato-and-tomato-puree-with-parsley-in-bowl-FzB_512zvP0 | Plataforma: salsa de tomate (mayoristas) |
 | 1596924699736-be026ddb5b0c | Klara Kulikova | https://unsplash.com/photos/white-round-ceramic-plate-with-white-cream-MnHjM1XiTrc | Plataforma: mozzarella (mayoristas) |
 
+## Portafolio
+
+| ID de la foto | Autor | Página en Unsplash | Dónde se usa |
+|---|---|---|---|
+| 1424847651672-bf20a4b0982b | no encontrado | — | Portafolio, página Restaurantes: foto del encabezado (revisada el 17/11/2026, responde 200) |
+
+Las imágenes de la página Servicios del portafolio son capturas de estas mismas demos (negocios ficticios), tomadas el 17/11/2026. La de «Encuéntranos en Google» muestra el mapa de Google incrustado, con su atribución visible.
+
 ## Modelos 3D
 
 Todavía no hay modelos: la carpeta `demos/_comun/3d/` espera `pizza.glb`, `tiramisu.glb`, `ensalada.glb`, `helado.glb` y `calzone.glb`. Cada modelo que se agregue debe tener licencia de uso comercial y anotarse aquí con su autor y licencia.

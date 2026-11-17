@@ -16,7 +16,9 @@ if ($section === null) {
 }
 
 $projects = portfolio_section_projects($site, $section['id']);
+$otras = array_values(array_filter(portfolio_sections($site), static fn (array $s): bool => $s['id'] !== $section['id']));
 $migas = [['Proyectos', '/proyectos'], [$section['nombre'], $section['url']]];
+$wa = site_wa($site, 'Hola Julio, vi tus proyectos de «' . $section['nombre'] . '» y quiero algo así.');
 
 render_partial('head', [
     'title' => $section['nombre'] . ': proyectos | ' . $site['profile']['name'],
@@ -29,20 +31,54 @@ render_partial('nav', ['site' => $site, 'actual' => 'proyectos']);
 ?>
 <main>
   <?php render_partial('page-header', [
-      'eyebrow' => 'Proyectos',
+      'eyebrow' => count($projects) === 1 ? '1 proyecto' : count($projects) . ' proyectos',
       'titulo' => $section['nombre'],
       'bajada' => $section['resumen'],
       'migas' => $migas,
   ]); ?>
 
-  <section class="section-band pt-0">
+  <section class="pb-5" aria-label="Proyectos de <?= e($section['nombre']) ?>">
     <div class="container">
-      <div class="project-grid">
+      <div class="tiles <?= count($projects) === 1 ? 'tiles-1' : 'tiles-3' ?>">
         <?php foreach ($projects as $project): ?>
-          <?php render_partial('project-card', ['project' => $project, 'compacto' => true]); ?>
+          <?php render_partial('mosaico', [
+              'url' => project_url($project),
+              'imagen' => $project['image_url'],
+              'titulo' => $project['title'],
+              'texto' => $project['description'],
+              'nivel' => 'h2',
+              'clase' => count($projects) === 1 ? 'tile-wide' : '',
+              'mas' => count($projects) === 1 ? 'Ver proyecto →' : '',
+          ]); ?>
         <?php endforeach; ?>
       </div>
-      <p class="mt-4"><a class="minimal-link section-back" href="/proyectos">← Todas las secciones</a></p>
+
+      <div class="other-sections">
+        <p>Otras secciones</p>
+        <div class="inline-links mt-0">
+          <a class="more-link section-back" href="/proyectos"><span aria-hidden="true">←</span> Todas las secciones</a>
+          <?php foreach ($otras as $o): ?>
+            <a class="more-link" href="<?= e($o['url']) ?>"><?= e($o['nombre']) ?></a>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-section section-alt">
+    <div class="container">
+      <div class="contact-shell">
+        <div>
+          <h2>¿Quieres algo así?</h2>
+          <p>Cuéntame qué necesita tu negocio y te digo cómo lo haría.</p>
+        </div>
+        <div class="contact-actions">
+          <?php if ($wa !== ''): ?>
+            <a class="minimal-btn minimal-btn-dark" href="<?= e($wa) ?>" target="_blank" rel="noopener"><span>WhatsApp</span></a>
+          <?php endif; ?>
+          <a class="minimal-btn minimal-btn-outline" href="/servicios"><span>Ver servicios</span></a>
+        </div>
+      </div>
     </div>
   </section>
 </main>

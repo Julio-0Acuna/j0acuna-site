@@ -27,7 +27,7 @@ t('contenido real: destacados y pruebas para restaurantes', function () {
         eq(count(portfolio_featured_projects($s)), 5);
         eq(array_column(portfolio_featured_projects($s), 'id'), ['ridelsip-cl', 'intranet-agencia', 'saturnus-aura', 'suitechile-cl', 'obrascivilesmys-cl']);
         eq(count(portfolio_restaurant_projects($s)), 3);
-        eq(count(portfolio_visible_services($s, 'restaurantes')), 4);
+        eq(count(portfolio_visible_services($s, 'restaurantes')), 7);
     });
 });
 
@@ -82,4 +82,64 @@ t('sitemap sin ocultos', function () {
     contiene($x, SITE_URL . '/proyecto/ridelsip-cl');
     no_contiene($x, 'alertaoficial');
     no_contiene($x, 'mibusca');
+});
+
+t('contenido real: servicios con imagen, tecnologias y ejemplo', function () {
+    con_sitio_real(function (array $s) {
+        $ids = array_column($s['services'], 'id');
+        foreach (['web-menu', 'pedidos-directos', 'apps-delivery', 'pedidos-una-pantalla', 'a-medida', 'menu-qr-3d', 'google-perfil', 'tienda-online', 'inteligencia-artificial'] as $id) {
+            ok(in_array($id, $ids, true), "falta el servicio $id");
+        }
+        foreach (portfolio_visible_services($s, 'todos') as $srv) {
+            ok($srv['imagen'] !== '', $srv['id'] . ' sin imagen');
+            $ruta = __DIR__ . '/../' . $srv['imagen'];
+            ok(is_file($ruta), $srv['id'] . ' imagen no existe');
+            ok(filesize($ruta) <= 200 * 1024, $srv['id'] . ' imagen pesada');
+            ok(count($srv['tecnologias']) >= 2, $srv['id'] . ' sin tecnologias');
+            ok($srv['ejemplo_url'] !== '' && $srv['ejemplo_texto'] !== '', $srv['id'] . ' sin ejemplo');
+            ok($srv['para_quien'] !== '', $srv['id'] . ' sin para quien');
+            ok(count($srv['puntos']) >= 3, $srv['id'] . ' con pocos puntos');
+            ok(mb_strlen($srv['nombre_corto']) <= 24, $srv['id'] . ' nombre corto largo');
+            foreach (['integración directa', 'Webpay', 'Mercado Pago'] as $prohibida) {
+                ok(stripos(json_encode($srv, JSON_UNESCAPED_UNICODE), $prohibida) === false, $srv['id'] . " contiene $prohibida");
+            }
+        }
+    });
+});
+
+t('contenido real: ejemplos de servicios apuntan a paginas que existen', function () {
+    con_sitio_real(function (array $s) {
+        foreach (portfolio_visible_services($s, 'todos') as $srv) {
+            $url = parse_url($srv['ejemplo_url'], PHP_URL_PATH);
+            if (preg_match('#^/proyecto/([a-z0-9-]+)$#', $url, $m)) {
+                ok(portfolio_find_project($s, $m[1]) !== null, $srv['id'] . ' enlaza a un proyecto oculto');
+            } elseif (preg_match('#^/proyectos/([a-z0-9-]+)$#', $url, $m)) {
+                ok(portfolio_find_section($s, $m[1]) !== null, $srv['id'] . ' enlaza a una seccion vacia');
+            } else {
+                $archivo = __DIR__ . '/..' . $url;
+                ok(is_file($archivo) || is_file(rtrim($archivo, '/') . '/index.php'), $srv['id'] . ' enlaza a ' . $url . ' que no existe');
+            }
+        }
+    });
+});
+
+t('contenido real: FAQ del dominio dice que el hosting es de Julio', function () {
+    con_sitio_real(function (array $s) {
+        $faq = array_values(array_filter($s['faqs'], static fn ($f) => $f['pregunta'] === '¿El dominio queda a mi nombre?'))[0] ?? null;
+        ok($faq !== null, 'falta la pregunta del dominio');
+        contiene($faq['respuesta'], 'El dominio .cl se registra a tu nombre');
+        contiene($faq['respuesta'], 'mi hosting');
+        foreach ($s['faqs'] as $f) {
+            no_contiene($f['pregunta'] . ' ' . $f['respuesta'], 'hosting a tu nombre');
+        }
+    });
+});
+
+t('miniaturas de mosaicos pesan poco', function () {
+    $minis = glob(__DIR__ . '/../assets/img/mini/{projects,demos/pizzeria/img}/*.webp', GLOB_BRACE) ?: [];
+    ok(count($minis) >= 20, 'faltan miniaturas');
+    foreach ($minis as $m) {
+        ok(filesize($m) <= 40 * 1024, basename($m) . ' miniatura pesada');
+        eq(getimagesize($m)[0], 600, basename($m) . ' ancho');
+    }
 });

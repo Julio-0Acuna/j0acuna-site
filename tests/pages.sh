@@ -28,6 +28,16 @@ debe_contener() {
 no_debe_contener() {
   curl -s "$BASE$1" | grep -qF -- "$2" && falla "$1 contiene $2 y no debería" || pasa "$1 no contiene $2"
 }
+# Cuenta las veces que aparece un texto: debe_contar URL TEXTO MINIMO, debe_contar_exacto URL TEXTO N
+contar() { curl -s "$BASE$1" | grep -oF -- "$2" | wc -l | tr -d ' '; }
+debe_contar() {
+  local n; n=$(contar "$1" "$2")
+  [ "$n" -ge "$3" ] && pasa "$1 tiene $n veces $2 (>= $3)" || falla "$1 tiene $n veces $2 (esperado >= $3)"
+}
+debe_contar_exacto() {
+  local n; n=$(contar "$1" "$2")
+  [ "$n" -eq "$3" ] && pasa "$1 tiene $n veces $2" || falla "$1 tiene $n veces $2 (esperado $3)"
+}
 
 # --- Generales: valen con datos de prueba y con el contenido real
 debe_responder  /  200
@@ -79,6 +89,20 @@ debe_contener   /restaurantes  'href="/proyectos"'
 debe_contener   /restaurantes  'Página web para restaurantes'
 no_debe_contener /restaurantes 'integración directa'
 debe_contener   /restaurantes  'og-restaurantes.jpg'
+# Rediseño 17/11: servicios en carrusel con tecnologías, mosaicos en proyectos, escalera en restaurantes
+debe_contener   /servicios  'data-bs-ride="carousel"'
+debe_contener   /servicios  'aria-roledescription="carrusel"'
+debe_contener   /servicios  'data-pausa'
+debe_contener   /servicios  'id="tecnologias"'
+debe_contener   /servicios  'Lenguajes y tecnologías que uso'
+no_debe_contener /servicios 'class="service-card'
+no_debe_contener /proyectos 'class="path-card'
+no_debe_contener /proyectos/restaurantes 'class="project-card'
+debe_contener   /proyectos/restaurantes '<a class="tile'
+no_debe_contener /restaurantes 'class="service-card'
+no_debe_contener /restaurantes 'class="project-card'
+debe_contener   /restaurantes  'class="stairs"'
+debe_contener   /restaurantes  'href="/servicios#'
 debe_contener   /restaurantes  'text=Hola%20Julio%2C%20tengo%20un%20local%20y%20quiero%20vender%20m%C3%A1s.'
 
 # Peso de /restaurantes sin contar Bootstrap: HTML + CSS/JS propios + imágenes locales < 300 KB
@@ -112,6 +136,8 @@ no_debe_contener /restaurantes 'Apps de delivery'
 debe_contener   /restaurantes  'href="/proyecto/restaurante-a"'
 no_debe_contener /restaurantes 'Servicio empresas'
 no_debe_contener /restaurantes 'href="/demos/'
+debe_contar_exacto /servicios 'class="carousel-item' 3
+debe_contar_exacto /servicios 'data-bs-target="#carrusel-servicios" data-bs-slide-to=' 3
 debe_responder  /proyectos/ejemplos 404
 no_debe_contener /proyectos 'href="/proyectos/ejemplos"'
 else
@@ -148,6 +174,31 @@ debe_contener   /  'href="/proyecto/intranet-agencia"'
 debe_contener   /  'href="/proyecto/saturnus-aura"'
 debe_contener   /  'href="/proyecto/suitechile-cl"'
 debe_contener   /  'href="/proyecto/obrascivilesmys-cl"'
+# Servicios: 9 diapositivas, una imagen de referencia por servicio, tecnologías y ejemplo de cada uno
+debe_contar_exacto /servicios 'class="carousel-item' 9
+debe_contar_exacto /servicios 'alt="Ejemplo de referencia:' 9
+debe_contar     /servicios  'class="tech-chips"' 14
+debe_contener   /servicios  'src="/assets/img/servicios/menu-qr-3d.webp"'
+debe_contener   /servicios  'src="/assets/img/servicios/google-perfil.webp"'
+debe_contener   /servicios  'href="/demos/pizzeria/plataforma/"'
+debe_contener   /servicios  'id="inteligencia-artificial"'
+debe_contener   /servicios  'Python'
+debe_contener   /servicios  '¿El dominio queda a mi nombre?'
+debe_contener   /servicios  'en mi hosting'
+debe_responder  /assets/img/servicios/tienda-online.webp 200
+# Proyectos: muchos ejemplos con imagen a la vista, en miniatura
+debe_contar     /proyectos  'src="/assets/img/mini/projects/' 15
+debe_contar_exacto /proyectos/formacion '<a class="tile' 9
+debe_contener   /proyectos/ia 'src="/assets/img/mini/projects/saturnus-aura.webp"'
+# Restaurantes: las 3 versiones de la pizzería, foto de encabezado y escalera con 4 niveles
+debe_contener   /restaurantes  'href="/demos/pizzeria/simple/"'
+debe_contener   /restaurantes  'href="/demos/pizzeria/multi/"'
+debe_contener   /restaurantes  'href="/demos/pizzeria/plataforma/"'
+debe_contener   /restaurantes  'src="/assets/img/mini/demos/pizzeria/img/simple.webp"'
+debe_contener   /restaurantes  'Pronto:'
+debe_contener   /restaurantes  'images.unsplash.com/photo-1424847651672-bf20a4b0982b'
+debe_contar_exacto /restaurantes 'class="stair stair-' 4
+debe_contener   /restaurantes  'href="/servicios#menu-qr-3d"'
 fi
 
 echo
