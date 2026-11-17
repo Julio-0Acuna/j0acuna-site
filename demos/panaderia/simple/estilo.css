@@ -1,0 +1,333 @@
+/* Panadería Las Tres Hornadas · Simple-page · papel kraft, tinta azul de bolsa de pan y letrero de letras */
+.th {
+  --kraft: #d4b086;
+  --kraft-osc: #a87d4f;
+  --papel: #f7eedc;
+  --papel-2: #efe1c6;
+  --tinta: #1d3a6e;
+  --tinta-osc: #11264d;
+  --rojo: #b8322a;
+  --trigo: #e6ad3e;
+  --fieltro: #1c1a18;
+  --cafe: #2c2219;
+  --cafe-suave: #6a5541;
+  --demo-tinta: var(--cafe);
+  --demo-suave: var(--cafe-suave);
+  --demo-fondo: var(--papel);
+  --demo-superficie: #fffaf0;
+  --demo-borde: rgba(44, 34, 25, .2);
+  --demo-acento: var(--tinta);
+  --demo-radio: 6px;
+  --demo-sombra: 0 1px 0 rgba(44, 34, 25, .08), 0 14px 30px -18px rgba(44, 34, 25, .45);
+  --demo-fuente-titulos: "Alfa Slab One", Georgia, serif;
+  --demo-foco: #b8322a;
+  --papel-textura: radial-gradient(rgba(120, 84, 40, .07) 1px, transparent 1.2px) 0 0 / 9px 9px,
+                   radial-gradient(rgba(255, 255, 255, .5) 1px, transparent 1.2px) 4px 6px / 13px 13px;
+  margin: 0;
+  background: var(--papel-textura), var(--papel);
+  color: var(--cafe);
+  font-family: "Work Sans", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  padding-bottom: 74px;
+}
+@media (min-width: 760px) { .th { padding-bottom: 0; } }
+.th h1, .th h2, .th h3 { margin: 0; line-height: 1.05; font-weight: 400; }
+.th h2 { font-family: "Alfa Slab One", Georgia, serif; font-size: clamp(2.2rem, 7.5vw, 3.6rem); color: var(--tinta); letter-spacing: -.01em; }
+.th h3 { font-family: "Alfa Slab One", Georgia, serif; }
+:where(.th) a { color: inherit; }
+.th [id] { scroll-margin-top: 86px; }
+.th-envoltura { width: min(1160px, 100% - 32px); margin-inline: auto; }
+.th-pequeno { font-size: .9rem; color: var(--cafe-suave); }
+
+.th-antetitulo {
+  display: inline-flex; align-items: center; gap: 10px; margin: 0 0 10px;
+  font: 700 .78rem/1.2 "Space Mono", ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--rojo);
+}
+.th-antetitulo::before { content: ""; width: 22px; height: 2px; background: currentColor; }
+.th-antetitulo--claro { color: var(--trigo); }
+.th-cabeza { max-width: 640px; margin-bottom: 34px; }
+.th-cabeza > p:not(.th-antetitulo) { margin: 14px 0 0; color: var(--cafe-suave); font-size: 1.05rem; }
+.th-cabeza--centro { margin-inline: auto; text-align: center; }
+.th-cabeza--centro .th-antetitulo { justify-content: center; }
+
+/* Botones: timbre de tinta con doble filete */
+.th-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 12px 22px; border: 0; border-radius: 6px; cursor: pointer;
+  background: var(--tinta); color: #fff; text-decoration: none;
+  box-shadow: inset 0 0 0 3px var(--tinta), inset 0 0 0 4.5px rgba(247, 238, 220, .85);
+  font: 700 .92rem/1.1 "Work Sans", sans-serif; letter-spacing: .08em; text-transform: uppercase;
+  transition: background .18s, transform .18s, box-shadow .18s;
+}
+.th-btn:hover { background: var(--tinta-osc); box-shadow: inset 0 0 0 3px var(--tinta-osc), inset 0 0 0 4.5px rgba(247, 238, 220, .85); transform: translateY(-2px); }
+.th-btn:active { transform: translateY(0); }
+.th-btn--linea { background: transparent; color: var(--tinta); box-shadow: inset 0 0 0 2px var(--tinta); }
+.th-btn--linea:hover { background: var(--tinta); color: #fff; box-shadow: inset 0 0 0 2px var(--tinta); }
+.th-btn--crema { background: var(--papel); color: var(--tinta); box-shadow: inset 0 0 0 3px var(--papel), inset 0 0 0 4.5px var(--tinta); }
+.th-btn--crema:hover { background: #fff; color: var(--tinta-osc); box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 4.5px var(--tinta); }
+.th-btn--borde-claro { background: transparent; color: #fff; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .85); }
+.th-btn--borde-claro:hover { background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 2px #fff; }
+.th-btn--chico { min-height: 44px; padding: 8px 16px; font-size: .8rem; }
+.th-acciones { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Cabecera */
+.th-top { position: sticky; top: 0; z-index: 50; background: rgba(247, 238, 220, .96); backdrop-filter: blur(6px); border-bottom: 2px solid var(--tinta); }
+.th-top__fila { display: flex; align-items: center; gap: 18px; min-height: 70px; }
+.th-marca { display: flex; align-items: center; gap: 12px; text-decoration: none; margin-right: auto; color: var(--tinta); }
+.th-marca__sello {
+  width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; flex: none;
+  color: var(--tinta); border: 2px solid var(--tinta); box-shadow: inset 0 0 0 3px var(--papel), inset 0 0 0 4.5px var(--tinta);
+}
+.th-marca__texto { font-family: "Alfa Slab One", serif; font-size: 1.3rem; line-height: 1; }
+.th-marca__texto small { display: block; font: 700 .64rem/1 "Space Mono", monospace; letter-spacing: .28em; text-transform: uppercase; color: var(--rojo); margin-bottom: 5px; }
+.th-nav { display: none; gap: 22px; font-weight: 600; font-size: .95rem; }
+.th-nav a { text-decoration: none; padding: 6px 0; background: linear-gradient(var(--rojo), var(--rojo)) 0 100% / 0 2px no-repeat; transition: background-size .2s; }
+.th-nav a:hover { background-size: 100% 2px; }
+@media (min-width: 1000px) { .th-nav { display: flex; } }
+@media (max-width: 400px) { .th-marca__texto { font-size: 1.1rem; } .th-marca__sello { width: 42px; height: 42px; } .th-top .th-btn--chico span { display: none; } }
+
+/* Portada sobre papel kraft */
+.th-hero {
+  position: relative; overflow: hidden; padding: 40px 0 64px;
+  background: radial-gradient(rgba(70, 44, 16, .12) 1px, transparent 1.3px) 0 0 / 7px 7px,
+              radial-gradient(rgba(255, 240, 210, .35) 1px, transparent 1.3px) 3px 4px / 11px 11px,
+              linear-gradient(170deg, #dcbb92, var(--kraft) 60%, #c9a372);
+  border-bottom: 2px solid var(--tinta);
+}
+.th-hero__grid { display: grid; gap: 44px; align-items: center; }
+@media (min-width: 900px) { .th-hero__grid { grid-template-columns: 1.08fr .92fr; } .th-hero { padding: 64px 0 88px; } }
+.th-chip {
+  display: inline-flex; align-items: center; gap: 8px; margin: 0 0 22px; padding: 6px 14px;
+  background: var(--papel); border: 1.5px solid var(--tinta); border-radius: 999px;
+  font: 700 .8rem/1.2 "Space Mono", monospace; color: var(--tinta);
+}
+.th-punto { width: 9px; height: 9px; border-radius: 50%; background: var(--rojo); flex: none; }
+.th-punto.is-abierto { background: #1f7a3c; box-shadow: 0 0 0 4px rgba(31, 122, 60, .2); }
+.th-hero h1 { font-family: "Alfa Slab One", Georgia, serif; color: var(--tinta); font-size: clamp(3.1rem, 13vw, 6.4rem); line-height: .92; letter-spacing: -.015em; }
+.th-hero h1 small { display: block; font: 700 .95rem/1 "Space Mono", monospace; letter-spacing: .4em; text-transform: uppercase; color: var(--rojo); margin-bottom: 14px; }
+.th-hero h1 span { display: block; color: var(--rojo); }
+.th-hero__eslogan { margin: 18px 0 8px; font-weight: 700; font-size: clamp(1.2rem, 4.2vw, 1.5rem); color: var(--cafe); }
+.th-hero__bajada { margin: 0 0 28px; max-width: 33em; color: #3d2e20; }
+.th-hero__firma { margin: 22px 0 0; font: 400 .82rem/1.4 "Space Mono", monospace; color: #4d3b29; }
+.th-hero :focus-visible { outline-color: var(--tinta); }
+
+/* La bolsa de papel con la foto adentro: borde superior dentado */
+.th-hero__bolsa { position: relative; justify-self: center; width: min(470px, 90vw); }
+.th-bolsa {
+  --diente: 12px;
+  margin: 0; padding: calc(var(--diente) + 14px) 16px 0;
+  background: radial-gradient(rgba(70, 44, 16, .14) 1px, transparent 1.4px) 0 0 / 6px 6px, linear-gradient(180deg, #e9d3b0, #dcbf96);
+  -webkit-mask: conic-gradient(from 135deg at top, #000 90deg, #0000 0) 0 0 / calc(2 * var(--diente)) var(--diente) repeat-x, linear-gradient(#000 0 0) 0 var(--diente) / 100% 100% no-repeat;
+          mask: conic-gradient(from 135deg at top, #000 90deg, #0000 0) 0 0 / calc(2 * var(--diente)) var(--diente) repeat-x, linear-gradient(#000 0 0) 0 var(--diente) / 100% 100% no-repeat;
+  filter: drop-shadow(0 30px 30px rgba(60, 36, 12, .35));
+  transform: rotate(1.6deg);
+}
+.th-bolsa__foto { display: block; width: 100%; aspect-ratio: 1 / .92; object-fit: cover; border-radius: 3px; }
+.th-bolsa__impreso {
+  display: grid; justify-items: center; gap: 2px; padding: 18px 10px 24px; text-align: center; color: var(--tinta);
+  border-top: 2px dashed rgba(29, 58, 110, .35); margin-top: 16px;
+}
+.th-bolsa__impreso span { font-family: "Alfa Slab One", serif; font-size: 1.5rem; line-height: 1; opacity: .9; }
+.th-bolsa__impreso small { font: 700 .7rem/1 "Space Mono", monospace; letter-spacing: .24em; text-transform: uppercase; }
+.th-timbre {
+  position: absolute; left: -22px; top: 34px; margin: 0; width: 150px; height: 150px; border-radius: 50%;
+  display: grid; place-content: center; text-align: center; gap: 0; color: var(--rojo);
+  border: 3px solid var(--rojo); box-shadow: inset 0 0 0 4px rgba(247, 238, 220, .0), inset 0 0 0 6px var(--rojo);
+  background: rgba(247, 238, 220, .82); transform: rotate(-12deg);
+  font-family: "Work Sans", sans-serif; text-transform: uppercase; line-height: 1;
+}
+.th-timbre span { font: 700 .72rem/1 "Space Mono", monospace; letter-spacing: .14em; }
+.th-timbre strong { font-family: "Alfa Slab One", serif; font-weight: 400; font-size: 1.12rem; margin: 5px 0 7px; letter-spacing: .02em; }
+.th-timbre small { font: 700 .56rem/1 "Space Mono", monospace; letter-spacing: 0; white-space: nowrap; }
+.th-timbre.is-caliente { animation: th-latido 2.4s ease-in-out infinite; }
+@keyframes th-latido { 0%, 100% { transform: rotate(-12deg) scale(1); } 50% { transform: rotate(-12deg) scale(1.06); } }
+@media (max-width: 480px) { .th-timbre { width: 116px; height: 116px; left: -8px; top: 16px; } .th-timbre strong { font-size: .9rem; margin: 3px 0 5px; } .th-timbre span { font-size: .6rem; } .th-timbre small { font-size: .46rem; } }
+
+/* Hornadas: banda azul con tickets */
+.th-hornadas {
+  background: radial-gradient(rgba(255, 255, 255, .05) 1px, transparent 1.3px) 0 0 / 8px 8px, var(--tinta);
+  color: #eef1f8; padding: 56px 0 60px;
+}
+.th-hornadas__cabeza { display: grid; gap: 4px; margin-bottom: 30px; }
+@media (min-width: 900px) { .th-hornadas__cabeza { grid-template-columns: auto 1fr; column-gap: 48px; align-items: end; } .th-hornadas__cabeza .th-antetitulo { grid-column: 1 / -1; } .th-hornadas__cabeza p:last-child { max-width: 32em; justify-self: end; } }
+.th-hornadas h2 { color: #fff; }
+.th-hornadas__cabeza p:last-child { margin: 8px 0 0; color: #cdd6ea; }
+.th-tickets { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); }
+.th-ticket {
+  --muesca: radial-gradient(circle at 0 50%, #0000 11px, #000 11.5px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, #0000 11px, #000 11.5px) right / 51% 100% no-repeat;
+  position: relative; display: grid; gap: 4px; padding: 20px 28px 22px;
+  background: var(--papel); color: var(--cafe);
+  -webkit-mask: var(--muesca); mask: var(--muesca);
+}
+.th-ticket::after { content: ""; position: absolute; left: 26px; right: 26px; top: 50%; border-top: 2px dashed rgba(44, 34, 25, .14); pointer-events: none; display: none; }
+.th-ticket__nombre { font: 700 .72rem/1.2 "Space Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--cafe-suave); }
+.th-ticket__hora { font-family: "Alfa Slab One", serif; font-weight: 400; font-size: clamp(2.6rem, 9vw, 3.4rem); line-height: 1; color: var(--tinta); font-variant-numeric: tabular-nums; }
+.th-ticket__estado { font-weight: 600; font-size: .95rem; }
+.th-ticket.is-salio .th-ticket__hora { color: #8c7a64; text-decoration: line-through 3px rgba(184, 50, 42, .55); }
+.th-ticket.is-caliente { background: #fff6e3; }
+.th-ticket.is-caliente .th-ticket__hora { color: var(--rojo); }
+.th-ticket.is-caliente .th-ticket__estado { color: var(--rojo); }
+.th-ticket.is-proxima .th-ticket__estado { color: var(--tinta); }
+.th-ticket.is-proxima .th-ticket__estado::before, .th-ticket.is-caliente .th-ticket__estado::before {
+  content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; vertical-align: .1em; background: currentColor;
+  animation: th-parpadeo 1.6s ease-in-out infinite;
+}
+@keyframes th-parpadeo { 50% { opacity: .25; } }
+.th-hornadas__nota { margin: 22px 0 0; font: 400 .85rem/1.5 "Space Mono", monospace; color: #b9c5df; }
+.th-hornadas :focus-visible { outline-color: var(--trigo); }
+
+.th-seccion { padding: 76px 0; }
+
+/* Pan del día: etiquetas de precio */
+.th-panes { display: grid; gap: 26px; grid-template-columns: repeat(auto-fill, minmax(min(310px, 100%), 1fr)); }
+.th-pan {
+  position: relative; display: flex; flex-direction: column; background: #fffaf0; border-radius: 4px;
+  box-shadow: var(--demo-sombra); border: 1px solid rgba(44, 34, 25, .12);
+  transition: transform .25s, box-shadow .25s;
+}
+.th-pan:hover { transform: translateY(-4px) rotate(-.4deg); box-shadow: 0 1px 0 rgba(44, 34, 25, .08), 0 24px 40px -22px rgba(44, 34, 25, .55); }
+.th-pan__foto { position: relative; margin: 10px 10px 0; overflow: hidden; border-radius: 2px; }
+.th-pan__foto img { display: block; width: 100%; aspect-ratio: 5 / 4; object-fit: cover; transition: transform .5s; }
+.th-pan:hover .th-pan__foto img { transform: scale(1.04); }
+.th-pan__sello {
+  position: absolute; right: 10px; top: 10px; padding: 5px 10px; border-radius: 3px;
+  background: var(--rojo); color: #fff; font: 700 .68rem/1.1 "Space Mono", monospace; letter-spacing: .08em; text-transform: uppercase;
+}
+.th-pan__cuerpo { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.th-pan h3 { font-size: 1.65rem; color: var(--tinta); }
+.th-pan__cuerpo > p { margin: 0; color: var(--cafe-suave); font-size: .97rem; }
+.th-pan__precio { margin-top: auto !important; padding-top: 8px; color: var(--cafe) !important; font: 400 .85rem/1 "Space Mono", monospace !important; }
+.th-pan__precio strong { font: 700 1.6rem/1 "Space Mono", monospace; color: var(--cafe); letter-spacing: -.02em; }
+.th-pan__pedir { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; margin-top: 6px; }
+.th-pan__pedir a {
+  display: grid; place-content: center; text-align: center; gap: 2px; min-height: 56px; padding: 6px 4px;
+  text-decoration: none; border-radius: 4px; color: var(--tinta);
+  box-shadow: inset 0 0 0 1.5px var(--tinta); transition: background .15s, color .15s;
+}
+.th-pan__pedir a span { font-weight: 700; font-size: .95rem; line-height: 1.1; }
+.th-pan__pedir a small { font: 400 .74rem/1 "Space Mono", monospace; }
+.th-pan__pedir a:nth-child(2) { background: var(--tinta); color: #fff; }
+.th-pan__pedir a:hover { background: var(--rojo); color: #fff; box-shadow: inset 0 0 0 1.5px var(--rojo); }
+
+/* Empanadas: fondo crema oscuro y fotos redondas tipo timbre */
+.th-empanadas { background: var(--papel-textura), var(--papel-2); border-block: 2px solid var(--tinta); }
+.th-empanadas__lista { display: grid; gap: 40px 28px; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
+.th-empanada { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.th-empanada__foto { width: min(230px, 64vw); border-radius: 50%; padding: 8px; border: 2px dashed var(--tinta); margin-bottom: 10px; transition: transform .4s; }
+.th-empanada__foto img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; display: block; }
+.th-empanada:hover .th-empanada__foto { transform: rotate(-6deg); }
+.th-empanada h3 { font-size: 1.6rem; color: var(--tinta); }
+.th-empanada p { margin: 0; max-width: 24em; color: var(--cafe-suave); }
+.th-empanada__precios { display: grid; gap: 2px; margin: 4px 0 8px !important; color: var(--cafe) !important; }
+.th-empanada__precios span { font: 400 .85rem/1.3 "Space Mono", monospace; }
+.th-empanada__precios strong { font: 700 1.2rem/1.3 "Space Mono", monospace; color: var(--rojo); }
+
+/* Dulces */
+.th-dulces__grid { display: grid; gap: 36px; }
+@media (min-width: 900px) { .th-dulces__grid { grid-template-columns: .9fr 1.1fr; gap: 64px; align-items: start; } }
+.th-dulces__canasto { margin: 28px 0 0; }
+.th-dulces__canasto img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; border-radius: 4px; transform: rotate(-1.5deg); box-shadow: var(--demo-sombra); outline: 10px solid #fffaf0; }
+.th-dulces__lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 2px solid var(--tinta); }
+.th-dulce { display: grid; grid-template-columns: 112px 1fr; gap: 18px; align-items: center; padding: 20px 0; border-bottom: 1.5px dashed rgba(29, 58, 110, .4); }
+@media (min-width: 560px) { .th-dulce { grid-template-columns: 150px 1fr; gap: 24px; } }
+.th-dulce__foto { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px; display: block; }
+.th-dulce h3 { font-size: 1.4rem; color: var(--tinta); }
+.th-dulce p { margin: 6px 0 0; color: var(--cafe-suave); font-size: .97rem; }
+.th-dulce__pie { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 10px !important; color: var(--cafe) !important; }
+.th-dulce__pie strong { font: 700 1.05rem/1 "Space Mono", monospace; }
+.th-dulce__pie a { display: inline-flex; align-items: center; min-height: 36px; padding: 4px 14px; border-radius: 4px; box-shadow: inset 0 0 0 1.5px var(--tinta); color: var(--tinta); font-weight: 700; font-size: .85rem; text-decoration: none; text-transform: uppercase; letter-spacing: .06em; }
+.th-dulce__pie a:hover { background: var(--tinta); color: #fff; }
+
+/* Lista de precios: letrero de fieltro con letras blancas, marco de madera */
+.th-precios { background: var(--papel-textura), #eadcc0; }
+.th-precios__grid { display: grid; gap: 28px; align-items: start; }
+@media (min-width: 980px) { .th-precios__grid { grid-template-columns: 1fr 300px; gap: 40px; } }
+.th-letrero {
+  padding: 14px; border-radius: 6px;
+  background: linear-gradient(135deg, #9a6a3c, #7a5129 40%, #8d5f33 70%, #6d4623);
+  box-shadow: 0 30px 50px -28px rgba(30, 18, 6, .7), inset 0 0 0 1px rgba(255, 255, 255, .15);
+}
+.th-letrero__tablero {
+  display: grid; gap: 4px 44px; padding: 22px 22px 18px; border-radius: 2px;
+  background: repeating-linear-gradient(180deg, #1f1d1b 0 26px, #141311 26px 28px);
+  box-shadow: inset 0 4px 14px rgba(0, 0, 0, .6);
+  color: #f4f1ea; font: 700 .9rem/28px "Space Mono", monospace; text-transform: uppercase; letter-spacing: .06em;
+}
+@media (min-width: 720px) { .th-letrero__tablero { grid-template-columns: 1fr 1fr; padding: 28px 34px 24px; } }
+.th-letrero__grupo h3 { font: 700 .9rem/28px "Space Mono", monospace; color: var(--trigo); letter-spacing: .18em; margin: 0 0 0; }
+.th-letrero__grupo h3::before { content: "— "; }
+.th-letrero__grupo ul { list-style: none; margin: 0 0 28px; padding: 0; }
+.th-letrero__grupo li { display: flex; justify-content: space-between; gap: 14px; text-shadow: 0 1px 0 rgba(0, 0, 0, .6); }
+.th-letrero__grupo li span:last-child { white-space: nowrap; font-variant-numeric: tabular-nums; }
+@media (max-width: 420px) { .th-letrero__tablero { font-size: .78rem; padding: 18px 14px; letter-spacing: .02em; } }
+
+/* Boleta de papel con el QR */
+.th-boleta {
+  --dentado: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 16px 100%;
+  display: grid; justify-items: center; gap: 14px; text-align: center; padding: 26px 22px 34px;
+  background: #fffdf7; color: var(--cafe); box-shadow: var(--demo-sombra);
+  -webkit-mask: var(--dentado); mask: var(--dentado);
+  font-size: .95rem;
+}
+.th-boleta__cabeza { margin: 0; font: 700 .95rem/1.3 "Space Mono", monospace; text-transform: uppercase; letter-spacing: .08em; border-bottom: 2px dashed rgba(44, 34, 25, .25); padding-bottom: 12px; width: 100%; }
+.th-boleta__cabeza small { font-weight: 400; letter-spacing: .02em; text-transform: none; color: var(--cafe-suave); }
+.th-boleta > p { margin: 0; color: var(--cafe-suave); }
+.th-qr .demo-qr__codigo { width: 176px; height: 176px; border: 2px solid var(--cafe); border-radius: 4px; }
+.th-qr figcaption { font: 700 .78rem/1.35 "Space Mono", monospace; color: var(--cafe); }
+
+/* Reparto: recibos */
+.th-reparto__grid { display: grid; gap: 40px; align-items: center; }
+@media (min-width: 900px) { .th-reparto__grid { grid-template-columns: .8fr 1.2fr; gap: 64px; } }
+.th-reparto__foto { margin: 0; position: relative; }
+.th-reparto__foto img { width: 100%; aspect-ratio: 7 / 8; object-fit: cover; display: block; border-radius: 4px; }
+.th-reparto__foto::after { content: ""; position: absolute; inset: 16px -16px -16px 16px; border: 2px solid var(--tinta); border-radius: 4px; z-index: -1; }
+.th-reparto { position: relative; z-index: 0; }
+.th-reparto__bajada { margin: 14px 0 22px; font-size: 1.1rem; color: var(--cafe-suave); max-width: 32em; }
+.th-recibos { list-style: none; margin: 0 0 26px; padding: 0; display: grid; gap: 12px; }
+.th-recibo { padding: 14px 18px 16px; background: #fffaf0; border-left: 5px solid var(--tinta); border-radius: 0 4px 4px 0; box-shadow: var(--demo-sombra); }
+.th-recibo p { margin: 0; }
+.th-recibo__titulo { font: 700 .74rem/1.3 "Space Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--rojo); margin-bottom: 4px !important; }
+
+/* Horario */
+.th-horario { border-top: 2px solid var(--tinta); }
+.th-horario__grid { display: grid; gap: 40px; align-items: start; }
+@media (min-width: 900px) { .th-horario__grid { grid-template-columns: .9fr 1.1fr; gap: 64px; } }
+.th-estado-linea { display: flex; align-items: center; gap: 10px; font-weight: 700; margin: 14px 0 16px; }
+.th-tabla-horario { background: #fffaf0; border-radius: 4px; padding: 18px 20px; gap: 8px; box-shadow: var(--demo-sombra); border-top: 5px solid var(--tinta); font-size: 1rem; }
+.th-tabla-horario dd { font-family: "Space Mono", monospace; font-weight: 700; }
+.th-horario__foto { margin: 0; }
+.th-horario__foto img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; border-radius: 4px; }
+.th-horario__foto figcaption { margin-top: 10px; font: 400 .82rem/1.5 "Space Mono", monospace; color: var(--cafe-suave); }
+
+/* Google (componente común) con el estilo de la casa */
+.th-seccion--google { background: var(--papel-textura), var(--papel-2); border-top: 2px solid var(--tinta); }
+.th .demo-google__intro h2 { color: var(--tinta); }
+.th .demo-google__perfil { border-top: 5px solid var(--tinta); }
+.th .demo-google__perfil h3 { font: 500 22px/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #202124; }
+
+/* Cierre */
+.th-cierre { background: var(--rojo); color: #fff; padding: 64px 0; text-align: center; }
+.th-cierre h2 { color: #fff; }
+.th-cierre p { margin: 12px 0 26px; font-size: 1.15rem; }
+.th-cierre .th-acciones { justify-content: center; }
+.th-cierre :focus-visible { outline-color: #fff; }
+
+.th-pie { background: var(--tinta-osc); color: #dbe2f0; padding: 40px 0 44px; }
+.th-pie p { margin: 0 0 4px; }
+.th-pie__marca { font-family: "Alfa Slab One", serif; font-size: 1.5rem; color: #fff; }
+.th-pie :focus-visible { outline-color: var(--trigo); }
+
+/* Barra fija inferior en el celular */
+.th-barra {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 80;
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  background: rgba(247, 238, 220, .97); border-top: 2px solid var(--tinta);
+}
+.th-barra a {
+  display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-radius: 6px;
+  text-decoration: none; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: .85rem;
+  color: var(--tinta); box-shadow: inset 0 0 0 2px var(--tinta);
+}
+.th-barra a:first-child { background: #17773f; color: #fff; box-shadow: none; }
+@media (min-width: 760px) { .th-barra { display: none; } }

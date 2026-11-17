@@ -1,0 +1,190 @@
+/* Panificadora Alba · Plataforma web · azul cobalto, amarillo mantequilla y letras de caja de reparto */
+.al {
+  --cobalto: #1f3bb3;
+  --cobalto-osc: #15298a;
+  --noche: #0d1640;
+  --sol: #ffd23f;
+  --sol-osc: #f2b705;
+  --crema: #faf6ec;
+  --tinta: #121a3d;
+  --gris: #545b78;
+  --t-fondo: var(--crema);
+  --t-superficie: #ffffff;
+  --t-tinta: var(--tinta);
+  --t-suave: var(--gris);
+  --t-borde: #e3ddcd;
+  --t-acento: var(--cobalto);
+  --t-acento-tinta: #ffffff;
+  --t-acento-suave: #e4e9fb;
+  --t-radio: 12px;
+  --t-radio-chico: 8px;
+  --t-sombra: 0 1px 0 rgba(18, 26, 61, .05);
+  --t-fuente: "Barlow", system-ui, sans-serif;
+  --t-fuente-titulos: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --demo-foco: var(--cobalto);
+  font-size: 16.5px;
+}
+.al h1, .al h2 { font-weight: 800; text-transform: uppercase; letter-spacing: .005em; line-height: .95; }
+.al h2 { font-size: clamp(1.9rem, 6vw, 2.6rem); }
+.al h3 { font-family: var(--t-fuente); font-weight: 700; font-size: 1.06rem; line-height: 1.25; }
+.al :focus-visible { outline: 3px solid var(--cobalto); outline-offset: 2px; }
+.al-ancho { width: min(1160px, 100% - 32px); margin-inline: auto; }
+
+/* Botones: rectos, condensados y en mayúsculas */
+.al .t-btn { border-radius: 8px; font-family: "Barlow Condensed", sans-serif; font-weight: 700; font-size: 1.05rem; letter-spacing: .04em; text-transform: uppercase; }
+.al .t-btn--primario { background: var(--cobalto); border-color: var(--cobalto); }
+.al .t-btn--primario:hover { background: var(--cobalto-osc); border-color: var(--cobalto-osc); filter: none; }
+.al .t-btn--wa { text-transform: none; font-family: var(--t-fuente); font-size: 1rem; letter-spacing: 0; }
+
+/* Cabecera cobalto */
+.al-cabecera { background: var(--cobalto); color: #fff; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 0 var(--noche); }
+.al-cabecera__fila { display: flex; align-items: center; gap: 14px; min-height: 70px; }
+.al-logo { display: inline-flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; margin-right: auto; }
+.al-logo__sol { flex: none; }
+.al-logo__texto { display: grid; font: 800 2rem/.9 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: .02em; }
+.al-logo__texto small { font: 700 .62rem/1 "Barlow", sans-serif; letter-spacing: .3em; color: var(--sol); margin-bottom: 3px; }
+.al-reparto-chip { display: none; margin: 0 auto 0 8px; padding: 7px 14px; border-radius: 999px; background: rgba(255, 255, 255, .12); font-weight: 600; font-size: .88rem; white-space: nowrap; }
+.al-reparto-chip span { color: var(--sol); margin-right: 4px; }
+.al-nav { display: flex; align-items: center; gap: 4px; }
+.al-nav a { position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; min-width: 44px; justify-content: center; padding: 6px 10px; border-radius: 8px; color: #fff; text-decoration: none; font-weight: 600; }
+.al-nav a:hover { background: rgba(255, 255, 255, .12); }
+.al-nav a.is-activo { background: var(--sol); color: var(--noche); }
+.al-nav__texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.al-burbuja { position: absolute; top: 2px; right: 0; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; display: inline-grid; place-items: center; background: var(--sol); color: var(--noche); font: 800 .78rem/1 "Barlow", sans-serif; box-shadow: 0 0 0 2px var(--cobalto); }
+.al-nav a.is-activo .al-burbuja { background: var(--noche); color: var(--sol); box-shadow: 0 0 0 2px var(--sol); }
+.al-salir button { min-height: 40px; background: none; border: 1.5px solid rgba(255, 255, 255, .4); color: #fff; border-radius: 8px; padding: 6px 12px; font: 700 .95rem "Barlow Condensed", sans-serif; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
+.al-salir button:hover { border-color: #fff; }
+.al-cabecera :focus-visible { outline-color: var(--sol); }
+@media (min-width: 720px) {
+  .al-nav__texto { position: static; width: auto; height: auto; overflow: visible; clip: auto; }
+  .al-burbuja { position: static; box-shadow: none; }
+  .al-nav a { padding: 6px 14px; }
+}
+@media (min-width: 1040px) { .al-reparto-chip { display: block; } .al-logo { margin-right: 0; } }
+@media (max-width: 380px) { .al-logo__texto { font-size: 1.7rem; } .al-logo__sol { width: 36px; height: 36px; } .al-salir button { padding: 6px 8px; } }
+
+.al-modo-mayorista { margin: 0 0 14px; padding: 10px 14px; border-radius: var(--t-radio-chico); background: var(--sol); color: var(--noche); font-size: .95rem; }
+
+/* Portada */
+.al-hero {
+  display: grid; gap: 28px; align-items: center; overflow: hidden;
+  background: radial-gradient(circle at 85% 110%, rgba(255, 210, 63, .45), transparent 45%), linear-gradient(160deg, var(--noche), var(--cobalto) 70%);
+  color: #fff; border-radius: 18px; padding: 30px 22px 26px;
+}
+@media (min-width: 900px) { .al-hero { grid-template-columns: 1.05fr .95fr; padding: 52px 52px; gap: 48px; } }
+.al-chip { display: inline-flex; align-items: center; gap: 8px; margin: 0; padding: 6px 12px; border-radius: 999px; background: rgba(255, 255, 255, .12); font-weight: 600; font-size: .85rem; }
+.al-chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #ff8a7a; }
+.al-chip.is-abierto::before { background: #6be38f; box-shadow: 0 0 0 3px rgba(107, 227, 143, .25); }
+.al-hero h1 { font-size: clamp(3.2rem, 13vw, 6.4rem); margin: 18px 0 16px; }
+.al-hero h1 span { display: block; color: var(--sol); }
+.al-hero p:not(.al-chip) { font-size: 1.1rem; max-width: 31em; margin: 0 0 24px; color: #dfe5fb; }
+.al-hero__acciones { display: flex; flex-wrap: wrap; gap: 10px; }
+.al-btn-sol { background: var(--sol); border-color: var(--sol); color: var(--noche); min-height: 54px; padding-inline: 26px; font-size: 1.15rem !important; }
+.al-btn-sol:hover { background: #fff; border-color: #fff; }
+.al-btn-linea { background: transparent; border-color: rgba(255, 255, 255, .6); color: #fff; min-height: 54px; }
+.al-btn-linea:hover { border-color: #fff; background: rgba(255, 255, 255, .1); }
+.al-hero :focus-visible { outline-color: var(--sol); }
+.al-hero__foto { position: relative; margin: 0 0 18px; }
+.al-hero__foto img { display: block; width: 100%; aspect-ratio: 1 / .9; object-fit: cover; border-radius: 12px; }
+.al-ticket {
+  position: absolute; left: -6px; bottom: -18px; display: grid; gap: 2px; padding: 14px 18px 16px; min-width: 210px;
+  background: #fff; color: var(--tinta); border-radius: 8px; transform: rotate(-3deg);
+  box-shadow: 0 18px 30px rgba(13, 22, 64, .35); border-top: 6px solid var(--sol);
+}
+.al-ticket__titulo { font: 700 .72rem/1.2 "Barlow", sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); }
+.al-ticket strong { font: 800 1.9rem/1 "Barlow Condensed", sans-serif; text-transform: uppercase; color: var(--cobalto); }
+.al-ticket span:last-child { font-weight: 600; font-size: .9rem; }
+@media (min-width: 900px) { .al-ticket { left: -28px; bottom: 26px; } .al-hero__foto { margin: 0; } }
+
+/* Ruta del reparto: de la noche al amanecer */
+.al-ruta { margin: 26px 0 0; padding: 22px 20px 20px; border-radius: 16px; background: #fff; border: 1.5px solid var(--t-borde); }
+.al-ruta__titulo { margin: 0 0 18px; font-size: 1.3rem !important; color: var(--cobalto); }
+.al-ruta__pasos { list-style: none; margin: 0; padding: 22px 0 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px 12px; position: relative; }
+.al-ruta__pasos::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--noche), var(--cobalto) 38%, #f2884b 72%, var(--sol)); }
+.al-ruta__paso { display: grid; gap: 2px; }
+.al-ruta__paso strong { font: 800 2.2rem/1 "Barlow Condensed", sans-serif; color: var(--tinta); font-variant-numeric: tabular-nums; }
+.al-ruta__paso span { color: var(--gris); font-weight: 600; font-size: .95rem; }
+.al-ruta__paso--3 strong { color: var(--cobalto); }
+@media (min-width: 720px) {
+  .al-ruta { display: grid; grid-template-columns: 200px 1fr; align-items: center; gap: 24px; padding: 26px 30px; }
+  .al-ruta__titulo { margin: 0; }
+  .al-ruta__pasos { grid-template-columns: repeat(4, 1fr); padding-top: 26px; }
+  .al-ruta__paso { position: relative; }
+  .al-ruta__paso::before { content: ""; position: absolute; top: -27px; left: 0; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid var(--tinta); }
+}
+
+.al-para { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.al-para li { display: grid; gap: 4px; padding: 18px 20px 20px; border-radius: 14px; background: #fff; border: 1.5px solid var(--t-borde); }
+.al-para__num { font: 800 1rem/1 "Barlow Condensed", sans-serif; color: var(--sol-osc); }
+.al-para strong { font: 800 1.45rem/1.05 "Barlow Condensed", sans-serif; text-transform: uppercase; color: var(--cobalto); }
+.al-para span:last-child { color: var(--gris); font-size: .95rem; }
+.al-para li:nth-child(2) { background: var(--noche); border-color: var(--noche); }
+.al-para li:nth-child(2) strong { color: var(--sol); }
+.al-para li:nth-child(2) span:last-child { color: #cfd7f5; }
+
+/* Catálogo y tarjetas */
+.al .t-destacados h2, .al .t-catalogo h2 { color: var(--tinta); }
+.al .t-destacados h2::before, .al .t-catalogo__cabeza h2::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 10px; border-radius: 3px; background: var(--sol); vertical-align: .12em; }
+.al .t-categoria__titulo { font: 800 1.5rem/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: .02em; color: var(--cobalto); padding-bottom: 8px; border-bottom: 2px solid var(--cobalto); }
+.al .t-producto { border: 1.5px solid var(--t-borde); box-shadow: none; transition: border-color .2s, transform .2s; }
+.al .t-producto:hover { border-color: var(--cobalto); transform: translateY(-3px); }
+.al .t-producto__foto { background: #efe8d6; }
+.al .t-producto__foto:not(:has(img))::after { content: "Alba"; position: absolute; inset: 0; display: grid; place-items: center; font: 800 2rem "Barlow Condensed", sans-serif; text-transform: uppercase; color: rgba(31, 59, 179, .25); }
+.al .t-producto__precio strong { font: 800 1.65rem/1 "Barlow Condensed", sans-serif; color: var(--tinta); }
+.al .t-sello { background: var(--sol); color: var(--noche); border-radius: 6px; text-transform: uppercase; font-family: "Barlow Condensed", sans-serif; font-size: .85rem; letter-spacing: .04em; }
+.al .t-sello--mayorista { background: var(--cobalto); color: #fff; }
+.al .t-etiqueta { background: var(--sol); color: var(--noche); }
+.al .t-btn-3d { border-color: var(--cobalto); color: var(--cobalto); border-radius: 8px; font-weight: 700; }
+.al .t-btn-3d:hover { background: var(--t-acento-suave); }
+.al .t-chips a { border-radius: 8px; font-weight: 700; }
+.al .t-chips a.is-activo { background: var(--cobalto); border-color: var(--cobalto); color: #fff; }
+.al .t-buscar input { border-radius: 8px; border-color: #cfc8b5; }
+.al .t-buscar .t-btn { border-radius: 8px; }
+.al .t-producto__stock { color: #b4410c; }
+.al .t-aviso-mayorista { background: var(--noche); border-radius: 16px; padding: 26px; display: grid; gap: 4px; }
+.al .t-aviso-mayorista h3 { font: 800 1.8rem/1 "Barlow Condensed", sans-serif; text-transform: uppercase; color: var(--sol); }
+.al .t-aviso-mayorista p { color: #d6ddf7; max-width: 46em; }
+.al .t-aviso-mayorista .t-btn { justify-self: start; background: var(--sol); border-color: var(--sol); color: var(--noche); }
+.al .t-qr { background: var(--sol); border: 0; color: var(--noche); border-radius: 16px; }
+.al .t-qr h2 { font-size: clamp(1.7rem, 5vw, 2.3rem); }
+.al .t-qr p { color: #3b3410; }
+.al .t-qr .demo-qr__codigo { border: 3px solid var(--noche); border-radius: 8px; }
+.al .t-google .demo-google__intro h2 { color: var(--tinta); }
+.al .t-google .demo-google__perfil h3 { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-weight: 500; font-size: 22px; text-transform: none; }
+
+/* Carrito, checkout, cuenta y panel con el acento de la marca */
+.al .t-pasos li.is-hecho::before { background: var(--cobalto); }
+.al .t-pasos li.is-actual::before { box-shadow: 0 0 0 5px var(--sol); }
+.al .t-pestanas a.is-activo { border-color: var(--sol); }
+.al .t-kpi strong { font: 800 2rem/1 "Barlow Condensed", sans-serif; color: var(--cobalto); }
+.al .t-prueba { border: 2px solid var(--cobalto); }
+.al .t-pago h1 { text-transform: none; }
+@media (max-width: 899px) { .al .t-prueba { order: -1; } }
+
+/* Celular: catálogo en dos columnas compactas */
+@media (max-width: 599px) {
+  .al .t-grilla { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .al .t-grilla .t-producto__foto { aspect-ratio: 1; }
+  .al .t-grilla .t-producto__cuerpo { padding: 10px 10px 12px; gap: 4px; }
+  .al .t-grilla .t-producto__cuerpo h3 { font-size: .95rem; }
+  .al .t-grilla .t-producto__desc { font-size: .8rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .al .t-grilla .t-producto__precio strong { font-size: 1.35rem; }
+  .al .t-grilla .t-producto__precio s, .al .t-grilla .t-producto__precio .t-etiqueta { font-size: .7rem; }
+  .al .t-grilla .t-producto__acciones { flex-direction: column; align-items: stretch; gap: 6px; }
+  .al .t-grilla .t-producto__acciones .t-btn, .al .t-grilla .t-btn-3d { min-height: 42px; padding: 6px 8px; font-size: .92rem; width: 100%; justify-content: center; }
+  .al .t-grilla .t-sello { font-size: .7rem; left: 6px; top: 6px; padding: 3px 7px; }
+}
+
+/* Mensajes de éxito arriba, como aviso del reparto */
+.al .al-principal > .demo-mensaje--ok { background: var(--noche); color: #fff; border-left: 6px solid var(--sol); }
+
+/* Pie */
+.al-pie { background: var(--noche); color: #cfd7f5; padding: 40px 0 34px; margin-top: 24px; }
+.al-pie__grid { display: grid; gap: 26px; margin-bottom: 18px; }
+@media (min-width: 860px) { .al-pie__grid { grid-template-columns: 1.3fr 1fr .6fr; } }
+.al-pie p { margin: 0 0 6px; }
+.al-pie a { color: #fff; }
+.al-logo__texto--pie { color: #fff; margin-bottom: 12px !important; }
+.al-pie__ruta { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.al-pie__ruta strong { display: inline-block; min-width: 56px; font: 800 1.2rem/1 "Barlow Condensed", sans-serif; color: var(--sol); }
+.al-pie :focus-visible { outline-color: var(--sol); }
