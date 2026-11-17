@@ -3,7 +3,6 @@ require_once __DIR__ . '/includes/view.php';
 
 $site = portfolio_load_site();
 $featured = portfolio_featured_projects($site, 3);
-$mosaic = array_slice(array_values(array_filter(portfolio_featured_projects($site), static fn (array $p): bool => $p['image_url'] !== '')), 0, 3);
 $wa = site_wa($site, $site['profile']['whatsapp_mensaje']);
 
 $caminos = [];
@@ -31,7 +30,7 @@ render_partial('nav', ['site' => $site, 'actual' => 'inicio']);
   <section id="inicio" class="hero-section">
     <div class="container">
       <div class="row align-items-center g-5">
-        <div class="<?= $mosaic ? 'col-lg-7' : 'col-lg-9' ?>">
+        <div class="col-lg-10">
           <p class="eyebrow mb-3">Desarrollador web en <?= e($site['profile']['ciudad']) ?> · negocios de <?= e($site['profile']['area']) ?></p>
           <h1><?= e($site['profile']['headline']) ?></h1>
           <p class="lead mt-4"><?= e($site['profile']['bio']) ?></p>
@@ -42,15 +41,6 @@ render_partial('nav', ['site' => $site, 'actual' => 'inicio']);
             <a class="minimal-btn minimal-btn-ghost" href="/proyectos"><span>Ver proyectos</span></a>
           </div>
         </div>
-        <?php if ($mosaic): ?>
-          <div class="col-lg-5">
-            <div class="hero-mosaic hero-mosaic-<?= count($mosaic) ?>">
-              <?php foreach ($mosaic as $p): ?>
-                <a href="<?= e(project_url($p)) ?>"><img src="<?= e(asset($p['image_url'])) ?>" alt="<?= e($p['title']) ?>" width="1200" height="750"></a>
-              <?php endforeach; ?>
-            </div>
-          </div>
-        <?php endif; ?>
       </div>
     </div>
   </section>

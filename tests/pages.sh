@@ -41,6 +41,7 @@ debe_contener   /  'href="/proyectos"'
 debe_contener   /  'href="/contacto"'
 debe_contener   /  'aria-current="page"'
 no_debe_contener / 'data-filtro'
+no_debe_contener / 'hero-mosaic'
 no_debe_contener / 'Todos los proyectos'
 no_debe_contener / 'admin/login.php'
 debe_responder  /servicios  200
