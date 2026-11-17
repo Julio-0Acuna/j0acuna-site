@@ -1,0 +1,21 @@
+# En MySQL, la tabla de citas no admite dos citas del mismo profesional a la misma hora:
+#   UNIQUE KEY uq_profesional_fecha (profesional_id, fecha_hora)
+# El servicio traduce ese choque a un mensaje claro para quien agenda.
+
+def _parse_fecha(self, fecha_hora_str: str) -> datetime:
+    # formato esperado: "YYYY-MM-DD HH:MM"
+    return datetime.strptime(fecha_hora_str, "%Y-%m-%d %H:%M")
+
+def _es_choque_horario(self, e: Exception) -> bool:
+    # cuando choca con UNIQUE uq_profesional_fecha (profesional_id, fecha_hora)
+    return "uq_profesional_fecha" in str(e)
+
+def agendar(self, cliente_id: int, profesional_id: int, fecha_hora_str: str, motivo: str | None):
+    fecha_hora = self._parse_fecha(fecha_hora_str)
+    validar_fecha_futura(fecha_hora)  # no se puede agendar en el pasado
+    try:
+        return self.dao.agendar(cliente_id, profesional_id, fecha_hora, motivo)
+    except Error as e:
+        if self._es_choque_horario(e):
+            raise ValueError("Ese profesional ya tiene una cita en ese horario.")
+        raise

@@ -1,0 +1,22 @@
+// Al pasar un producto por el lector: si ya está en el carrito, suma la cantidad;
+// si no, agrega una línea nueva con su nombre y precio.
+public void agregarPorCodigo(String codigoBarra, int cantidad) {
+    if (cantidad <= 0) throw new IllegalArgumentException("Cantidad debe ser > 0");
+
+    Producto p = productoDAO.buscarPorCodigoBarra(codigoBarra);
+    if (p == null) throw new IllegalArgumentException("Producto no existe o está inactivo.");
+
+    for (ItemCarrito item : carrito) {
+        if (item.getIdProducto() == p.getIdProducto()) {
+            item.setCantidad(item.getCantidad() + cantidad);
+            return;
+        }
+    }
+
+    carrito.add(new ItemCarrito(p.getIdProducto(), p.getCodigoBarra(), p.getNombre(), p.getPrecio(), cantidad));
+}
+
+// Total del carrito: la suma de los subtotales de cada línea.
+public double totalCarrito() {
+    return carrito.stream().mapToDouble(ItemCarrito::getSubtotalLinea).sum();
+}

@@ -1,0 +1,25 @@
+function flujo_bom_paneles_sip()
+{
+    return [ // Receta de cada panel: [material, cantidad por panel]
+        'PANEL-SIP-75MM'  => [['PLANCHA-OSB', 2], ['NUCLEO-EPS', 1]],
+        'PANEL-SIP-100MM' => [['PLANCHA-OSB', 2], ['NUCLEO-EPS-GRUESO', 1]],
+    ];
+}
+// Al crear una orden de compra, suma el material que piden sus paneles y lo descuenta solo.
+function flujo_descontar_materiales_paneles(PDO $pdo, array $items, $userId, $referencia = '')
+{
+    $bom = flujo_bom_paneles_sip();
+    $necesidad = []; // codigo_material => cantidad_total
+    foreach ($items as $item) {
+        $codigo = strtoupper(trim((string) ($item['codigo'] ?? '')));
+        if ($codigo === '' || !isset($bom[$codigo])) {
+            continue;
+        }
+        $cantidadPaneles = (int) round((float) ($item['cantidad'] ?? 0));
+        foreach ($bom[$codigo] as $componente) {
+            $codMat = $componente[0];
+            $porPanel = (int) $componente[1];
+            $necesidad[$codMat] = ($necesidad[$codMat] ?? 0) + ($porPanel * $cantidadPaneles);
+        }
+    }
+    // ... luego resta cada material del inventario; puede quedar negativo a propósito.

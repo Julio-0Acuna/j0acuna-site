@@ -176,7 +176,8 @@
             "mostrar_cliente": true,
             "pais": "Chile",
             "anio": "2026",
-            "credito": ""
+            "credito": "",
+            "mostrar_codigo": false
         },
         {
             "id": "paneles-duenos-restaurantes",
@@ -245,7 +246,8 @@
             "mostrar_cliente": true,
             "pais": "Chile",
             "anio": "2026",
-            "credito": ""
+            "credito": "",
+            "mostrar_codigo": false
         },
         {
             "id": "saturnus-aura",
@@ -283,7 +285,8 @@
             "mostrar_cliente": false,
             "pais": "Chile",
             "anio": "2026",
-            "credito": ""
+            "credito": "",
+            "mostrar_codigo": true
         },
         {
             "id": "obrascivilesmys-cl",
@@ -550,7 +553,8 @@
             "mostrar_cliente": false,
             "pais": "Chile",
             "anio": "2026",
-            "credito": "Proyecto propio"
+            "credito": "Proyecto propio",
+            "mostrar_codigo": true
         },
         {
             "id": "bitacora",
@@ -583,7 +587,8 @@
             "mostrar_cliente": false,
             "pais": "Chile",
             "anio": "2026",
-            "credito": "Proyecto propio"
+            "credito": "Proyecto propio",
+            "mostrar_codigo": true
         },
         {
             "id": "integracion-magalu",
@@ -634,7 +639,8 @@
             "repo_url": "https://github.com/Julio-0Acuna/BibliotecaOOP",
             "published": true,
             "orden": 16,
-            "credito": "Proyecto de estudio"
+            "credito": "Proyecto de estudio",
+            "mostrar_codigo": true
         },
         {
             "id": "mini-pos",
@@ -653,7 +659,8 @@
             "repo_url": "https://github.com/Julio-0Acuna/mini_pos",
             "published": true,
             "orden": 17,
-            "credito": "Proyecto de estudio"
+            "credito": "Proyecto de estudio",
+            "mostrar_codigo": true
         },
         {
             "id": "src",
@@ -672,7 +679,8 @@
             "repo_url": "https://github.com/Julio-0Acuna/SRC",
             "published": true,
             "orden": 18,
-            "credito": "Proyecto de estudio"
+            "credito": "Proyecto de estudio",
+            "mostrar_codigo": true
         },
         {
             "id": "supermercado-backend",
@@ -690,7 +698,8 @@
             "repo_url": "https://github.com/Julio-0Acuna/supermercado-backend",
             "published": true,
             "orden": 19,
-            "credito": "Proyecto de estudio"
+            "credito": "Proyecto de estudio",
+            "mostrar_codigo": true
         },
         {
             "id": "supermercadocaja",
@@ -708,7 +717,8 @@
             "repo_url": "https://github.com/Julio-0Acuna/SupermercadoCaja",
             "published": true,
             "orden": 20,
-            "credito": "Proyecto de estudio"
+            "credito": "Proyecto de estudio",
+            "mostrar_codigo": true
         },
         {
             "id": "bancobackend",
@@ -727,7 +737,8 @@
             "repo_url": "https://github.com/Julio-0Acuna/bancoBackend",
             "published": true,
             "orden": 21,
-            "credito": "Proyecto de estudio"
+            "credito": "Proyecto de estudio",
+            "mostrar_codigo": true
         },
         {
             "id": "hyperledger-fabric-lab",

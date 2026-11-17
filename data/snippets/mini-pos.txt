@@ -1,0 +1,25 @@
+def registrar_venta(self, items: list[dict]) -> dict:
+    # items: [{"producto_id": 1, "cantidad": 2}, ...]
+    conn = get_conn()
+    try:
+        conn.start_transaction()  # todo o nada: se guarda la venta completa o no se guarda
+        cur = conn.cursor(dictionary=True)
+        # 1) Obtener productos y validar (existen, están activos, cantidad > 0) ...
+        for it in items:
+            p = productos_map[it["producto_id"]]
+            if p["stock"] < it["cantidad"]:
+                raise ValueError(f"Stock insuficiente para {p['nombre']}. Stock={p['stock']}, pedido={it['cantidad']}")
+
+        # 2) Calcular totales ...
+        iva = round(subtotal * IVA_RATE, 2)
+        total = round(subtotal + iva, 2)
+
+        # 3) Insertar venta y detalle, 4) descontar stock (un trigger en MySQL impide que quede negativo) ...
+        conn.commit()
+        return {"ok": True, "mensaje": "Venta registrada", "venta_id": venta_id, "subtotal": subtotal, "iva": iva, "total": total}
+
+    except Exception as e:
+        conn.rollback()  # si algo falla, no queda una venta a medias ni stock mal descontado
+        return {"ok": False, "mensaje": str(e), "venta_id": None}
+    finally:
+        conn.close()

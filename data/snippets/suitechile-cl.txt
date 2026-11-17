@@ -1,0 +1,23 @@
+// Cada panel exige un rol. Sin sesión va al login; con otro rol, a su propio panel.
+protected function requireRole(string $role): array
+{
+    $user = $this->currentUser();
+    if ($user === null) {
+        $this->redirect('/login');
+    }
+    if (($user['role'] ?? '') !== $role) {
+        $this->redirect('/dashboard');
+    }
+    return $user;
+}
+
+// /dashboard reparte a cada usuario según su rol (admin, bróker o inversionista).
+$target = [
+    'inversionista' => '/panel/inversionista',
+    'admin' => '/panel/admin',
+    'broker' => '/panel/broker',
+][$user['role']] ?? '/login';
+
+$this->redirect($target);
+
+// Uso: la primera línea de cada panel es  $user = $this->requireRole('admin');

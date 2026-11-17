@@ -1,0 +1,23 @@
+-- Si se corrige una línea ya vendida, el inventario se ajusta solo, por la diferencia.
+CREATE TRIGGER au_boleta_detalle_stock
+AFTER UPDATE ON boleta_detalle
+FOR EACH ROW
+BEGIN
+  DECLARE diff INT DEFAULT 0;
+  IF OLD.id_producto <> NEW.id_producto THEN
+    -- cambió el producto: devuelve stock al viejo y descuenta del nuevo (validando) ...
+  ELSE
+    -- mismo producto: ajustar diferencia
+    SET diff = NEW.cantidad - OLD.cantidad;
+
+    IF diff > 0 THEN
+      IF (SELECT stock FROM producto WHERE id_producto = NEW.id_producto) < diff THEN
+        SIGNAL SQLSTATE '45000'
+          SET MESSAGE_TEXT = 'Stock insuficiente para aumentar cantidad';
+      END IF;
+      UPDATE producto SET stock = stock - diff WHERE id_producto = NEW.id_producto;
+    ELSEIF diff < 0 THEN
+      UPDATE producto SET stock = stock + ABS(diff) WHERE id_producto = NEW.id_producto;
+    END IF;
+  END IF;
+END$$

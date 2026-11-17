@@ -1,0 +1,24 @@
+CUADROS_PARA_INTERRUMPIR = 3  # ~240 ms de voz del usuario encima de la del asistente para callarlo
+
+class Interrupcion:
+    """¿El usuario le está hablando encima al asistente? Se compara con el eco de lo que
+    el asistente está diciendo, medido mientras habla, y una pausita solo resta medio punto."""
+
+    GRACIA = 5  # primeros cuadros (~0,4 s) de cada respuesta: solo mide cuánto eco entra al micrófono
+    PISO = 120.0
+
+    def __init__(self):
+        self.eco, self.vistos, self.cuenta = 0.0, 0, 0.0
+
+    def cuadro(self, energia: float, es_voz) -> bool:
+        self.vistos += 1
+        if self.vistos <= self.GRACIA:
+            self.eco = max(self.eco, energia * 0.6)
+            return False
+        # Más fuerte que el eco y, según el detector, voz humana (no un golpe ni música)
+        if energia > max(self.eco * 2, self.PISO) and es_voz():
+            self.cuenta += 1
+            return self.cuenta >= CUADROS_PARA_INTERRUMPIR
+        self.cuenta = max(0.0, self.cuenta - 0.5)
+        self.eco = max(self.eco * 0.99, energia * 0.6)
+        return False

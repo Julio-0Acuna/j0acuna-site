@@ -1,0 +1,25 @@
+def actualizar_copias_totales(self, libro_id: int, nuevas_totales: int) -> tuple[bool, str]:
+    """
+    Regla: no puedes bajar copias_totales por debajo de las copias prestadas.
+    prestadas = copias_totales - copias_disponibles
+    """
+    # ... abre la conexión y lee el libro con una consulta parametrizada
+    row = cur.fetchone()
+    if not row:
+        return False, "Libro no existe"
+
+    tot = int(row["copias_totales"])
+    disp = int(row["copias_disponibles"])
+    prestadas = tot - disp
+    if nuevas_totales < prestadas:
+        return False, f"No se puede: hay {prestadas} copias prestadas."
+
+    nueva_disp = nuevas_totales - prestadas
+    cur2 = conn.cursor()
+    cur2.execute("""
+        UPDATE libros
+        SET copias_totales=%s, copias_disponibles=%s
+        WHERE id=%s
+    """, (nuevas_totales, nueva_disp, libro_id))
+    conn.commit()
+    return (cur2.rowcount > 0), "Copias actualizadas"

@@ -1,0 +1,101 @@
+[
+  {
+    "id": "ridelsip-cl",
+    "archivo": "ridelsip-cl.txt",
+    "lenguaje": "php",
+    "titulo": "Receta de paneles que descuenta materiales sola",
+    "explicacion": "Cada panel SIP tiene su receta de materiales. Al crear una orden de compra, el sistema suma lo que piden todos los paneles y lo descuenta del inventario sin que nadie lo haga a mano.",
+    "origen": "admin/includes/flujo-venta.php (paquete ridelsip-modificacion-vt-fabrica.zip)",
+    "requiere_aprobacion": true
+  },
+  {
+    "id": "suitechile-cl",
+    "archivo": "suitechile-cl.txt",
+    "lenguaje": "php",
+    "titulo": "Cada rol entra solo a su panel",
+    "explicacion": "Administradores, brókers e inversionistas tienen paneles distintos. Si alguien intenta abrir uno que no le corresponde, el sistema lo devuelve al suyo o al inicio de sesión.",
+    "origen": "app/Core/Controller.php + app/Controllers/DashboardController.php",
+    "requiere_aprobacion": true
+  },
+  {
+    "id": "saturnus-aura",
+    "archivo": "saturnus-aura.txt",
+    "lenguaje": "python",
+    "titulo": "Comprueba que cada cita exista de verdad",
+    "explicacion": "Cuando la IA cita una frase con su número de página, AURA busca esa frase en el documento real. Si no está en esa página, avisa en vez de mostrar una cita inventada.",
+    "origen": "AURA-Nuestro-Equipo/AURA-Equipo-Trabajo/source/apps/api/app/application/aura_guide_engine.py",
+    "requiere_aprobacion": false
+  },
+  {
+    "id": "jarvis",
+    "archivo": "jarvis.txt",
+    "lenguaje": "python",
+    "titulo": "Se calla cuando le hablas encima",
+    "explicacion": "Mientras el asistente habla, escucha el micrófono y distingue su propio eco de una persona hablando. Si alguien le habla encima un cuarto de segundo, se calla y escucha.",
+    "origen": "prototipo-ventana/oido_boca.py",
+    "requiere_aprobacion": false
+  },
+  {
+    "id": "bitacora",
+    "archivo": "bitacora.txt",
+    "lenguaje": "javascript",
+    "titulo": "Sugiere la etiqueta correcta al equivocarse",
+    "explicacion": "Si el jugador escribe mal una etiqueta HTML, el juego busca la más parecida y le pregunta si quiso escribir esa, como un corrector ortográfico pensado para aprender.",
+    "origen": "analizador.js",
+    "requiere_aprobacion": false
+  },
+  {
+    "id": "bibliotecaoop",
+    "archivo": "bibliotecaoop.txt",
+    "lenguaje": "python",
+    "titulo": "No deja quitar libros que están prestados",
+    "explicacion": "Al cambiar cuántas copias tiene la biblioteca de un libro, el sistema revisa cuántas están prestadas y no permite bajar el total por debajo de esa cifra.",
+    "origen": "src/dao/libro_dao.py",
+    "requiere_aprobacion": false
+  },
+  {
+    "id": "mini-pos",
+    "archivo": "mini-pos.txt",
+    "lenguaje": "python",
+    "titulo": "Venta completa o nada, con IVA",
+    "explicacion": "Una venta revisa el stock, calcula el IVA y descuenta inventario en un solo paso. Si algo falla a mitad de camino, se deshace todo y no queda una venta a medias.",
+    "origen": "src/services/pos_service.py",
+    "requiere_aprobacion": false
+  },
+  {
+    "id": "src",
+    "archivo": "src.txt",
+    "lenguaje": "python",
+    "titulo": "Impide agendar dos citas a la misma hora",
+    "explicacion": "La base de datos no permite que un profesional tenga dos citas en el mismo horario, y el sistema convierte ese choque en un mensaje claro para quien agenda.",
+    "origen": "src/services/cita_service.py",
+    "requiere_aprobacion": false
+  },
+  {
+    "id": "supermercado-backend",
+    "archivo": "supermercado-backend.txt",
+    "lenguaje": "sql",
+    "titulo": "El inventario se corrige solo al editar ventas",
+    "explicacion": "Si se corrige la cantidad de un producto en una boleta ya hecha, la base de datos ajusta el stock solo por la diferencia y rechaza el cambio si no alcanza.",
+    "origen": "Supermercado_BDD.sql",
+    "requiere_aprobacion": false
+  },
+  {
+    "id": "supermercadocaja",
+    "archivo": "supermercadocaja.txt",
+    "lenguaje": "java",
+    "titulo": "Escanear un producto y sumarlo al carrito",
+    "explicacion": "Al pasar un producto por el lector de código de barras, la caja lo agrega al carrito; si ya estaba, solo aumenta la cantidad en vez de repetir la línea.",
+    "origen": "src/SupermercadoCaja_Service/VentasService.java",
+    "requiere_aprobacion": false
+  },
+  {
+    "id": "bancobackend",
+    "archivo": "bancobackend.txt",
+    "lenguaje": "java",
+    "titulo": "Retiro seguro con validación de saldo",
+    "explicacion": "Antes de un retiro, el sistema confirma que la cuenta existe, que el monto es válido y que hay saldo suficiente; luego descuenta y deja el movimiento en el historial.",
+    "origen": "src/bancobackend/servicio/ServicioBanco.java",
+    "requiere_aprobacion": false
+  }
+]

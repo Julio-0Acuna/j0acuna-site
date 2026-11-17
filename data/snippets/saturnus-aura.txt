@@ -1,0 +1,24 @@
+# El modelo debe citar así: «frase textual» (pág. N).
+QUOTE_WITH_PAGE = re.compile(
+    r"[«\"“]([^»\"”]{15,400})[»\"”]\s*\(?\s*p[aá]g[a-z]*\.?\s*(\d{1,5})\s*\)?",
+    re.IGNORECASE,
+)
+
+def unverified_quote_warnings(answer: str, content: str) -> list[str]:
+    """Marca las citas cuya página no contiene de verdad la frase citada.
+    AURA nunca afirma más de lo que el documento puede mostrar."""
+    warnings: list[str] = []
+    wrong: list[str] = []
+    for match in QUOTE_WITH_PAGE.finditer(answer):
+        quote = match.group(1).strip()
+        cited_page = int(match.group(2))
+        if page_of_quote(content, quote) != cited_page:  # busca la frase en el documento real
+            wrong.append(clean_snippet(quote)[:70])
+    if wrong:
+        warnings.append(
+            "No pude verificar la pagina de estas citas: "
+            + "; ".join(dict.fromkeys(wrong))
+            + "."
+        )
+    # ... también avisa de las páginas citadas sin frase, que no se pueden comprobar.
+    return warnings

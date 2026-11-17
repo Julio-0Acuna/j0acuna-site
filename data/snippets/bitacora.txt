@@ -1,0 +1,25 @@
+const letrasOrdenadas = (palabra) => [...palabra].sort().join('');
+// Busca la etiqueta real más cercana a lo que escribió el jugador.
+// distancia() cuenta cuántas letras hay que cambiar (distancia de Levenshtein).
+// Si hay empate, gana la que tiene las mismas letras en otro orden (titel → title) o empieza igual.
+function parecida(nombre) {
+  let mejor = null;
+  let menor = 2.5;
+  for (const conocida of CONOCIDAS) {
+    if (conocida.length < 2) continue;
+    let puntaje = distancia(nombre, conocida);
+    if (letrasOrdenadas(nombre) === letrasOrdenadas(conocida)) puntaje -= 1;
+    if (nombre[0] === conocida[0]) puntaje -= 0.5;
+    if (puntaje < menor) {
+      menor = puntaje;
+      mejor = conocida;
+    }
+  }
+  return mejor;
+}
+
+// ... al encontrar una etiqueta que no existe:
+const sugerida = parecida(nombre);
+agregar(linea, sugerida
+  ? `\`<${nombre}>\` no existe. ¿Quisiste escribir \`<${sugerida}>\`?`
+  : `\`<${nombre}>\` no existe en HTML.`);
