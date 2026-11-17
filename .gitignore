@@ -4,3 +4,5 @@ data/login_attempts*
 assets/img/projects/*.png
 .superpowers/
 deploy/
+data/correos/
+data/contacto_limite.json
