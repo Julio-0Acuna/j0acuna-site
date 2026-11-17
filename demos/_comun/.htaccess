@@ -1,0 +1,4 @@
+# Base común: CSS, JS y modelos 3D son públicos; los PHP solo se incluyen desde otras páginas.
+<FilesMatch "\.php$">
+  Require all denied
+</FilesMatch>

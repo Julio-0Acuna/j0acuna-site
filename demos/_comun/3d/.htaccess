@@ -1,0 +1,8 @@
+# Modelos 3D de los platos (pizza.glb, etc.). Se sirven con su tipo correcto para <model-viewer>.
+AddType model/gltf-binary .glb
+AddType model/gltf+json .gltf
+<IfModule mod_headers.c>
+  <FilesMatch "\.glb$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>

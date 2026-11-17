@@ -1,0 +1,37 @@
+/* Páginas del portafolio sobre los ejemplos (/demos/ y /demos/<rubro>/). Usa las variables de styles.css. */
+.demos-intro { max-width: 760px; color: rgba(229, 237, 247, .86); font-size: 1.08rem; margin-bottom: 2rem; }
+.demos-rubros { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.demos-rubro, .demos-plan {
+  display: flex; flex-direction: column; overflow: hidden;
+  background: linear-gradient(180deg, rgba(16, 26, 43, .96), rgba(13, 20, 33, .96));
+  border: 1px solid var(--line); border-radius: 8px;
+}
+.demos-rubro__img, .demos-plan__img { display: block; aspect-ratio: 4 / 3; background: #0b1220; border-bottom: 1px solid var(--line); overflow: hidden; }
+.demos-rubro__img img, .demos-plan__img img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; transition: transform .3s; }
+.demos-rubro__img:hover img, .demos-plan__img:hover img { transform: scale(1.03); }
+.demos-rubro__cuerpo, .demos-plan__cuerpo { padding: 1.2rem 1.3rem 1.4rem; display: flex; flex-direction: column; gap: .6rem; flex: 1; }
+.demos-rubro h2, .demos-rubro h3, .demos-plan h2 { margin: 0; color: #f8fafc; font-size: 1.35rem; font-weight: 800; }
+.demos-rubro p, .demos-plan p { margin: 0; color: var(--muted); }
+.demos-pronto { margin-top: 2rem; color: var(--muted); }
+.demos-pronto ul { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; margin: .6rem 0 0; }
+.demos-pronto li { border: 1px dashed var(--line); border-radius: 999px; padding: .3rem .8rem; font-size: .9rem; }
+
+.demos-planes { display: grid; gap: 1.2rem; }
+@media (min-width: 992px) { .demos-planes { grid-template-columns: repeat(3, 1fr); } }
+.demos-plan__nivel { font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #5eead4; }
+.demos-plan__negocio { font-size: .95rem; }
+.demos-plan__negocio strong { color: #e2e8f0; }
+.demos-plan ul { margin: .4rem 0 .6rem; padding-left: 1.1rem; color: rgba(229, 237, 247, .86); }
+.demos-plan li { margin-bottom: .35rem; }
+.demos-plan__acciones { margin-top: auto; display: flex; flex-wrap: wrap; gap: .6rem; }
+.demos-plan--destacado { border-color: rgba(20, 184, 166, .55); box-shadow: 0 0 0 1px rgba(20, 184, 166, .25), 0 20px 50px rgba(0, 0, 0, .35); }
+.demos-incluye { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.demos-incluye div { padding: 1.1rem 1.2rem; border: 1px solid var(--line); border-radius: 8px; background: rgba(13, 20, 33, .7); }
+.demos-incluye h3 { margin: 0 0 .4rem; color: #f8fafc; font-size: 1.05rem; font-weight: 800; }
+.demos-incluye p { margin: 0; color: var(--muted); }
+.demos-nota { margin-top: 1.4rem; color: var(--muted); font-size: .92rem; }
+.demos-creditos table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.demos-creditos th, .demos-creditos td { border-bottom: 1px solid var(--line); padding: .5rem .6rem; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.demos-creditos .tabla { overflow-x: auto; }
+.demos-creditos a { color: #5eead4; }
+.demos-creditos code { color: #fcd34d; overflow-wrap: anywhere; }

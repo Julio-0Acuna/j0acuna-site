@@ -1,0 +1,147 @@
+/* Cohete Pizza · Plataforma web · estilo app de delivery */
+.cp {
+  --naranja: #ff5a1f;
+  --naranja-osc: #d9420c;
+  --amarillo: #ffc83d;
+  --tinta: #1a1423;
+  --crema: #fff6ee;
+  --t-fondo: var(--crema);
+  --t-superficie: #ffffff;
+  --t-tinta: var(--tinta);
+  --t-suave: #6a6072;
+  --t-borde: #f0e2d6;
+  --t-acento: #d9420c;
+  --t-acento-tinta: #ffffff;
+  --t-acento-suave: #ffe7da;
+  --t-radio: 22px;
+  --t-radio-chico: 14px;
+  --t-sombra: 0 8px 24px rgba(26, 20, 35, .07);
+  --t-fuente: "Outfit", system-ui, sans-serif;
+  --t-fuente-titulos: "Outfit", system-ui, sans-serif;
+  --demo-foco: #1a1423;
+  padding-bottom: 76px;
+}
+@media (min-width: 860px) { .cp { padding-bottom: 0; } }
+.cp h1, .cp h2 { font-weight: 800; letter-spacing: -.02em; }
+.cp h3 { font-weight: 700; }
+.cp :focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
+
+/* Barra superior */
+.cp-barra { background: var(--tinta); color: #fff; position: sticky; top: 0; z-index: 50; }
+.cp-barra__fila { width: min(1160px, 100% - 32px); margin: 0 auto; display: flex; align-items: center; gap: 16px; min-height: 64px; }
+.cp-logo { display: inline-flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; }
+.cp-logo__icono { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--naranja); color: var(--tinta); transform: rotate(-8deg); }
+.cp-logo__texto { font-weight: 800; font-size: 1.3rem; letter-spacing: -.02em; }
+.cp-logo__texto strong { color: var(--naranja); font-weight: 900; }
+.cp-ubicacion { margin: 0 0 0 auto; display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; font-weight: 600; background: rgba(255, 255, 255, .1); padding: 6px 12px; border-radius: 999px; white-space: nowrap; }
+.cp-punto { width: 8px; height: 8px; border-radius: 50%; background: #3ddc84; box-shadow: 0 0 0 3px rgba(61, 220, 132, .25); }
+.cp-nav { display: none; align-items: center; gap: 6px; }
+.cp-nav a { color: #fff; text-decoration: none; font-weight: 600; padding: 8px 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; }
+.cp-nav a:hover { background: rgba(255, 255, 255, .12); }
+.cp-nav a.is-activo { background: var(--naranja); color: var(--tinta); }
+.cp-salir button { background: none; border: 1px solid rgba(255, 255, 255, .3); color: #fff; border-radius: 999px; padding: 7px 14px; font: inherit; font-weight: 600; cursor: pointer; }
+.cp-barra :focus-visible { outline-color: var(--amarillo); }
+@media (min-width: 860px) { .cp-nav { display: flex; } .cp-ubicacion { margin-left: 8px; margin-right: auto; } }
+@media (max-width: 420px) { .cp-ubicacion { font-size: .78rem; padding: 6px 10px; } .cp-logo__texto { font-size: 1.15rem; } }
+.cp-burbuja { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--amarillo); color: var(--tinta); font-size: .75rem; font-weight: 800; display: inline-grid; place-items: center; }
+
+/* Barra de pestañas inferior (celular) */
+.cp-tabs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  background: #fff; border-top: 1px solid var(--t-borde);
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 24px rgba(26, 20, 35, .08);
+}
+.cp-tabs a { position: relative; display: grid; justify-items: center; gap: 2px; padding: 6px 4px; min-height: 52px; color: var(--t-suave); text-decoration: none; font-size: .75rem; font-weight: 600; border-radius: 14px; }
+.cp-tabs a.is-activo { color: var(--naranja-osc); background: var(--t-acento-suave); }
+.cp-tabs .cp-burbuja { position: absolute; top: 2px; left: calc(50% + 6px); }
+@media (min-width: 860px) { .cp-tabs { display: none; } }
+
+.cp-modo-mayorista { margin: 0 0 14px; padding: 10px 14px; border-radius: var(--t-radio-chico); background: #ede9fe; color: #3b0764; font-weight: 700; font-size: .9rem; }
+
+/* Portada */
+.cp-hero {
+  position: relative; overflow: hidden;
+  display: grid; gap: 8px; align-items: center;
+  background: #f04e16; color: var(--tinta);
+  border-radius: 28px; padding: 28px 22px 0;
+}
+@media (min-width: 860px) { .cp-hero { grid-template-columns: 1.1fr .9fr; padding: 48px 48px; } }
+.cp-hero h1 { font-size: clamp(2.3rem, 10vw, 4.2rem); font-weight: 900; line-height: .95; letter-spacing: -.04em; margin: 12px 0 14px; }
+.cp-hero h1 span { display: block; color: #fff; }
+.cp-hero p { font-size: 1.05rem; max-width: 30em; margin: 0 0 20px; font-weight: 500; }
+.cp-chip-estado { display: inline-flex; margin: 0 !important; padding: 5px 12px; border-radius: 999px; background: var(--tinta); color: #fff; font-size: .8rem !important; font-weight: 700 !important; }
+.cp-chip-estado.is-abierto::before { content: ""; width: 8px; height: 8px; margin: 5px 8px 0 0; border-radius: 50%; background: #3ddc84; }
+.cp-hero__acciones { display: flex; flex-wrap: wrap; gap: 10px; }
+.cp-btn-blanco { background: var(--tinta); border-color: var(--tinta); color: #fff; border-radius: 999px; padding-inline: 26px; min-height: 52px; font-size: 1.05rem; }
+.cp-btn-blanco:hover { border-color: #fff; }
+.cp-btn-borde { background: transparent; border-color: var(--tinta); color: var(--tinta); border-radius: 999px; min-height: 52px; }
+.cp-hero__foto { position: relative; justify-self: center; width: min(380px, 86%); margin-bottom: -40px; }
+@media (min-width: 860px) { .cp-hero__foto { margin: -20px 0; } }
+.cp-hero__foto img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; display: block; box-shadow: 0 30px 60px rgba(26, 20, 35, .35); }
+.cp-hero__badge { position: absolute; right: 2%; top: 6%; width: 74px; height: 74px; border-radius: 50%; background: var(--amarillo); display: grid; place-items: center; font-weight: 900; font-size: 1.6rem; transform: rotate(12deg); border: 4px solid var(--tinta); }
+.cp-hero :focus-visible { outline-color: #fff; }
+
+.cp-beneficios { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.cp-beneficios li { display: grid; gap: 2px; background: #fff; border-radius: var(--t-radio-chico); padding: 14px 16px; border: 1px solid var(--t-borde); }
+.cp-beneficios span { color: var(--t-suave); font-size: .875rem; }
+
+/* Tarjetas de producto con aire de app */
+.cp .t-producto { border: 0; }
+.cp .t-producto__foto { background: linear-gradient(135deg, #ffe0cc, #ffd0b3); }
+.cp .t-producto__foto:not(:has(img))::after { content: "🍕" / ""; position: absolute; inset: 0; display: grid; place-items: center; font-size: 3rem; opacity: .5; }
+.cp .t-producto__precio strong { font-size: 1.35rem; font-weight: 800; }
+.cp .t-producto__acciones form .t-btn { border-radius: 999px; }
+.cp .t-sello { background: var(--amarillo); color: var(--tinta); }
+.cp .t-sello--mayorista { background: #6d28d9; color: #fff; }
+.cp .t-btn-3d { border-radius: 999px; border-color: var(--tinta); color: var(--tinta); }
+.cp .t-chips a.is-activo { background: var(--naranja); border-color: var(--naranja); color: var(--tinta); }
+.cp .t-buscar input { border-width: 2px; }
+.cp .t-aviso-mayorista { background: linear-gradient(135deg, #2e1065, #1a1423); }
+.cp .t-aviso-mayorista .t-btn { background: var(--amarillo); border-color: var(--amarillo); color: var(--tinta); border-radius: 999px; }
+.cp .t-qr { background: var(--tinta); color: #fff; border: 0; }
+.cp .t-qr p { color: #d8d0e0; }
+.cp .t-qr figcaption { color: #fff; }
+.cp .t-btn--primario { border-radius: 999px; }
+.cp .t-pestanas a.is-activo { border-color: var(--naranja); }
+
+/* Google con el estilo de la marca */
+.cp .t-google .demo-google__intro h2 { font-weight: 800; }
+
+/* Pie */
+.cp-pie { background: var(--tinta); color: #d8d0e0; padding: 32px 0 28px; margin-top: 24px; }
+.cp-pie__fila { width: min(1160px, 100% - 32px); margin: 0 auto; }
+.cp-pie p { margin: 0 0 6px; }
+.cp-pie a { color: #fff; }
+.cp-pie .cp-logo__texto { color: #fff; }
+.cp-pie :focus-visible { outline-color: var(--amarillo); }
+
+/* Celular: el catálogo como lista de app (foto a la izquierda) */
+@media (max-width: 599px) {
+  .cp .t-grilla { grid-template-columns: 1fr; gap: 12px; }
+  .cp .t-grilla .t-producto { flex-direction: row; border-radius: 18px; }
+  .cp .t-grilla .t-producto__foto { flex: 0 0 112px; aspect-ratio: auto; min-height: 132px; }
+  .cp .t-grilla .t-producto__cuerpo { padding: 12px 12px 12px 14px; gap: 4px; min-width: 0; }
+  .cp .t-grilla .t-producto__cuerpo h3 { font-size: 1rem; }
+  .cp .t-grilla .t-producto__desc { font-size: .85rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .cp .t-grilla .t-producto__precio strong { font-size: 1.1rem; }
+  .cp .t-grilla .t-producto__acciones { gap: 6px; }
+  .cp .t-grilla .t-producto__acciones .t-btn, .cp .t-grilla .t-btn-3d { min-height: 40px; padding: 6px 12px; font-size: .875rem; }
+  .cp .t-grilla .t-sello { font-size: .65rem; left: 6px; top: 6px; padding: 3px 8px; }
+}
+
+/* En la demo, las cuentas de prueba van primero en el celular */
+@media (max-width: 899px) { .cp .t-prueba { order: -1; } }
+.cp .t-prueba { border: 2px solid var(--naranja); }
+
+/* Mensajes de éxito como aviso flotante (estilo app); los errores quedan en la página */
+.cp .cp-principal > .demo-mensaje--ok {
+  position: fixed; left: 50%; bottom: 92px; z-index: 70; transform: translateX(-50%);
+  width: max-content; max-width: calc(100vw - 32px); margin: 0;
+  background: var(--tinta); color: #fff; border-radius: 18px; padding: 12px 20px; font-weight: 600;
+  box-shadow: 0 12px 30px rgba(26, 20, 35, .3);
+  animation: cp-aviso 5s ease forwards;
+}
+@media (min-width: 860px) { .cp .cp-principal > .demo-mensaje--ok { bottom: 28px; } }
+@keyframes cp-aviso { 0%, 85% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }

@@ -1,0 +1,5 @@
+# Ejemplos por rubro. Los archivos PHP que empiezan con "_" son partes internas (datos,
+# plantillas): no se sirven solos. Las carpetas _motor/ y data/ tienen su propio "Require all denied".
+<FilesMatch "^_.*\.php$">
+  Require all denied
+</FilesMatch>
