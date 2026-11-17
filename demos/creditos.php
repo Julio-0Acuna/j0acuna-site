@@ -80,6 +80,19 @@ render_partial('nav', ['site' => $site, 'actual' => '']);
   <section class="section-band pt-0 demos-creditos">
     <div class="container">
       <?= creditos_html((string) file_get_contents(__DIR__ . '/CREDITOS.md')) ?>
+      <?php
+      // Cada rubro puede traer su propio CREDITOS.md (demos/<rubro>/CREDITOS.md).
+      foreach (glob(__DIR__ . '/*/CREDITOS.md') ?: [] as $archivo):
+          $rubro = basename(dirname($archivo));
+          if (!preg_match('/^[a-z0-9-]+$/', $rubro)) {
+              continue;
+          }
+      ?>
+        <section class="creditos-rubro" id="creditos-<?= e($rubro) ?>">
+          <h2>Rubro: <?= e(ucfirst($rubro)) ?></h2>
+          <?= creditos_html((string) file_get_contents($archivo)) ?>
+        </section>
+      <?php endforeach; ?>
     </div>
   </section>
 </main>

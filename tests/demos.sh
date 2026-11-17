@@ -52,6 +52,8 @@ no_debe_contener /demos/pizzeria/ 'noindex'
 for img in simple multi plataforma; do debe_responder "/demos/pizzeria/img/$img.webp" 200; done
 debe_responder   /demos/creditos.php 200
 debe_contener    /demos/creditos.php 'Ivan Torres'
+debe_contener    /demos/creditos.php 'id="creditos-sushi"'
+no_debe_contener /demos/creditos.php 'id="creditos-pizzeria"'
 
 # --- Reglas comunes a las 3 versiones (y a todas las páginas de la Multi-page)
 PAGINAS="/demos/pizzeria/simple/ /demos/pizzeria/multi/ /demos/pizzeria/multi/menu.php /demos/pizzeria/multi/nosotros.php /demos/pizzeria/multi/preguntas.php /demos/pizzeria/multi/contacto.php /demos/pizzeria/multi/pedido.php $TIENDA ${TIENDA}?r=ingresar ${TIENDA}?r=registro ${TIENDA}?r=carrito"
