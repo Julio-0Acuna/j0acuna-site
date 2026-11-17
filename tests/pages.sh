@@ -31,11 +31,39 @@ no_debe_contener() {
 
 # --- Generales: valen con datos de prueba y con el contenido real
 debe_responder  /  200
-debe_contener   /  'id="servicios"'
+debe_contener   /  'id="caminos"'
 debe_contener   /  'id="destacados"'
-debe_contener   /  'data-filtro="restaurantes"'
-no_debe_contener / 'data-filtro="ejemplos"'
+debe_contener   /  'Santiago'
+debe_contener   /  'Desarrollador web en Santiago'
+debe_contener   /  '"@type":"ProfessionalService"'
+debe_contener   /  'href="/servicios"'
+debe_contener   /  'href="/proyectos"'
+debe_contener   /  'href="/contacto"'
+debe_contener   /  'aria-current="page"'
+no_debe_contener / 'data-filtro'
+no_debe_contener / 'Todos los proyectos'
 no_debe_contener / 'admin/login.php'
+debe_responder  /servicios  200
+debe_contener   /servicios  'id="preguntas"'
+debe_contener   /servicios  '"@type":"FAQPage"'
+debe_contener   /servicios  '"@type":"Service"'
+debe_contener   /servicios  'Cotizar'
+debe_contener   /servicios  'todo Chile'
+debe_responder  /proyectos  200
+debe_contener   /proyectos  'href="/proyectos/restaurantes"'
+no_debe_contener /proyectos 'href="/proyectos/ejemplos"'
+debe_contener   /proyectos  '"@type":"BreadcrumbList"'
+debe_responder  /proyectos/restaurantes 200
+debe_contener   /proyectos/restaurantes '"@type":"BreadcrumbList"'
+debe_contener   /proyectos/restaurantes 'href="/proyectos"'
+debe_responder  /proyectos/ejemplos 404
+debe_responder  /proyectos/no-existe 404
+debe_responder  /contacto  200
+debe_contener   /contacto  'Cómo trabajo'
+debe_contener   /contacto  '"@type":"ProfessionalService"'
+debe_contener   /contacto  'https://wa.me/56973537642'
+debe_responder  /llms.txt   200
+debe_responder  /robots.txt 200
 no_debe_contener / 'href="assets/'
 no_debe_contener / 'src="assets/'
 debe_contener   /  'https://wa.me/56973537642'
@@ -46,7 +74,8 @@ debe_responder  /restaurantes  200
 debe_contener   /restaurantes  'Presencia'
 debe_contener   /restaurantes  'Vende directo'
 debe_contener   /restaurantes  'id="pruebas"'
-debe_contener   /restaurantes  'href="/"'
+debe_contener   /restaurantes  'href="/proyectos"'
+debe_contener   /restaurantes  'Página web para restaurantes'
 no_debe_contener /restaurantes 'href="/demos/'
 no_debe_contener /restaurantes 'integración directa'
 debe_contener   /restaurantes  'og-restaurantes.jpg'
@@ -85,6 +114,10 @@ no_debe_contener /restaurantes 'Servicio empresas'
 else
 # --- Solo con el contenido real (data/site.json)
 debe_responder  /proyecto/ridelsip-cl    200
+debe_contener   /proyecto/ridelsip-cl    '"@type":"CreativeWork"'
+debe_contener   /proyecto/ridelsip-cl    'href="/proyectos/gestion"'
+debe_responder  /proyectos/ia            200
+debe_responder  /proyectos/formacion     200
 debe_contener   /proyecto/ridelsip-cl    'RIDEL-SIP SpA'
 no_debe_contener /proyecto/ridelsip-cl   'src="assets/'
 debe_responder  /proyecto/alertaoficial  404

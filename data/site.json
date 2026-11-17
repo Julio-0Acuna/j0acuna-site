@@ -3,12 +3,14 @@
         "name": "Julio Acuña",
         "role": "Desarrollador de páginas web y sistemas para negocios",
         "headline": "Páginas web y sistemas para que tu negocio venda más",
-        "tagline": "Julio Acuña, desarrollador en Chile: páginas web, menú digital, pedidos por WhatsApp, apps de delivery y sistemas a medida para restaurantes, comercios y empresas.",
+        "tagline": "Julio Acuña, desarrollador web en Santiago: páginas web, menú digital con QR, pedidos por WhatsApp, tiendas online y sistemas a medida para negocios de todo Chile.",
         "bio": "Soy Julio. Construyo sitios y sistemas que se usan todos los días: tiendas online, paneles de gestión, plataformas para restaurantes y herramientas con inteligencia artificial. Trabajo en español y portugués, con clientes en Chile y Brasil.",
         "approach": "Escucho cómo funciona tu negocio, propongo lo justo y lo dejo andando, con soporte cuando lo necesites.",
-        "location": "Chile",
+        "location": "Santiago, Chile",
         "contact_text": "Cuéntame qué necesitas por WhatsApp o por correo. Te respondo con una propuesta clara, sin compromiso.",
-        "whatsapp_mensaje": "Hola Julio, vi tu página y quiero cotizar."
+        "whatsapp_mensaje": "Hola Julio, vi tu página y quiero cotizar.",
+        "ciudad": "Santiago",
+        "area": "todo Chile"
     },
     "links": {
         "email": "Julio0acuna123@gmail.com",
@@ -16,13 +18,26 @@
         "linkedin": "https://www.linkedin.com/in/julio-0acuna/",
         "whatsapp": "+56 9 7353 7642"
     },
-    "skills": ["PHP", "JavaScript", "TypeScript", "Node.js", "Python", "MySQL", "Bootstrap", "Responsive Design"],
+    "skills": [
+        "PHP",
+        "JavaScript",
+        "TypeScript",
+        "Node.js",
+        "Python",
+        "MySQL",
+        "Bootstrap",
+        "Responsive Design"
+    ],
     "services": [
         {
             "id": "web-menu",
             "titulo": "Página web y menú digital con QR",
             "resumen": "Tu negocio en Google y en el celular de tus clientes: horarios, ubicación, productos y un menú que se abre con un QR en la mesa o en el mostrador.",
-            "puntos": ["Diseño adaptado al celular", "Menú o catálogo fácil de actualizar", "Botón de WhatsApp y mapa"],
+            "puntos": [
+                "Diseño adaptado al celular",
+                "Menú o catálogo fácil de actualizar",
+                "Botón de WhatsApp y mapa"
+            ],
             "para": "ambos",
             "nivel": "presencia",
             "orden": 1,
@@ -32,7 +47,11 @@
             "id": "pedidos-directos",
             "titulo": "Pedidos directos por WhatsApp o web",
             "resumen": "Tus clientes eligen productos, arman su pedido y te llega listo por WhatsApp, sin pagar comisión a una app.",
-            "puntos": ["Carrito con precios y cantidades", "Retiro en local o despacho", "Pedido ordenado, sin errores al anotar"],
+            "puntos": [
+                "Carrito con precios y cantidades",
+                "Retiro en local o despacho",
+                "Pedido ordenado, sin errores al anotar"
+            ],
             "para": "ambos",
             "nivel": "directo",
             "orden": 2,
@@ -42,7 +61,11 @@
             "id": "apps-delivery",
             "titulo": "Vende en Uber Eats y PedidosYa",
             "resumen": "Te ayudo a entrar y a vender más en las apps de delivery: alta del local, menú, fotos, promociones y revisión de tus números.",
-            "puntos": ["Alta y configuración del local", "Menú y fotos que venden", "Revisión de ventas y promociones"],
+            "puntos": [
+                "Alta y configuración del local",
+                "Menú y fotos que venden",
+                "Revisión de ventas y promociones"
+            ],
             "para": "restaurantes",
             "nivel": "apps",
             "orden": 3,
@@ -52,7 +75,11 @@
             "id": "pedidos-una-pantalla",
             "titulo": "Todos tus pedidos en una pantalla",
             "resumen": "Los pedidos de las apps y de tu web llegan a una sola pantalla de cocina, con comanda impresa y aviso sonoro. Ya lo construí en Brasil para iFood y 99Food; en Chile se conecta según lo que permita cada app.",
-            "puntos": ["Pantalla de cocina con estados del pedido", "Comanda impresa", "Panel de ventas del día"],
+            "puntos": [
+                "Pantalla de cocina con estados del pedido",
+                "Comanda impresa",
+                "Panel de ventas del día"
+            ],
             "para": "restaurantes",
             "nivel": "premium",
             "orden": 4,
@@ -62,7 +89,11 @@
             "id": "a-medida",
             "titulo": "Sistemas a medida: gestión, inventario, presupuestos e IA",
             "resumen": "Si tu empresa trabaja con planillas y papeles, lo paso a un sistema web con usuarios y permisos, que se usa desde el computador o el celular.",
-            "puntos": ["Ventas, presupuestos y órdenes de trabajo", "Inventario y control de stock", "Asistentes con inteligencia artificial"],
+            "puntos": [
+                "Ventas, presupuestos y órdenes de trabajo",
+                "Inventario y control de stock",
+                "Asistentes con inteligencia artificial"
+            ],
             "para": "empresas",
             "nivel": "",
             "orden": 5,
@@ -79,8 +110,23 @@
             "problema": "Los restaurantes recibían pedidos en dos apps distintas, cada una en su propia tablet. Se perdían pedidos y la cocina trabajaba con dos sistemas al mismo tiempo.",
             "solucion": "Una plataforma conectada a las APIs oficiales de iFood y 99Food: cada pedido entra a la misma pantalla con la app de origen, se confirma, se prepara y se despacha desde ahí.",
             "resultado": "Una sola pantalla para toda la cocina, con la conexión a iFood homologada para pedidos y la de 99Food en homologación.",
-            "funcionalidades": ["Pantalla de cocina con estados: confirmado, en preparación, listo, despachado", "Comanda impresa y aviso sonoro", "Panel de ventas e historial", "Menú digital", "Varios restaurantes en una misma plataforma, cada uno con sus datos separados"],
-            "technologies": ["Node.js", "TypeScript", "Fastify", "Prisma", "PostgreSQL", "Docker", "API iFood", "API 99Food"],
+            "funcionalidades": [
+                "Pantalla de cocina con estados: confirmado, en preparación, listo, despachado",
+                "Comanda impresa y aviso sonoro",
+                "Panel de ventas e historial",
+                "Menú digital",
+                "Varios restaurantes en una misma plataforma, cada uno con sus datos separados"
+            ],
+            "technologies": [
+                "Node.js",
+                "TypeScript",
+                "Fastify",
+                "Prisma",
+                "PostgreSQL",
+                "Docker",
+                "API iFood",
+                "API 99Food"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
@@ -103,8 +149,22 @@
             "problema": "La constructora vendía por teléfono y redes, armaba presupuestos a mano y controlaba el inventario y las herramientas en planillas sueltas.",
             "solucion": "Una tienda online con carrito y despacho calculado según la dirección, y un panel interno con usuarios por rol para ventas, fábrica, bodega y administración.",
             "resultado": "El equipo trabaja a diario en el sistema: presupuestos en PDF y Word en minutos, inventario que se descuenta solo al fabricar y control de herramientas por obra.",
-            "funcionalidades": ["Catálogo de modelos, carrito y retiro en fábrica", "Despacho calculado según región y comuna", "Presupuestos, órdenes de compra y de trabajo con exportación a PDF y Word", "Inventario de más de 300 productos que se descuenta al fabricar", "Control de herramientas por obra, con foto", "Costos de materiales actualizados automáticamente", "Usuarios y permisos por rol"],
-            "technologies": ["PHP", "MySQL", "JavaScript", "Google Apps Script", "Responsive Design"],
+            "funcionalidades": [
+                "Catálogo de modelos, carrito y retiro en fábrica",
+                "Despacho calculado según región y comuna",
+                "Presupuestos, órdenes de compra y de trabajo con exportación a PDF y Word",
+                "Inventario de más de 300 productos que se descuenta al fabricar",
+                "Control de herramientas por obra, con foto",
+                "Costos de materiales actualizados automáticamente",
+                "Usuarios y permisos por rol"
+            ],
+            "technologies": [
+                "PHP",
+                "MySQL",
+                "JavaScript",
+                "Google Apps Script",
+                "Responsive Design"
+            ],
             "image_url": "assets/img/projects/ridelsip-cl.webp",
             "demo_url": "https://ridelsip.cl",
             "repo_url": "",
@@ -127,8 +187,19 @@
             "problema": "Los dueños recibían sus números en planillas y mensajes sueltos, y les costaba ver en un solo lugar cómo iba su negocio.",
             "solucion": "Un portal con acceso privado para cada restaurante, que se sincroniza con sus planillas y muestra los números del mes con gráficos simples.",
             "resultado": "Cada dueño revisa sus números desde el celular y descarga un informe en PDF para sus reuniones.",
-            "funcionalidades": ["Ventas del mes y costo de la mercadería", "Proveedores y competencia", "Desempeño en apps de delivery", "Estrategia: FODA, matriz BCG y 4P", "Informe en PDF"],
-            "technologies": ["HTML", "JavaScript", "Node.js", "Google Sheets"],
+            "funcionalidades": [
+                "Ventas del mes y costo de la mercadería",
+                "Proveedores y competencia",
+                "Desempeño en apps de delivery",
+                "Estrategia: FODA, matriz BCG y 4P",
+                "Informe en PDF"
+            ],
+            "technologies": [
+                "HTML",
+                "JavaScript",
+                "Node.js",
+                "Google Sheets"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
@@ -151,8 +222,18 @@
             "problema": "La inmobiliaria necesitaba mostrar sus proyectos y dar a cada tipo de usuario un acceso distinto, desde cualquier dispositivo.",
             "solucion": "Un sitio 100% adaptable al celular, con proyectos editables desde el panel y un acceso privado para cada rol.",
             "resultado": "Sitio publicado en suitechile.cl, con cuentas por rol y proyectos que el administrador actualiza sin tocar código.",
-            "funcionalidades": ["Sitio público con proyectos e inversiones", "Panel de administrador con usuarios y auditoría", "Paneles de bróker e inversionista", "Sección para atraer brokers"],
-            "technologies": ["PHP", "MySQL", "JavaScript", "Responsive Design"],
+            "funcionalidades": [
+                "Sitio público con proyectos e inversiones",
+                "Panel de administrador con usuarios y auditoría",
+                "Paneles de bróker e inversionista",
+                "Sección para atraer brokers"
+            ],
+            "technologies": [
+                "PHP",
+                "MySQL",
+                "JavaScript",
+                "Responsive Design"
+            ],
             "image_url": "assets/img/projects/suitechile-cl.webp",
             "demo_url": "https://suitechile.cl",
             "repo_url": "",
@@ -175,8 +256,22 @@
             "problema": "Las empresas tienen manuales, reglamentos e informes repartidos en carpetas, y no quieren subir información confidencial a servicios en la nube.",
             "solucion": "Una aplicación que funciona 100% en el computador: indexa los documentos, los muestra en un mapa visual y responde en lenguaje natural indicando de qué documento sacó cada dato.",
             "resultado": "Un MVP funcional con instalador para Windows y Linux, que se adapta solo a computadores modestos.",
-            "funcionalidades": ["Chat con respuestas y citas de la fuente", "Subida de documentos y PDF", "Mapa visual de documentos e ideas", "Funciona sin internet", "Respaldos y actualizaciones"],
-            "technologies": ["Electron", "React", "TypeScript", "Python", "FastAPI", "SQLite", "llama.cpp"],
+            "funcionalidades": [
+                "Chat con respuestas y citas de la fuente",
+                "Subida de documentos y PDF",
+                "Mapa visual de documentos e ideas",
+                "Funciona sin internet",
+                "Respaldos y actualizaciones"
+            ],
+            "technologies": [
+                "Electron",
+                "React",
+                "TypeScript",
+                "Python",
+                "FastAPI",
+                "SQLite",
+                "llama.cpp"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
@@ -199,8 +294,17 @@
             "problema": "La empresa necesitaba presentarse de forma profesional y recibir solicitudes de cotización.",
             "solucion": "Un sitio claro y rápido, pensado para el celular, que explica cada servicio y lleva a pedir una cotización.",
             "resultado": "Sitio publicado en obrascivilesmys.cl.",
-            "funcionalidades": ["Servicios: obras civiles, regularizaciones, saneamientos y certificaciones eléctricas", "Botón de cotización", "Diseño adaptado al celular"],
-            "technologies": ["HTML", "CSS", "JavaScript", "Responsive Design"],
+            "funcionalidades": [
+                "Servicios: obras civiles, regularizaciones, saneamientos y certificaciones eléctricas",
+                "Botón de cotización",
+                "Diseño adaptado al celular"
+            ],
+            "technologies": [
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "Responsive Design"
+            ],
             "image_url": "assets/img/projects/obrascivilesmys-cl.webp",
             "demo_url": "https://obrascivilesmys.cl",
             "repo_url": "",
@@ -223,8 +327,19 @@
             "problema": "El equipo usaba muchas herramientas por separado, con contraseñas distintas y sin un lugar común para capacitarse.",
             "solucion": "Una intranet por áreas (finanzas, comercial, marketing, recursos humanos) con un acceso único para todas las plataformas de la empresa y una academia con cursos, exámenes y certificados.",
             "resultado": "Todo el equipo trabaja desde un mismo portal y la dirección ve el avance de cada persona.",
-            "funcionalidades": ["Áreas y permisos por persona", "Un solo usuario para todas las plataformas, con código de verificación por correo", "Academia con cursos, exámenes y certificados", "Registro de actividad para la dirección", "Pruebas automáticas antes de cada publicación"],
-            "technologies": ["PHP", "MySQL", "Node.js", "JavaScript"],
+            "funcionalidades": [
+                "Áreas y permisos por persona",
+                "Un solo usuario para todas las plataformas, con código de verificación por correo",
+                "Academia con cursos, exámenes y certificados",
+                "Registro de actividad para la dirección",
+                "Pruebas automáticas antes de cada publicación"
+            ],
+            "technologies": [
+                "PHP",
+                "MySQL",
+                "Node.js",
+                "JavaScript"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
@@ -247,8 +362,16 @@
             "problema": "Otra agencia quería usar la misma plataforma de gestión, pero con su propia marca y sin mezclar datos.",
             "solucion": "Una instalación aparte, con su logo, su dominio y su base de datos, mantenida con las mismas mejoras que la versión original.",
             "resultado": "La agencia gestiona sus tiendas con su propia marca.",
-            "funcionalidades": ["Marca y dominio propios", "Datos completamente separados", "Tareas y estrategias por tienda"],
-            "technologies": ["Node.js", "React", "JavaScript"],
+            "funcionalidades": [
+                "Marca y dominio propios",
+                "Datos completamente separados",
+                "Tareas y estrategias por tienda"
+            ],
+            "technologies": [
+                "Node.js",
+                "React",
+                "JavaScript"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
@@ -271,8 +394,15 @@
             "problema": "Cambiar fotos del menú, tienda por tienda, tomaba mucho tiempo al equipo.",
             "solucion": "Una herramienta simple: eliges la tienda, buscas el producto, eliges la foto y se actualiza.",
             "resultado": "Cambios de fotos en segundos, sin entrar al portal de cada tienda.",
-            "funcionalidades": ["Búsqueda de productos por tienda", "Subida de la foto nueva", "Conexión oficial con renovación automática del acceso"],
-            "technologies": ["Python", "API iFood"],
+            "funcionalidades": [
+                "Búsqueda de productos por tienda",
+                "Subida de la foto nueva",
+                "Conexión oficial con renovación automática del acceso"
+            ],
+            "technologies": [
+                "Python",
+                "API iFood"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
@@ -295,8 +425,18 @@
             "problema": "La agencia quería vender y dictar un curso de gestión de delivery con seguimiento de cada alumno.",
             "solucion": "Una plataforma con videos y materiales por módulo, puntos de experiencia y un panel para ver dónde se traban los alumnos.",
             "resultado": "Curso publicado con su primer módulo completo y panel de seguimiento para el administrador.",
-            "funcionalidades": ["Videos y PDF por clase", "Puntos, niveles, medallas y ranking", "Panel del administrador con avance por módulo", "Exportación a CSV"],
-            "technologies": ["Node.js", "Express", "MySQL", "JavaScript"],
+            "funcionalidades": [
+                "Videos y PDF por clase",
+                "Puntos, niveles, medallas y ranking",
+                "Panel del administrador con avance por módulo",
+                "Exportación a CSV"
+            ],
+            "technologies": [
+                "Node.js",
+                "Express",
+                "MySQL",
+                "JavaScript"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
@@ -319,8 +459,18 @@
             "problema": "Grabar clases y mentorías en video tomaba días de trabajo.",
             "solucion": "Un proceso automático que dibuja las ideas en una pizarra animada, las narra con voz natural y agrega subtítulos.",
             "resultado": "7 clases de 15 a 30 minutos y 2 mentorías entregadas.",
-            "funcionalidades": ["Animación estilo pizarra", "Voz natural en portugués", "Subtítulos", "Duración definida por quien lo pide"],
-            "technologies": ["Python", "Playwright", "ffmpeg", "Texto a voz"],
+            "funcionalidades": [
+                "Animación estilo pizarra",
+                "Voz natural en portugués",
+                "Subtítulos",
+                "Duración definida por quien lo pide"
+            ],
+            "technologies": [
+                "Python",
+                "Playwright",
+                "ffmpeg",
+                "Texto a voz"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
@@ -343,8 +493,17 @@
             "problema": "El equipo necesitaba audios con voz natural y transcripciones sin pagar servicios externos por cada uso.",
             "solucion": "Un servicio propio que lee números, fechas y teléfonos de forma natural y revisa cada frase antes de entregarla.",
             "resultado": "Audios y transcripciones generados dentro de la empresa.",
-            "funcionalidades": ["Texto a voz natural", "Transcripción de audios", "Lectura correcta de números, fechas y teléfonos", "Revisión automática de cada frase"],
-            "technologies": ["Python", "Whisper", "Texto a voz"],
+            "funcionalidades": [
+                "Texto a voz natural",
+                "Transcripción de audios",
+                "Lectura correcta de números, fechas y teléfonos",
+                "Revisión automática de cada frase"
+            ],
+            "technologies": [
+                "Python",
+                "Whisper",
+                "Texto a voz"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
@@ -367,8 +526,19 @@
             "problema": "Quería un asistente que ayudara a organizar el día y las reuniones sin tener que escribir.",
             "solucion": "Un asistente de escritorio con una mascota animada, que escucha, responde con voz natural y se conecta al correo, al navegador y a los recordatorios.",
             "resultado": "Lo uso a diario; lleva más de 70 versiones de mejoras.",
-            "funcionalidades": ["Conversación por voz en español y portugués", "Plan del día y recordatorios", "Notas de reuniones con tareas", "Redacción de correos y mensajes con confirmación", "App en el celular"],
-            "technologies": ["Python", "Whisper", "Qt", "Inteligencia artificial"],
+            "funcionalidades": [
+                "Conversación por voz en español y portugués",
+                "Plan del día y recordatorios",
+                "Notas de reuniones con tareas",
+                "Redacción de correos y mensajes con confirmación",
+                "App en el celular"
+            ],
+            "technologies": [
+                "Python",
+                "Whisper",
+                "Qt",
+                "Inteligencia artificial"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
@@ -391,8 +561,17 @@
             "problema": "Los cursos tradicionales de programación cuestan de seguir; quería aprender jugando.",
             "solucion": "Niveles cortos de 2 a 5 minutos, con narración, música y un botón que indica el siguiente paso.",
             "resultado": "Prototipo jugable desde HTML hasta el examen final.",
-            "funcionalidades": ["Niveles cortos con dificultad creciente", "Narración y música", "Construcción del puerto según avanzas", "Examen final"],
-            "technologies": ["HTML", "CSS", "JavaScript"],
+            "funcionalidades": [
+                "Niveles cortos con dificultad creciente",
+                "Narración y música",
+                "Construcción del puerto según avanzas",
+                "Examen final"
+            ],
+            "technologies": [
+                "HTML",
+                "CSS",
+                "JavaScript"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
@@ -415,8 +594,16 @@
             "problema": "La agencia quería saber cuánto costaba recibir pedidos de otro marketplace en su plataforma.",
             "solucion": "Registro de la aplicación, una llamada real de prueba a la API y un documento con casos de uso, estimaciones y diagramas.",
             "resultado": "Documento listo para decidir la integración.",
-            "funcionalidades": ["Registro y prueba de la API de pedidos", "Casos de uso y estimaciones", "3 diagramas UML"],
-            "technologies": ["API REST", "OAuth", "UML"],
+            "funcionalidades": [
+                "Registro y prueba de la API de pedidos",
+                "Casos de uso y estimaciones",
+                "3 diagramas UML"
+            ],
+            "technologies": [
+                "API REST",
+                "OAuth",
+                "UML"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
@@ -436,7 +623,12 @@
             "category": "Formación y estudio",
             "categoria_id": "formacion",
             "description": "Sistema de gestión de biblioteca en Python con programación orientada a objetos y MySQL: usuarios, libros, préstamos, devoluciones y control de stock.",
-            "technologies": ["Python", "MySQL", "POO", "Stored Procedures"],
+            "technologies": [
+                "Python",
+                "MySQL",
+                "POO",
+                "Stored Procedures"
+            ],
             "image_url": "assets/img/projects/bibliotecaoop.webp",
             "demo_url": "",
             "repo_url": "https://github.com/Julio-0Acuna/BibliotecaOOP",
@@ -450,7 +642,12 @@
             "category": "Formación y estudio",
             "categoria_id": "formacion",
             "description": "Sistema de ventas en Python con MySQL: productos, ventas, inventario, cálculo automático de IVA y validación de stock, con arquitectura por capas.",
-            "technologies": ["Python", "MySQL", "POO", "Arquitectura por capas"],
+            "technologies": [
+                "Python",
+                "MySQL",
+                "POO",
+                "Arquitectura por capas"
+            ],
             "image_url": "assets/img/projects/mini-pos.webp",
             "demo_url": "",
             "repo_url": "https://github.com/Julio-0Acuna/mini_pos",
@@ -464,7 +661,12 @@
             "category": "Formación y estudio",
             "categoria_id": "formacion",
             "description": "Sistema de reservas de citas en Python con programación orientada a objetos y arquitectura por capas (DAO y servicios).",
-            "technologies": ["Python", "POO", "DAO", "Service Layer"],
+            "technologies": [
+                "Python",
+                "POO",
+                "DAO",
+                "Service Layer"
+            ],
             "image_url": "assets/img/projects/src.webp",
             "demo_url": "",
             "repo_url": "https://github.com/Julio-0Acuna/SRC",
@@ -478,7 +680,11 @@
             "category": "Formación y estudio",
             "categoria_id": "formacion",
             "description": "Gestión de supermercado en Java con JDBC y MySQL: inventario, ventas y reglas de negocio en la base de datos.",
-            "technologies": ["Java", "JDBC", "MySQL"],
+            "technologies": [
+                "Java",
+                "JDBC",
+                "MySQL"
+            ],
             "image_url": "assets/img/projects/supermercado-backend.webp",
             "demo_url": "",
             "repo_url": "https://github.com/Julio-0Acuna/supermercado-backend",
@@ -492,7 +698,11 @@
             "category": "Formación y estudio",
             "categoria_id": "formacion",
             "description": "Caja registradora en Java con JDBC y MySQL: control automático de stock, cálculo de impuestos y boleta en archivo de texto.",
-            "technologies": ["Java", "JDBC", "MySQL"],
+            "technologies": [
+                "Java",
+                "JDBC",
+                "MySQL"
+            ],
             "image_url": "assets/img/projects/supermercadocaja.webp",
             "demo_url": "",
             "repo_url": "https://github.com/Julio-0Acuna/SupermercadoCaja",
@@ -506,7 +716,12 @@
             "category": "Formación y estudio",
             "categoria_id": "formacion",
             "description": "Sistema bancario de consola en Java con MySQL: autenticación, cuentas, transacciones y reportes.",
-            "technologies": ["Java", "JDBC", "MySQL", "POO"],
+            "technologies": [
+                "Java",
+                "JDBC",
+                "MySQL",
+                "POO"
+            ],
             "image_url": "assets/img/projects/bancobackend.webp",
             "demo_url": "",
             "repo_url": "https://github.com/Julio-0Acuna/bancoBackend",
@@ -520,7 +735,12 @@
             "category": "Formación y estudio",
             "categoria_id": "formacion",
             "description": "Laboratorio de redes blockchain privadas con Hyperledger Fabric: contratos inteligentes, identidades, canales y registro de transacciones.",
-            "technologies": ["Hyperledger Fabric", "Blockchain", "Smart Contracts", "Docker"],
+            "technologies": [
+                "Hyperledger Fabric",
+                "Blockchain",
+                "Smart Contracts",
+                "Docker"
+            ],
             "image_url": "assets/img/projects/hyperledger-fabric-lab.webp",
             "demo_url": "",
             "repo_url": "",
@@ -534,7 +754,9 @@
             "category": "Páginas web",
             "categoria_id": "web",
             "description": "Repositorio en preparación.",
-            "technologies": ["Web"],
+            "technologies": [
+                "Web"
+            ],
             "image_url": "assets/img/projects/mibusca-brasil.webp",
             "demo_url": "",
             "repo_url": "https://github.com/Julio-0Acuna/MiBusca-Brasil",
@@ -547,12 +769,41 @@
             "category": "Inteligencia artificial",
             "categoria_id": "ia",
             "description": "Monitoreo del Diario Oficial de Chile con alertas de derechos de agua y normas nuevas. Oculto hasta su lanzamiento.",
-            "technologies": ["Python", "SQLite"],
+            "technologies": [
+                "Python",
+                "SQLite"
+            ],
             "image_url": "",
             "demo_url": "",
             "repo_url": "",
             "published": false,
             "orden": 99
+        }
+    ],
+    "faqs": [
+        {
+            "pregunta": "¿Trabajas fuera de Santiago?",
+            "respuesta": "Sí. Estoy en Santiago y trabajo con negocios de todo Chile a distancia, por videollamada y WhatsApp."
+        },
+        {
+            "pregunta": "¿Cuánto demora una página web?",
+            "respuesta": "Una página simple, alrededor de una semana; un sitio de varias páginas, de dos a tres semanas; una tienda online, de cuatro a seis semanas. Depende de que tengas listos los textos y las fotos."
+        },
+        {
+            "pregunta": "¿Puedo cambiar yo mismo los precios y los productos?",
+            "respuesta": "Sí. Te dejo un panel simple para cambiar precios, fotos y horarios, y te enseño a usarlo."
+        },
+        {
+            "pregunta": "¿Funciona con Uber Eats y PedidosYa?",
+            "respuesta": "Te ayudo a vender en ambas apps. Conectar sus pedidos directo a tu sistema depende de que cada app lo autorice; mientras tanto, tu página recibe pedidos por WhatsApp sin comisión."
+        },
+        {
+            "pregunta": "¿Me ayudas a aparecer en Google?",
+            "respuesta": "Sí. Creo y configuro tu Perfil de Empresa en Google para que aparezcas en Maps y en las búsquedas de tu zona."
+        },
+        {
+            "pregunta": "¿El dominio y la página quedan a mi nombre?",
+            "respuesta": "Sí. Te ayudo a registrar tu dominio .cl y el hosting a tu nombre, para que siempre sean tuyos."
         }
     ]
 }

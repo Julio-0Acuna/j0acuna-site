@@ -45,3 +45,11 @@ function render_partial(string $nombre, array $vars = []): void
     extract($vars, EXTR_SKIP);
     include __DIR__ . '/partials/' . basename($nombre) . '.php';
 }
+
+/** Mensaje de WhatsApp listo para el enlace del sitio, o '' si no hay número. */
+function site_wa(array $site, string $mensaje): string
+{
+    return $site['links']['whatsapp'] !== '' ? wa_link($site['links']['whatsapp'], $mensaje) : '';
+}
+
+require_once __DIR__ . '/seo.php';

@@ -17,18 +17,19 @@ foreach ($servicios as $s) {
 }
 
 render_partial('head', [
-    'title' => 'Más ventas para tu local | ' . $site['profile']['name'],
+    'title' => 'Página web para restaurantes en Santiago y Chile | ' . $site['profile']['name'],
     'description' => 'Página web, menú digital con QR, pedidos por WhatsApp y apps de delivery para restaurantes y comercios en Chile.',
     'og_image' => 'assets/img/og/og-restaurantes.jpg',
     'canonical' => '/restaurantes',
+    'jsonld' => [jsonld_breadcrumbs([['Restaurantes', '/restaurantes']])],
 ]);
-render_partial('nav', ['site' => $site]);
+render_partial('nav', ['site' => $site, 'actual' => 'restaurantes']);
 ?>
 <main>
   <section class="local-hero">
     <div class="container">
-      <p class="eyebrow mb-3">Para restaurantes y comercios</p>
-      <h1>Más ventas para tu local, sin complicarte</h1>
+      <p class="eyebrow mb-3">Restaurantes y comercios · Santiago y todo Chile</p>
+      <h1>Página web para restaurantes y comercios, sin complicarte</h1>
       <p class="lead mt-3">Página web, menú digital con QR, pedidos por WhatsApp y apoyo para vender en Uber Eats y PedidosYa. Tú atiendes tu negocio; yo me encargo de la parte digital.</p>
       <?php if ($wa !== ''): ?>
         <a class="minimal-btn minimal-btn-light mt-3" href="<?= e($wa) ?>" target="_blank" rel="noopener"><span>Conversemos por WhatsApp</span></a>
@@ -98,7 +99,7 @@ render_partial('nav', ['site' => $site]);
           <?php if ($wa !== ''): ?>
             <a class="minimal-btn minimal-btn-dark" href="<?= e($wa) ?>" target="_blank" rel="noopener"><span>WhatsApp</span></a>
           <?php endif; ?>
-          <a class="minimal-btn minimal-btn-outline" href="/"><span>Ver todos mis proyectos</span></a>
+          <a class="minimal-btn minimal-btn-outline" href="/proyectos"><span>Ver todos mis proyectos</span></a>
         </div>
       </div>
     </div>

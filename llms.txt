@@ -1,0 +1,35 @@
+# Julio Acuña
+
+> Desarrollador web en Santiago, Chile. Hace páginas web, menú digital con QR, pedidos por WhatsApp,
+> tiendas online y sistemas a medida para restaurantes, comercios y empresas de todo Chile.
+
+## Qué ofrece
+- Página web y menú digital con QR: Tu negocio en Google y en el celular de tus clientes: horarios, ubicación, productos y un menú que se abre con un QR en la mesa o en el mostrador.
+- Pedidos directos por WhatsApp o web: Tus clientes eligen productos, arman su pedido y te llega listo por WhatsApp, sin pagar comisión a una app.
+- Vende en Uber Eats y PedidosYa: Te ayudo a entrar y a vender más en las apps de delivery: alta del local, menú, fotos, promociones y revisión de tus números.
+- Todos tus pedidos en una pantalla: Los pedidos de las apps y de tu web llegan a una sola pantalla de cocina, con comanda impresa y aviso sonoro. Ya lo construí en Brasil para iFood y 99Food; en Chile se conecta según lo que permita cada app.
+- Sistemas a medida: gestión, inventario, presupuestos e IA: Si tu empresa trabaja con planillas y papeles, lo paso a un sistema web con usuarios y permisos, que se usa desde el computador o el celular.
+
+## Dónde trabaja
+Está en Santiago y atiende negocios de todo Chile, también a distancia por videollamada y WhatsApp.
+
+## Idiomas
+Español y portugués.
+
+## Contacto
+- WhatsApp: +56 9 7353 7642
+- Correo: Julio0acuna123@gmail.com
+- LinkedIn: https://www.linkedin.com/in/julio-0acuna/
+- GitHub: https://github.com/Julio-0Acuna/
+
+## Páginas clave
+- Inicio: https://j0acuna.site/
+- Servicios y preguntas frecuentes: https://j0acuna.site/servicios
+- Restaurantes y comercios: https://j0acuna.site/restaurantes
+- Proyectos: https://j0acuna.site/proyectos
+  - Restaurantes y delivery: https://j0acuna.site/proyectos/restaurantes
+  - Comercio y gestión: https://j0acuna.site/proyectos/gestion
+  - Páginas web: https://j0acuna.site/proyectos/web
+  - Inteligencia artificial: https://j0acuna.site/proyectos/ia
+  - Formación y estudio: https://j0acuna.site/proyectos/formacion
+- Contacto: https://j0acuna.site/contacto

@@ -2,34 +2,44 @@
 require_once __DIR__ . '/includes/view.php';
 
 $site = portfolio_load_site();
-$projects = portfolio_visible_projects($site);
-$featured = portfolio_featured_projects($site);
-$categories = portfolio_categories_in_use($site);
-$services = portfolio_visible_services($site, 'todos');
-$mosaic = array_slice(array_values(array_filter($featured, static fn (array $p): bool => $p['image_url'] !== '')), 0, 3);
-$waGeneral = $site['links']['whatsapp'] !== '' ? wa_link($site['links']['whatsapp'], $site['profile']['whatsapp_mensaje']) : '';
+$featured = portfolio_featured_projects($site, 3);
+$mosaic = array_slice(array_values(array_filter(portfolio_featured_projects($site), static fn (array $p): bool => $p['image_url'] !== '')), 0, 3);
+$wa = site_wa($site, $site['profile']['whatsapp_mensaje']);
+
+$caminos = [];
+foreach ([
+    ['restaurantes', 'Restaurantes y comercios', 'Página web, menú QR, pedidos por WhatsApp y apps de delivery.', '/restaurantes'],
+    ['gestion', 'Sistemas para empresas', 'Tiendas online y sistemas que ordenan ventas, inventario y equipos.', '/proyectos/gestion'],
+    ['ia', 'Inteligencia artificial', 'Asistentes, voz y documentos que responden por ti.', '/proyectos/ia'],
+] as [$sec, $titulo, $texto, $ruta]) {
+    $s = portfolio_find_section($site, $sec);
+    if ($s !== null) {
+        $caminos[] = ['titulo' => $titulo, 'texto' => $texto, 'ruta' => $ruta, 'imagen' => $s['portada']];
+    }
+}
 
 render_partial('head', [
-    'title' => $site['profile']['name'] . ' | Páginas web y sistemas para negocios',
+    'title' => $site['profile']['name'] . ' | Desarrollador web en ' . $site['profile']['ciudad'] . ', Chile',
     'description' => $site['profile']['tagline'],
     'og_image' => 'assets/img/og/og-inicio.jpg',
     'canonical' => '/',
+    'jsonld' => [jsonld_business($site)],
 ]);
-render_partial('nav', ['site' => $site]);
+render_partial('nav', ['site' => $site, 'actual' => 'inicio']);
 ?>
 <main>
   <section id="inicio" class="hero-section">
     <div class="container">
       <div class="row align-items-center g-5">
         <div class="<?= $mosaic ? 'col-lg-7' : 'col-lg-9' ?>">
-          <p class="eyebrow mb-3"><?= e($site['profile']['role']) ?></p>
+          <p class="eyebrow mb-3">Desarrollador web en <?= e($site['profile']['ciudad']) ?> · negocios de <?= e($site['profile']['area']) ?></p>
           <h1><?= e($site['profile']['headline']) ?></h1>
           <p class="lead mt-4"><?= e($site['profile']['bio']) ?></p>
           <div class="hero-actions mt-4">
-            <?php if ($waGeneral !== ''): ?>
-              <a class="minimal-btn minimal-btn-light" href="<?= e($waGeneral) ?>" target="_blank" rel="noopener"><span>Escríbeme por WhatsApp</span></a>
+            <?php if ($wa !== ''): ?>
+              <a class="minimal-btn minimal-btn-light" href="<?= e($wa) ?>" target="_blank" rel="noopener"><span>Escríbeme por WhatsApp</span></a>
             <?php endif; ?>
-            <a class="minimal-btn minimal-btn-ghost" href="#proyectos"><span>Ver proyectos</span></a>
+            <a class="minimal-btn minimal-btn-ghost" href="/proyectos"><span>Ver proyectos</span></a>
           </div>
         </div>
         <?php if ($mosaic): ?>
@@ -45,16 +55,25 @@ render_partial('nav', ['site' => $site]);
     </div>
   </section>
 
-  <?php if ($services): ?>
-    <section id="servicios" class="section-band">
-      <div class="container reveal">
+  <?php if ($caminos): ?>
+    <section id="caminos" class="section-band">
+      <div class="container">
         <div class="section-heading">
-          <p class="eyebrow">Servicios</p>
-          <h2>Qué puedo hacer por tu negocio</h2>
+          <p class="eyebrow">¿Qué necesitas?</p>
+          <h2>Elige tu camino</h2>
         </div>
-        <div class="service-grid">
-          <?php foreach ($services as $service): ?>
-            <?php render_partial('service-card', ['service' => $service, 'site' => $site]); ?>
+        <div class="path-grid">
+          <?php foreach ($caminos as $c): ?>
+            <a class="path-card" href="<?= e($c['ruta']) ?>">
+              <?php if ($c['imagen'] !== ''): ?>
+                <img src="<?= e(asset($c['imagen'])) ?>" alt="" loading="lazy" width="1200" height="750">
+              <?php endif; ?>
+              <span class="path-body">
+                <strong><?= e($c['titulo']) ?></strong>
+                <span><?= e($c['texto']) ?></span>
+                <span class="path-more">Ver más →</span>
+              </span>
+            </a>
           <?php endforeach; ?>
         </div>
       </div>
@@ -63,70 +82,33 @@ render_partial('nav', ['site' => $site]);
 
   <?php if ($featured): ?>
     <section id="destacados" class="section-band section-alt">
-      <div class="container reveal">
+      <div class="container">
         <div class="section-heading">
           <p class="eyebrow">Destacados</p>
-          <h2>Proyectos que hablan por mí</h2>
+          <h2>Algunos proyectos</h2>
         </div>
-        <div class="project-grid project-grid-featured">
+        <div class="project-grid">
           <?php foreach ($featured as $project): ?>
-            <?php render_partial('project-card', ['project' => $project]); ?>
+            <?php render_partial('project-card', ['project' => $project, 'compacto' => true]); ?>
           <?php endforeach; ?>
         </div>
+        <p class="mt-4"><a class="minimal-btn minimal-btn-outline" href="/proyectos"><span>Ver todos los proyectos</span></a></p>
       </div>
     </section>
   <?php endif; ?>
 
-  <section id="proyectos" class="section-band">
-    <div class="container reveal">
-      <div class="section-heading">
-        <p class="eyebrow">Trabajo realizado</p>
-        <h2>Todos los proyectos</h2>
-      </div>
-      <?php if (count($categories) > 1): ?>
-        <div class="filter-bar" role="group" aria-label="Filtrar proyectos por categoría">
-          <button type="button" class="filter-chip is-active" data-filtro="todos" aria-pressed="true">Todos</button>
-          <?php foreach ($categories as $category): ?>
-            <button type="button" class="filter-chip" data-filtro="<?= e($category['id']) ?>" aria-pressed="false"><?= e($category['nombre']) ?></button>
-          <?php endforeach; ?>
-        </div>
-      <?php endif; ?>
-      <div class="project-grid" data-project-grid>
-        <?php foreach ($projects as $project): ?>
-          <?php render_partial('project-card', ['project' => $project]); ?>
-        <?php endforeach; ?>
-      </div>
-    </div>
-  </section>
-
-  <section id="como-trabajo" class="section-band section-alt">
-    <div class="container reveal">
-      <div class="section-heading">
-        <p class="eyebrow">Cómo trabajo</p>
-        <h2>Simple, en tres pasos</h2>
-      </div>
-      <ol class="steps">
-        <li><strong>Conversamos</strong><span>Me cuentas cómo funciona tu negocio y qué necesitas.</span></li>
-        <li><strong>Te envío una propuesta</strong><span>Qué se hace, cuánto demora y cuánto cuesta, por escrito.</span></li>
-        <li><strong>Lo publico y te enseño a usarlo</strong><span>Queda en línea y sabes manejarlo desde el primer día.</span></li>
-      </ol>
-    </div>
-  </section>
-
-  <section id="contacto" class="contact-section">
-    <div class="container reveal">
+  <section class="contact-section">
+    <div class="container">
       <div class="contact-shell">
         <div>
-          <p class="eyebrow">Contacto</p>
-          <h2>Conversemos sobre tu próximo proyecto</h2>
+          <h2>¿Conversamos?</h2>
           <p><?= e($site['profile']['contact_text']) ?></p>
         </div>
         <div class="contact-actions">
-          <?php if ($waGeneral !== ''): ?>
-            <a class="minimal-btn minimal-btn-dark" href="<?= e($waGeneral) ?>" target="_blank" rel="noopener"><span>WhatsApp</span></a>
+          <?php if ($wa !== ''): ?>
+            <a class="minimal-btn minimal-btn-dark" href="<?= e($wa) ?>" target="_blank" rel="noopener"><span>WhatsApp</span></a>
           <?php endif; ?>
-          <a class="minimal-btn minimal-btn-outline" href="mailto:<?= e($site['links']['email']) ?>"><span>Correo</span></a>
-          <a class="minimal-btn minimal-btn-outline" href="<?= e($site['links']['linkedin']) ?>" target="_blank" rel="noopener"><span>LinkedIn</span></a>
+          <a class="minimal-btn minimal-btn-outline" href="/servicios"><span>Ver servicios</span></a>
         </div>
       </div>
     </div>

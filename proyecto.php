@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/view.php';
+require_once __DIR__ . '/includes/prism.php';
 
 $site = portfolio_load_site();
 $id = is_string($_GET['id'] ?? null) ? $_GET['id'] : '';
@@ -10,16 +11,16 @@ if ($p === null) {
     render_partial('head', [
         'title' => 'Proyecto no encontrado | ' . $site['profile']['name'],
         'description' => 'Este proyecto no existe o ya no está publicado.',
-        'canonical' => '/',
+        'canonical' => '/proyectos',
     ]);
-    render_partial('nav', ['site' => $site]);
+    render_partial('nav', ['site' => $site, 'actual' => 'proyectos']);
     ?>
     <main class="detail-page">
       <div class="container">
         <p class="eyebrow">Error 404</p>
         <h1>Proyecto no encontrado</h1>
         <p class="detail-lead">Este proyecto no existe o ya no está publicado.</p>
-        <a class="minimal-btn minimal-btn-dark" href="/"><span>Ver todos los proyectos</span></a>
+        <a class="minimal-btn minimal-btn-dark" href="/proyectos"><span>Ver todos los proyectos</span></a>
       </div>
     </main>
     <?php
@@ -39,18 +40,37 @@ $meta = array_filter([
     category_name($p['categoria_id']),
 ], static fn ($v): bool => $v !== '');
 $secciones = ['El problema' => $p['problema'], 'La solución' => $p['solucion'], 'El resultado' => $p['resultado']];
+$seccion = portfolio_find_section($site, $p['categoria_id']);
+$migas = [['Proyectos', '/proyectos']];
+if ($seccion !== null) {
+    $migas[] = [$seccion['nombre'], $seccion['url']];
+}
+$migas[] = [$p['title'], project_url($p)];
+$snippet = portfolio_snippet($p);
 
 render_partial('head', [
     'title' => $p['title'] . ' | ' . $site['profile']['name'],
     'description' => $p['description'],
     'og_image' => $imagenes[0] ?? 'assets/img/og/og-inicio.jpg',
     'canonical' => project_url($p),
+    'jsonld' => [jsonld_project($p, $site), jsonld_breadcrumbs($migas)],
+    'extra_head' => $snippet !== null ? prism_head() : '',
 ]);
-render_partial('nav', ['site' => $site]);
+render_partial('nav', ['site' => $site, 'actual' => 'proyectos']);
 ?>
 <main class="detail-page">
   <div class="container">
-    <a class="detail-back" href="/#proyectos">&larr; Todos los proyectos</a>
+    <nav class="breadcrumbs" aria-label="Estás en">
+      <a href="/">Inicio</a>
+      <?php foreach ($migas as $i => [$nombre, $ruta]): ?>
+        <span aria-hidden="true">›</span>
+        <?php if ($i === count($migas) - 1): ?>
+          <span aria-current="page"><?= e($nombre) ?></span>
+        <?php else: ?>
+          <a href="<?= e($ruta) ?>"><?= e($nombre) ?></a>
+        <?php endif; ?>
+      <?php endforeach; ?>
+    </nav>
     <header class="detail-header">
       <p class="eyebrow"><?= e(category_name($p['categoria_id'])) ?></p>
       <h1><?= e($p['title']) ?></h1>
@@ -71,6 +91,9 @@ render_partial('nav', ['site' => $site]);
           <img src="<?= e(asset($img)) ?>" alt="Vista de <?= e($p['title']) ?>" loading="lazy" width="1200" height="750">
         <?php endforeach; ?>
       </div>
+      <?php if ($p['imagen_ejemplo']): ?>
+        <p class="image-note">Imagen con datos de ejemplo: el sistema real trabaja con información de clientes que no se muestra.</p>
+      <?php endif; ?>
     <?php endif; ?>
 
     <div class="detail-grid">
@@ -92,6 +115,9 @@ render_partial('nav', ['site' => $site]);
               <?php endforeach; ?>
             </ul>
           </section>
+        <?php endif; ?>
+        <?php if ($snippet !== null): ?>
+          <?php render_partial('code-block', ['snippet' => $snippet]); ?>
         <?php endif; ?>
       </div>
       <aside class="detail-aside">
@@ -120,4 +146,7 @@ render_partial('nav', ['site' => $site]);
 </main>
 <?php
 render_partial('whatsapp-fab', ['site' => $site, 'mensaje' => 'Hola Julio, vi el proyecto «' . $p['title'] . '» y quiero algo así para mi negocio.']);
+if ($snippet !== null) {
+    echo prism_scripts($snippet['lenguaje']);
+}
 render_partial('footer', ['site' => $site]);

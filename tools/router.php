@@ -9,8 +9,22 @@ if (preg_match('#^/(data|includes|tests|tools)(/|$)#', $path)) {
     return true;
 }
 
-if (preg_match('#^/restaurantes/?$#', $path)) {
-    require $root . '/restaurantes.php';
+$rutas = [
+    '#^/restaurantes/?$#' => 'restaurantes.php',
+    '#^/servicios/?$#' => 'servicios.php',
+    '#^/proyectos/?$#' => 'proyectos.php',
+    '#^/contacto/?$#' => 'contacto.php',
+];
+foreach ($rutas as $patron => $archivo) {
+    if (preg_match($patron, $path)) {
+        require $root . '/' . $archivo;
+        return true;
+    }
+}
+
+if (preg_match('#^/proyectos/([a-z0-9-]+)/?$#', $path, $m)) {
+    $_GET['id'] = $m[1];
+    require $root . '/seccion.php';
     return true;
 }
 
@@ -22,6 +36,11 @@ if (preg_match('#^/proyecto/([a-z0-9-]+)/?$#', $path, $m)) {
 
 if ($path !== '/' && is_file($root . $path)) {
     return false;
+}
+
+if (is_dir($root . $path) && is_file(rtrim($root . $path, '/') . '/index.php')) {
+    require rtrim($root . $path, '/') . '/index.php';
+    return true;
 }
 
 if ($path === '/' || $path === '/index.php') {

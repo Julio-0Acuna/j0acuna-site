@@ -1,6 +1,12 @@
 DirectoryIndex index.php index.html
 Options -Indexes
 
+AddType model/gltf-binary .glb
+
 RewriteEngine On
 RewriteRule ^restaurantes/?$ restaurantes.php [L]
+RewriteRule ^servicios/?$ servicios.php [L]
+RewriteRule ^proyectos/?$ proyectos.php [L]
+RewriteRule ^proyectos/([a-z0-9-]+)/?$ seccion.php?id=$1 [L,QSA]
 RewriteRule ^proyecto/([a-z0-9-]+)/?$ proyecto.php?id=$1 [L,QSA]
+RewriteRule ^contacto/?$ contacto.php [L]

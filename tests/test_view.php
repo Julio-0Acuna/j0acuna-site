@@ -50,10 +50,12 @@ t('bootstrap por CDN con integridad', function () {
 
 t('nav sin admin y con enlaces absolutos', function () {
     ob_start();
-    render_partial('nav', ['site' => portfolio_load_site()]);
+    render_partial('nav', ['site' => portfolio_load_site(), 'actual' => 'servicios']);
     $h = ob_get_clean();
-    contiene($h, 'href="/#servicios"');
+    contiene($h, 'href="/servicios" aria-current="page"');
+    contiene($h, 'href="/proyectos"');
     contiene($h, 'href="/restaurantes"');
+    contiene($h, 'href="/contacto"');
     no_contiene($h, 'admin');
 });
 

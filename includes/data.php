@@ -19,6 +19,10 @@ function portfolio_load_site(): array
     $site['projects'] = array_map('portfolio_normalize_project', is_array($data['projects'] ?? null) ? $data['projects'] : $site['projects']);
     $site['services'] = array_map('portfolio_normalize_service', is_array($data['services'] ?? null) ? $data['services'] : []);
     $site['skills'] = is_array($data['skills'] ?? null) ? $data['skills'] : $site['skills'];
+    $site['faqs'] = array_values(array_filter(
+        is_array($data['faqs'] ?? null) ? $data['faqs'] : [],
+        static fn ($f): bool => is_array($f) && trim((string) ($f['pregunta'] ?? '')) !== '' && trim((string) ($f['respuesta'] ?? '')) !== ''
+    ));
 
     return $site;
 }
@@ -31,13 +35,49 @@ function portfolio_save_site(array $site): void
 function portfolio_categories(): array
 {
     return [
-        ['id' => 'restaurantes', 'nombre' => 'Restaurantes y delivery'],
-        ['id' => 'ejemplos', 'nombre' => 'Ejemplos por rubro'],
-        ['id' => 'gestion', 'nombre' => 'Comercio y gestión'],
-        ['id' => 'web', 'nombre' => 'Páginas web'],
-        ['id' => 'ia', 'nombre' => 'Inteligencia artificial'],
-        ['id' => 'formacion', 'nombre' => 'Formación y estudio'],
+        ['id' => 'restaurantes', 'nombre' => 'Restaurantes y delivery', 'resumen' => 'Pedidos, paneles y herramientas para restaurantes y apps de delivery.'],
+        ['id' => 'ejemplos', 'nombre' => 'Ejemplos por rubro', 'resumen' => 'Sitios de ejemplo para distintos tipos de negocio.'],
+        ['id' => 'gestion', 'nombre' => 'Comercio y gestión', 'resumen' => 'Tiendas online y sistemas que ordenan ventas, inventario y equipos.'],
+        ['id' => 'web', 'nombre' => 'Páginas web', 'resumen' => 'Sitios rápidos, claros y pensados para el celular.'],
+        ['id' => 'ia', 'nombre' => 'Inteligencia artificial', 'resumen' => 'Asistentes, voz y documentos con inteligencia artificial.'],
+        ['id' => 'formacion', 'nombre' => 'Formación y estudio', 'resumen' => 'Cursos, juegos educativos y proyectos de estudio.'],
     ];
+}
+
+/** Secciones con al menos un proyecto visible: nombre, resumen, url, cantidad y portada. */
+function portfolio_sections(array $site): array
+{
+    $sections = [];
+    foreach (portfolio_categories() as $c) {
+        $projects = portfolio_section_projects($site, $c['id']);
+        if (!$projects) {
+            continue;
+        }
+        $cover = '';
+        foreach ($projects as $p) {
+            if ($p['image_url'] !== '') {
+                $cover = $p['image_url'];
+                break;
+            }
+        }
+        $sections[] = $c + ['url' => '/proyectos/' . $c['id'], 'cantidad' => count($projects), 'portada' => $cover];
+    }
+    return $sections;
+}
+
+function portfolio_section_projects(array $site, string $id): array
+{
+    return array_values(array_filter(portfolio_visible_projects($site), static fn (array $p): bool => $p['categoria_id'] === $id));
+}
+
+function portfolio_find_section(array $site, string $id): ?array
+{
+    foreach (portfolio_sections($site) as $s) {
+        if ($s['id'] === $id) {
+            return $s;
+        }
+    }
+    return null;
 }
 
 function portfolio_category_from_legacy(string $category): string
@@ -79,8 +119,12 @@ function portfolio_normalize_project(array $p): array
         'funcionalidades' => [],
         'galeria' => [],
         'credito' => '',
+        'imagen_ejemplo' => false,
+        'mostrar_codigo' => false,
     ];
     $p = array_replace($defaults, $p);
+    $p['imagen_ejemplo'] = (bool) $p['imagen_ejemplo'];
+    $p['mostrar_codigo'] = (bool) $p['mostrar_codigo'];
     $p['orden'] = (int) $p['orden'];
     foreach (['published', 'destacado', 'en_restaurantes', 'mostrar_cliente'] as $flag) {
         $p[$flag] = (bool) $p[$flag];
@@ -218,6 +262,36 @@ function portfolio_apply_admin_post(array $site, array $post): array
     return $site;
 }
 
+/**
+ * Fragmento de código del proyecto (data/snippets/indice.json + archivo), solo si el proyecto
+ * tiene mostrar_codigo. Devuelve null si falta algo.
+ */
+function portfolio_snippet(array $project, ?string $dir = null): ?array
+{
+    if (empty($project['mostrar_codigo'])) {
+        return null;
+    }
+    $dir = $dir ?? __DIR__ . '/../data/snippets';
+    $indice = is_file($dir . '/indice.json') ? json_decode((string) file_get_contents($dir . '/indice.json'), true) : null;
+    foreach (is_array($indice) ? $indice : [] as $s) {
+        if (($s['id'] ?? '') !== $project['id']) {
+            continue;
+        }
+        $archivo = $dir . '/' . basename((string) ($s['archivo'] ?? ''));
+        if (!is_file($archivo)) {
+            return null;
+        }
+        $lenguaje = in_array($s['lenguaje'] ?? '', ['php', 'python', 'javascript', 'java', 'sql'], true) ? $s['lenguaje'] : 'none';
+        return [
+            'lenguaje' => $lenguaje,
+            'titulo' => (string) ($s['titulo'] ?? ''),
+            'explicacion' => (string) ($s['explicacion'] ?? ''),
+            'codigo' => (string) file_get_contents($archivo),
+        ];
+    }
+    return null;
+}
+
 function portfolio_load_admin(): array
 {
     if (!file_exists(PORTFOLIO_ADMIN_FILE)) {
@@ -260,6 +334,8 @@ function portfolio_default_site(): array
             'bio' => 'Soy Julio, desarrollo soluciones web con foco en sitios rapidos, funcionales y faciles de mantener.',
             'approach' => 'Trabajo con interfaces limpias, codigo ordenado y herramientas practicas para que cada proyecto pueda crecer sin perder claridad.',
             'location' => 'Chile',
+            'ciudad' => 'Santiago',
+            'area' => 'todo Chile',
             'contact_text' => 'Puedes revisar mis redes o escribirme directamente para colaborar.',
             'whatsapp_mensaje' => 'Hola Julio, vi tu página y quiero cotizar.',
         ],
@@ -271,6 +347,7 @@ function portfolio_default_site(): array
         ],
         'skills' => ['PHP', 'JavaScript', 'CSS', 'Bootstrap', 'MySQL', 'Git', 'Responsive Design'],
         'services' => [],
+        'faqs' => [],
         'projects' => [
             [
                 'id' => 'portafolio-admin',

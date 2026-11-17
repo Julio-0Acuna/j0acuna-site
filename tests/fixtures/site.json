@@ -14,17 +14,105 @@
         "linkedin": "https://www.linkedin.com/in/julio-0acuna/",
         "whatsapp": "+56 9 7353 7642"
     },
-    "skills": ["PHP"],
+    "skills": [
+        "PHP"
+    ],
     "services": [
-        {"id": "srv-rest", "titulo": "Servicio restaurantes", "resumen": "Para locales", "para": "restaurantes", "nivel": "presencia", "orden": 1, "publicado": true},
-        {"id": "srv-emp", "titulo": "Servicio empresas", "resumen": "Para empresas", "para": "empresas", "orden": 3, "publicado": true},
-        {"id": "srv-ambos", "titulo": "Servicio ambos", "resumen": "Para todos", "para": "ambos", "nivel": "directo", "orden": 2, "publicado": true}
+        {
+            "id": "srv-rest",
+            "titulo": "Servicio restaurantes",
+            "resumen": "Para locales",
+            "para": "restaurantes",
+            "nivel": "presencia",
+            "orden": 1,
+            "publicado": true
+        },
+        {
+            "id": "srv-emp",
+            "titulo": "Servicio empresas",
+            "resumen": "Para empresas",
+            "para": "empresas",
+            "orden": 3,
+            "publicado": true
+        },
+        {
+            "id": "srv-ambos",
+            "titulo": "Servicio ambos",
+            "resumen": "Para todos",
+            "para": "ambos",
+            "nivel": "directo",
+            "orden": 2,
+            "publicado": true
+        }
     ],
     "projects": [
-        {"id": "gestion-b", "title": "Sistema B", "categoria_id": "gestion", "description": "Gestión B", "technologies": ["PHP"], "orden": 2, "published": true},
-        {"id": "restaurante-a", "title": "Carnicería «Don Ramón» & Cía", "categoria_id": "restaurantes", "description": "Pedidos para \"Don Ramón\"", "technologies": ["PHP", "MySQL"], "destacado": true, "en_restaurantes": true, "orden": 1, "cliente": "Don Ramón", "mostrar_cliente": true, "problema": "Pedidos en papel", "solucion": "Sistema web", "resultado": "Menos errores", "funcionalidades": ["Carrito", "WhatsApp"], "published": true},
-        {"id": "oculto", "title": "Proyecto oculto", "categoria_id": "ejemplos", "description": "No debe verse", "destacado": true, "published": false},
-        {"id": "viejo", "title": "Proyecto viejo", "category": "Python + MySQL", "description": "Formato antiguo", "technologies": ["Python"], "published": true},
-        {"id": "web-c", "title": "Web C", "categoria_id": "web", "description": "Sitio C", "technologies": ["HTML"], "published": true}
+        {
+            "id": "gestion-b",
+            "title": "Sistema B",
+            "categoria_id": "gestion",
+            "description": "Gestión B",
+            "technologies": [
+                "PHP"
+            ],
+            "orden": 2,
+            "published": true
+        },
+        {
+            "id": "restaurante-a",
+            "title": "Carnicería «Don Ramón» & Cía",
+            "categoria_id": "restaurantes",
+            "description": "Pedidos para \"Don Ramón\"",
+            "technologies": [
+                "PHP",
+                "MySQL"
+            ],
+            "destacado": true,
+            "en_restaurantes": true,
+            "orden": 1,
+            "cliente": "Don Ramón",
+            "mostrar_cliente": true,
+            "problema": "Pedidos en papel",
+            "solucion": "Sistema web",
+            "resultado": "Menos errores",
+            "funcionalidades": [
+                "Carrito",
+                "WhatsApp"
+            ],
+            "published": true
+        },
+        {
+            "id": "oculto",
+            "title": "Proyecto oculto",
+            "categoria_id": "ejemplos",
+            "description": "No debe verse",
+            "destacado": true,
+            "published": false
+        },
+        {
+            "id": "viejo",
+            "title": "Proyecto viejo",
+            "category": "Python + MySQL",
+            "description": "Formato antiguo",
+            "technologies": [
+                "Python"
+            ],
+            "published": true
+        },
+        {
+            "id": "web-c",
+            "title": "Web C",
+            "categoria_id": "web",
+            "description": "Sitio C",
+            "technologies": [
+                "HTML"
+            ],
+            "published": true
+        }
+    ],
+    "faqs": [
+        {
+            "pregunta": "¿Trabajas en regiones?",
+            "respuesta": "Sí, en todo Chile."
+        }
     ]
 }
