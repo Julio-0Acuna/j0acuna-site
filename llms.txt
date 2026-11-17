@@ -4,11 +4,15 @@
 > tiendas online y sistemas a medida para restaurantes, comercios y empresas de todo Chile.
 
 ## Qué ofrece
-- Página web y menú digital con QR: Tu negocio en Google y en el celular de tus clientes: horarios, ubicación, productos y un menú que se abre con un QR en la mesa o en el mostrador.
+- Página web para tu negocio: Una página clara y rápida en el celular, con tus productos, horario, ubicación y botón de WhatsApp. Puede ser de una sola página o un sitio con varias secciones.
+- Menú digital con QR y platos en 3D: Tu carta en el celular del cliente: escanea el código QR de la mesa y ve fotos, precios y tamaños. Los platos destacados se pueden girar en 3D o ver sobre la mesa con la cámara.
+- Aparece en Google: Perfil de Empresa y SEO: Creo y configuro tu Perfil de Empresa en Google para que aparezcas en Maps con horario, fotos y reseñas, y preparo tu página para que Google la entienda y la muestre a quienes buscan en tu zona.
 - Pedidos directos por WhatsApp o web: Tus clientes eligen productos, arman su pedido y te llega listo por WhatsApp, sin pagar comisión a una app.
+- Tienda online con cuentas de clientes: Una plataforma web para vender en línea: catálogo, carrito, retiro o despacho, cuentas de clientes y un panel donde ves los pedidos, el stock y las ventas del día.
 - Vende en Uber Eats y PedidosYa: Te ayudo a entrar y a vender más en las apps de delivery: alta del local, menú, fotos, promociones y revisión de tus números.
 - Todos tus pedidos en una pantalla: Los pedidos de las apps y de tu web llegan a una sola pantalla de cocina, con comanda impresa y aviso sonoro. Ya lo construí en Brasil para iFood y 99Food; en Chile se conecta según lo que permita cada app.
-- Sistemas a medida: gestión, inventario, presupuestos e IA: Si tu empresa trabaja con planillas y papeles, lo paso a un sistema web con usuarios y permisos, que se usa desde el computador o el celular.
+- Sistemas a medida: gestión, inventario, presupuestos e intranets: Si tu empresa trabaja con planillas y papeles, lo paso a un sistema web con usuarios y permisos, que se usa desde el computador o el celular.
+- Inteligencia artificial: asistentes, voz y documentos: Herramientas con inteligencia artificial que ahorran horas: un asistente que responde preguntas sobre los documentos de tu empresa citando la fuente, transcripción de audios, texto a voz y videos explicativos.
 
 ## Dónde trabaja
 Está en Santiago y atiende negocios de todo Chile, también a distancia por videollamada y WhatsApp.
@@ -35,4 +39,13 @@ Español y portugués.
   - Formación y estudio: https://j0acuna.site/proyectos/formacion
 - Ejemplos por rubro (sitios de demostración de negocios ficticios): https://j0acuna.site/demos/
   - Pizzeria: https://j0acuna.site/demos/pizzeria/
+- Blog con guías para negocios: https://j0acuna.site/blog
+  - Cómo aparecer en Google Maps con tu negocio, paso a paso: https://j0acuna.site/blog/aparecer-en-google-maps-perfil-de-empresa
+  - Cómo vender en PedidosYa y Uber Eats sin perder tu margen: https://j0acuna.site/blog/como-vender-en-pedidosya-y-uber-eats
+  - Menú digital QR para restaurantes, qué revisar antes de imprimir: https://j0acuna.site/blog/menu-digital-qr-restaurantes
+  - Pedidos por WhatsApp para restaurantes, sin pagar comisión: https://j0acuna.site/blog/pedidos-por-whatsapp-sin-comision
+  - Qué debe tener una página web para talleres mecánicos: https://j0acuna.site/blog/pagina-web-para-talleres-mecanicos
+  - Tienda online para pymes en Chile, qué decidir antes de partir: https://j0acuna.site/blog/tienda-online-para-pymes-chile
+  - ¿Cuánto cuesta una página web para un restaurante en Chile?: https://j0acuna.site/blog/cuanto-cuesta-pagina-web-restaurante-chile
+  - ¿Página web para mi negocio o solo Instagram? Cómo decidir: https://j0acuna.site/blog/pagina-web-o-solo-instagram
 - Contacto: https://j0acuna.site/contacto
