@@ -1,0 +1,4 @@
+# Solo index.php es público. Configuración, seed, funciones, plantillas y el reinicio por CLI no se sirven.
+<FilesMatch "^(config|seed|reset|_encargo)\.php$">
+  Require all denied
+</FilesMatch>

@@ -1,0 +1,273 @@
+/* Pastelería Doña Elvira · Simple-page · pastelería familiar de barrio (caja celeste, blonda y letra a mano) */
+.de {
+  --celeste: #bfdcea;
+  --celeste-2: #e3f0f6;
+  --celeste-osc: #2f6f8f;
+  --crema: #fbf5ea;
+  --papel: #fffdf8;
+  --choco: #3a2217;
+  --choco-2: #5e3d2c;
+  --suave: #6d5243;
+  --cereza: #a8243a;
+  --mantequilla: #f3d68f;
+  --menta: #d4ecdf;
+  --demo-tinta: var(--choco);
+  --demo-suave: var(--suave);
+  --demo-fondo: var(--crema);
+  --demo-superficie: var(--papel);
+  --demo-borde: rgba(58, 34, 23, .14);
+  --demo-acento: var(--cereza);
+  --demo-radio: 18px;
+  --demo-sombra: 0 14px 34px rgba(58, 34, 23, .1);
+  --demo-fuente-titulos: "Fraunces", Georgia, serif;
+  --demo-foco: #1f5f86;
+  margin: 0;
+  background: var(--crema);
+  color: var(--choco);
+  font-family: "Karla", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  padding-bottom: 72px;
+}
+@media (min-width: 760px) { .de { padding-bottom: 0; } }
+
+.de h1, .de h2, .de h3 { font-family: "Fraunces", Georgia, serif; line-height: 1.08; margin: 0; font-weight: 650; letter-spacing: -.01em; }
+.de h2 { font-size: clamp(2.2rem, 7vw, 3.5rem); }
+:where(.de) a { color: inherit; }
+.de-envoltura { width: min(1140px, 100% - 32px); margin-inline: auto; }
+.de-mano { font-family: "Caveat", cursive; font-weight: 700; font-size: 1.55rem; line-height: 1.1; color: var(--cereza); margin: 0 0 6px; }
+
+/* Botones redondeados, chocolate y crema */
+.de-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 52px; padding: 12px 24px; border-radius: 999px;
+  background: var(--choco); color: var(--crema); text-decoration: none;
+  border: 2px solid var(--choco); font-weight: 700; font-size: 1.02rem;
+  transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease;
+  box-shadow: 0 8px 20px rgba(58, 34, 23, .18);
+}
+.de-btn:hover { transform: translateY(-2px); background: var(--choco-2); }
+.de-btn--linea { background: transparent; color: var(--choco); box-shadow: none; }
+.de-btn--linea:hover { background: var(--papel); }
+.de-btn--crema { background: var(--crema); color: var(--choco); border-color: var(--crema); }
+.de-btn--crema:hover { background: #fff; }
+.de-btn--borde { background: transparent; color: var(--crema); border-color: rgba(251, 245, 234, .7); box-shadow: none; }
+.de-btn--borde:hover { background: rgba(251, 245, 234, .12); }
+.de-btn--chico { min-height: 44px; padding: 8px 18px; font-size: .95rem; box-shadow: none; }
+.de-acciones { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Toldo a rayas con festón */
+.de-toldo {
+  position: relative; z-index: 55; height: 22px;
+  background: repeating-linear-gradient(90deg, var(--celeste) 0 32px, var(--papel) 32px 64px);
+}
+.de-toldo::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 14px;
+  background:
+    radial-gradient(circle at 16px 0, var(--celeste) 15.5px, transparent 16.5px) 0 0 / 64px 14px repeat-x,
+    radial-gradient(circle at 48px 0, var(--papel) 15.5px, transparent 16.5px) 0 0 / 64px 14px repeat-x;
+  filter: drop-shadow(0 3px 2px rgba(58, 34, 23, .08));
+}
+
+/* Cabecera */
+.de-top { position: sticky; top: 0; z-index: 50; background: rgba(251, 245, 234, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--demo-borde); }
+.de-top__fila { display: flex; align-items: center; gap: 16px; min-height: 72px; padding-top: 6px; }
+.de-marca { display: flex; align-items: center; gap: 12px; text-decoration: none; margin-right: auto; }
+.de-marca__sello {
+  width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; flex: none;
+  background: var(--celeste); color: var(--choco);
+  box-shadow: inset 0 0 0 3px var(--papel), inset 0 0 0 4px var(--choco);
+  font-family: "Fraunces", serif; font-style: italic; font-weight: 650; font-size: 17px;
+}
+.de-marca__nombre { font-family: "Fraunces", serif; font-weight: 650; font-size: 1.4rem; line-height: 1; }
+.de-marca__nombre small { display: block; margin-top: 5px; font-family: "Karla", sans-serif; font-weight: 700; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--suave); }
+.de-nav { display: none; gap: 26px; font-weight: 700; font-size: .98rem; }
+.de-nav a { text-decoration: none; padding: 6px 0; background: linear-gradient(var(--cereza), var(--cereza)) 0 100% / 0 2px no-repeat; transition: background-size .2s; }
+.de-nav a:hover { background-size: 100% 2px; }
+@media (min-width: 920px) { .de-nav { display: flex; } }
+
+/* Portada */
+.de-hero { padding: 36px 0 64px; overflow: hidden; background: var(--crema); }
+.de-hero__grid { display: grid; gap: 28px; align-items: center; }
+@media (min-width: 880px) { .de-hero__grid { grid-template-columns: 1.05fr .95fr; } .de-hero { padding: 64px 0 88px; } }
+.de-hero h1 { font-size: clamp(2.7rem, 10.5vw, 5.2rem); font-weight: 650; letter-spacing: -.025em; }
+.de-hero__eslogan { font-family: "Fraunces", serif; font-style: italic; font-size: clamp(1.3rem, 4.4vw, 1.75rem); line-height: 1.25; margin: 16px 0 10px; }
+.de-hero__eslogan span { color: var(--suave); }
+.de-hero__bajada { color: var(--suave); max-width: 34em; margin: 0 0 26px; }
+.de-estado { display: flex; align-items: center; gap: 8px; margin: 18px 0 0; font-weight: 700; font-size: .95rem; }
+.de-estado__punto { width: 10px; height: 10px; border-radius: 50%; background: var(--cereza); flex: none; }
+.de-estado__punto.is-abierto { background: #1f7a4d; box-shadow: 0 0 0 4px rgba(31, 122, 77, .18); }
+
+.de-hero__foto { position: relative; justify-self: center; width: min(470px, 84vw); aspect-ratio: 1; display: grid; place-items: center; }
+.de-hero__foto::before { content: ""; position: absolute; inset: 6%; border-radius: 50%; background: var(--celeste); transform: translate(5%, 4%); }
+.de-blonda { position: absolute; inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 18px 30px rgba(58, 34, 23, .16)); }
+.de-blonda__papel { fill: var(--papel); }
+.de-blonda__calado circle { fill: var(--celeste-2); }
+.de-blonda__linea { fill: none; stroke: rgba(58, 34, 23, .14); stroke-width: 1.5; stroke-dasharray: 3 6; }
+.de-hero__img { position: relative; width: 66%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; display: block; box-shadow: 0 0 0 6px var(--papel), 0 10px 26px rgba(58, 34, 23, .22); }
+.de-hero__nota {
+  position: absolute; left: -2%; bottom: -4%; margin: 0; transform: rotate(-5deg);
+  font-family: "Caveat", cursive; font-weight: 700; font-size: clamp(1.25rem, 4.6vw, 1.6rem); line-height: 1.05; color: var(--choco);
+  background: var(--mantequilla); padding: 10px 16px 12px; border-radius: 4px; box-shadow: 0 8px 16px rgba(58, 34, 23, .14);
+}
+.de-hero__nota::before { content: ""; position: absolute; left: 50%; top: -9px; width: 54px; height: 18px; transform: translateX(-50%) rotate(3deg); background: rgba(255, 255, 255, .6); }
+.de-hero__flecha { position: absolute; left: 22%; bottom: 13%; width: 70px; color: var(--choco); transform: rotate(-30deg); display: none; }
+@media (min-width: 880px) { .de-hero__nota { left: -14%; bottom: 4%; } .de-hero__flecha { display: block; left: 2%; bottom: 22%; } }
+
+/* Secciones */
+.de-seccion { padding: 72px 0; }
+.de-encabezado { max-width: 680px; margin-bottom: 34px; }
+.de-encabezado > p:last-child { color: var(--suave); margin: 12px 0 0; }
+
+/* Vitrina del día */
+.de-vitrina { background: var(--celeste-2); }
+.de-vitrina__grid { display: grid; gap: 30px 22px; grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); }
+.de-producto { position: relative; display: flex; flex-direction: column; }
+.de-producto__foto { position: relative; margin-bottom: 14px; }
+.de-producto__foto img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; border-radius: 22px 22px 50% 50% / 22px 22px 14% 14%; transition: transform .35s ease; }
+.de-producto:hover .de-producto__foto img { transform: translateY(-4px) rotate(-1deg); }
+.de-producto__dia {
+  position: absolute; left: 12px; top: 12px; padding: 4px 12px; border-radius: 999px;
+  background: var(--papel); color: var(--suave); font-size: .8rem; font-weight: 700;
+}
+.de-producto__dia.is-hoy { background: var(--choco); color: var(--crema); }
+.de-producto h3 { font-size: 1.45rem; }
+.de-producto p { margin: 6px 0 14px; color: var(--suave); font-size: .96rem; flex: 1; }
+.de-producto.is-otro-dia .de-producto__foto img { filter: saturate(.75); }
+.de-producto__precios { display: flex; flex-wrap: wrap; gap: 10px; }
+.de-etiqueta {
+  position: relative; display: inline-grid; align-content: center; gap: 0; min-height: 50px; padding: 6px 16px 6px 26px;
+  text-decoration: none; background: var(--papel); color: var(--choco); font-weight: 700; font-size: 1.12rem; line-height: 1.1;
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%);
+  transition: background-color .15s, transform .15s;
+}
+.de-etiqueta::before { content: ""; position: absolute; left: 11px; top: 50%; width: 7px; height: 7px; margin-top: -3.5px; border-radius: 50%; background: var(--celeste-2); }
+.de-etiqueta small { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--suave); }
+.de-etiqueta--fuerte { background: var(--mantequilla); }
+.de-etiqueta:hover { transform: translateX(2px); background: var(--choco); color: var(--crema); }
+.de-etiqueta:hover small { color: var(--mantequilla); }
+
+/* Tortas por encargo: papel de caja celeste con cordel */
+.de-tortas { position: relative; background: var(--celeste); overflow: hidden; }
+.de-cordel { position: absolute; inset: 0; pointer-events: none; }
+.de-cordel::before, .de-cordel::after { content: ""; position: absolute; background: var(--papel); opacity: .85; }
+.de-cordel::before { top: 0; bottom: 0; right: 9%; width: 3px; box-shadow: 7px 0 0 rgba(255, 253, 248, .6); }
+.de-cordel::after { left: 0; right: 0; top: 30px; height: 3px; box-shadow: 0 7px 0 rgba(255, 253, 248, .6); }
+.de-tortas .de-envoltura { position: relative; }
+.de-tortas .de-mano { color: var(--choco); }
+.de-tortas .de-encabezado > p:last-child { color: var(--choco-2); }
+.de-tortas__lista { display: grid; gap: 22px; }
+@media (min-width: 900px) { .de-tortas__lista { grid-template-columns: 1fr 1fr; } }
+.de-torta { display: grid; grid-template-columns: 1fr; background: var(--papel); border-radius: 26px; overflow: hidden; box-shadow: 0 18px 40px rgba(47, 111, 143, .2); }
+@media (min-width: 560px) { .de-torta { grid-template-columns: 42% 1fr; } }
+.de-torta__foto { position: relative; min-height: 220px; }
+.de-torta__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.de-torta__sello {
+  position: absolute; right: 12px; top: 12px; transform: rotate(4deg);
+  font-family: "Caveat", cursive; font-weight: 700; font-size: 1.25rem; line-height: 1;
+  background: var(--mantequilla); padding: 6px 12px 8px; border-radius: 6px;
+}
+.de-torta__texto { padding: 22px 22px 24px; display: flex; flex-direction: column; }
+.de-torta h3 { font-size: 1.6rem; }
+.de-torta p { margin: 8px 0 0; color: var(--suave); font-size: .97rem; }
+.de-torta__elige { font-size: .78rem !important; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-top: auto !important; padding-top: 16px; }
+.de-tamanos { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.de-tamanos a {
+  display: grid; justify-items: center; gap: 2px; padding: 10px 4px; min-height: 58px; text-decoration: none; text-align: center;
+  border: 1.5px solid var(--demo-borde); border-radius: 16px; line-height: 1.15; transition: border-color .15s, background-color .15s, transform .15s;
+}
+.de-tamanos span { font-size: .78rem; color: var(--suave); font-weight: 700; }
+.de-tamanos strong { font-size: 1.05rem; }
+.de-tamanos a:hover { border-color: var(--choco); background: var(--crema); transform: translateY(-2px); }
+.de-tamanos li:nth-child(2) a { background: var(--celeste-2); border-color: var(--celeste); }
+
+.de-pasos { list-style: none; counter-reset: paso; margin: 40px 0 0; padding: 0; display: grid; gap: 14px; }
+@media (min-width: 860px) { .de-pasos { grid-template-columns: repeat(3, 1fr); gap: 22px; } }
+.de-pasos li { counter-increment: paso; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr; gap: 2px 14px; align-items: start; background: rgba(255, 253, 248, .55); border-radius: 20px; padding: 18px 18px 18px 16px; }
+.de-pasos li::before { content: counter(paso); grid-row: 1 / 3; font-family: "Fraunces", serif; font-style: italic; font-weight: 650; font-size: 2.6rem; line-height: .9; color: var(--celeste-osc); }
+.de-pasos span { color: var(--choco-2); font-size: .95rem; }
+
+/* Carta como libreta de recetas */
+.de-carta { background: var(--crema); }
+.de-carta__grid { display: grid; gap: 34px; }
+@media (min-width: 980px) { .de-carta__grid { grid-template-columns: 1fr 270px; align-items: start; } }
+.de-libreta {
+  position: relative; padding: 34px 22px 34px 44px; border-radius: 6px 22px 22px 6px;
+  background:
+    linear-gradient(90deg, transparent 30px, rgba(168, 36, 58, .35) 30px 32px, transparent 32px),
+    repeating-linear-gradient(180deg, var(--papel) 0 33px, #dbe9f0 33px 34px);
+  box-shadow: 0 16px 40px rgba(58, 34, 23, .1), -6px 0 0 var(--choco-2);
+}
+@media (min-width: 720px) { .de-libreta { padding: 40px 40px 40px 62px; background: linear-gradient(90deg, transparent 40px, rgba(168, 36, 58, .35) 40px 42px, transparent 42px), repeating-linear-gradient(180deg, var(--papel) 0 33px, #dbe9f0 33px 34px); } }
+.de-libreta__columnas { margin-top: 26px; display: grid; gap: 26px 44px; }
+@media (min-width: 760px) { .de-libreta__columnas { grid-template-columns: 1fr 1fr; } }
+.de-libreta__grupo h3 { font-family: "Caveat", cursive; font-weight: 700; font-size: 1.75rem; color: var(--cereza); margin-bottom: 6px; }
+.de-libreta__grupo ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.de-libreta__linea { display: flex; align-items: baseline; gap: 8px; }
+.de-libreta__puntos { flex: 1; min-width: 14px; border-bottom: 2px dotted rgba(58, 34, 23, .3); transform: translateY(-4px); }
+.de-libreta__precio { font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.de-libreta__detalle { display: block; font-size: .9rem; color: var(--suave); }
+.de-libreta__detalle a { margin-left: 4px; font-weight: 700; color: var(--celeste-osc); text-underline-offset: 3px; }
+.de-libreta__detalle a:hover { color: var(--cereza); }
+.de-carta__lado { display: grid; justify-items: center; gap: 16px; text-align: center; }
+.de-carta__lado > p { margin: 0; color: var(--suave); font-size: .93rem; max-width: 260px; }
+.de-colgante { position: relative; padding: 30px 18px 14px; background: var(--mantequilla); border-radius: 16px 16px 22px 22px; transform: rotate(-3deg); box-shadow: 0 16px 30px rgba(58, 34, 23, .16); }
+.de-colgante::before { content: ""; position: absolute; left: 50%; top: 10px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: var(--crema); box-shadow: inset 0 0 0 2px rgba(58, 34, 23, .25); }
+.de-colgante::after { content: ""; position: absolute; left: 50%; bottom: 100%; width: 2px; height: 34px; background: var(--choco-2); transform-origin: bottom; transform: rotate(8deg); }
+.de-qr .demo-qr__codigo { width: 172px; height: 172px; border-radius: 12px; }
+.de-qr figcaption { font-weight: 700; color: var(--choco); }
+.de-carta__fotos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 300px; }
+.de-carta__fotos img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; display: block; box-shadow: 0 0 0 4px var(--papel); }
+
+/* Horario */
+.de-horario { background: var(--papel); }
+.de-horario__grid { display: grid; gap: 40px; align-items: center; }
+@media (min-width: 880px) { .de-horario__grid { grid-template-columns: .9fr 1.1fr; gap: 64px; } }
+.de-horario__foto { margin: 0; position: relative; }
+.de-horario__foto img { width: 100%; aspect-ratio: 5 / 6; object-fit: cover; display: block; border-radius: 200px 200px 24px 24px; }
+.de-horario__foto figcaption { position: absolute; right: 8px; bottom: 18px; background: var(--papel); padding: 8px 16px 10px; border-radius: 12px; transform: rotate(-3deg); box-shadow: 0 8px 18px rgba(58, 34, 23, .14); font-size: 1.35rem; }
+.de-tabla-horario { margin: 16px 0 24px; padding: 18px 20px; gap: 8px; border-radius: 18px; background: var(--celeste-2); max-width: 420px; }
+.de-entregas { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.de-entregas li { display: grid; gap: 2px; padding-left: 18px; border-left: 3px solid var(--celeste); }
+.de-entregas span { color: var(--suave); font-size: .95rem; }
+
+/* Google (componente común) con el estilo de la casa */
+.de-seccion--google { background: var(--celeste-2); }
+.de .demo-google__intro h2 { font-size: clamp(2rem, 6.5vw, 3rem); }
+.de .demo-google__perfil { border: 0; border-radius: 22px; }
+.de .demo-google__mapa { border: 0; border-radius: 22px; }
+.de .demo-google__resena { border: 0; border-radius: 18px; }
+
+/* Cierre */
+.de-cierre { position: relative; background: var(--choco); color: var(--crema); padding: 76px 0 72px; text-align: center; }
+.de-cierre::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 16px;
+  background: radial-gradient(circle at 16px 0, var(--celeste-2) 15.5px, transparent 16.5px) 0 0 / 32px 16px repeat-x;
+}
+.de-cierre .de-mano { color: var(--mantequilla); }
+.de-cierre h2 { color: var(--crema); }
+.de-cierre p { font-size: 1.1rem; margin: 12px auto 26px; max-width: 32em; }
+.de-cierre .de-acciones { justify-content: center; }
+.de-cierre :focus-visible { outline-color: var(--mantequilla); }
+
+.de-pie { background: #2a170f; color: #e9dccb; padding: 36px 0 40px; }
+.de-pie p { margin: 0 0 4px; }
+.de-pie__marca { font-family: "Fraunces", serif; font-weight: 650; font-size: 1.5rem; color: var(--crema); }
+.de-pie :focus-visible { outline-color: var(--mantequilla); }
+
+/* Barra fija inferior en el celular */
+.de-barra {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 80;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  background: rgba(251, 245, 234, .96); backdrop-filter: blur(8px); box-shadow: 0 -8px 24px rgba(58, 34, 23, .12);
+}
+.de-barra a {
+  display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-radius: 999px;
+  text-decoration: none; font-weight: 700; border: 2px solid var(--choco); color: var(--choco);
+}
+.de-barra a:first-child { background: #136c43; border-color: #136c43; color: #fff; }
+@media (min-width: 760px) { .de-barra { display: none; } }
+
+.de [id] { scroll-margin-top: 90px; }
+@media (max-width: 420px) { .de-marca__nombre { font-size: 1.2rem; } .de-marca__nombre small { font-size: .6rem; letter-spacing: .08em; white-space: nowrap; } .de-marca__sello { width: 40px; height: 40px; font-size: 15px; } .de-top__fila { gap: 10px; } .de-btn--chico { padding: 8px 14px; } }
+@media (prefers-reduced-motion: reduce) { .de-producto:hover .de-producto__foto img, .de-btn:hover { transform: none; } }
