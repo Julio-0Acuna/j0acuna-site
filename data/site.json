@@ -127,7 +127,7 @@
                 "API iFood",
                 "API 99Food"
             ],
-            "image_url": "",
+            "image_url": "assets/img/projects/sistema-pedidos-multi-app.webp",
             "demo_url": "",
             "repo_url": "",
             "published": true,
@@ -138,7 +138,8 @@
             "mostrar_cliente": false,
             "pais": "Brasil",
             "anio": "2026",
-            "credito": "Desarrollado para MAVT, agencia de restaurantes en Brasil"
+            "credito": "Desarrollado para MAVT, agencia de restaurantes en Brasil",
+            "imagen_ejemplo": true
         },
         {
             "id": "ridelsip-cl",
@@ -201,7 +202,7 @@
                 "Node.js",
                 "Google Sheets"
             ],
-            "image_url": "",
+            "image_url": "assets/img/projects/paneles-duenos-restaurantes.webp",
             "demo_url": "",
             "repo_url": "",
             "published": true,
@@ -212,7 +213,8 @@
             "mostrar_cliente": false,
             "pais": "Brasil",
             "anio": "2026",
-            "credito": "Para una agencia de restaurantes en Brasil"
+            "credito": "Para una agencia de restaurantes en Brasil",
+            "imagen_ejemplo": true
         },
         {
             "id": "suitechile-cl",
@@ -274,7 +276,7 @@
                 "SQLite",
                 "llama.cpp"
             ],
-            "image_url": "",
+            "image_url": "assets/img/projects/saturnus-aura.webp",
             "demo_url": "",
             "repo_url": "",
             "published": true,
@@ -286,7 +288,8 @@
             "pais": "Chile",
             "anio": "2026",
             "credito": "",
-            "mostrar_codigo": true
+            "mostrar_codigo": true,
+            "imagen_ejemplo": true
         },
         {
             "id": "obrascivilesmys-cl",
@@ -343,7 +346,7 @@
                 "Node.js",
                 "JavaScript"
             ],
-            "image_url": "",
+            "image_url": "assets/img/projects/intranet-agencia.webp",
             "demo_url": "",
             "repo_url": "",
             "published": true,
@@ -354,7 +357,8 @@
             "mostrar_cliente": false,
             "pais": "Brasil",
             "anio": "2026",
-            "credito": "Para una agencia de restaurantes en Brasil"
+            "credito": "Para una agencia de restaurantes en Brasil",
+            "imagen_ejemplo": true
         },
         {
             "id": "marca-propia-agencia",
@@ -375,7 +379,7 @@
                 "React",
                 "JavaScript"
             ],
-            "image_url": "",
+            "image_url": "assets/img/projects/marca-propia-agencia.webp",
             "demo_url": "",
             "repo_url": "",
             "published": true,
@@ -386,7 +390,8 @@
             "mostrar_cliente": false,
             "pais": "Brasil",
             "anio": "2026",
-            "credito": "Para una agencia de restaurantes en Brasil"
+            "credito": "Para una agencia de restaurantes en Brasil",
+            "imagen_ejemplo": true
         },
         {
             "id": "cambio-fotos-ifood",
@@ -406,7 +411,7 @@
                 "Python",
                 "API iFood"
             ],
-            "image_url": "",
+            "image_url": "assets/img/projects/cambio-fotos-ifood.webp",
             "demo_url": "",
             "repo_url": "",
             "published": true,
@@ -417,7 +422,8 @@
             "mostrar_cliente": false,
             "pais": "Brasil",
             "anio": "2026",
-            "credito": "Desarrollado para MAVT, agencia de restaurantes en Brasil"
+            "credito": "Desarrollado para MAVT, agencia de restaurantes en Brasil",
+            "imagen_ejemplo": true
         },
         {
             "id": "plataforma-cursos",
@@ -440,7 +446,7 @@
                 "MySQL",
                 "JavaScript"
             ],
-            "image_url": "",
+            "image_url": "assets/img/projects/plataforma-cursos.webp",
             "demo_url": "",
             "repo_url": "",
             "published": true,
@@ -451,7 +457,8 @@
             "mostrar_cliente": false,
             "pais": "Brasil",
             "anio": "2026",
-            "credito": "Desarrollado para MAVT, agencia de restaurantes en Brasil"
+            "credito": "Desarrollado para MAVT, agencia de restaurantes en Brasil",
+            "imagen_ejemplo": true
         },
         {
             "id": "videos-pizarra",
@@ -474,7 +481,7 @@
                 "ffmpeg",
                 "Texto a voz"
             ],
-            "image_url": "",
+            "image_url": "assets/img/projects/videos-pizarra.webp",
             "demo_url": "",
             "repo_url": "",
             "published": true,
@@ -485,7 +492,8 @@
             "mostrar_cliente": false,
             "pais": "Brasil",
             "anio": "2026",
-            "credito": "Desarrollado para MAVT, agencia de restaurantes en Brasil"
+            "credito": "Desarrollado para MAVT, agencia de restaurantes en Brasil",
+            "imagen_ejemplo": true
         },
         {
             "id": "voz-ia",
@@ -507,7 +515,7 @@
                 "Whisper",
                 "Texto a voz"
             ],
-            "image_url": "",
+            "image_url": "assets/img/projects/voz-ia.webp",
             "demo_url": "",
             "repo_url": "",
             "published": true,
@@ -518,7 +526,8 @@
             "mostrar_cliente": false,
             "pais": "Brasil",
             "anio": "2026",
-            "credito": "Desarrollado para MAVT, agencia de restaurantes en Brasil"
+            "credito": "Desarrollado para MAVT, agencia de restaurantes en Brasil",
+            "imagen_ejemplo": true
         },
         {
             "id": "jarvis",
@@ -542,7 +551,7 @@
                 "Qt",
                 "Inteligencia artificial"
             ],
-            "image_url": "",
+            "image_url": "assets/img/projects/jarvis.webp",
             "demo_url": "",
             "repo_url": "",
             "published": true,
@@ -554,7 +563,8 @@
             "pais": "Chile",
             "anio": "2026",
             "credito": "Proyecto propio",
-            "mostrar_codigo": true
+            "mostrar_codigo": true,
+            "imagen_ejemplo": true
         },
         {
             "id": "bitacora",
@@ -576,7 +586,7 @@
                 "CSS",
                 "JavaScript"
             ],
-            "image_url": "",
+            "image_url": "assets/img/projects/bitacora.webp",
             "demo_url": "",
             "repo_url": "",
             "published": true,
@@ -588,7 +598,8 @@
             "pais": "Chile",
             "anio": "2026",
             "credito": "Proyecto propio",
-            "mostrar_codigo": true
+            "mostrar_codigo": true,
+            "imagen_ejemplo": false
         },
         {
             "id": "integracion-magalu",
@@ -609,7 +620,7 @@
                 "OAuth",
                 "UML"
             ],
-            "image_url": "",
+            "image_url": "assets/img/projects/integracion-magalu.webp",
             "demo_url": "",
             "repo_url": "",
             "published": true,
@@ -620,7 +631,8 @@
             "mostrar_cliente": false,
             "pais": "Brasil",
             "anio": "2026",
-            "credito": "Desarrollado para MAVT, agencia de restaurantes en Brasil"
+            "credito": "Desarrollado para MAVT, agencia de restaurantes en Brasil",
+            "imagen_ejemplo": true
         },
         {
             "id": "bibliotecaoop",
