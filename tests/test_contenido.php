@@ -25,6 +25,7 @@ t('contenido real: contacto y ocultos', function () {
 t('contenido real: destacados y pruebas para restaurantes', function () {
     con_sitio_real(function (array $s) {
         eq(count(portfolio_featured_projects($s)), 5);
+        eq(array_column(portfolio_featured_projects($s), 'id'), ['ridelsip-cl', 'intranet-agencia', 'saturnus-aura', 'suitechile-cl', 'obrascivilesmys-cl']);
         eq(count(portfolio_restaurant_projects($s)), 3);
         eq(count(portfolio_visible_services($s, 'restaurantes')), 4);
     });

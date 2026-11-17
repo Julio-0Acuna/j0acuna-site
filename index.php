@@ -2,7 +2,7 @@
 require_once __DIR__ . '/includes/view.php';
 
 $site = portfolio_load_site();
-$featured = portfolio_featured_projects($site, 3);
+$featured = portfolio_featured_projects($site, 8);
 $wa = site_wa($site, $site['profile']['whatsapp_mensaje']);
 
 $caminos = [];
@@ -77,10 +77,39 @@ render_partial('nav', ['site' => $site, 'actual' => 'inicio']);
           <p class="eyebrow">Destacados</p>
           <h2>Algunos proyectos</h2>
         </div>
-        <div class="project-grid">
-          <?php foreach ($featured as $project): ?>
-            <?php render_partial('project-card', ['project' => $project, 'compacto' => true]); ?>
-          <?php endforeach; ?>
+        <div id="carrusel-destacados" class="carousel slide featured-carousel" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="hover" aria-label="Proyectos destacados">
+          <div class="carousel-indicators">
+            <?php foreach ($featured as $i => $project): ?>
+              <button type="button" data-bs-target="#carrusel-destacados" data-bs-slide-to="<?= $i ?>"<?= $i === 0 ? ' class="active" aria-current="true"' : '' ?> aria-label="<?= e($project['title']) ?>"></button>
+            <?php endforeach; ?>
+          </div>
+          <div class="carousel-inner">
+            <?php foreach ($featured as $i => $project): ?>
+              <div class="carousel-item<?= $i === 0 ? ' active' : '' ?>">
+                <a class="featured-slide" href="<?= e(project_url($project)) ?>">
+                  <?php if ($project['image_url'] !== ''): ?>
+                    <img src="<?= e(asset($project['image_url'])) ?>" alt="<?= e($project['title']) ?>" width="1200" height="750"<?= $i === 0 ? '' : ' loading="lazy"' ?>>
+                  <?php endif; ?>
+                  <span class="featured-text">
+                    <span class="featured-cat"><?= e(category_name($project['categoria_id'])) ?></span>
+                    <strong><?= e($project['title']) ?></strong>
+                    <span><?= e($project['description']) ?></span>
+                    <span class="featured-more">Ver proyecto →</span>
+                  </span>
+                </a>
+              </div>
+            <?php endforeach; ?>
+          </div>
+          <?php if (count($featured) > 1): ?>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carrusel-destacados" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carrusel-destacados" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Siguiente</span>
+            </button>
+          <?php endif; ?>
         </div>
         <p class="mt-4"><a class="minimal-btn minimal-btn-outline" href="/proyectos"><span>Ver todos los proyectos</span></a></p>
       </div>

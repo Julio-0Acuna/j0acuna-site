@@ -958,6 +958,109 @@ body::before {
   }
 }
 
+/* ---- Carrusel de destacados (inicio) ---- */
+
+.featured-carousel {
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(16, 26, 43, 0.96), rgba(13, 20, 33, 0.96));
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.featured-slide {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  min-height: 420px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.featured-slide:hover {
+  color: inherit;
+}
+
+.featured-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.featured-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2.5rem 2.5rem 3.5rem;
+}
+
+.featured-cat {
+  color: var(--accent-2);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.06rem;
+  text-transform: uppercase;
+}
+
+.featured-text strong {
+  color: #f8fafc;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.featured-text span {
+  color: var(--muted);
+}
+
+.featured-text .featured-more {
+  color: #5eead4;
+  font-weight: 800;
+}
+
+.featured-carousel .carousel-indicators {
+  margin-bottom: 0.75rem;
+}
+
+.featured-carousel .carousel-indicators [data-bs-target] {
+  width: 26px;
+  height: 4px;
+  background-color: #5eead4;
+}
+
+.featured-carousel .carousel-control-prev,
+.featured-carousel .carousel-control-next {
+  width: 48px;
+}
+
+.featured-carousel .carousel-control-prev-icon,
+.featured-carousel .carousel-control-next-icon {
+  width: 2.4rem;
+  height: 2.4rem;
+  background-color: rgba(7, 11, 18, 0.75);
+  background-size: 55%;
+  border-radius: 999px;
+}
+
+@media (max-width: 767.98px) {
+  .featured-slide {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .featured-slide img {
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+
+  .featured-text {
+    padding: 1.4rem 1.4rem 2.8rem;
+  }
+}
+
 /* ---- Sitio de varias páginas ---- */
 
 .nav-link.active {

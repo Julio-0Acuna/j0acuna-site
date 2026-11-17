@@ -131,9 +131,9 @@
             "demo_url": "",
             "repo_url": "",
             "published": true,
-            "destacado": true,
+            "destacado": false,
             "en_restaurantes": true,
-            "orden": 1,
+            "orden": 6,
             "cliente": "",
             "mostrar_cliente": false,
             "pais": "Brasil",
@@ -172,7 +172,7 @@
             "published": true,
             "destacado": true,
             "en_restaurantes": true,
-            "orden": 2,
+            "orden": 1,
             "cliente": "RIDEL-SIP SpA",
             "mostrar_cliente": true,
             "pais": "Chile",
@@ -206,9 +206,9 @@
             "demo_url": "",
             "repo_url": "",
             "published": true,
-            "destacado": true,
+            "destacado": false,
             "en_restaurantes": true,
-            "orden": 3,
+            "orden": 7,
             "cliente": "",
             "mostrar_cliente": false,
             "pais": "Brasil",
@@ -282,7 +282,7 @@
             "published": true,
             "destacado": true,
             "en_restaurantes": false,
-            "orden": 5,
+            "orden": 3,
             "cliente": "",
             "mostrar_cliente": false,
             "pais": "Chile",
@@ -315,9 +315,9 @@
             "demo_url": "https://obrascivilesmys.cl",
             "repo_url": "",
             "published": true,
-            "destacado": false,
+            "destacado": true,
             "en_restaurantes": false,
-            "orden": 6,
+            "orden": 5,
             "cliente": "MS Obras Civiles",
             "mostrar_cliente": true,
             "pais": "Chile",
@@ -350,9 +350,9 @@
             "demo_url": "",
             "repo_url": "",
             "published": true,
-            "destacado": false,
+            "destacado": true,
             "en_restaurantes": false,
-            "orden": 7,
+            "orden": 2,
             "cliente": "",
             "mostrar_cliente": false,
             "pais": "Brasil",
@@ -652,7 +652,8 @@
             "published": true,
             "orden": 16,
             "credito": "Proyecto de estudio",
-            "mostrar_codigo": true
+            "mostrar_codigo": true,
+            "destacado": false
         },
         {
             "id": "mini-pos",
@@ -672,7 +673,8 @@
             "published": true,
             "orden": 17,
             "credito": "Proyecto de estudio",
-            "mostrar_codigo": true
+            "mostrar_codigo": true,
+            "destacado": false
         },
         {
             "id": "src",
@@ -692,7 +694,8 @@
             "published": true,
             "orden": 18,
             "credito": "Proyecto de estudio",
-            "mostrar_codigo": true
+            "mostrar_codigo": true,
+            "destacado": false
         },
         {
             "id": "supermercado-backend",
@@ -711,7 +714,8 @@
             "published": true,
             "orden": 19,
             "credito": "Proyecto de estudio",
-            "mostrar_codigo": true
+            "mostrar_codigo": true,
+            "destacado": false
         },
         {
             "id": "supermercadocaja",
@@ -730,7 +734,8 @@
             "published": true,
             "orden": 20,
             "credito": "Proyecto de estudio",
-            "mostrar_codigo": true
+            "mostrar_codigo": true,
+            "destacado": false
         },
         {
             "id": "bancobackend",
@@ -750,7 +755,8 @@
             "published": true,
             "orden": 21,
             "credito": "Proyecto de estudio",
-            "mostrar_codigo": true
+            "mostrar_codigo": true,
+            "destacado": false
         },
         {
             "id": "hyperledger-fabric-lab",
@@ -769,7 +775,8 @@
             "repo_url": "",
             "published": true,
             "orden": 22,
-            "credito": "Proyecto de estudio"
+            "credito": "Proyecto de estudio",
+            "destacado": false
         },
         {
             "id": "mibusca-brasil",
@@ -784,7 +791,8 @@
             "demo_url": "",
             "repo_url": "https://github.com/Julio-0Acuna/MiBusca-Brasil",
             "published": false,
-            "orden": 99
+            "orden": 99,
+            "destacado": false
         },
         {
             "id": "alertaoficial",
@@ -800,7 +808,8 @@
             "demo_url": "",
             "repo_url": "",
             "published": false,
-            "orden": 99
+            "orden": 99,
+            "destacado": false
         },
         {
             "id": "ejemplo-pizzeria",

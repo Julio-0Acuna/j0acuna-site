@@ -42,6 +42,8 @@ debe_contener   /  'href="/contacto"'
 debe_contener   /  'aria-current="page"'
 no_debe_contener / 'data-filtro'
 no_debe_contener / 'hero-mosaic'
+debe_contener   /  'data-bs-ride="carousel"'
+debe_contener   /  'carousel-indicators'
 no_debe_contener / 'Todos los proyectos'
 no_debe_contener / 'admin/login.php'
 debe_responder  /servicios  200
@@ -141,6 +143,11 @@ debe_contener   /proyectos/ejemplos 'href="/proyecto/ejemplo-pizzeria"'
 debe_contener   /proyecto/ejemplo-pizzeria 'href="/demos/pizzeria/"'
 debe_contener   /sitemap.xml   'https://j0acuna.site/demos/pizzeria/'
 debe_contener   /llms.txt      'https://j0acuna.site/demos/'
+debe_contener   /  'href="/proyecto/ridelsip-cl"'
+debe_contener   /  'href="/proyecto/intranet-agencia"'
+debe_contener   /  'href="/proyecto/saturnus-aura"'
+debe_contener   /  'href="/proyecto/suitechile-cl"'
+debe_contener   /  'href="/proyecto/obrascivilesmys-cl"'
 fi
 
 echo
