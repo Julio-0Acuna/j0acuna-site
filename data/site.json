@@ -801,6 +801,40 @@
             "repo_url": "",
             "published": false,
             "orden": 99
+        },
+        {
+            "id": "ejemplo-pizzeria",
+            "title": "Página web para pizzerías: 3 ejemplos",
+            "category": "Ejemplos por rubro",
+            "categoria_id": "ejemplos",
+            "description": "Tres sitios de ejemplo para pizzerías, uno por plan: una página simple, un sitio de varias páginas con menú 3D y una tienda online con cuentas de clientes y panel del dueño.",
+            "problema": "Muchas pizzerías venden solo por apps que cobran comisión y no tienen un lugar propio donde mostrar su menú y recibir pedidos.",
+            "solucion": "Tres formas de tener presencia propia, de la más simple a una tienda completa, todas con pedido por WhatsApp, sección de Google y diseño pensado para el celular.",
+            "resultado": "Los tres ejemplos funcionan: puedes recorrerlos, armar un pedido y entrar a la tienda como cliente, mayorista o dueño.",
+            "funcionalidades": [
+                "Simple-page con menú y código QR",
+                "Multi-page con carrito y platos en 3D",
+                "Plataforma web con cuentas, mayoristas y panel del dueño",
+                "Sección «Encuéntranos en Google» en las tres"
+            ],
+            "technologies": [
+                "PHP",
+                "SQLite",
+                "JavaScript",
+                "model-viewer"
+            ],
+            "image_url": "demos/pizzeria/img/multi.webp",
+            "demo_url": "/demos/pizzeria/",
+            "repo_url": "",
+            "published": true,
+            "destacado": false,
+            "en_restaurantes": false,
+            "orden": 1,
+            "pais": "Chile",
+            "anio": "2026",
+            "credito": "Negocios ficticios, hechos como demostración",
+            "imagen_ejemplo": false,
+            "mostrar_codigo": false
         }
     ],
     "faqs": [

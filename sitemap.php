@@ -11,6 +11,19 @@ $site = portfolio_load_site();
 
 // --- sitemap.xml
 $urls = ['/', '/servicios', '/proyectos', '/restaurantes', '/contacto'];
+
+// Ejemplos por rubro: /demos/ y la página de cada rubro (las versiones son noindex).
+$rubros = [];
+foreach (glob(__DIR__ . '/demos/*/_rubro.php') ?: [] as $archivo) {
+    $rubros[] = basename(dirname($archivo));
+}
+sort($rubros);
+if ($rubros) {
+    $urls[] = '/demos/';
+    foreach ($rubros as $r) {
+        $urls[] = '/demos/' . $r . '/';
+    }
+}
 foreach (portfolio_sections($site) as $s) {
     $urls[] = $s['url'];
 }
@@ -50,6 +63,12 @@ $l .= '- Restaurantes y comercios: ' . absolute_url('/restaurantes') . "\n";
 $l .= '- Proyectos: ' . absolute_url('/proyectos') . "\n";
 foreach (portfolio_sections($site) as $s) {
     $l .= "  - {$s['nombre']}: " . absolute_url($s['url']) . "\n";
+}
+if ($rubros) {
+    $l .= '- Ejemplos por rubro (sitios de demostración de negocios ficticios): ' . absolute_url('/demos/') . "\n";
+    foreach ($rubros as $r) {
+        $l .= '  - ' . ucfirst($r) . ': ' . absolute_url('/demos/' . $r . '/') . "\n";
+    }
 }
 $l .= '- Contacto: ' . absolute_url('/contacto') . "\n";
 file_put_contents(__DIR__ . '/llms.txt', $l);

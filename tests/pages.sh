@@ -51,12 +51,10 @@ debe_contener   /servicios  'Cotizar'
 debe_contener   /servicios  'todo Chile'
 debe_responder  /proyectos  200
 debe_contener   /proyectos  'href="/proyectos/restaurantes"'
-no_debe_contener /proyectos 'href="/proyectos/ejemplos"'
 debe_contener   /proyectos  '"@type":"BreadcrumbList"'
 debe_responder  /proyectos/restaurantes 200
 debe_contener   /proyectos/restaurantes '"@type":"BreadcrumbList"'
 debe_contener   /proyectos/restaurantes 'href="/proyectos"'
-debe_responder  /proyectos/ejemplos 404
 debe_responder  /proyectos/no-existe 404
 debe_responder  /contacto  200
 debe_contener   /contacto  'Cómo trabajo'
@@ -76,7 +74,6 @@ debe_contener   /restaurantes  'Vende directo'
 debe_contener   /restaurantes  'id="pruebas"'
 debe_contener   /restaurantes  'href="/proyectos"'
 debe_contener   /restaurantes  'Página web para restaurantes'
-no_debe_contener /restaurantes 'href="/demos/'
 no_debe_contener /restaurantes 'integración directa'
 debe_contener   /restaurantes  'og-restaurantes.jpg'
 debe_contener   /restaurantes  'text=Hola%20Julio%2C%20tengo%20un%20local%20y%20quiero%20vender%20m%C3%A1s.'
@@ -111,6 +108,9 @@ debe_responder  /proyecto/oculto        404
 no_debe_contener /restaurantes 'Apps de delivery'
 debe_contener   /restaurantes  'href="/proyecto/restaurante-a"'
 no_debe_contener /restaurantes 'Servicio empresas'
+no_debe_contener /restaurantes 'href="/demos/'
+debe_responder  /proyectos/ejemplos 404
+no_debe_contener /proyectos 'href="/proyectos/ejemplos"'
 else
 # --- Solo con el contenido real (data/site.json)
 debe_responder  /proyecto/ridelsip-cl    200
@@ -134,6 +134,12 @@ debe_contener   /proyecto/sistema-pedidos-multi-app   'Desarrollado para MAVT'
 debe_responder  /sitemap.xml  200
 debe_responder  /robots.txt   200
 debe_responder  /favicon.svg  200
+debe_contener   /restaurantes  'href="/demos/"'
+debe_responder  /proyectos/ejemplos 200
+debe_contener   /proyectos/ejemplos 'href="/proyecto/ejemplo-pizzeria"'
+debe_contener   /proyecto/ejemplo-pizzeria 'href="/demos/pizzeria/"'
+debe_contener   /sitemap.xml   'https://j0acuna.site/demos/pizzeria/'
+debe_contener   /llms.txt      'https://j0acuna.site/demos/'
 fi
 
 echo

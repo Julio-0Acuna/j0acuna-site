@@ -28,8 +28,11 @@ Español y portugués.
 - Restaurantes y comercios: https://j0acuna.site/restaurantes
 - Proyectos: https://j0acuna.site/proyectos
   - Restaurantes y delivery: https://j0acuna.site/proyectos/restaurantes
+  - Ejemplos por rubro: https://j0acuna.site/proyectos/ejemplos
   - Comercio y gestión: https://j0acuna.site/proyectos/gestion
   - Páginas web: https://j0acuna.site/proyectos/web
   - Inteligencia artificial: https://j0acuna.site/proyectos/ia
   - Formación y estudio: https://j0acuna.site/proyectos/formacion
+- Ejemplos por rubro (sitios de demostración de negocios ficticios): https://j0acuna.site/demos/
+  - Pizzeria: https://j0acuna.site/demos/pizzeria/
 - Contacto: https://j0acuna.site/contacto
