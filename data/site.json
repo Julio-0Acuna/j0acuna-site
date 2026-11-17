@@ -31,72 +31,239 @@
     "services": [
         {
             "id": "web-menu",
-            "titulo": "Página web y menú digital con QR",
-            "resumen": "Tu negocio en Google y en el celular de tus clientes: horarios, ubicación, productos y un menú que se abre con un QR en la mesa o en el mostrador.",
+            "titulo": "Página web para tu negocio",
+            "nombre_corto": "Página web",
+            "resumen": "Una página clara y rápida en el celular, con tus productos, horario, ubicación y botón de WhatsApp. Puede ser de una sola página o un sitio con varias secciones.",
+            "para_quien": "Restaurantes, tiendas, talleres y empresas que necesitan aparecer en internet y recibir consultas.",
             "puntos": [
-                "Diseño adaptado al celular",
-                "Menú o catálogo fácil de actualizar",
-                "Botón de WhatsApp y mapa"
+                "Simple-page: todo en una página, ideal para empezar",
+                "Multi-page: inicio, menú o catálogo, nosotros, preguntas y contacto",
+                "Diseño pensado primero para el celular",
+                "Panel simple para cambiar precios, fotos y horarios"
             ],
+            "tecnologias": [
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "PHP",
+                "Bootstrap"
+            ],
+            "imagen": "demos/pizzeria/img/simple.webp",
+            "ejemplo_url": "/demos/pizzeria/simple/",
+            "ejemplo_texto": "Ver ejemplo: pizzería en una página",
             "para": "ambos",
             "nivel": "presencia",
             "orden": 1,
             "publicado": true
         },
         {
+            "id": "menu-qr-3d",
+            "titulo": "Menú digital con QR y platos en 3D",
+            "nombre_corto": "Menú QR y 3D",
+            "resumen": "Tu carta en el celular del cliente: escanea el código QR de la mesa y ve fotos, precios y tamaños. Los platos destacados se pueden girar en 3D o ver sobre la mesa con la cámara.",
+            "para_quien": "Restaurantes, cafeterías y locales de comida con mesas, mostrador o delivery.",
+            "puntos": [
+                "Código QR listo para imprimir en mesas, caja y volantes",
+                "Menú por categorías, con buscador, fotos y tamaños",
+                "Platos en 3D y «Ver en tu mesa» con realidad aumentada",
+                "Cambias precios y platos sin reimprimir la carta"
+            ],
+            "tecnologias": [
+                "HTML",
+                "JavaScript",
+                "Código QR",
+                "3D y realidad aumentada"
+            ],
+            "imagen": "assets/img/servicios/menu-qr-3d.webp",
+            "ejemplo_url": "/demos/pizzeria/multi/menu.php",
+            "ejemplo_texto": "Ver el menú de ejemplo con QR y 3D",
+            "para": "restaurantes",
+            "nivel": "presencia",
+            "orden": 2,
+            "publicado": true
+        },
+        {
+            "id": "google-perfil",
+            "titulo": "Aparece en Google: Perfil de Empresa y SEO",
+            "nombre_corto": "Google y SEO",
+            "resumen": "Creo y configuro tu Perfil de Empresa en Google para que aparezcas en Maps con horario, fotos y reseñas, y preparo tu página para que Google la entienda y la muestre a quienes buscan en tu zona.",
+            "para_quien": "Negocios que quieren aparecer cuando alguien busca «pizzería en Ñuñoa» o «taller en Maipú».",
+            "puntos": [
+                "Perfil de Empresa en Google: creación, horario, fotos y categoría",
+                "Botones «Cómo llegar» y «Déjanos tu reseña» en tu página",
+                "Títulos, descripciones y datos estructurados para Google",
+                "Alta en Google Search Console con el mapa del sitio"
+            ],
+            "tecnologias": [
+                "Perfil de Empresa en Google",
+                "Google Search Console",
+                "Datos estructurados (schema.org)",
+                "Google Maps"
+            ],
+            "imagen": "assets/img/servicios/google-perfil.webp",
+            "ejemplo_url": "/demos/pizzeria/simple/#google",
+            "ejemplo_texto": "Ver «Encuéntranos en Google» en un ejemplo",
+            "para": "ambos",
+            "nivel": "presencia",
+            "orden": 3,
+            "publicado": true
+        },
+        {
             "id": "pedidos-directos",
             "titulo": "Pedidos directos por WhatsApp o web",
+            "nombre_corto": "Pedidos por WhatsApp",
             "resumen": "Tus clientes eligen productos, arman su pedido y te llega listo por WhatsApp, sin pagar comisión a una app.",
+            "para_quien": "Locales que reciben pedidos por teléfono o WhatsApp y quieren dejar de anotar a mano.",
             "puntos": [
-                "Carrito con precios y cantidades",
-                "Retiro en local o despacho",
-                "Pedido ordenado, sin errores al anotar"
+                "Carrito con precios, tamaños y cantidades",
+                "Retiro en el local o despacho con costo por comuna",
+                "Pedido ordenado, sin errores al anotar",
+                "Sin comisión por venta"
             ],
+            "tecnologias": [
+                "JavaScript",
+                "PHP",
+                "WhatsApp"
+            ],
+            "imagen": "assets/img/servicios/pedidos-directos.webp",
+            "ejemplo_url": "/demos/pizzeria/multi/",
+            "ejemplo_texto": "Probar el pedido en el ejemplo Multi-page",
             "para": "ambos",
             "nivel": "directo",
-            "orden": 2,
+            "orden": 4,
+            "publicado": true
+        },
+        {
+            "id": "tienda-online",
+            "titulo": "Tienda online con cuentas de clientes",
+            "nombre_corto": "Tienda online",
+            "resumen": "Una plataforma web para vender en línea: catálogo, carrito, retiro o despacho, cuentas de clientes y un panel donde ves los pedidos, el stock y las ventas del día.",
+            "para_quien": "Negocios con delivery propio, venta a mayoristas o varias sucursales.",
+            "puntos": [
+                "Cuentas de clientes con direcciones guardadas y «repetir pedido»",
+                "Precios para mayoristas, con aprobación del dueño",
+                "Panel del dueño: pedidos por estado, productos, stock y ventas",
+                "Pago al recibir o pago en línea con tu proveedor de pagos"
+            ],
+            "tecnologias": [
+                "PHP",
+                "MySQL",
+                "SQLite",
+                "JavaScript"
+            ],
+            "imagen": "assets/img/servicios/tienda-online.webp",
+            "ejemplo_url": "/demos/pizzeria/plataforma/",
+            "ejemplo_texto": "Probar la tienda de ejemplo, con panel del dueño",
+            "para": "ambos",
+            "nivel": "directo",
+            "orden": 5,
             "publicado": true
         },
         {
             "id": "apps-delivery",
             "titulo": "Vende en Uber Eats y PedidosYa",
+            "nombre_corto": "Apps de delivery",
             "resumen": "Te ayudo a entrar y a vender más en las apps de delivery: alta del local, menú, fotos, promociones y revisión de tus números.",
+            "para_quien": "Restaurantes que quieren entrar a las apps de delivery o que ya están y venden poco.",
             "puntos": [
                 "Alta y configuración del local",
                 "Menú y fotos que venden",
-                "Revisión de ventas y promociones"
+                "Revisión de ventas y promociones",
+                "Panel con tus números del mes"
             ],
+            "tecnologias": [
+                "Uber Eats",
+                "PedidosYa",
+                "Google Sheets"
+            ],
+            "imagen": "assets/img/projects/paneles-duenos-restaurantes.webp",
+            "ejemplo_url": "/proyecto/paneles-duenos-restaurantes",
+            "ejemplo_texto": "Ver los paneles para dueños de restaurantes",
             "para": "restaurantes",
             "nivel": "apps",
-            "orden": 3,
+            "orden": 6,
             "publicado": true
         },
         {
             "id": "pedidos-una-pantalla",
             "titulo": "Todos tus pedidos en una pantalla",
+            "nombre_corto": "Pedidos en una pantalla",
             "resumen": "Los pedidos de las apps y de tu web llegan a una sola pantalla de cocina, con comanda impresa y aviso sonoro. Ya lo construí en Brasil para iFood y 99Food; en Chile se conecta según lo que permita cada app.",
+            "para_quien": "Restaurantes con muchos pedidos de delivery que hoy atienden varias tablets a la vez.",
             "puntos": [
                 "Pantalla de cocina con estados del pedido",
                 "Comanda impresa",
                 "Panel de ventas del día"
             ],
+            "tecnologias": [
+                "Node.js",
+                "TypeScript",
+                "PostgreSQL",
+                "Docker",
+                "APIs de iFood y 99Food"
+            ],
+            "imagen": "assets/img/projects/sistema-pedidos-multi-app.webp",
+            "ejemplo_url": "/proyecto/sistema-pedidos-multi-app",
+            "ejemplo_texto": "Ver el sistema de pedidos en una pantalla",
             "para": "restaurantes",
             "nivel": "premium",
-            "orden": 4,
+            "orden": 7,
             "publicado": true
         },
         {
             "id": "a-medida",
-            "titulo": "Sistemas a medida: gestión, inventario, presupuestos e IA",
+            "titulo": "Sistemas a medida: gestión, inventario, presupuestos e intranets",
+            "nombre_corto": "Sistemas a medida",
             "resumen": "Si tu empresa trabaja con planillas y papeles, lo paso a un sistema web con usuarios y permisos, que se usa desde el computador o el celular.",
+            "para_quien": "Empresas y pymes que llevan ventas, stock o equipos en planillas, papeles o WhatsApp.",
             "puntos": [
-                "Ventas, presupuestos y órdenes de trabajo",
+                "Ventas, presupuestos y órdenes de trabajo en PDF",
                 "Inventario y control de stock",
-                "Asistentes con inteligencia artificial"
+                "Intranet con un usuario por persona y permisos por área",
+                "Conexión con Google Sheets y tus planillas actuales"
             ],
+            "tecnologias": [
+                "PHP",
+                "MySQL",
+                "Node.js",
+                "React",
+                "JavaScript",
+                "Google Apps Script"
+            ],
+            "imagen": "assets/img/projects/intranet-agencia.webp",
+            "ejemplo_url": "/proyectos/gestion",
+            "ejemplo_texto": "Ver sistemas de gestión que hice",
             "para": "empresas",
             "nivel": "",
-            "orden": 5,
+            "orden": 8,
+            "publicado": true
+        },
+        {
+            "id": "inteligencia-artificial",
+            "titulo": "Inteligencia artificial: asistentes, voz y documentos",
+            "nombre_corto": "Inteligencia artificial",
+            "resumen": "Herramientas con inteligencia artificial que ahorran horas: un asistente que responde preguntas sobre los documentos de tu empresa citando la fuente, transcripción de audios, texto a voz y videos explicativos.",
+            "para_quien": "Empresas con muchos documentos, procedimientos o capacitaciones, donde se pierde tiempo buscando información.",
+            "puntos": [
+                "Asistente que responde con tus documentos y cita la fuente",
+                "Puede funcionar en tu computador, sin enviar datos a internet",
+                "Transcripción de audios y texto a voz",
+                "Videos animados a partir de un PDF o un guion"
+            ],
+            "tecnologias": [
+                "Python",
+                "FastAPI",
+                "Whisper",
+                "llama.cpp",
+                "Electron",
+                "React"
+            ],
+            "imagen": "assets/img/projects/saturnus-aura.webp",
+            "ejemplo_url": "/proyectos/ia",
+            "ejemplo_texto": "Ver proyectos con inteligencia artificial",
+            "para": "empresas",
+            "nivel": "",
+            "orden": 9,
             "publicado": true
         }
     ],
@@ -868,8 +1035,8 @@
             "respuesta": "Sí. Creo y configuro tu Perfil de Empresa en Google para que aparezcas en Maps y en las búsquedas de tu zona."
         },
         {
-            "pregunta": "¿El dominio y la página quedan a mi nombre?",
-            "respuesta": "Sí. Te ayudo a registrar tu dominio .cl y el hosting a tu nombre, para que siempre sean tuyos."
+            "pregunta": "¿El dominio queda a mi nombre?",
+            "respuesta": "Sí. El dominio .cl se registra a tu nombre, así siempre es tuyo. La página queda alojada en mi hosting, con certificado de seguridad y respaldos, y yo me encargo de mantenerla funcionando."
         }
     ]
 }

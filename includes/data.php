@@ -148,12 +148,35 @@ function portfolio_normalize_service(array $s): array
         'publicado' => false,
         'precio_desde' => '',
         'mostrar_precio' => false,
+        'nombre_corto' => '',
+        'para_quien' => '',
+        'imagen' => '',
+        'tecnologias' => [],
+        'ejemplo_url' => '',
+        'ejemplo_texto' => '',
     ];
     $s = array_replace($defaults, $s);
     $s['orden'] = (int) $s['orden'];
     $s['publicado'] = (bool) $s['publicado'];
     $s['mostrar_precio'] = (bool) $s['mostrar_precio'];
     $s['puntos'] = is_array($s['puntos']) ? array_values($s['puntos']) : [];
+    $s['tecnologias'] = is_array($s['tecnologias'])
+        ? array_values(array_filter(array_map(static fn ($t): string => is_scalar($t) ? trim((string) $t) : '', $s['tecnologias']), 'strlen'))
+        : [];
+    foreach (['nombre_corto', 'para_quien', 'imagen', 'ejemplo_url', 'ejemplo_texto'] as $campo) {
+        $s[$campo] = is_scalar($s[$campo]) ? trim((string) $s[$campo]) : '';
+    }
+    // Nombre corto para las pestañas del carrusel: si falta, lo que va antes de ":" en el título.
+    if ($s['nombre_corto'] === '') {
+        $s['nombre_corto'] = trim(explode(':', (string) $s['titulo'], 2)[0]);
+    }
+    // Imagen: ruta local del sitio, sin "..". Ejemplo: ruta del sitio o http(s). Si no, se descarta.
+    if (!preg_match('#^[a-z0-9][a-z0-9/_.-]*\.(webp|jpg|jpeg|png)$#i', $s['imagen']) || str_contains($s['imagen'], '..')) {
+        $s['imagen'] = '';
+    }
+    if (!preg_match('#^(/(?!/)|https?://)#i', $s['ejemplo_url'])) {
+        $s['ejemplo_url'] = '';
+    }
     return $s;
 }
 

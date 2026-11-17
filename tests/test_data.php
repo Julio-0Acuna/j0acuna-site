@@ -48,3 +48,37 @@ t('defaults de servicio y perfil', function () {
     eq($srv['puntos'], []);
     eq($s['profile']['whatsapp_mensaje'], 'Hola Julio, vi tu página y quiero cotizar.');
 });
+
+t('servicio: campos nuevos con valores por defecto', function () {
+    $srv = portfolio_normalize_service(['id' => 'x', 'titulo' => 'Sistemas a medida: gestión y más']);
+    eq($srv['imagen'], '');
+    eq($srv['tecnologias'], []);
+    eq($srv['ejemplo_url'], '');
+    eq($srv['ejemplo_texto'], '');
+    eq($srv['para_quien'], '');
+    eq($srv['nombre_corto'], 'Sistemas a medida');
+});
+
+t('servicio: limpia tecnologias, imagen y enlace de ejemplo', function () {
+    $srv = portfolio_normalize_service([
+        'tecnologias' => [' PHP ', '', ['x'], 'MySQL'],
+        'imagen' => '../data/site.json',
+        'ejemplo_url' => 'javascript:alert(1)',
+        'nombre_corto' => 'Web',
+    ]);
+    eq($srv['tecnologias'], ['PHP', 'MySQL']);
+    eq($srv['imagen'], '');
+    eq($srv['ejemplo_url'], '');
+    eq($srv['nombre_corto'], 'Web');
+    eq(portfolio_normalize_service(['ejemplo_url' => '//otro.sitio/x'])['ejemplo_url'], '');
+    eq(portfolio_normalize_service(['ejemplo_url' => '/demos/pizzeria/'])['ejemplo_url'], '/demos/pizzeria/');
+    eq(portfolio_normalize_service(['imagen' => 'assets/img/servicios/a.webp'])['imagen'], 'assets/img/servicios/a.webp');
+});
+
+t('el panel no borra los campos nuevos de servicios', function () {
+    $site = portfolio_load_site();
+    $site['services'][0]['tecnologias'] = ['PHP'];
+    $site['services'][0]['imagen'] = 'assets/img/servicios/a.webp';
+    $r = portfolio_apply_admin_post($site, ['profile' => ['name' => 'X'], 'projects' => []]);
+    eq($r['services'], $site['services']);
+});
