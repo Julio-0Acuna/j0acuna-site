@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Julio Acuña · Páginas web y sistemas para que tu negocio venda más (Propuesta C)</title>
+<meta name="description" content="Propuesta C, Oscuro elegante: portada del portafolio de Julio Acuña, desarrollador web en Santiago.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05070B; --bg-2:#090C12; --bg-3:#0E121A;
+  --text:#F3F5F9; --text-2:#B7BFCC; --mute:#7D8798;
+  --line:rgba(255,255,255,.08); --glass:rgba(255,255,255,.045); --glass-2:rgba(255,255,255,.08);
+  --teal:#5EEAD0; --mint:#C9F7E4; --amber:#F7BC62;
+  --grad:linear-gradient(96deg,#6EF0D6 0%,#D8F6CF 48%,#F7BC62 100%);
+  --sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+  --wrap:min(1200px,100% - 2.5rem);
+  --ease:cubic-bezier(.22,.8,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:96px;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--text);font:400 1.0625rem/1.6 var(--sans);overflow-x:clip;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+ul,ol{list-style:none;margin:0;padding:0}
+h1,h2,h3,h4,p,figure{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{width:var(--wrap);margin-inline:auto}
+main{display:block;overflow-x:clip}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:fixed;left:1rem;top:-4rem;z-index:100;background:#fff;color:#000;padding:.6rem 1rem;border-radius:999px}
+.skip:focus{top:1rem}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:10px}
+::selection{background:rgba(94,234,208,.3)}
+
+.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.kicker{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.kicker b{font-weight:500;color:var(--teal)}
+.h2{font-weight:600;font-size:clamp(2.2rem,4.8vw,4rem);line-height:1.02;letter-spacing:-.045em;text-wrap:balance}
+.h2 .soft{color:var(--mute)}
+.sub{color:var(--text-2);font-size:1.08rem;max-width:44ch}
+
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;min-height:50px;padding:0 1.35rem;border-radius:999px;font-weight:500;font-size:.98rem;transition:transform .3s var(--ease),background .3s,box-shadow .3s,color .3s}
+.btn svg{width:18px;height:18px;flex:none}
+.btn--light{background:#fff;color:#05070B;box-shadow:0 0 0 1px rgba(255,255,255,.6),0 10px 40px -8px rgba(94,234,208,.45)}
+.btn--light:hover{transform:translateY(-2px);box-shadow:0 0 0 1px #fff,0 16px 50px -6px rgba(94,234,208,.6)}
+.btn--glass{background:var(--glass-2);color:var(--text);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.btn--glass:hover{background:rgba(255,255,255,.13)}
+.btn--sm{min-height:40px;padding:0 1rem;font-size:.9rem}
+.more{display:inline-flex;align-items:center;gap:.45rem;color:var(--text);font-weight:500;transition:gap .3s var(--ease),color .2s}
+.more svg{width:17px;height:17px;transition:transform .3s var(--ease)}
+.more:hover{color:var(--teal)}
+.more:hover svg{transform:translateX(3px)}
+
+/* Fondo */
+.sky{position:absolute;inset:0 0 auto 0;height:1100px;pointer-events:none;overflow:hidden;z-index:0}
+.sky__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:72px 72px;background-position:center top;-webkit-mask-image:radial-gradient(ellipse 60% 55% at 50% 10%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse 60% 55% at 50% 10%,#000 20%,transparent 75%)}
+.sky__a,.sky__b{position:absolute;border-radius:50%}
+.sky__a{width:900px;height:700px;left:-280px;top:-260px;background:radial-gradient(closest-side,rgba(94,234,208,.22),transparent)}
+.sky__b{width:800px;height:640px;right:-260px;top:-160px;background:radial-gradient(closest-side,rgba(247,188,98,.16),transparent)}
+
+/* Encabezado */
+.top{position:sticky;top:0;z-index:50;padding:14px 0}
+.top__bar{display:flex;align-items:center;gap:1rem;height:58px;padding:0 .5rem 0 1.1rem;border-radius:999px;transition:background .35s,box-shadow .35s}
+.top.is-scrolled .top__bar{background:rgba(12,15,21,.7);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 20px 40px -20px rgba(0,0,0,.7)}
+.brand{display:flex;align-items:center;gap:.6rem;font-weight:600;letter-spacing:-.02em;font-size:1.06rem;margin-right:auto;position:relative;z-index:61}
+.brand__dot{width:22px;height:22px;border-radius:7px;background:conic-gradient(from 210deg,#6EF0D6,#F7BC62,#6EF0D6);box-shadow:0 0 18px rgba(94,234,208,.5)}
+.nav ul{display:flex;gap:.15rem}
+.nav ul a{display:block;padding:.45rem .85rem;border-radius:999px;color:var(--text-2);font-size:.92rem;transition:color .2s,background .2s}
+.nav ul a:hover{color:var(--text);background:var(--glass)}
+.nav ul a[aria-current]{color:var(--text);background:var(--glass-2)}
+.burger{display:none;position:relative;z-index:61;width:44px;height:44px;border:0;border-radius:50%;background:var(--glass-2)}
+.burger i,.burger i::before,.burger i::after{position:absolute;left:13px;width:18px;height:1.5px;background:var(--text);transition:transform .35s var(--ease)}
+.burger i{top:21px}.burger i::before{content:"";left:0;top:-5px}.burger i::after{content:"";left:0;top:5px}
+.burger[aria-expanded="true"] i{background:transparent}
+.burger[aria-expanded="true"] i::before{transform:translateY(5px) rotate(45deg)}
+.burger[aria-expanded="true"] i::after{transform:translateY(-5px) rotate(-45deg)}
+.nav__foot{display:none}
+@media (max-width:959px){
+  .burger{display:block}
+  .top__wa{display:none}
+  .nav{position:fixed;inset:0;z-index:60;padding:100px 1.25rem 2rem;background:rgba(5,7,11,.92);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);display:flex;flex-direction:column;justify-content:space-between;opacity:0;visibility:hidden;transition:opacity .35s var(--ease),visibility 0s .35s}
+  .nav.is-open{opacity:1;visibility:visible;transition-delay:0s}
+  .nav ul{flex-direction:column;gap:.1rem}
+  .nav ul a{font-size:2rem;font-weight:500;letter-spacing:-.035em;padding:.35rem 0;background:none!important;color:var(--text-2)}
+  .nav ul a[aria-current]{color:var(--text)}
+  .nav li{opacity:0;transform:translateY(10px);transition:opacity .4s var(--ease),transform .4s var(--ease)}
+  .nav.is-open li{opacity:1;transform:none}
+  .nav.is-open li:nth-child(2){transition-delay:.04s}.nav.is-open li:nth-child(3){transition-delay:.08s}.nav.is-open li:nth-child(4){transition-delay:.12s}.nav.is-open li:nth-child(5){transition-delay:.16s}.nav.is-open li:nth-child(6){transition-delay:.2s}
+  .nav__foot{display:flex;flex-direction:column;align-items:flex-start;gap:1rem;color:var(--mute);font-size:.9rem}
+}
+
+/* Hero */
+.hero{position:relative;padding:clamp(1.8rem,4.5vw,3.2rem) 0 0;text-align:center}
+.hero__in{position:relative;z-index:1;display:grid;justify-items:center;gap:1.3rem}
+.badge{display:inline-flex;align-items:center;gap:.6rem;padding:.4rem .9rem .4rem .7rem;border-radius:999px;background:var(--glass);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);font-size:.86rem;color:var(--text-2)}
+.badge i{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(94,234,208,.15),0 0 14px var(--teal)}
+.hero h1{font-weight:600;font-size:clamp(2.55rem,6vw,5.1rem);line-height:1;letter-spacing:-.05em;max-width:15ch;text-wrap:balance}
+.hero .sub{margin-inline:auto;text-align:center;font-size:clamp(1.05rem,1.5vw,1.2rem);max-width:40ch}
+.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem;margin-top:.4rem}
+
+.stage{position:relative;height:clamp(390px,50vw,640px);margin-top:clamp(2rem,3.5vw,2.8rem);-webkit-mask-image:linear-gradient(180deg,#000 72%,transparent 100%);mask-image:linear-gradient(180deg,#000 72%,transparent 100%)}
+.stage::before{content:"";position:absolute;left:50%;top:18%;width:min(900px,120%);height:80%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(94,234,208,.28),rgba(247,188,98,.12) 55%,transparent);pointer-events:none}
+.ph{position:absolute;left:50%;top:calc(6% + 18px);width:clamp(150px,19vw,250px);aspect-ratio:9/18.6;border-radius:clamp(24px,2.7vw,38px);padding:clamp(5px,.55vw,8px);background:linear-gradient(155deg,#323844,#0c0f14 60%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 60px 90px -40px rgba(0,0,0,.9),0 0 70px -20px rgba(94,234,208,.25);transition:transform 1.2s var(--ease)}
+.ph img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:clamp(19px,2.2vw,31px)}
+.ph::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(115deg,rgba(255,255,255,.12),transparent 30%);pointer-events:none}
+.ph--c{z-index:2;top:18px;width:clamp(172px,22vw,290px);transform:translateX(-50%)}
+.ph--l{transform:translateX(-128%) rotate(-8deg)}
+.ph--r{transform:translateX(28%) rotate(8deg)}
+.ph__tag{position:absolute;z-index:3;top:-14px;left:50%;transform:translateX(-50%);white-space:nowrap;padding:.3rem .7rem;border-radius:999px;font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--text);background:rgba(12,15,21,.78);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.ph--l .ph__tag,.ph--r .ph__tag{top:-12px}
+.js .stage .ph--l{transform:translateX(-50%) rotate(0)}
+.js .stage .ph--r{transform:translateX(-50%) rotate(0)}
+.js .stage.in .ph--l{transform:translateX(-128%) rotate(-8deg)}
+.js .stage.in .ph--r{transform:translateX(28%) rotate(8deg)}
+
+/* Secciones */
+.sec{position:relative;padding:clamp(5rem,10vw,9rem) 0}
+.sec__head{display:grid;gap:1.1rem;margin-bottom:clamp(2.2rem,4vw,3.2rem)}
+@media (min-width:960px){.sec__head--row{grid-template-columns:1fr auto;align-items:end;column-gap:3rem}.sec__head--row .kicker{grid-column:1/-1}}
+.hr{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);border:0;margin:0}
+
+/* Rubros */
+.chips{display:flex;gap:.4rem;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:40px;padding:0 1rem;border:0;border-radius:999px;background:var(--glass);color:var(--text-2);font-size:.9rem;transition:background .2s,color .2s}
+.chip:hover{background:var(--glass-2);color:var(--text)}
+.chip[aria-pressed="true"]{background:#fff;color:#05070B}
+.chip span{font-family:var(--mono);font-size:.72rem;opacity:.6;margin-left:.35rem}
+.rbx{position:relative;margin-top:1.6rem}
+.rb__track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:12px max(1.25rem,calc((100vw - 1200px)/2)) 22px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
+.rb__track::-webkit-scrollbar{display:none}
+.rb{flex:none;width:min(72vw,280px);scroll-snap-align:start;scroll-margin-left:max(1.25rem,calc((100vw - 1200px)/2))}
+.rb[hidden]{display:none}
+.rb a{position:relative;display:block;aspect-ratio:3/4.15;border-radius:24px;overflow:hidden;background:var(--bg-3);transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.rb a:hover,.rb a:focus-visible{transform:translateY(-6px);box-shadow:0 30px 60px -30px rgba(0,0,0,.9),0 0 0 1px rgba(94,234,208,.35),0 0 50px -10px rgba(94,234,208,.35)}
+.rb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
+.rb a:hover img{transform:scale(1.06)}
+.rb a::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,7,11,.15) 0%,transparent 30%,transparent 48%,rgba(5,7,11,.92) 100%)}
+.rb__st{position:absolute;z-index:1;top:12px;left:12px;display:inline-flex;align-items:center;gap:.4rem;padding:.28rem .62rem;border-radius:999px;font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;background:rgba(5,7,11,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--text-2)}
+.rb__st i{width:6px;height:6px;border-radius:50%;background:var(--mute)}
+.rb__st--on{color:var(--text)}
+.rb__st--on i{background:#5BE38A;box-shadow:0 0 10px #5BE38A}
+.rb__txt{position:absolute;z-index:1;left:0;right:0;bottom:0;padding:1.1rem 1.15rem 1.2rem;display:grid;gap:.55rem}
+.rb__name{font-size:1.45rem;font-weight:600;letter-spacing:-.035em;line-height:1.05}
+.rb__v{display:flex;gap:4px}
+.rb__v span{flex:1;padding:.32rem 0;border-radius:8px;background:rgba(255,255,255,.1);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);text-align:center;font-family:var(--mono);font-size:.62rem;letter-spacing:.03em;color:var(--text-2)}
+.rb--on .rb__v span{background:rgba(94,234,208,.16);color:var(--mint)}
+.rbx__ui{display:flex;align-items:center;gap:.6rem;margin-top:.8rem}
+.rbx__prog{flex:1;height:2px;border-radius:2px;background:var(--line);overflow:hidden}
+.rbx__prog i{display:block;height:100%;width:20%;background:var(--grad);border-radius:2px;transition:width .3s,transform .3s}
+.ibtn{flex:none;width:44px;height:44px;border:0;border-radius:50%;background:var(--glass-2);color:var(--text);display:grid;place-items:center;transition:background .2s,color .2s}
+.ibtn:hover{background:#fff;color:#05070B}
+.ibtn svg{width:18px;height:18px}
+
+/* Versiones */
+.vx{display:grid;gap:2.5rem;margin-top:clamp(4rem,8vw,6rem);align-items:center}
+.vx__txt{display:grid;gap:1.2rem;align-content:start}
+.vx__txt h3{font-size:clamp(1.8rem,3.2vw,2.6rem);font-weight:600;letter-spacing:-.04em;line-height:1.05;text-wrap:balance}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;border-radius:999px;background:var(--glass);justify-self:start;max-width:100%}
+.seg button{border:0;background:none;min-height:40px;padding:0 1rem;border-radius:999px;color:var(--text-2);font-size:.9rem;transition:background .25s,color .25s}
+.seg button[aria-selected="true"]{background:#fff;color:#05070B}
+@media (max-width:520px){.seg{display:grid;grid-template-columns:repeat(3,1fr);width:100%;border-radius:18px}.seg button{padding:0 .4rem;font-size:.84rem;line-height:1.15;min-height:46px;border-radius:14px}}
+.vx__panel ul{display:grid;gap:.7rem;margin:.4rem 0 1.2rem}
+.vx__panel li{display:flex;gap:.75rem;align-items:flex-start;color:var(--text-2)}
+.vx__panel li::before{content:"";flex:none;margin-top:.55em;width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px var(--teal)}
+.vx__panel[hidden]{display:none}
+.frame{position:relative;border-radius:16px;background:#0D1118;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 50px 100px -40px rgba(0,0,0,.9)}
+.frame::before{content:"";position:absolute;inset:-12% -8%;z-index:-1;background:radial-gradient(closest-side,rgba(94,234,208,.2),rgba(247,188,98,.08) 60%,transparent)}
+.frame__bar{display:flex;align-items:center;gap:6px;height:36px;padding:0 14px}
+.frame__bar i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.14)}
+.frame__bar span{margin-left:auto;margin-right:auto;font-family:var(--mono);font-size:.7rem;color:var(--mute);padding:.2rem .8rem;border-radius:6px;background:rgba(255,255,255,.05)}
+.frame__img{display:grid;border-radius:0 0 16px 16px;overflow:hidden}
+.frame__img img{grid-area:1/1;width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top;opacity:0;transition:opacity .6s var(--ease)}
+.frame__img img.is-on{opacity:1}
+@media (min-width:960px){.vx{grid-template-columns:.85fr 1.15fr;gap:4.5rem}}
+
+/* Servicios */
+.svc{display:grid;gap:3rem;align-items:center}
+.svc__list{display:grid;gap:2rem 2.2rem}
+.svc__item{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start}
+.ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:radial-gradient(120% 120% at 30% 20%,rgba(94,234,208,.22),rgba(255,255,255,.03) 70%);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.ico svg{width:22px;height:22px;stroke:url(#g-ico)}
+.svc__item h3{font-size:1.12rem;font-weight:600;letter-spacing:-.02em}
+.svc__item p{color:var(--mute);font-size:.95rem;margin-top:.15rem}
+.svc__art{position:relative;perspective:1400px;min-height:300px}
+.svc__art::before{content:"";position:absolute;inset:-10%;background:radial-gradient(closest-side,rgba(247,188,98,.16),transparent);z-index:-1}
+.shot{position:absolute;border-radius:14px;overflow:hidden;background:#111;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 40px 80px -30px rgba(0,0,0,.9);transition:transform 1s var(--ease)}
+.shot img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top left}
+.shot--a{width:78%;left:0;top:0;transform:rotateY(14deg) rotateX(6deg) rotateZ(-2deg)}
+.shot--b{width:62%;right:0;bottom:0;transform:rotateY(-10deg) rotateX(4deg) rotateZ(2deg)}
+.svc__art:hover .shot--a{transform:rotateY(6deg) rotateX(2deg) rotateZ(-1deg) translateY(-6px)}
+.svc__art:hover .shot--b{transform:rotateY(-4deg) rotateX(2deg) rotateZ(1deg) translateY(-6px)}
+@media (min-width:640px){.svc__list{grid-template-columns:1fr 1fr}.svc__art{min-height:420px}}
+@media (min-width:1000px){.svc{grid-template-columns:1.05fr .95fr;gap:4rem}}
+
+/* Proyectos */
+.pj{display:grid;gap:2rem}
+.pj__stage{display:grid}
+.pj__s{grid-area:1/1;display:grid;gap:1.6rem;align-items:center;opacity:0;visibility:hidden;transition:opacity .7s var(--ease),visibility 0s .7s}
+.pj__s.is-on{opacity:1;visibility:visible;transition-delay:0s}
+.pj__s .frame__img img{opacity:1;aspect-ratio:16/10;transform:scale(1.03);transition:transform 7s linear}
+.pj__s.is-on .frame__img img{transform:scale(1)}
+.pj__txt{display:grid;gap:.9rem;align-content:center}
+.pj__txt h3{font-size:clamp(1.9rem,3.4vw,2.8rem);font-weight:600;letter-spacing:-.045em;line-height:1.02}
+.pj__txt p{color:var(--text-2);max-width:40ch}
+.pj__tabs{display:flex;gap:.4rem;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.pj__tabs::-webkit-scrollbar{display:none}
+.pj__tab{flex:1 0 auto;min-width:140px;border:0;background:none;text-align:left;padding:.9rem .2rem 0;color:var(--mute);font-size:.9rem;position:relative;transition:color .2s}
+.pj__tab::before,.pj__tab::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;border-radius:2px;background:var(--line)}
+.pj__tab::after{background:var(--grad);transform:scaleX(0);transform-origin:left}
+.pj__tab:hover{color:var(--text-2)}
+.pj__tab[aria-selected="true"]{color:var(--text)}
+.pj__tab[aria-selected="true"]::after{animation:fill var(--dur,6.5s) linear forwards}
+.pj.is-paused .pj__tab[aria-selected="true"]::after{animation-play-state:paused}
+.pj.no-auto .pj__tab[aria-selected="true"]::after{animation:none;transform:scaleX(1)}
+.pj__tab small{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;color:var(--mute);margin-bottom:.2rem}
+@keyframes fill{to{transform:scaleX(1)}}
+.pj__ui{display:flex;align-items:center;gap:1rem}
+@media (min-width:960px){.pj__s{grid-template-columns:1.5fr .9fr;gap:3.5rem}}
+
+/* Proceso */
+.steps{position:relative;display:grid;gap:2.4rem;padding-left:2rem}
+.steps::before{content:"";position:absolute;left:5px;top:8px;bottom:8px;width:1px;background:linear-gradient(180deg,var(--teal),var(--amber) 80%,transparent)}
+.step{position:relative;display:grid;gap:.5rem}
+.step::before{content:"";position:absolute;left:calc(-2rem + 1px);top:.45rem;width:9px;height:9px;border-radius:50%;background:var(--bg);box-shadow:0 0 0 2px var(--teal),0 0 16px var(--teal)}
+.step:nth-child(2)::before{box-shadow:0 0 0 2px #B7EBC3,0 0 16px #B7EBC3}
+.step:nth-child(3)::before{box-shadow:0 0 0 2px var(--amber),0 0 16px var(--amber)}
+.step small{font-family:var(--mono);color:var(--mute);font-size:.75rem;letter-spacing:.06em}
+.step h3{font-size:1.5rem;font-weight:600;letter-spacing:-.035em}
+.step p{color:var(--text-2);max-width:30ch}
+@media (min-width:860px){
+  .steps{grid-template-columns:repeat(3,1fr);gap:3rem;padding:2.2rem 0 0}
+  .steps::before{left:0;right:0;top:4px;bottom:auto;width:auto;height:1px;background:linear-gradient(90deg,var(--teal),#B7EBC3 50%,var(--amber) 90%,transparent)}
+  .step::before{left:0;top:calc(-2.2rem)}
+}
+
+/* Contacto */
+.cta{position:relative;text-align:center;padding:clamp(6rem,13vw,11rem) 0;overflow:hidden}
+.cta::before{content:"";position:absolute;left:50%;top:50%;width:min(1000px,140vw);height:700px;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(94,234,208,.2),rgba(247,188,98,.1) 50%,transparent)}
+.cta__in{position:relative;display:grid;justify-items:center;gap:1.4rem}
+.cta h2{font-weight:600;font-size:clamp(3rem,9vw,7.5rem);line-height:.95;letter-spacing:-.06em}
+.cta p{color:var(--text-2);max-width:36ch;font-size:1.12rem}
+.cta small{color:var(--mute);font-size:.9rem}
+.cta small a{color:var(--text-2);text-decoration:underline;text-decoration-color:rgba(255,255,255,.25);text-underline-offset:3px}
+
+/* Pie */
+.foot{position:relative;padding:3rem 0 2rem;overflow:hidden}
+.foot__row{display:flex;flex-wrap:wrap;gap:1.4rem 2.4rem;justify-content:space-between;align-items:center}
+.foot nav ul,.foot__soc{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;color:var(--text-2);font-size:.93rem}
+.foot a:hover{color:var(--teal)}
+.foot__big{margin-top:3rem;font-weight:600;font-size:clamp(3.6rem,15.5vw,13.5rem);line-height:.8;letter-spacing:-.07em;text-align:center;white-space:nowrap;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,0) 85%);-webkit-background-clip:text;background-clip:text;color:transparent;user-select:none}
+.foot__bot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem;margin-top:1.4rem;font-size:.82rem;color:var(--mute);font-family:var(--mono)}
+
+/* Aparición */
+.js .rv{opacity:0;transform:translateY(18px);filter:blur(6px);transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}
+.js .rv.in{opacity:1;transform:none;filter:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rb__track{scroll-behavior:auto}
+  .js .rv{opacity:1;transform:none;filter:none}
+  .js .stage .ph--l{transform:translateX(-128%) rotate(-8deg)}
+  .js .stage .ph--r{transform:translateX(28%) rotate(8deg)}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs><linearGradient id="g-ico" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6EF0D6"/><stop offset="1" stop-color="#F7BC62"/></linearGradient></defs>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2c0 1.3.9 2.5 1 2.7.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></symbol>
+  <symbol id="i-arr" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M6 13l6 6 6-6"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" d="M8 6h3v12H8zM13 6h3v12h-3z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></symbol>
+</svg>
+
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<div class="sky" aria-hidden="true"><div class="sky__grid"></div><div class="sky__a"></div><div class="sky__b"></div></div>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <div class="top__bar">
+      <a class="brand" href="/"><span class="brand__dot" aria-hidden="true"></span>Julio Acuña</a>
+      <nav class="nav" id="menu" aria-label="Principal">
+        <ul>
+          <li><a href="/" aria-current="page">Inicio</a></li>
+          <li><a href="/servicios">Servicios</a></li>
+          <li><a href="/proyectos">Proyectos</a></li>
+          <li><a href="/restaurantes">Restaurantes</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/contacto">Contacto</a></li>
+        </ul>
+        <div class="nav__foot">
+          <a class="btn btn--light" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Escríbeme por WhatsApp</a>
+          <span>Santiago · negocios de todo Chile</span>
+        </div>
+      </nav>
+      <a class="btn btn--light btn--sm top__wa" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp</a>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="menu"><span class="sr">Abrir menú</span><i aria-hidden="true"></i></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap hero__in">
+      <p class="badge"><i aria-hidden="true"></i>Santiago · negocios de todo Chile</p>
+      <h1>Páginas web y sistemas para que tu negocio <span class="grad">venda más</span></h1>
+      <p class="sub">Página web, menú QR, pedidos por WhatsApp, tiendas online y sistemas a medida. Claros, rápidos y pensados para el celular.</p>
+      <div class="actions">
+        <a class="btn btn--light" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Escríbeme por WhatsApp</a>
+        <a class="btn btn--glass" href="#rubros">Ver ejemplos<svg aria-hidden="true"><use href="#i-down"/></svg></a>
+      </div>
+    </div>
+    <div class="stage" id="stage" role="img" aria-label="Tres celulares con los ejemplos de pizzería: Simple-page, Multi-page y Plataforma web">
+      <div class="ph ph--l"><span class="ph__tag">Simple-page</span><img src="img/movil-simple.webp" width="620" height="1256" alt=""></div>
+      <div class="ph ph--r"><span class="ph__tag">Plataforma web</span><img src="img/movil-plataforma.webp" width="620" height="1256" alt=""></div>
+      <div class="ph ph--c"><span class="ph__tag">Multi-page</span><img src="img/movil-multi.webp" width="620" height="1256" alt="" fetchpriority="high"></div>
+    </div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- Rubros -->
+  <section class="sec" id="rubros" aria-labelledby="t-rubros">
+    <div class="wrap">
+      <div class="sec__head sec__head--row rv">
+        <p class="kicker"><b>01</b> Ejemplos por rubro</p>
+        <h2 class="h2" id="t-rubros">Elige tu rubro. <span class="soft">Mira cómo se vería tu negocio.</span></h2>
+        <div class="chips" role="group" aria-label="Filtrar rubros">
+          <button class="chip" type="button" data-f="todos" aria-pressed="true">Todos<span>13</span></button>
+          <button class="chip" type="button" data-f="comida" aria-pressed="false">Comida<span>7</span></button>
+          <button class="chip" type="button" data-f="comercio" aria-pressed="false">Comercio<span>4</span></button>
+          <button class="chip" type="button" data-f="servicios" aria-pressed="false">Servicios<span>2</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="rbx rv" data-rbx role="region" aria-roledescription="carrusel" aria-label="Rubros con ejemplos">
+      <ul class="rb__track" tabindex="0" aria-label="Lista de rubros, se puede deslizar">
+        <li class="rb rb--on" data-g="comida"><a href="/demos/pizzeria/"><img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st rb__st--on"><i></i>Disponible</span><span class="rb__txt"><span class="rb__name">Pizzería</span><span class="rb__v" aria-label="3 versiones"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+        <li class="rb" data-g="comida"><a href="#" data-wa="sushi"><img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st"><i></i>Pronto</span><span class="rb__txt"><span class="rb__name">Sushi</span><span class="rb__v" aria-hidden="true"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+        <li class="rb" data-g="comida"><a href="#" data-wa="pastelería"><img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st"><i></i>Pronto</span><span class="rb__txt"><span class="rb__name">Pastelería</span><span class="rb__v" aria-hidden="true"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+        <li class="rb" data-g="comida"><a href="#" data-wa="panadería"><img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st"><i></i>Pronto</span><span class="rb__txt"><span class="rb__name">Panadería</span><span class="rb__v" aria-hidden="true"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+        <li class="rb" data-g="comercio"><a href="#" data-wa="carnicería"><img src="https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st"><i></i>Pronto</span><span class="rb__txt"><span class="rb__name">Carnicería</span><span class="rb__v" aria-hidden="true"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+        <li class="rb" data-g="comida"><a href="#" data-wa="comida peruana"><img src="https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st"><i></i>Pronto</span><span class="rb__txt"><span class="rb__name">Comida peruana</span><span class="rb__v" aria-hidden="true"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+        <li class="rb" data-g="comida"><a href="#" data-wa="comida china"><img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st"><i></i>Pronto</span><span class="rb__txt"><span class="rb__name">Comida china</span><span class="rb__v" aria-hidden="true"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+        <li class="rb" data-g="comida"><a href="#" data-wa="comida variada"><img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st"><i></i>Pronto</span><span class="rb__txt"><span class="rb__name">Comida variada</span><span class="rb__v" aria-hidden="true"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+        <li class="rb" data-g="servicios"><a href="#" data-wa="taller mecánico"><img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st"><i></i>Pronto</span><span class="rb__txt"><span class="rb__name">Taller mecánico</span><span class="rb__v" aria-hidden="true"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+        <li class="rb" data-g="comercio"><a href="#" data-wa="botillería"><img src="https://images.unsplash.com/photo-1597290282695-edc43d0e7129?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st"><i></i>Pronto</span><span class="rb__txt"><span class="rb__name">Botillería</span><span class="rb__v" aria-hidden="true"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+        <li class="rb" data-g="comercio"><a href="#" data-wa="almacén"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st"><i></i>Pronto</span><span class="rb__txt"><span class="rb__name">Almacén</span><span class="rb__v" aria-hidden="true"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+        <li class="rb" data-g="comercio"><a href="#" data-wa="ferretería"><img src="https://images.unsplash.com/photo-1426927308491-6380b6a9936f?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st"><i></i>Pronto</span><span class="rb__txt"><span class="rb__name">Ferretería</span><span class="rb__v" aria-hidden="true"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+        <li class="rb" data-g="servicios"><a href="#" data-wa="peluquería"><img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600&q=70&auto=format&fit=crop" width="600" height="830" alt="" loading="lazy"><span class="rb__st"><i></i>Pronto</span><span class="rb__txt"><span class="rb__name">Peluquería</span><span class="rb__v" aria-hidden="true"><span>Simple</span><span>Multi</span><span>Plataforma</span></span></span></a></li>
+      </ul>
+      <div class="wrap rbx__ui">
+        <div class="rbx__prog" aria-hidden="true"><i></i></div>
+        <button class="ibtn" type="button" data-pause aria-label="Pausar desplazamiento automático"><svg aria-hidden="true"><use href="#i-pause"/></svg></button>
+        <button class="ibtn" type="button" data-prev aria-label="Rubros anteriores"><svg aria-hidden="true"><use href="#i-prev"/></svg></button>
+        <button class="ibtn" type="button" data-next aria-label="Rubros siguientes"><svg aria-hidden="true"><use href="#i-next"/></svg></button>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="vx">
+        <div class="vx__txt rv">
+          <p class="kicker"><b>3</b> versiones por rubro</p>
+          <h3>Parte simple. Crece cuando tu negocio lo pida.</h3>
+          <div class="seg" role="tablist" aria-label="Versiones">
+            <button type="button" role="tab" id="tb-s" aria-controls="pn-s" aria-selected="true" tabindex="0" data-img="0">Simple-page</button>
+            <button type="button" role="tab" id="tb-m" aria-controls="pn-m" aria-selected="false" tabindex="-1" data-img="1">Multi-page</button>
+            <button type="button" role="tab" id="tb-p" aria-controls="pn-p" aria-selected="false" tabindex="-1" data-img="2">Plataforma web</button>
+          </div>
+          <div class="vx__panel" role="tabpanel" id="pn-s" aria-labelledby="tb-s">
+            <ul><li>Una sola página, rápida en el celular</li><li>Menú con QR y botón de WhatsApp</li><li>Horario, mapa y sección de Google</li></ul>
+            <a class="more" href="/demos/pizzeria/simple/">Abrir el ejemplo<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+          </div>
+          <div class="vx__panel" role="tabpanel" id="pn-m" aria-labelledby="tb-m" hidden>
+            <ul><li>Inicio, menú, nosotros, preguntas y contacto</li><li>Platos en 3D y «Ver en tu mesa»</li><li>Pedido armado que llega por WhatsApp</li></ul>
+            <a class="more" href="/demos/pizzeria/multi/">Abrir el ejemplo<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+          </div>
+          <div class="vx__panel" role="tabpanel" id="pn-p" aria-labelledby="tb-p" hidden>
+            <ul><li>Tienda online con cuentas de clientes</li><li>Panel del dueño con pedidos y stock</li><li>Retiro en el local o despacho por comuna</li></ul>
+            <a class="more" href="/demos/pizzeria/plataforma/">Abrir el ejemplo<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+          </div>
+        </div>
+        <figure class="frame rv" aria-label="Vista previa de la versión elegida">
+          <div class="frame__bar" aria-hidden="true"><i></i><i></i><i></i><span data-url>pizzeria · simple-page</span></div>
+          <div class="frame__img">
+            <img class="is-on" src="/demos/pizzeria/img/simple.webp" width="800" height="600" alt="Pizzería La Vecina Rosa, ejemplo Simple-page" loading="lazy">
+            <img src="/demos/pizzeria/img/multi.webp" width="800" height="600" alt="Forno Ottavia, ejemplo Multi-page" loading="lazy">
+            <img src="/demos/pizzeria/img/plataforma.webp" width="800" height="600" alt="Cohete Pizza, ejemplo Plataforma web" loading="lazy">
+          </div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- Servicios -->
+  <section class="sec" id="servicios" aria-labelledby="t-svc">
+    <div class="wrap">
+      <div class="sec__head sec__head--row rv">
+        <p class="kicker"><b>02</b> Servicios</p>
+        <h2 class="h2" id="t-svc">Todo lo que tu negocio <span class="soft">necesita para vender en internet.</span></h2>
+        <a class="more" href="/servicios">Ver todos los servicios<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+      </div>
+      <div class="svc">
+        <ul class="svc__list">
+          <li class="svc__item rv"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg></span><div><h3>Página web</h3><p>Rápida en el celular, con WhatsApp a un toque.</p></div></li>
+          <li class="svc__item rv"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v.01M20 20h-3v-3M14 20h.01"/></svg></span><div><h3>Menú QR y 3D</h3><p>Tu carta en el celular, sin reimprimir.</p></div></li>
+          <li class="svc__item rv"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"/><path d="M9 10h6M9 13.5h4"/></svg></span><div><h3>Pedidos por WhatsApp</h3><p>Pedidos listos, sin comisión de apps.</p></div></li>
+          <li class="svc__item rv"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><div><h3>Tienda online</h3><p>Catálogo, carrito, cuentas y panel.</p></div></li>
+          <li class="svc__item rv"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><div><h3>Google y SEO</h3><p>Que te encuentren en Maps y en Google.</p></div></li>
+          <li class="svc__item rv"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 7.5l9 4.5 9-4.5L12 3Z"/><path d="m3 12 9 4.5 9-4.5M3 16.5 12 21l9-4.5"/></svg></span><div><h3>Sistemas a medida</h3><p>De planillas a un sistema ordenado.</p></div></li>
+        </ul>
+        <div class="svc__art rv" aria-hidden="true">
+          <div class="shot shot--a"><img src="/assets/img/servicios/tienda-online.webp" width="1200" height="750" alt="" loading="lazy"></div>
+          <div class="shot shot--b"><img src="/assets/img/servicios/menu-qr-3d.webp" width="1200" height="750" alt="" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- Proyectos -->
+  <section class="sec" id="proyectos" aria-labelledby="t-proy">
+    <div class="wrap">
+      <div class="sec__head sec__head--row rv">
+        <p class="kicker"><b>03</b> Proyectos destacados</p>
+        <h2 class="h2" id="t-proy">Sistemas que se usan <span class="soft">todos los días.</span></h2>
+        <a class="more" href="/proyectos">Ver todos los proyectos<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+      </div>
+
+      <div class="pj rv" data-pj data-interval="6500" role="region" aria-roledescription="carrusel" aria-label="Proyectos destacados">
+        <div class="pj__stage" aria-live="off">
+          <article class="pj__s is-on" id="pj-1" role="tabpanel" aria-labelledby="pt-1">
+            <a class="frame" href="/proyecto/ridelsip-cl" tabindex="-1" aria-hidden="true"><span class="frame__bar"><i></i><i></i><i></i><span>ridelsip.cl</span></span><span class="frame__img"><img src="/assets/img/projects/ridelsip-cl.webp" width="1200" height="750" alt="" loading="lazy"></span></a>
+            <div class="pj__txt"><p class="kicker">Tienda online y gestión · Chile</p><h3>RIDEL-SIP</h3><p>Tienda de casas prefabricadas y un sistema que ordena ventas, fábrica e inventario.</p><a class="more" href="/proyecto/ridelsip-cl">Ver proyecto<svg aria-hidden="true"><use href="#i-arr"/></svg></a></div>
+          </article>
+          <article class="pj__s" id="pj-2" role="tabpanel" aria-labelledby="pt-2">
+            <a class="frame" href="/proyecto/intranet-agencia" tabindex="-1" aria-hidden="true"><span class="frame__bar"><i></i><i></i><i></i><span>intranet · agencia</span></span><span class="frame__img"><img src="/assets/img/projects/intranet-agencia.webp" width="1200" height="750" alt="" loading="lazy"></span></a>
+            <div class="pj__txt"><p class="kicker">Intranet · Brasil</p><h3>Intranet y academia</h3><p>Un portal para todo el equipo, con permisos por persona y cursos propios.</p><a class="more" href="/proyecto/intranet-agencia">Ver proyecto<svg aria-hidden="true"><use href="#i-arr"/></svg></a></div>
+          </article>
+          <article class="pj__s" id="pj-3" role="tabpanel" aria-labelledby="pt-3">
+            <a class="frame" href="/proyecto/saturnus-aura" tabindex="-1" aria-hidden="true"><span class="frame__bar"><i></i><i></i><i></i><span>aura · escritorio</span></span><span class="frame__img"><img src="/assets/img/projects/saturnus-aura.webp" width="1200" height="750" alt="" loading="lazy"></span></a>
+            <div class="pj__txt"><p class="kicker">Inteligencia artificial · Chile</p><h3>AURA</h3><p>Responde preguntas sobre los documentos de tu empresa, citando la fuente y sin internet.</p><a class="more" href="/proyecto/saturnus-aura">Ver proyecto<svg aria-hidden="true"><use href="#i-arr"/></svg></a></div>
+          </article>
+          <article class="pj__s" id="pj-4" role="tabpanel" aria-labelledby="pt-4">
+            <a class="frame" href="/proyecto/suitechile-cl" tabindex="-1" aria-hidden="true"><span class="frame__bar"><i></i><i></i><i></i><span>suitechile.cl</span></span><span class="frame__img"><img src="/assets/img/projects/suitechile-cl.webp" width="1200" height="750" alt="" loading="lazy"></span></a>
+            <div class="pj__txt"><p class="kicker">Sitio inmobiliario · Chile</p><h3>SUITE Properties</h3><p>Proyectos de inversión y tres paneles privados: administrador, bróker e inversionista.</p><a class="more" href="/proyecto/suitechile-cl">Ver proyecto<svg aria-hidden="true"><use href="#i-arr"/></svg></a></div>
+          </article>
+          <article class="pj__s" id="pj-5" role="tabpanel" aria-labelledby="pt-5">
+            <a class="frame" href="/proyecto/obrascivilesmys-cl" tabindex="-1" aria-hidden="true"><span class="frame__bar"><i></i><i></i><i></i><span>obrascivilesmys.cl</span></span><span class="frame__img"><img src="/assets/img/projects/obrascivilesmys-cl.webp" width="1200" height="750" alt="" loading="lazy"></span></a>
+            <div class="pj__txt"><p class="kicker">Página web · Coquimbo</p><h3>MS Obras Civiles</h3><p>Servicios, contacto y solicitud de cotización para una empresa de obras civiles.</p><a class="more" href="/proyecto/obrascivilesmys-cl">Ver proyecto<svg aria-hidden="true"><use href="#i-arr"/></svg></a></div>
+          </article>
+        </div>
+        <div class="pj__ui">
+          <div class="pj__tabs" role="tablist" aria-label="Elegir proyecto">
+            <button class="pj__tab" type="button" role="tab" id="pt-1" aria-controls="pj-1" aria-selected="true"><small>01</small>RIDEL-SIP</button>
+            <button class="pj__tab" type="button" role="tab" id="pt-2" aria-controls="pj-2" aria-selected="false" tabindex="-1"><small>02</small>Intranet</button>
+            <button class="pj__tab" type="button" role="tab" id="pt-3" aria-controls="pj-3" aria-selected="false" tabindex="-1"><small>03</small>AURA</button>
+            <button class="pj__tab" type="button" role="tab" id="pt-4" aria-controls="pj-4" aria-selected="false" tabindex="-1"><small>04</small>SUITE</button>
+            <button class="pj__tab" type="button" role="tab" id="pt-5" aria-controls="pj-5" aria-selected="false" tabindex="-1"><small>05</small>MS Obras Civiles</button>
+          </div>
+          <button class="ibtn" type="button" data-pause aria-label="Pausar carrusel"><svg aria-hidden="true"><use href="#i-pause"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- Cómo trabajo -->
+  <section class="sec" id="proceso" aria-labelledby="t-proc">
+    <div class="wrap">
+      <div class="sec__head rv">
+        <p class="kicker"><b>04</b> Cómo trabajo</p>
+        <h2 class="h2" id="t-proc">Simple, claro <span class="soft">y sin letra chica.</span></h2>
+      </div>
+      <ol class="steps">
+        <li class="step rv"><small>PASO 01</small><h3>Conversamos</h3><p>Me cuentas cómo funciona tu negocio y qué necesitas.</p></li>
+        <li class="step rv"><small>PASO 02</small><h3>Te propongo</h3><p>Una propuesta clara: qué incluye, plazo y precio.</p></li>
+        <li class="step rv"><small>PASO 03</small><h3>Lo dejo andando</h3><p>Lo publico, te enseño a usarlo y quedo de soporte.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Contacto -->
+  <section class="cta" id="contacto" aria-labelledby="t-cta">
+    <div class="wrap cta__in">
+      <p class="badge rv"><i aria-hidden="true"></i>Propuesta sin compromiso</p>
+      <h2 class="rv" id="t-cta"><span class="grad">¿Conversamos?</span></h2>
+      <p class="rv">Cuéntame qué necesitas y te respondo con una propuesta clara, sin compromiso.</p>
+      <div class="actions rv">
+        <a class="btn btn--light" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Escríbeme por WhatsApp</a>
+        <a class="btn btn--glass" href="mailto:Julio0acuna123@gmail.com">Enviar un correo</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <hr class="hr">
+    <div class="foot__row" style="margin-top:2.2rem">
+      <a class="brand" href="/"><span class="brand__dot" aria-hidden="true"></span>Julio Acuña</a>
+      <nav aria-label="Pie de página"><ul><li><a href="/servicios">Servicios</a></li><li><a href="/proyectos">Proyectos</a></li><li><a href="/restaurantes">Restaurantes</a></li><li><a href="/blog">Blog</a></li><li><a href="/contacto">Contacto</a></li></ul></nav>
+      <ul class="foot__soc"><li><a href="https://wa.me/56973537642" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="mailto:Julio0acuna123@gmail.com">Correo</a></li><li><a href="https://www.linkedin.com/in/julio-0acuna/" target="_blank" rel="noopener">LinkedIn</a></li><li><a href="https://github.com/Julio-0Acuna/" target="_blank" rel="noopener">GitHub</a></li></ul>
+    </div>
+    <p class="foot__big" aria-hidden="true">Julio Acuña</p>
+    <div class="foot__bot"><span>© 2026 · Santiago, Chile</span><span>Fotos de rubros: Unsplash</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var d=document;
+  d.documentElement.classList.add('js');
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasIO='IntersectionObserver' in window;
+
+  var top=d.getElementById('top');
+  var onScroll=function(){top.classList.toggle('is-scrolled',window.scrollY>8)};
+  onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
+
+  // Menú móvil
+  var burger=d.querySelector('.burger'), menu=d.getElementById('menu');
+  function setMenu(open){
+    burger.setAttribute('aria-expanded',open);
+    burger.querySelector('.sr').textContent=open?'Cerrar menú':'Abrir menú';
+    menu.classList.toggle('is-open',open); d.body.style.overflow=open?'hidden':'';
+  }
+  burger.addEventListener('click',function(){setMenu(burger.getAttribute('aria-expanded')!=='true')});
+  menu.addEventListener('click',function(e){if(e.target.closest('a'))setMenu(false)});
+  d.addEventListener('keydown',function(e){if(e.key==='Escape'&&menu.classList.contains('is-open')){setMenu(false);burger.focus()}});
+
+  // Rubros "pronto" → WhatsApp
+  d.querySelectorAll('[data-wa]').forEach(function(a){
+    a.href='https://wa.me/56973537642?text='+encodeURIComponent('Hola Julio, quiero una página web para mi negocio ('+a.dataset.wa+').');
+    a.target='_blank'; a.rel='noopener';
+    a.setAttribute('aria-label',a.querySelector('.rb__name').textContent+': ejemplo pronto. Pedir el mío por WhatsApp');
+  });
+
+  // Aparición
+  var rv=[].slice.call(d.querySelectorAll('.rv')).concat([d.getElementById('stage')]);
+  if(hasIO&&!reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
+    rv.forEach(function(el){io.observe(el)});
+  } else rv.forEach(function(el){el.classList.add('in')});
+
+  // Carrusel de rubros
+  var rbx=d.querySelector('[data-rbx]');
+  (function(){
+    var tr=rbx.querySelector('.rb__track'), prog=rbx.querySelector('.rbx__prog i'), pb=rbx.querySelector('[data-pause]');
+    var userPaused=reduce, hold=false, visible=true, timer=null;
+    function cardW(){var c=tr.querySelector('.rb:not([hidden])');return c?c.getBoundingClientRect().width+14:300}
+    function atEnd(){return tr.scrollLeft+tr.clientWidth>=tr.scrollWidth-6}
+    function step(dir){
+      if(dir>0&&atEnd())tr.scrollTo({left:0,behavior:reduce?'auto':'smooth'});
+      else if(dir<0&&tr.scrollLeft<4)tr.scrollTo({left:tr.scrollWidth,behavior:reduce?'auto':'smooth'});
+      else tr.scrollBy({left:dir*cardW(),behavior:reduce?'auto':'smooth'});
+    }
+    function paintProg(){
+      var max=tr.scrollWidth-tr.clientWidth, vis=tr.clientWidth/tr.scrollWidth;
+      prog.style.width=Math.max(8,vis*100)+'%';
+      prog.style.transform='translateX('+(max>0?(tr.scrollLeft/max)*(100/vis-100):0)+'%)';
+    }
+    function running(){return !userPaused&&!hold&&visible&&!d.hidden}
+    function sync(){clearTimeout(timer);if(running())timer=setTimeout(function(){step(1);sync()},3200)}
+    rbx.querySelector('[data-prev]').addEventListener('click',function(){step(-1);sync()});
+    rbx.querySelector('[data-next]').addEventListener('click',function(){step(1);sync()});
+    pb.addEventListener('click',function(){
+      userPaused=!userPaused;
+      pb.setAttribute('aria-label',userPaused?'Reanudar desplazamiento automático':'Pausar desplazamiento automático');
+      pb.querySelector('use').setAttribute('href',userPaused?'#i-play':'#i-pause'); sync();
+    });
+    if(reduce)pb.querySelector('use').setAttribute('href','#i-play'),pb.setAttribute('aria-label','Reanudar desplazamiento automático');
+    ['mouseenter','focusin','touchstart','pointerdown'].forEach(function(ev){tr.addEventListener(ev,function(){hold=true;sync()},{passive:true})});
+    tr.addEventListener('mouseleave',function(){hold=false;sync()});
+    tr.addEventListener('focusout',function(e){if(!tr.contains(e.relatedTarget)){hold=false;sync()}});
+    tr.addEventListener('touchend',function(){setTimeout(function(){hold=false;sync()},2500)},{passive:true});
+    tr.addEventListener('scroll',paintProg,{passive:true}); window.addEventListener('resize',paintProg);
+    d.addEventListener('visibilitychange',sync);
+    if(hasIO)new IntersectionObserver(function(es){visible=es[0].isIntersecting;sync()}).observe(tr);
+    // Filtros
+    var chips=d.querySelectorAll('.chip'), cards=tr.querySelectorAll('.rb');
+    chips.forEach(function(c){c.addEventListener('click',function(){
+      chips.forEach(function(x){x.setAttribute('aria-pressed',x===c)});
+      cards.forEach(function(li){li.hidden=!(c.dataset.f==='todos'||li.dataset.g===c.dataset.f)});
+      tr.scrollTo({left:0}); paintProg();
+    })});
+    paintProg(); sync();
+  })();
+
+  // Pestañas de versiones
+  (function(){
+    var tabs=[].slice.call(d.querySelectorAll('.seg [role=tab]')), imgs=d.querySelectorAll('.vx .frame__img img'), url=d.querySelector('[data-url]');
+    var names=['pizzeria · simple-page','pizzeria · multi-page','pizzeria · plataforma'];
+    function sel(t,focus){
+      tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;d.getElementById(x.getAttribute('aria-controls')).hidden=!on});
+      var n=+t.dataset.img; imgs.forEach(function(im,k){im.classList.toggle('is-on',k===n)}); url.textContent=names[n];
+      if(focus)t.focus();
+    }
+    tabs.forEach(function(t,k){
+      t.addEventListener('click',function(){sel(t)});
+      t.addEventListener('keydown',function(e){
+        var m={ArrowRight:1,ArrowLeft:-1}[e.key]; if(e.key==='Home')m='h'; if(e.key==='End')m='e'; if(m===undefined)return;
+        e.preventDefault(); var j=m==='h'?0:m==='e'?tabs.length-1:(k+m+tabs.length)%tabs.length; sel(tabs[j],true);
+      });
+    });
+  })();
+
+  // Carrusel de proyectos (pestañas con avance automático)
+  (function(){
+    var pj=d.querySelector('[data-pj]'); if(!pj)return;
+    var tabs=[].slice.call(pj.querySelectorAll('.pj__tab')), slides=[].slice.call(pj.querySelectorAll('.pj__s')), pb=pj.querySelector('[data-pause]');
+    var ms=+pj.dataset.interval||6500, i=0, timer=null, userPaused=reduce, hold=false, visible=true, left=ms, t0=0, ticking=false;
+    pj.style.setProperty('--dur',ms+'ms');
+    function paint(focus){
+      tabs.forEach(function(t,n){var on=n===i;t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1});
+      slides.forEach(function(s,n){var on=n===i;s.classList.toggle('is-on',on);s.setAttribute('aria-hidden',!on);if('inert' in s)s.inert=!on});
+      var t=tabs[i], box=t.parentNode;
+      if(box.scrollWidth>box.clientWidth)box.scrollTo({left:t.offsetLeft-box.offsetLeft-20,behavior:reduce?'auto':'smooth'});
+      if(focus)t.focus();
+    }
+    function restartBar(){var t=tabs[i];t.setAttribute('aria-selected','false');void t.offsetWidth;t.setAttribute('aria-selected','true')}
+    function running(){return !userPaused&&!hold&&visible&&!d.hidden}
+    function sync(){
+      var run=running();
+      if(run&&!ticking){t0=Date.now();timer=setTimeout(function(){go(i+1)},left);ticking=true}
+      else if(!run&&ticking){clearTimeout(timer);left=Math.max(0,left-(Date.now()-t0));ticking=false}
+      pj.classList.toggle('is-paused',!run);
+    }
+    function go(n,user,focus){clearTimeout(timer);ticking=false;left=ms;i=(n+slides.length)%slides.length;if(user)pj.querySelector('.pj__stage').setAttribute('aria-live','polite');paint(focus);restartBar();sync()}
+    tabs.forEach(function(t,k){
+      t.addEventListener('click',function(){go(k,true)});
+      t.addEventListener('keydown',function(e){var m={ArrowRight:1,ArrowLeft:-1}[e.key];if(!m)return;e.preventDefault();go(k+m,true,true)});
+    });
+    pb.addEventListener('click',function(){
+      userPaused=!userPaused; pb.setAttribute('aria-label',userPaused?'Reproducir carrusel':'Pausar carrusel');
+      pb.querySelector('use').setAttribute('href',userPaused?'#i-play':'#i-pause'); sync();
+    });
+    if(reduce){pj.classList.add('no-auto');pb.querySelector('use').setAttribute('href','#i-play');pb.setAttribute('aria-label','Reproducir carrusel')}
+    var stage=pj.querySelector('.pj__stage');
+    stage.addEventListener('mouseenter',function(){hold=true;sync()});
+    stage.addEventListener('mouseleave',function(){hold=false;sync()});
+    pj.addEventListener('focusin',function(e){if(!e.target.classList.contains('pj__tab')&&e.target!==pb){hold=true;sync()}});
+    pj.addEventListener('focusout',function(){hold=false;sync()});
+    d.addEventListener('visibilitychange',sync);
+    if(hasIO)new IntersectionObserver(function(es){visible=es[0].isIntersecting;sync()}).observe(pj);
+    paint(); sync();
+  })();
+})();
+</script>
+</body>
+</html>

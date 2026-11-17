@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propuestas de portada · Julio Acuña</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg">
+<style>
+:root{--bg:#EDEDEA;--card:#FFFFFF;--ink:#1A1A18;--mute:#6B6B66;--line:rgba(0,0,0,.08)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{width:min(1240px,100% - 2rem);margin:0 auto;padding:clamp(2rem,6vw,4.5rem) 0 4rem}
+header{display:grid;gap:.6rem;margin-bottom:clamp(2rem,5vw,3.2rem)}
+header p{margin:0;color:var(--mute);max-width:60ch}
+h1{margin:0;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:-.03em}
+.grid{display:grid;gap:1.6rem}
+@media (min-width:900px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.p{display:flex;flex-direction:column;background:var(--card);border-radius:20px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.05),0 20px 40px -24px rgba(0,0,0,.25);text-decoration:none;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.p:hover{transform:translateY(-4px);box-shadow:0 1px 2px rgba(0,0,0,.05),0 30px 60px -28px rgba(0,0,0,.35)}
+.p:focus-visible{outline:3px solid #2563EB;outline-offset:3px}
+.p img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top;background:#ddd}
+.p__body{display:grid;gap:.7rem;padding:1.3rem 1.4rem 1.5rem;flex:1;align-content:start}
+.p__tag{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);font-weight:600}
+.p h2{margin:0;font-size:1.5rem;letter-spacing:-.02em;line-height:1.1}
+.p p{margin:0;color:#3d3d39;font-size:.95rem}
+.sw{display:flex;gap:6px;margin-top:.2rem}
+.sw i{width:26px;height:26px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.meta{font-size:.85rem;color:var(--mute)}
+.go{margin-top:.4rem;font-weight:600;display:inline-flex;align-items:center;gap:.4rem}
+.p:hover .go{text-decoration:underline;text-underline-offset:4px}
+footer{margin-top:2.5rem;color:var(--mute);font-size:.9rem}
+@media (prefers-reduced-motion:reduce){.p{transition:none}.p:hover{transform:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <h1>Tres propuestas de portada</h1>
+    <p>Mismo contenido, tres estilos distintos. Ábrelas en el computador y en el celular, y elige la que mejor te represente.</p>
+  </header>
+  <div class="grid">
+    <a class="p" href="a.html">
+      <img src="img/a.webp" width="1200" height="750" alt="Primera pantalla de la propuesta A, Claro premium">
+      <div class="p__body">
+        <span class="p__tag">Propuesta A</span>
+        <h2>Claro premium</h2>
+        <p>Estudio de diseño: fondo marfil, serif elegante, foto en arco y mucho aire. Sobria y cara.</p>
+        <div class="sw" aria-hidden="true"><i style="background:#F7F3ED"></i><i style="background:#EEE7DC"></i><i style="background:#1B1915"></i><i style="background:#A3412A"></i></div>
+        <span class="meta">Instrument Serif + Instrument Sans</span>
+        <span class="go">Abrir propuesta →</span>
+      </div>
+    </a>
+    <a class="p" href="b.html">
+      <img src="img/b.webp" width="1200" height="750" alt="Primera pantalla de la propuesta B, Agencia creativa">
+      <div class="p__body">
+        <span class="p__tag">Propuesta B</span>
+        <h2>Agencia creativa</h2>
+        <p>Energía y color: titular gigante con fotos dentro, rubros en cintas que se mueven y secciones de color.</p>
+        <div class="sw" aria-hidden="true"><i style="background:#FFF4E6"></i><i style="background:#FF5531"></i><i style="background:#FFC83A"></i><i style="background:#5A3CF0"></i><i style="background:#FFA3C7"></i><i style="background:#16120F"></i></div>
+        <span class="meta">Bricolage Grotesque + Figtree</span>
+        <span class="go">Abrir propuesta →</span>
+      </div>
+    </a>
+    <a class="p" href="c.html">
+      <img src="img/c.webp" width="1200" height="750" alt="Primera pantalla de la propuesta C, Oscuro elegante">
+      <div class="p__body">
+        <span class="p__tag">Propuesta C</span>
+        <h2>Oscuro elegante</h2>
+        <p>Producto tecnológico premium: fondo casi negro, brillos turquesa y ámbar, vidrio y tres celulares en escena.</p>
+        <div class="sw" aria-hidden="true"><i style="background:#05070B"></i><i style="background:#0E121A"></i><i style="background:#5EEAD0"></i><i style="background:#F7BC62"></i><i style="background:#F3F5F9"></i></div>
+        <span class="meta">Geist + Geist Mono</span>
+        <span class="go">Abrir propuesta →</span>
+      </div>
+    </a>
+  </div>
+  <footer>Maquetas de la portada (inicio). Las fotos de rubros son de Unsplash; los rubros marcados «pronto» llevan a WhatsApp hasta que su ejemplo esté listo.</footer>
+</main>
+</body>
+</html>

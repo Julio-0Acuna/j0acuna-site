@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Julio Acuña · Páginas web para negocios en Santiago y todo Chile (Propuesta A)</title>
+<meta name="description" content="Propuesta A, Claro premium: portada del portafolio de Julio Acuña, desarrollador web en Santiago.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F3ED; --paper-2:#EEE7DC; --paper-3:#E4DACB;
+  --ink:#1B1915; --ink-2:#47423B; --mute:#6F685E; --line:rgba(27,25,21,.13);
+  --accent:#A3412A; --accent-soft:#EBD8CC;
+  --serif:"Instrument Serif","Iowan Old Style","Times New Roman",serif;
+  --sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --wrap:min(1240px,100% - 2.5rem);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.6 var(--sans);overflow-x:clip;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+ul,ol{list-style:none;margin:0;padding:0}
+h1,h2,h3,p,figure{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{width:var(--wrap);margin-inline:auto}
+main{display:block;overflow-x:clip}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:fixed;left:1rem;top:-4rem;z-index:100;background:var(--ink);color:var(--paper);padding:.6rem 1rem;border-radius:999px}
+.skip:focus{top:1rem}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+/* Tipografía */
+.eyebrow{display:flex;align-items:center;gap:.7rem;font-size:clamp(.7rem,2.6vw,.78rem);font-weight:500;letter-spacing:clamp(.08em,.6vw,.16em);text-transform:uppercase;color:var(--mute)}
+.eyebrow::before{content:"";width:28px;height:1px;background:currentColor}
+.display{font-family:var(--serif);font-weight:400;font-size:clamp(3.2rem,7.2vw,6.8rem);line-height:.96;letter-spacing:-.015em;text-wrap:balance}
+.h2{font-family:var(--serif);font-weight:400;font-size:clamp(2.4rem,5vw,4.4rem);line-height:1;letter-spacing:-.01em;text-wrap:balance}
+em{font-style:italic;color:var(--accent)}
+.lead{font-size:clamp(1.05rem,1.4vw,1.2rem);color:var(--ink-2);max-width:34ch}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;gap:.6rem;min-height:52px;padding:0 1.5rem;border-radius:999px;font-weight:500;font-size:.98rem;transition:transform .3s var(--ease),background .3s,color .3s}
+.btn svg{width:19px;height:19px;flex:none}
+.btn--ink{background:var(--ink);color:var(--paper)}
+.btn--ink:hover{background:var(--accent)}
+.btn--light{background:var(--paper);color:var(--ink)}
+.btn--light:hover{background:#fff}
+.btn--sm{min-height:42px;padding:0 1.1rem;font-size:.9rem}
+.link{justify-self:start;display:inline-flex;align-items:center;gap:.5rem;font-weight:500;padding-bottom:3px;background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat;transition:background-size .4s var(--ease),gap .3s var(--ease)}
+.link:hover{gap:.85rem;color:var(--accent)}
+
+/* Encabezado */
+.top{position:sticky;top:0;z-index:50;transition:background .3s,box-shadow .3s}
+.top.is-scrolled{background:rgba(247,243,237,.86);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);box-shadow:0 1px 0 var(--line)}
+.top__in{display:flex;align-items:center;gap:1.5rem;height:72px}
+.brand{font-family:var(--serif);font-size:1.6rem;letter-spacing:-.01em;margin-right:auto;position:relative;z-index:61}
+.nav ul{display:flex;gap:1.9rem;font-size:.93rem}
+.nav ul a{position:relative;color:var(--ink-2);transition:color .2s}
+.nav ul a:hover,.nav ul a[aria-current]{color:var(--ink)}
+.nav ul a[aria-current]::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:1px;background:var(--accent)}
+.burger{display:none;position:relative;z-index:61;width:46px;height:46px;border:0;background:transparent;border-radius:50%}
+.burger i,.burger i::before,.burger i::after{position:absolute;left:12px;width:22px;height:1.5px;background:var(--ink);transition:transform .35s var(--ease),opacity .2s}
+.burger i{top:22px}.burger i::before{content:"";left:0;top:-7px}.burger i::after{content:"";left:0;top:7px}
+.burger[aria-expanded="true"] i{background:transparent}
+.burger[aria-expanded="true"] i::before{transform:translateY(7px) rotate(45deg)}
+.burger[aria-expanded="true"] i::after{transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:959px){
+  .burger{display:block}
+  .top__wa{display:none}
+  .nav{position:fixed;inset:0;z-index:60;background:var(--paper);padding:110px 1.5rem 2rem;display:flex;flex-direction:column;justify-content:space-between;opacity:0;visibility:hidden;transform:translateY(-12px);transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s .35s}
+  .nav.is-open{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+  .nav ul{flex-direction:column;gap:.2rem}
+  .nav ul a{font-family:var(--serif);font-size:2.6rem;color:var(--ink);line-height:1.25}
+  .nav ul a[aria-current]::after{display:none}
+  .nav ul a[aria-current]{font-style:italic;color:var(--accent)}
+  .nav .nav__foot{display:flex}
+}
+.nav__foot{display:none;flex-direction:column;gap:1rem;align-items:flex-start;color:var(--mute);font-size:.9rem}
+
+/* Hero */
+.hero{padding:clamp(1.5rem,4vw,3.5rem) 0 clamp(4rem,8vw,7rem)}
+.hero__grid{display:grid;gap:3rem;align-items:center}
+.hero__text{display:grid;gap:1.6rem;align-content:start}
+.hero .display{max-width:12ch}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:1.1rem 1.6rem;margin-top:.4rem}
+.hero__art{position:relative;margin-inline:auto;width:min(100%,520px);padding:0 0 2.2rem 0}
+.arch{border-radius:999px 999px 28px 28px;overflow:hidden;aspect-ratio:4/5;background:var(--paper-3);margin-left:14%}
+.arch img{width:100%;height:100%;object-fit:cover;transform:scale(1.04)}
+.phone{position:absolute;left:0;bottom:0;width:clamp(138px,36%,198px);aspect-ratio:9/18.6;border-radius:30px;background:#141210;padding:6px;box-shadow:0 40px 70px -28px rgba(60,35,15,.55),0 12px 24px -12px rgba(60,35,15,.35)}
+.phone img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:25px}
+.phone::before{content:"";position:absolute;top:13px;left:50%;width:30%;height:5px;border-radius:9px;background:#141210;transform:translateX(-50%);z-index:1}
+.hero__cap{position:absolute;right:0;bottom:-.2rem;font-size:.8rem;line-height:1.35;color:var(--mute);text-align:right;width:56%}
+.hero__cap b{font-weight:500;color:var(--ink-2)}
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;display:flex}
+.ticker ul{display:flex;flex:none;align-items:center;gap:2.2rem;padding:1.1rem 1.1rem;font-family:var(--serif);font-size:1.4rem;color:var(--ink-2);animation:tick 38s linear infinite}
+.ticker li{display:flex;align-items:center;gap:2.2rem;white-space:nowrap}
+.ticker li::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.85}
+.ticker:hover ul{animation-play-state:paused}
+@keyframes tick{to{transform:translateX(-100%)}}
+@media (prefers-reduced-motion:reduce){.ticker{justify-content:center}.ticker ul{animation:none;flex-wrap:wrap;justify-content:center;flex:1}.ticker ul+ul{display:none}}
+@media (min-width:960px){
+  .hero__grid{grid-template-columns:1.15fr .85fr;gap:4rem}
+  .hero__art{width:100%;max-width:500px;margin-right:0}
+}
+
+/* Secciones */
+.sec{padding:clamp(4.5rem,9vw,8.5rem) 0}
+.sec--sand{background:var(--paper-2)}
+.sec__head{display:grid;gap:1.2rem;margin-bottom:clamp(2rem,4vw,3rem)}
+.sec__head p.aside{color:var(--ink-2);max-width:38ch}
+@media (min-width:960px){
+  .sec__head{grid-template-columns:1fr auto;align-items:end;column-gap:4rem}
+  .sec__head .eyebrow{grid-column:1/-1}
+  .sec__head .aside{text-align:right;justify-self:end}
+}
+
+/* Rubros */
+.filters{display:flex;gap:1.3rem;margin-bottom:2rem;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+@media (min-width:700px){.filters{gap:1.8rem}}
+.filters button{flex:none;white-space:nowrap;background:none;border:0;padding:.7rem 0;margin-bottom:-1px;font-size:.95rem;color:var(--mute);border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+.filters button sup{font-size:.68rem;margin-left:.15rem;color:var(--mute)}
+.filters button:hover{color:var(--ink)}
+.filters button[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.rubros{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem 1rem}
+.rubro a{display:flex;flex-direction:column;gap:.8rem;height:100%}
+.rubro__img{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:1/1;background:var(--paper-3)}
+.rubro__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
+.rubro a:hover .rubro__img img{transform:scale(1.06)}
+.rubro__name{font-family:var(--serif);font-size:1.5rem;line-height:1.05}
+.rubro__meta{display:block;font-size:.8rem;color:var(--mute);margin-top:.3rem}
+.rubro__meta i{font-style:normal;color:var(--accent)}
+.rubro[hidden]{display:none}
+.rubro--feat{grid-column:1/-1}
+.rubro--feat .rubro__img{aspect-ratio:4/3.4}
+.rubro--feat .rubro__img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(20,14,8,.62))}
+.rubro__over{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:1.3rem;color:#fff;display:grid;gap:.6rem}
+.rubro__over .rubro__name{font-size:clamp(2.1rem,4vw,3.2rem)}
+.chip{justify-self:start;display:inline-flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.92);color:var(--ink);font-size:.74rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.38rem .75rem;border-radius:999px}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:#2E9E5B}
+.vers{display:flex;flex-wrap:wrap;gap:.35rem .9rem;font-size:.86rem;color:rgba(255,255,255,.9)}
+.vers span::before{content:"✓ ";color:#F2C6A8}
+@media (min-width:700px){.rubros{grid-template-columns:repeat(3,1fr)}.rubro__img{aspect-ratio:4/5}}
+@media (min-width:1080px){
+  .rubros{grid-template-columns:repeat(4,1fr);gap:2.6rem 1.4rem}
+  .rubro--feat{grid-column:span 2;grid-row:span 2}
+  .rubro--feat .rubro__img{aspect-ratio:auto;flex:1;min-height:420px}
+}
+.rubros__note{margin-top:2.5rem;color:var(--mute);font-size:.92rem}
+
+/* Tres versiones */
+.vrow{display:grid;grid-auto-flow:column;grid-auto-columns:82%;gap:1.2rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:1rem;margin-inline:-1.25rem;padding-inline:1.25rem;scrollbar-width:none}
+.vrow::-webkit-scrollbar{display:none}
+.vcard{scroll-snap-align:start;display:grid;gap:1rem;align-content:start}
+.vcard__img{border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 30px 60px -35px rgba(60,40,20,.45)}
+.vcard__img img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top;transition:transform .9s var(--ease)}
+.vcard:hover .vcard__img img{transform:scale(1.03)}
+.vcard__n{font-family:var(--serif);font-style:italic;color:var(--accent);font-size:1.15rem}
+.vcard h3{font-family:var(--serif);font-weight:400;font-size:1.9rem;line-height:1}
+.vcard p{color:var(--ink-2);font-size:.98rem;max-width:32ch}
+@media (min-width:900px){.vrow{grid-auto-flow:row;grid-template-columns:repeat(3,1fr);overflow:visible;margin:0;padding:0;gap:2rem}}
+
+/* Servicios */
+.svc{display:grid;gap:2.5rem}
+.svc__intro{display:grid;gap:1.4rem;align-content:start}
+.svc__prev{display:none}
+.svc__list li{border-top:1px solid var(--line)}
+.svc__list li:last-child{border-bottom:1px solid var(--line)}
+.svc__list a{display:grid;grid-template-columns:60px 1fr auto;align-items:center;gap:1rem;padding:1rem 0;transition:padding .4s var(--ease)}
+.svc__list img{width:60px;height:60px;border-radius:14px;object-fit:cover;object-position:top left}
+.svc__n{display:none;font-family:var(--serif);font-style:italic;color:var(--accent);font-size:1.3rem}
+.svc__t{font-family:var(--serif);font-size:1.65rem;line-height:1}
+.svc__d{display:block;color:var(--mute);font-size:.92rem;margin-top:.35rem;font-family:var(--sans)}
+.svc__go{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--ink);transition:background .3s,color .3s,transform .4s var(--ease)}
+.svc__list a:hover{padding-left:.6rem}
+.svc__list a:hover .svc__go{background:var(--ink);color:var(--paper);transform:rotate(-45deg)}
+@media (min-width:960px){
+  .svc{grid-template-columns:.95fr 1.05fr;gap:5rem}
+  .svc__intro{position:sticky;top:110px}
+  .svc__prev{display:block;margin-top:1.2rem;border-radius:20px;overflow:hidden;background:#fff;box-shadow:0 40px 70px -45px rgba(60,40,20,.5)}
+  .svc__prev img{width:100%;aspect-ratio:16/11;object-fit:cover;object-position:top left;transition:opacity .35s}
+  .svc__prev img.is-fading{opacity:0}
+  .svc__list a{grid-template-columns:3rem 1fr auto;gap:1.2rem;padding:1.45rem 0}
+  .svc__list img{display:none}
+  .svc__n{display:block}
+  .svc__list a.is-on{padding-left:.6rem}
+  .svc__list a.is-on .svc__go{background:var(--ink);color:var(--paper);transform:rotate(-45deg)}
+  .svc__t{font-size:2.3rem}
+}
+/* Proyectos (carrusel) */
+.car{position:relative}
+.car__track{display:grid}
+.slide{grid-area:1/1;display:grid;gap:1.6rem;opacity:0;visibility:hidden;transition:opacity .8s var(--ease),visibility 0s .8s}
+.slide.is-active{opacity:1;visibility:visible;transition-delay:0s}
+.slide__img{display:block;border-radius:20px;overflow:hidden;background:var(--paper-3);box-shadow:0 40px 80px -45px rgba(60,40,20,.55)}
+.slide__img img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;transform:scale(1.05);transition:transform 6s linear}
+.slide.is-active .slide__img img{transform:scale(1)}
+.slide__txt{display:grid;gap:.9rem;align-content:center}
+.slide__cat{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.slide h3{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,3.6vw,3.3rem);line-height:1}
+.slide p{color:var(--ink-2);max-width:40ch}
+.car__ui{display:flex;align-items:center;gap:1rem;margin-top:2rem}
+.car__bars{display:flex;gap:6px;flex:1;max-width:340px}
+.car__bars button{flex:1;height:22px;border:0;background:none;padding:0;position:relative}
+.car__bars button::before,.car__bars button::after{content:"";position:absolute;left:0;right:0;top:10px;height:2px;border-radius:2px;background:var(--line)}
+.car__bars button::after{background:var(--ink);transform:scaleX(0);transform-origin:left}
+.car__bars button.is-done::after{transform:scaleX(1)}
+.car__bars button.is-active::after{animation:fill var(--dur,6s) linear forwards}
+.car.is-paused .car__bars button.is-active::after{animation-play-state:paused}
+.car.no-auto .car__bars button.is-active::after{animation:none;transform:scaleX(1)}
+@keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.car__count{font-family:var(--serif);font-size:1.3rem;min-width:4.2rem}
+.car__count b{font-weight:400;color:var(--accent);font-style:italic}
+.cbtn{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:transparent;display:grid;place-items:center;transition:background .3s,color .3s,border-color .3s}
+.cbtn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.cbtn svg{width:18px;height:18px}
+@media (min-width:960px){.slide{grid-template-columns:1.35fr .9fr;gap:4rem}}
+
+/* Proceso */
+.steps{display:grid;gap:2.6rem;counter-reset:s}
+.step{display:grid;gap:.7rem;padding-top:1.6rem;border-top:1px solid var(--line)}
+.step__n{font-family:var(--serif);font-style:italic;font-size:4.2rem;line-height:.8;color:var(--accent)}
+.step h3{font-family:var(--serif);font-weight:400;font-size:2rem;line-height:1}
+.step p{color:var(--ink-2);max-width:30ch}
+@media (min-width:860px){.steps{grid-template-columns:repeat(3,1fr);gap:3rem}}
+
+/* Contacto */
+.cta{position:relative;isolation:isolate;color:#fff;padding:clamp(6rem,14vw,11rem) 0;overflow:hidden}
+.cta__bg{position:absolute;inset:0;z-index:-1}
+.cta__bg img{width:100%;height:100%;object-fit:cover}
+.cta__bg::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(22,16,10,.88) 10%,rgba(22,16,10,.55) 60%,rgba(22,16,10,.25))}
+.cta h2{font-family:var(--serif);font-weight:400;font-size:clamp(3rem,8vw,7.2rem);line-height:.95;max-width:10ch}
+.cta h2 em{color:#F0C2A3}
+.cta p{color:rgba(255,255,255,.82);max-width:36ch;margin:1.4rem 0 2.2rem;font-size:1.1rem}
+.cta .actions a.link{color:#fff}
+
+/* Pie */
+.foot{padding:4rem 0 2.5rem}
+.foot__top{display:grid;gap:2.5rem;padding-bottom:3rem;border-bottom:1px solid var(--line)}
+.foot__brand{font-family:var(--serif);font-size:clamp(2.6rem,6vw,4.6rem);line-height:.95}
+.foot__brand span{display:block;font-family:var(--sans);font-size:.95rem;color:var(--mute);margin-top:.8rem;letter-spacing:0}
+.foot__cols{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.foot h3{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);font-weight:500;margin-bottom:.9rem}
+.foot li{margin:.35rem 0}
+.foot li a:hover{color:var(--accent)}
+.foot__bot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem;padding-top:1.6rem;font-size:.85rem;color:var(--mute)}
+@media (min-width:860px){.foot__top{grid-template-columns:1.3fr 1fr}}
+
+/* Aparición al hacer scroll */
+.js .rv{opacity:0;transform:translateY(22px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.js .rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .js .rv{opacity:1;transform:none}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2c0 1.3.9 2.5 1 2.7.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></symbol>
+  <symbol id="i-arr" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" d="M8 6h3v12H8zM13 6h3v12h-3z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></symbol>
+</svg>
+
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<header class="top" id="top">
+  <div class="wrap top__in">
+    <a class="brand" href="/">Julio Acuña</a>
+    <nav class="nav" id="menu" aria-label="Principal">
+      <ul>
+        <li><a href="/" aria-current="page">Inicio</a></li>
+        <li><a href="/servicios">Servicios</a></li>
+        <li><a href="/proyectos">Proyectos</a></li>
+        <li><a href="/restaurantes">Restaurantes</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/contacto">Contacto</a></li>
+      </ul>
+      <div class="nav__foot">
+        <a class="btn btn--ink" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Escríbeme por WhatsApp</a>
+        <span>Santiago · negocios de todo Chile</span>
+      </div>
+    </nav>
+    <a class="btn btn--ink btn--sm top__wa" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp</a>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="menu"><span class="sr">Abrir menú</span><i aria-hidden="true"></i></button>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Portada -->
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div class="hero__text">
+        <p class="eyebrow">Santiago · negocios de todo Chile</p>
+        <h1 class="display">Páginas web para que tu negocio <em>venda más</em></h1>
+        <p class="lead">Página web, menú QR, pedidos por WhatsApp y sistemas a medida. Con diseño cuidado y listos para el celular.</p>
+        <div class="actions">
+          <a class="btn btn--ink" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Escríbeme por WhatsApp</a>
+          <a class="link" href="#rubros">Ver ejemplos <svg width="18" height="18" aria-hidden="true"><use href="#i-arr"/></svg></a>
+        </div>
+      </div>
+      <figure class="hero__art">
+        <div class="arch"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1000&q=72&auto=format&fit=crop" width="1000" height="1250" alt="Comedor de un restaurante con luz natural, mesas de madera y plantas" fetchpriority="high"></div>
+        <div class="phone"><img src="img/movil-multi.webp" width="620" height="1256" alt="Sitio de ejemplo en un celular: Forno Ottavia, pizzería napolitana"></div>
+        <figcaption class="hero__cap"><b>Forno Ottavia</b> · ejemplo para pizzería</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="ticker" role="region" aria-label="Lo que hago">
+    <ul><li>Página web</li><li>Menú QR</li><li>Pedidos por WhatsApp</li><li>Tienda online</li><li>Google y SEO</li><li>Sistemas a medida</li></ul>
+    <ul aria-hidden="true"><li>Página web</li><li>Menú QR</li><li>Pedidos por WhatsApp</li><li>Tienda online</li><li>Google y SEO</li><li>Sistemas a medida</li></ul>
+  </div>
+
+  <!-- Ejemplos por rubro -->
+  <section class="sec" id="rubros" aria-labelledby="t-rubros">
+    <div class="wrap">
+      <div class="sec__head rv">
+        <p class="eyebrow">Ejemplos por rubro</p>
+        <h2 class="h2" id="t-rubros">Mira cómo se vería <em>tu</em> negocio</h2>
+        <p class="aside">Trece rubros. Cada uno en tres versiones: Simple-page, Multi-page y Plataforma web.</p>
+      </div>
+
+      <div class="filters rv" role="group" aria-label="Filtrar rubros">
+        <button type="button" data-f="todos" aria-pressed="true">Todos<sup>13</sup></button>
+        <button type="button" data-f="comida" aria-pressed="false">Comida<sup>7</sup></button>
+        <button type="button" data-f="comercio" aria-pressed="false">Comercio<sup>4</sup></button>
+        <button type="button" data-f="servicios" aria-pressed="false">Servicios<sup>2</sup></button>
+      </div>
+
+      <ul class="rubros" id="lista-rubros">
+        <li class="rubro rubro--feat rv" data-g="comida">
+          <a href="/demos/pizzeria/">
+            <span class="rubro__img">
+              <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=1200&q=72&auto=format&fit=crop" width="1200" height="1000" alt="" loading="lazy">
+              <span class="rubro__over">
+                <span class="chip">Listo para ver</span>
+                <span class="rubro__name">Pizzería</span>
+                <span class="vers"><span>Simple-page</span><span>Multi-page</span><span>Plataforma web</span></span>
+              </span>
+            </span>
+          </a>
+        </li>
+        <li class="rubro rv" data-g="comida"><a href="#" data-wa="sushi"><span class="rubro__img"><img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=700&q=70&auto=format&fit=crop" width="700" height="875" alt="" loading="lazy"></span><span><span class="rubro__name">Sushi</span><span class="rubro__meta">3 versiones · <i>pronto</i></span></span></a></li>
+        <li class="rubro rv" data-g="comida"><a href="#" data-wa="pastelería"><span class="rubro__img"><img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=700&q=70&auto=format&fit=crop" width="700" height="875" alt="" loading="lazy"></span><span><span class="rubro__name">Pastelería</span><span class="rubro__meta">3 versiones · <i>pronto</i></span></span></a></li>
+        <li class="rubro rv" data-g="comida"><a href="#" data-wa="panadería"><span class="rubro__img"><img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=700&q=70&auto=format&fit=crop" width="700" height="875" alt="" loading="lazy"></span><span><span class="rubro__name">Panadería</span><span class="rubro__meta">3 versiones · <i>pronto</i></span></span></a></li>
+        <li class="rubro rv" data-g="comida"><a href="#" data-wa="comida peruana"><span class="rubro__img"><img src="https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=700&q=70&auto=format&fit=crop" width="700" height="875" alt="" loading="lazy"></span><span><span class="rubro__name">Comida peruana</span><span class="rubro__meta">3 versiones · <i>pronto</i></span></span></a></li>
+        <li class="rubro rv" data-g="comercio"><a href="#" data-wa="carnicería"><span class="rubro__img"><img src="https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=700&q=70&auto=format&fit=crop" width="700" height="875" alt="" loading="lazy"></span><span><span class="rubro__name">Carnicería</span><span class="rubro__meta">3 versiones · <i>pronto</i></span></span></a></li>
+        <li class="rubro rv" data-g="comida"><a href="#" data-wa="comida china"><span class="rubro__img"><img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=700&q=70&auto=format&fit=crop" width="700" height="875" alt="" loading="lazy"></span><span><span class="rubro__name">Comida china</span><span class="rubro__meta">3 versiones · <i>pronto</i></span></span></a></li>
+        <li class="rubro rv" data-g="comida"><a href="#" data-wa="comida variada"><span class="rubro__img"><img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=700&q=70&auto=format&fit=crop" width="700" height="875" alt="" loading="lazy"></span><span><span class="rubro__name">Comida variada</span><span class="rubro__meta">3 versiones · <i>pronto</i></span></span></a></li>
+        <li class="rubro rv" data-g="servicios"><a href="#" data-wa="taller mecánico"><span class="rubro__img"><img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=700&q=70&auto=format&fit=crop" width="700" height="875" alt="" loading="lazy"></span><span><span class="rubro__name">Taller mecánico</span><span class="rubro__meta">3 versiones · <i>pronto</i></span></span></a></li>
+        <li class="rubro rv" data-g="comercio"><a href="#" data-wa="botillería"><span class="rubro__img"><img src="https://images.unsplash.com/photo-1597290282695-edc43d0e7129?w=700&q=70&auto=format&fit=crop" width="700" height="875" alt="" loading="lazy"></span><span><span class="rubro__name">Botillería</span><span class="rubro__meta">3 versiones · <i>pronto</i></span></span></a></li>
+        <li class="rubro rv" data-g="comercio"><a href="#" data-wa="almacén"><span class="rubro__img"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=700&q=70&auto=format&fit=crop" width="700" height="875" alt="" loading="lazy"></span><span><span class="rubro__name">Almacén</span><span class="rubro__meta">3 versiones · <i>pronto</i></span></span></a></li>
+        <li class="rubro rv" data-g="comercio"><a href="#" data-wa="ferretería"><span class="rubro__img"><img src="https://images.unsplash.com/photo-1426927308491-6380b6a9936f?w=700&q=70&auto=format&fit=crop" width="700" height="875" alt="" loading="lazy"></span><span><span class="rubro__name">Ferretería</span><span class="rubro__meta">3 versiones · <i>pronto</i></span></span></a></li>
+        <li class="rubro rv" data-g="servicios"><a href="#" data-wa="peluquería"><span class="rubro__img"><img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=700&q=70&auto=format&fit=crop" width="700" height="875" alt="" loading="lazy"></span><span><span class="rubro__name">Peluquería</span><span class="rubro__meta">3 versiones · <i>pronto</i></span></span></a></li>
+      </ul>
+      <p class="rubros__note rv">¿Tu rubro no está? Igual lo hacemos: <a class="link" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener">cuéntame de tu negocio</a></p>
+    </div>
+  </section>
+
+  <!-- Tres versiones -->
+  <section class="sec sec--sand" aria-labelledby="t-vers">
+    <div class="wrap">
+      <div class="sec__head rv">
+        <p class="eyebrow">Tres versiones por rubro</p>
+        <h2 class="h2" id="t-vers">Elige cuánto <em>quieres</em> crecer</h2>
+        <p class="aside">El ejemplo de pizzería ya está funcionando. Ábrelo en tu celular y prueba hacer un pedido.</p>
+      </div>
+      <div class="vrow rv">
+        <a class="vcard" href="/demos/pizzeria/simple/">
+          <span class="vcard__img"><img src="/demos/pizzeria/img/simple.webp" width="800" height="600" alt="Página de una sola sección de la pizzería La Vecina Rosa" loading="lazy"></span>
+          <span class="vcard__n">i.</span>
+          <h3>Simple-page</h3>
+          <p>Todo en una página: menú con QR, horario, mapa y WhatsApp.</p>
+        </a>
+        <a class="vcard" href="/demos/pizzeria/multi/">
+          <span class="vcard__img"><img src="/demos/pizzeria/img/multi.webp" width="800" height="600" alt="Sitio de varias páginas de la pizzería Forno Ottavia" loading="lazy"></span>
+          <span class="vcard__n">ii.</span>
+          <h3>Multi-page</h3>
+          <p>Varias páginas, platos en 3D y pedido armado por WhatsApp.</p>
+        </a>
+        <a class="vcard" href="/demos/pizzeria/plataforma/">
+          <span class="vcard__img"><img src="/demos/pizzeria/img/plataforma.webp" width="800" height="600" alt="Tienda online de la pizzería Cohete Pizza" loading="lazy"></span>
+          <span class="vcard__n">iii.</span>
+          <h3>Plataforma web</h3>
+          <p>Tienda online con cuentas de clientes y panel del dueño.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Servicios -->
+  <section class="sec" id="servicios" aria-labelledby="t-svc">
+    <div class="wrap svc">
+      <div class="svc__intro rv">
+        <p class="eyebrow">Servicios</p>
+        <h2 class="h2" id="t-svc">Lo justo para <em>vender</em> en internet</h2>
+        <p class="lead">Partes por lo básico y sumas lo demás cuando tu negocio lo pida.</p>
+        <a class="link" href="/servicios">Ver todos los servicios <svg width="18" height="18" aria-hidden="true"><use href="#i-arr"/></svg></a>
+        <figure class="svc__prev" aria-hidden="true"><img id="svc-prev" src="/demos/pizzeria/img/simple.webp" width="800" height="600" alt="" loading="lazy"></figure>
+      </div>
+      <ol class="svc__list">
+        <li class="rv"><a href="/servicios" data-img="/demos/pizzeria/img/simple.webp"><img src="/demos/pizzeria/img/simple.webp" width="84" height="84" alt="" loading="lazy"><span class="svc__n" aria-hidden="true">01</span><span><span class="svc__t">Página web</span><span class="svc__d">Rápida en el celular, con WhatsApp a un toque.</span></span><span class="svc__go" aria-hidden="true"><svg width="18" height="18"><use href="#i-arr"/></svg></span></a></li>
+        <li class="rv"><a href="/servicios" data-img="/assets/img/servicios/menu-qr-3d.webp"><img src="/assets/img/servicios/menu-qr-3d.webp" width="84" height="84" alt="" loading="lazy"><span class="svc__n" aria-hidden="true">02</span><span><span class="svc__t">Menú QR y 3D</span><span class="svc__d">Tu carta en el celular, sin reimprimir.</span></span><span class="svc__go" aria-hidden="true"><svg width="18" height="18"><use href="#i-arr"/></svg></span></a></li>
+        <li class="rv"><a href="/servicios" data-img="/assets/img/servicios/pedidos-directos.webp"><img src="/assets/img/servicios/pedidos-directos.webp" width="84" height="84" alt="" loading="lazy"><span class="svc__n" aria-hidden="true">03</span><span><span class="svc__t">Pedidos por WhatsApp</span><span class="svc__d">Pedidos listos, sin comisión de apps.</span></span><span class="svc__go" aria-hidden="true"><svg width="18" height="18"><use href="#i-arr"/></svg></span></a></li>
+        <li class="rv"><a href="/servicios" data-img="/assets/img/servicios/tienda-online.webp"><img src="/assets/img/servicios/tienda-online.webp" width="84" height="84" alt="" loading="lazy"><span class="svc__n" aria-hidden="true">04</span><span><span class="svc__t">Tienda online</span><span class="svc__d">Catálogo, carrito, cuentas y panel.</span></span><span class="svc__go" aria-hidden="true"><svg width="18" height="18"><use href="#i-arr"/></svg></span></a></li>
+        <li class="rv"><a href="/servicios" data-img="/assets/img/servicios/google-perfil.webp"><img src="/assets/img/servicios/google-perfil.webp" width="84" height="84" alt="" loading="lazy"><span class="svc__n" aria-hidden="true">05</span><span><span class="svc__t">Google y SEO</span><span class="svc__d">Que te encuentren en Maps y en Google.</span></span><span class="svc__go" aria-hidden="true"><svg width="18" height="18"><use href="#i-arr"/></svg></span></a></li>
+        <li class="rv"><a href="/servicios" data-img="/assets/img/projects/intranet-agencia.webp"><img src="/assets/img/projects/intranet-agencia.webp" width="84" height="84" alt="" loading="lazy"><span class="svc__n" aria-hidden="true">06</span><span><span class="svc__t">Sistemas a medida</span><span class="svc__d">De planillas a un sistema ordenado.</span></span><span class="svc__go" aria-hidden="true"><svg width="18" height="18"><use href="#i-arr"/></svg></span></a></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Proyectos -->
+  <section class="sec sec--sand" id="proyectos" aria-labelledby="t-proy">
+    <div class="wrap">
+      <div class="sec__head rv">
+        <p class="eyebrow">Proyectos destacados</p>
+        <h2 class="h2" id="t-proy">Sitios y sistemas <em>en uso</em></h2>
+        <a class="link aside" href="/proyectos">Ver todos los proyectos <svg width="18" height="18" aria-hidden="true"><use href="#i-arr"/></svg></a>
+      </div>
+
+      <div class="car rv" data-car data-interval="6500" role="region" aria-roledescription="carrusel" aria-label="Proyectos destacados">
+        <div class="car__track" aria-live="off">
+          <article class="slide is-active" role="group" aria-roledescription="diapositiva" aria-label="1 de 5">
+            <a class="slide__img" href="/proyecto/ridelsip-cl" tabindex="-1" aria-hidden="true"><img src="/assets/img/projects/ridelsip-cl.webp" width="1200" height="750" alt="" loading="lazy"></a>
+            <div class="slide__txt">
+              <p class="slide__cat">Tienda online y gestión · Chile</p>
+              <h3>RIDEL-SIP</h3>
+              <p>Tienda de casas prefabricadas y un sistema que ordena ventas, fábrica e inventario.</p>
+              <a class="link" href="/proyecto/ridelsip-cl">Ver proyecto <svg width="18" height="18" aria-hidden="true"><use href="#i-arr"/></svg></a>
+            </div>
+          </article>
+          <article class="slide" role="group" aria-roledescription="diapositiva" aria-label="2 de 5">
+            <a class="slide__img" href="/proyecto/intranet-agencia" tabindex="-1" aria-hidden="true"><img src="/assets/img/projects/intranet-agencia.webp" width="1200" height="750" alt="" loading="lazy"></a>
+            <div class="slide__txt">
+              <p class="slide__cat">Intranet · Brasil</p>
+              <h3>Intranet y academia</h3>
+              <p>Un portal para todo el equipo, con permisos por persona y cursos propios.</p>
+              <a class="link" href="/proyecto/intranet-agencia">Ver proyecto <svg width="18" height="18" aria-hidden="true"><use href="#i-arr"/></svg></a>
+            </div>
+          </article>
+          <article class="slide" role="group" aria-roledescription="diapositiva" aria-label="3 de 5">
+            <a class="slide__img" href="/proyecto/saturnus-aura" tabindex="-1" aria-hidden="true"><img src="/assets/img/projects/saturnus-aura.webp" width="1200" height="750" alt="" loading="lazy"></a>
+            <div class="slide__txt">
+              <p class="slide__cat">Inteligencia artificial · Chile</p>
+              <h3>AURA</h3>
+              <p>Responde preguntas sobre los documentos de tu empresa, citando la fuente y sin internet.</p>
+              <a class="link" href="/proyecto/saturnus-aura">Ver proyecto <svg width="18" height="18" aria-hidden="true"><use href="#i-arr"/></svg></a>
+            </div>
+          </article>
+          <article class="slide" role="group" aria-roledescription="diapositiva" aria-label="4 de 5">
+            <a class="slide__img" href="/proyecto/suitechile-cl" tabindex="-1" aria-hidden="true"><img src="/assets/img/projects/suitechile-cl.webp" width="1200" height="750" alt="" loading="lazy"></a>
+            <div class="slide__txt">
+              <p class="slide__cat">Sitio inmobiliario · Chile</p>
+              <h3>SUITE Properties</h3>
+              <p>Proyectos de inversión y tres paneles privados: administrador, bróker e inversionista.</p>
+              <a class="link" href="/proyecto/suitechile-cl">Ver proyecto <svg width="18" height="18" aria-hidden="true"><use href="#i-arr"/></svg></a>
+            </div>
+          </article>
+          <article class="slide" role="group" aria-roledescription="diapositiva" aria-label="5 de 5">
+            <a class="slide__img" href="/proyecto/obrascivilesmys-cl" tabindex="-1" aria-hidden="true"><img src="/assets/img/projects/obrascivilesmys-cl.webp" width="1200" height="750" alt="" loading="lazy"></a>
+            <div class="slide__txt">
+              <p class="slide__cat">Página web · Coquimbo</p>
+              <h3>MS Obras Civiles</h3>
+              <p>Servicios, contacto y solicitud de cotización para una empresa de obras civiles.</p>
+              <a class="link" href="/proyecto/obrascivilesmys-cl">Ver proyecto <svg width="18" height="18" aria-hidden="true"><use href="#i-arr"/></svg></a>
+            </div>
+          </article>
+        </div>
+        <div class="car__ui">
+          <p class="car__count" aria-hidden="true"><b data-cur>01</b> / 05</p>
+          <div class="car__bars" data-dots></div>
+          <button class="cbtn" type="button" data-pause aria-label="Pausar carrusel"><svg aria-hidden="true"><use href="#i-pause"/></svg></button>
+          <button class="cbtn" type="button" data-prev aria-label="Proyecto anterior"><svg aria-hidden="true"><use href="#i-prev"/></svg></button>
+          <button class="cbtn" type="button" data-next aria-label="Proyecto siguiente"><svg aria-hidden="true"><use href="#i-next"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo trabajo -->
+  <section class="sec" id="proceso" aria-labelledby="t-proc">
+    <div class="wrap">
+      <div class="sec__head rv">
+        <p class="eyebrow">Cómo trabajo</p>
+        <h2 class="h2" id="t-proc">Simple, de <em>principio a fin</em></h2>
+      </div>
+      <ol class="steps">
+        <li class="step rv"><span class="step__n" aria-hidden="true">1</span><h3>Conversamos</h3><p>Me cuentas cómo funciona tu negocio y qué necesitas.</p></li>
+        <li class="step rv"><span class="step__n" aria-hidden="true">2</span><h3>Te propongo</h3><p>Una propuesta clara: qué incluye, plazo y precio.</p></li>
+        <li class="step rv"><span class="step__n" aria-hidden="true">3</span><h3>Lo dejo andando</h3><p>Lo publico, te enseño a usarlo y quedo de soporte.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Contacto -->
+  <section class="cta" id="contacto" aria-labelledby="t-cta">
+    <div class="cta__bg" aria-hidden="true"><img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=1800&q=70&auto=format&fit=crop" width="1800" height="1200" alt="" loading="lazy"></div>
+    <div class="wrap">
+      <h2 id="t-cta" class="rv">¿Conversamos sobre <em>tu negocio?</em></h2>
+      <p class="rv">Escríbeme y te respondo con una propuesta clara, sin compromiso.</p>
+      <div class="actions rv">
+        <a class="btn btn--light" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Escríbeme por WhatsApp</a>
+        <a class="link" href="mailto:Julio0acuna123@gmail.com">o por correo</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__top">
+      <p class="foot__brand">Julio Acuña<span>Páginas web y sistemas para negocios. Santiago · todo Chile.</span></p>
+      <div class="foot__cols">
+        <div>
+          <h3>Sitio</h3>
+          <ul><li><a href="/servicios">Servicios</a></li><li><a href="/proyectos">Proyectos</a></li><li><a href="/restaurantes">Restaurantes</a></li><li><a href="/blog">Blog</a></li><li><a href="/contacto">Contacto</a></li></ul>
+        </div>
+        <div>
+          <h3>Contacto</h3>
+          <ul><li><a href="https://wa.me/56973537642" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="mailto:Julio0acuna123@gmail.com">Correo</a></li><li><a href="https://www.linkedin.com/in/julio-0acuna/" target="_blank" rel="noopener">LinkedIn</a></li><li><a href="https://github.com/Julio-0Acuna/" target="_blank" rel="noopener">GitHub</a></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="foot__bot"><span>© 2026 Julio Acuña · Santiago, Chile</span><span>Fotos de rubros: Unsplash</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var d=document, root=d.documentElement;
+  root.classList.add('js');
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Encabezado al hacer scroll
+  var top=d.getElementById('top');
+  var onScroll=function(){top.classList.toggle('is-scrolled', window.scrollY>8)};
+  onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
+
+  // Menú móvil
+  var burger=d.querySelector('.burger'), menu=d.getElementById('menu');
+  function setMenu(open){
+    burger.setAttribute('aria-expanded',open);
+    burger.querySelector('.sr').textContent=open?'Cerrar menú':'Abrir menú';
+    menu.classList.toggle('is-open',open);
+    d.body.style.overflow=open?'hidden':'';
+  }
+  burger.addEventListener('click',function(){setMenu(burger.getAttribute('aria-expanded')!=='true')});
+  menu.addEventListener('click',function(e){if(e.target.closest('a'))setMenu(false)});
+  d.addEventListener('keydown',function(e){if(e.key==='Escape'&&menu.classList.contains('is-open')){setMenu(false);burger.focus()}});
+
+  // Rubros: enlace a WhatsApp con el rubro elegido
+  d.querySelectorAll('[data-wa]').forEach(function(a){
+    a.href='https://wa.me/56973537642?text='+encodeURIComponent('Hola Julio, quiero una página web para mi negocio ('+a.dataset.wa+').');
+    a.target='_blank'; a.rel='noopener';
+    a.setAttribute('aria-label',a.querySelector('.rubro__name').textContent+': ejemplo pronto. Pedir el mío por WhatsApp');
+  });
+
+  // Filtros de rubros
+  var fbtns=d.querySelectorAll('.filters button'), items=d.querySelectorAll('#lista-rubros .rubro');
+  fbtns.forEach(function(b){b.addEventListener('click',function(){
+    fbtns.forEach(function(x){x.setAttribute('aria-pressed',x===b)});
+    var f=b.dataset.f;
+    items.forEach(function(li){li.hidden=!(f==='todos'||li.dataset.g===f);li.classList.add('in')});
+  })});
+
+  // Servicios: vista previa
+  var prev=d.getElementById('svc-prev');
+  d.querySelectorAll('.svc__list a').forEach(function(a,n){
+    if(n===0)a.classList.add('is-on');
+    var show=function(){
+      d.querySelectorAll('.svc__list a.is-on').forEach(function(x){x.classList.remove('is-on')});
+      a.classList.add('is-on');
+      if(!prev||prev.getAttribute('src')===a.dataset.img)return;
+      prev.classList.add('is-fading');
+      setTimeout(function(){prev.src=a.dataset.img;prev.classList.remove('is-fading')},reduce?0:180);
+    };
+    a.addEventListener('mouseenter',show);a.addEventListener('focus',show);
+  });
+
+  // Aparición suave
+  var rv=d.querySelectorAll('.rv');
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
+    rv.forEach(function(el){io.observe(el)});
+  } else rv.forEach(function(el){el.classList.add('in')});
+
+  // Carrusel de proyectos
+  d.querySelectorAll('[data-car]').forEach(function(car){
+    var slides=[].slice.call(car.querySelectorAll('.slide')), dots=car.querySelector('[data-dots]');
+    var cur=car.querySelector('[data-cur]'), pauseBtn=car.querySelector('[data-pause]');
+    var ms=+car.dataset.interval||6000, i=0, timer=null, userPaused=reduce, hover=false, visible=true, left=ms, t0=0, ticking=false;
+    car.style.setProperty('--dur',ms+'ms');
+    slides.forEach(function(s,n){
+      var b=d.createElement('button'); b.type='button';
+      b.setAttribute('aria-label','Ir al proyecto '+(n+1)+': '+s.querySelector('h3').textContent);
+      b.addEventListener('click',function(){go(n,true)}); dots.appendChild(b);
+    });
+    var bars=[].slice.call(dots.children);
+    function paint(){
+      slides.forEach(function(s,n){var on=n===i;s.classList.toggle('is-active',on);s.setAttribute('aria-hidden',!on);if('inert' in s)s.inert=!on});
+      bars.forEach(function(b,n){b.classList.toggle('is-active',n===i);b.classList.toggle('is-done',n<i);if(n===i)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current')});
+      cur.textContent=('0'+(i+1)).slice(-2);
+      var bar=bars[i]; bar.classList.remove('is-active'); void bar.offsetWidth; bar.classList.add('is-active');
+    }
+    function running(){return !userPaused&&!hover&&visible&&!d.hidden}
+    function sync(){
+      var run=running();
+      if(run&&!ticking){t0=Date.now();timer=setTimeout(function(){go(i+1)},left);ticking=true}
+      else if(!run&&ticking){clearTimeout(timer);left=Math.max(0,left-(Date.now()-t0));ticking=false}
+      car.classList.toggle('is-paused',!run);
+    }
+    function go(n,user){clearTimeout(timer);ticking=false;left=ms;i=(n+slides.length)%slides.length;if(user)car.querySelector('.car__track').setAttribute('aria-live','polite');paint();sync()}
+    var schedule=sync;
+    function setPaused(p){
+      userPaused=p; pauseBtn.setAttribute('aria-label',p?'Reproducir carrusel':'Pausar carrusel');
+      pauseBtn.querySelector('use').setAttribute('href',p?'#i-play':'#i-pause'); sync();
+    }
+    car.querySelector('[data-prev]').addEventListener('click',function(){go(i-1,true)});
+    car.querySelector('[data-next]').addEventListener('click',function(){go(i+1,true)});
+    pauseBtn.addEventListener('click',function(){setPaused(!userPaused)});
+    car.addEventListener('mouseenter',function(){hover=true;schedule()});
+    car.addEventListener('mouseleave',function(){hover=false;schedule()});
+    car.addEventListener('focusin',function(){hover=true;schedule()});
+    car.addEventListener('focusout',function(e){if(!car.contains(e.relatedTarget)){hover=false;schedule()}});
+    d.addEventListener('visibilitychange',schedule);
+    if('IntersectionObserver' in window)new IntersectionObserver(function(es){visible=es[0].isIntersecting;schedule()}).observe(car);
+    if(reduce)car.classList.add('no-auto');
+    paint(); setPaused(userPaused);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Julio Acuña · Páginas web que venden por ti (Propuesta B)</title>
+<meta name="description" content="Propuesta B, Agencia creativa: portada del portafolio de Julio Acuña, desarrollador web en Santiago.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FFF4E6; --cream-2:#FCE7CF; --ink:#16120F; --ink-2:#3D3630; --mute:#6B6058;
+  --tomato:#FF5531; --sun:#FFC83A; --violet:#5A3CF0; --pink:#FFA3C7; --mint:#36D6A2;
+  --disp:"Bricolage Grotesque",system-ui,sans-serif;
+  --sans:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --wrap:min(1280px,100% - 2.5rem);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --bounce:cubic-bezier(.34,1.56,.64,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--cream);color:var(--ink);font:500 1.0625rem/1.55 var(--sans);overflow-x:clip;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+ul,ol{list-style:none;margin:0;padding:0}
+h1,h2,h3,p,figure{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{width:var(--wrap);margin-inline:auto}
+main{display:block;overflow-x:clip}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:fixed;left:1rem;top:-4rem;z-index:100;background:var(--ink);color:var(--cream);padding:.6rem 1rem;border-radius:999px}
+.skip:focus{top:1rem}
+:focus-visible{outline:3px solid var(--violet);outline-offset:3px;border-radius:8px}
+.dark :focus-visible{outline-color:var(--sun)}
+
+.disp{font-family:var(--disp);font-weight:800;letter-spacing:-.022em;line-height:.92;font-variation-settings:"wdth" 86}
+.h2{font-family:var(--disp);font-weight:800;font-size:clamp(2.6rem,7.2vw,6.2rem);line-height:.94;letter-spacing:-.025em;font-variation-settings:"wdth" 86;text-wrap:balance}
+.sticker{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem .95rem;border-radius:999px;font-weight:700;font-size:.85rem;letter-spacing:.01em;transform:rotate(-2deg)}
+.sticker--sun{background:var(--sun);color:var(--ink)}
+.sticker--pink{background:var(--pink);color:var(--ink)}
+.sticker--mint{background:var(--mint);color:var(--ink)}
+.sticker--cream{background:var(--cream);color:var(--ink)}
+.sticker--ink{background:var(--ink);color:var(--cream)}
+.sticker svg{width:15px;height:15px}
+
+.btn{display:inline-flex;align-items:center;gap:.7rem;min-height:56px;padding:0 1.6rem;border-radius:999px;font-weight:700;font-size:1rem;border:0;transition:transform .35s var(--bounce),background .25s,color .25s}
+.btn:hover{transform:translateY(-3px) rotate(-1.5deg)}
+.btn svg{width:20px;height:20px;flex:none}
+.btn--ink{background:var(--ink);color:var(--cream)}
+.btn--ink:hover{background:var(--violet)}
+.btn--sun{background:var(--sun);color:var(--ink)}
+.btn--sun:hover{background:#fff}
+.btn--cream{background:var(--cream);color:var(--ink)}
+.btn--sm{min-height:44px;padding:0 1.15rem;font-size:.92rem}
+.arrow{display:inline-flex;align-items:center;gap:.55rem;font-weight:700;border-bottom:3px solid currentColor;padding-bottom:2px;transition:gap .3s var(--ease)}
+.arrow:hover{gap:.95rem}
+.arrow svg{width:20px;height:20px}
+
+/* Encabezado */
+.top{position:sticky;top:0;z-index:50;transition:background .3s,box-shadow .3s}
+.top.is-scrolled{background:rgba(255,244,230,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 2px 0 var(--ink)}
+.top__in{display:flex;align-items:center;gap:1rem;height:76px}
+.brand{display:flex;align-items:center;gap:.6rem;font-family:var(--disp);font-weight:800;font-size:1.35rem;letter-spacing:-.03em;margin-right:auto;position:relative;z-index:61}
+.brand__mark{width:38px;height:38px;border-radius:12px 12px 12px 2px;background:var(--tomato);color:var(--ink);display:grid;place-items:center;font-size:1rem;letter-spacing:-.04em;transform:rotate(-6deg);transition:transform .4s var(--bounce)}
+.brand:hover .brand__mark{transform:rotate(6deg) scale(1.06)}
+.nav ul{display:flex;gap:.25rem}
+.nav ul a{display:block;padding:.5rem .9rem;border-radius:999px;font-weight:600;font-size:.95rem;transition:background .2s,color .2s}
+.nav ul a:hover{background:var(--ink);color:var(--cream)}
+.nav ul a[aria-current]{background:var(--sun)}
+.burger{display:none;position:relative;z-index:61;width:48px;height:48px;border:0;border-radius:50%;background:var(--ink)}
+.burger i,.burger i::before,.burger i::after{position:absolute;left:14px;width:20px;height:2.5px;border-radius:2px;background:var(--cream);transition:transform .35s var(--ease)}
+.burger i{top:23px}.burger i::before{content:"";left:0;top:-6px}.burger i::after{content:"";left:0;top:6px}
+.burger[aria-expanded="true"] i{background:transparent}
+.burger[aria-expanded="true"] i::before{transform:translateY(6px) rotate(45deg)}
+.burger[aria-expanded="true"] i::after{transform:translateY(-6px) rotate(-45deg)}
+.nav__foot{display:none}
+@media (max-width:999px){
+  .burger{display:block}
+  .top__wa{display:none}
+  .nav{position:fixed;inset:0;z-index:60;background:var(--sun);padding:104px 1.25rem 2rem;display:flex;flex-direction:column;justify-content:space-between;clip-path:circle(0 at calc(100% - 44px) 38px);visibility:hidden;transition:clip-path .6s var(--ease),visibility 0s .6s}
+  .nav.is-open{clip-path:circle(150% at calc(100% - 44px) 38px);visibility:visible;transition-delay:0s}
+  .nav ul{flex-direction:column;gap:0}
+  .nav ul a{font-family:var(--disp);font-weight:800;font-size:clamp(2.6rem,12vw,3.6rem);letter-spacing:-.04em;line-height:1.05;padding:.1rem 0;border-radius:0;font-variation-settings:"wdth" 82}
+  .nav ul a:hover{background:none;color:var(--tomato)}
+  .nav ul a[aria-current]{background:none;color:var(--tomato)}
+  .nav__foot{display:flex;flex-direction:column;align-items:flex-start;gap:1rem;font-weight:600}
+}
+
+/* Hero */
+.hero{position:relative;padding:clamp(1.5rem,4vw,3rem) 0 clamp(3rem,6vw,5rem)}
+.hero__in{display:grid;gap:2.5rem;align-items:center}
+.hero__copy{display:grid;gap:1.6rem;justify-items:start}
+.mega{font-size:clamp(3.25rem,10.4vw,9.2rem)}
+.mega .l{display:block;white-space:nowrap}
+.pill{display:inline-block;width:clamp(1.25em,12vw,1.55em);height:.78em;border-radius:999px;overflow:hidden;vertical-align:-.02em;margin:0 .04em;transform:rotate(-5deg);box-shadow:0 0 0 .06em var(--ink)}
+.pill img{width:100%;height:100%;object-fit:cover}
+.pill--b{transform:rotate(4deg);background:var(--violet)}
+.hl{position:relative;color:var(--tomato);display:inline-block}
+.hl svg{position:absolute;left:-2%;bottom:-.16em;width:104%;height:.26em;overflow:visible}
+.hl path{stroke-dasharray:420;stroke-dashoffset:420;animation:draw 1.2s .5s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.hero__row{display:grid;gap:1.4rem;max-width:40rem}
+.lead{font-size:clamp(1.05rem,1.6vw,1.25rem);color:var(--ink-2);font-weight:500;max-width:36ch}
+.actions{display:flex;flex-wrap:wrap;gap:.8rem}
+.hero__art{position:relative;width:min(100%,380px);margin:0 auto;aspect-ratio:1/1.12}
+.blob{position:absolute;inset:6% 0 4% 2%;background:var(--sun);border-radius:52% 48% 44% 56%/52% 42% 58% 48%;animation:morph 12s ease-in-out infinite alternate}
+.blob2{position:absolute;width:34%;aspect-ratio:1;right:-2%;top:2%;background:var(--violet);border-radius:50%}
+@keyframes morph{50%{border-radius:42% 58% 56% 44%/46% 56% 44% 54%}100%{border-radius:58% 42% 48% 52%/40% 50% 50% 60%}}
+.phone{position:absolute;left:50%;top:50%;width:52%;aspect-ratio:9/18.6;border-radius:32px;background:var(--ink);padding:7px;transform:translate(-50%,-50%) rotate(7deg);box-shadow:14px 18px 0 var(--ink)}
+.phone img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:26px}
+.badge{position:absolute;left:-1%;top:4%;width:30%;aspect-ratio:1;color:var(--ink)}
+.badge svg{width:100%;height:100%;animation:spin 18s linear infinite}
+.badge::after{content:"";position:absolute;inset:34%;border-radius:50%;background:var(--tomato)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bubble{position:absolute;right:0;bottom:14%;display:flex;align-items:center;gap:.55rem;background:#fff;color:var(--ink);padding:.6rem .85rem .6rem .6rem;border-radius:18px 18px 4px 18px;font-size:.78rem;font-weight:600;line-height:1.25;box-shadow:5px 6px 0 var(--ink);max-width:62%;transform:rotate(-3deg)}
+.bubble i{flex:none;width:30px;height:30px;border-radius:50%;background:#25D366;color:#fff;display:grid;place-items:center}
+.bubble i svg{width:17px;height:17px}
+.bubble small{display:block;color:var(--mute);font-weight:500;font-size:.72rem}
+@media (min-width:1000px){
+  .hero__in{grid-template-columns:1fr 430px;gap:1.5rem}
+  .hero__art{width:100%;margin-top:2rem}
+}
+
+/* Cinta */
+.strip{background:var(--ink);color:var(--cream);overflow:hidden;display:flex;transform:rotate(-1.2deg);margin:0 -2vw;width:104vw}
+.strip ul{display:flex;flex:none;align-items:center;gap:1.6rem;padding:1rem .8rem;font-family:var(--disp);font-weight:700;font-size:clamp(1.3rem,2.6vw,2rem);letter-spacing:-.02em;animation:mq 30s linear infinite}
+.strip li{display:flex;align-items:center;gap:1.6rem;white-space:nowrap}
+.strip li::after{content:"";width:22px;height:22px;flex:none;background:var(--sun);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.strip li:nth-child(3n+2)::after{background:var(--pink)}
+.strip li:nth-child(3n)::after{background:var(--tomato)}
+.strip-wrap{overflow:hidden;padding:1.2rem 0}
+@keyframes mq{to{transform:translateX(-100%)}}
+
+/* Secciones */
+.sec{padding:clamp(4.5rem,9vw,8rem) 0;position:relative}
+.dark{background:var(--ink);color:var(--cream)}
+.sec__head{display:grid;gap:1.3rem;justify-items:start;margin-bottom:clamp(2.2rem,5vw,3.5rem)}
+.sec__head p.sub{max-width:38ch;font-size:1.1rem;color:inherit;opacity:.82}
+@media (min-width:1000px){.sec__head--split{grid-template-columns:1fr auto;align-items:end;column-gap:3rem}.sec__head--split .sticker{grid-column:1/-1}}
+
+/* Rubros: cintas */
+.c-sun{color:var(--sun)} .c-pink{color:var(--pink)} .c-tom{color:var(--tomato)}
+.mq{overflow:hidden;padding:.6rem 0}
+.mq+.mq{margin-top:.6rem}
+.mq__row{display:flex;gap:16px;width:max-content;animation:mqx var(--t,60s) linear infinite}
+.mq--rev .mq__row{animation-direction:reverse}
+.mq:hover .mq__row,.mq:focus-within .mq__row,.is-still .mq__row{animation-play-state:paused}
+@keyframes mqx{to{transform:translateX(calc(-50% - 8px))}}
+.card{position:relative;flex:none;width:clamp(210px,24vw,290px)}
+.card a{display:block;position:relative;border-radius:28px;overflow:hidden;aspect-ratio:3/4;background:#2a231e;transition:transform .45s var(--bounce)}
+.card:nth-child(odd) a{transform:rotate(-1.5deg)}
+.card:nth-child(even) a{transform:rotate(1.5deg)}
+.card a:hover,.card a:focus-visible{transform:rotate(0) scale(1.03)}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card a::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(10,6,4,.78))}
+.card__txt{position:absolute;z-index:1;left:0;right:0;bottom:0;padding:1.1rem 1.1rem 1.2rem;display:grid;gap:.5rem;justify-items:start}
+.card__name{font-family:var(--disp);font-weight:800;font-size:1.85rem;line-height:.95;letter-spacing:-.035em;color:#fff;font-variation-settings:"wdth" 85}
+.card .sticker{font-size:.74rem;padding:.3rem .7rem}
+.mq-ctrl{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.8rem}
+.mq-ctrl p{opacity:.75;font-size:.95rem}
+.pbtn{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;padding:0 1rem;border-radius:999px;border:0;background:rgba(255,244,230,.12);color:var(--cream);font-weight:600;font-size:.9rem}
+.pbtn:hover{background:var(--cream);color:var(--ink)}
+.pbtn svg{width:16px;height:16px}
+
+/* Pizzería en 3 versiones */
+.trio{margin-top:clamp(4rem,8vw,6.5rem)}
+.trio__head{display:grid;gap:1rem;justify-items:start;margin-bottom:2.5rem}
+.trio__head h3{font-family:var(--disp);font-weight:800;font-size:clamp(2rem,4.6vw,3.6rem);line-height:.95;letter-spacing:-.02em;font-variation-settings:"wdth" 88;text-wrap:balance}
+.trio__list{display:grid;grid-auto-flow:column;grid-auto-columns:78%;gap:1.4rem;overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:-1.25rem;padding:1rem 1.25rem 1.5rem;scrollbar-width:none}
+.trio__list::-webkit-scrollbar{display:none}
+.ver{scroll-snap-align:center;display:grid;grid-template-columns:minmax(0,1fr);gap:1rem;justify-items:center;text-align:center}
+.ver__stage{position:relative;width:100%;aspect-ratio:1/1.05;display:grid;place-items:center}
+.ver__stage::before{content:"";position:absolute;inset:4% 2%;border-radius:46% 54% 50% 50%/55% 45% 55% 45%;background:var(--c)}
+.ver__phone{position:relative;width:54%;aspect-ratio:9/18.6;border-radius:26px;background:#000;padding:6px;transform:rotate(var(--r));box-shadow:10px 12px 0 rgba(0,0,0,.55);transition:transform .5s var(--bounce)}
+.ver:hover .ver__phone{transform:rotate(0) translateY(-6px)}
+.ver__phone img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:21px}
+.ver h4{margin:0;font-family:var(--disp);font-weight:800;font-size:1.9rem;letter-spacing:-.03em}
+.ver p{opacity:.8;max-width:26ch;margin:0}
+.ver .arrow{color:var(--sun)}
+@media (min-width:860px){.trio__list{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;margin:0;padding:0}}
+
+/* Servicios */
+.tiles{display:grid;grid-auto-flow:column;grid-auto-columns:84%;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:-1.25rem;padding:0 1.25rem 1rem;scrollbar-width:none}
+.tiles::-webkit-scrollbar{display:none}
+.tiles>li{scroll-snap-align:center;display:flex}
+.tiles .tile{flex:1}
+.tile{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;min-height:250px;padding:1.6rem 1.6rem 0;border-radius:30px;background:var(--bg);color:var(--fg,var(--ink));transition:transform .45s var(--bounce)}
+.tile:hover{transform:translateY(-6px) rotate(-.8deg)}
+.tile:nth-child(1){border-radius:30px 30px 30px 110px}
+.tile:nth-child(4){border-radius:110px 30px 30px 30px}
+.tile:nth-child(6){border-radius:30px 110px 30px 30px}
+.tile h3{font-family:var(--disp);font-weight:800;font-size:clamp(1.75rem,2.6vw,2.2rem);line-height:.95;letter-spacing:-.02em;font-variation-settings:"wdth" 90}
+.tile p{margin-top:.5rem;font-weight:600;opacity:.85;max-width:24ch}
+.tile__img{margin:1.4rem -1.6rem 0 18%;border-radius:18px 0 0 0;overflow:hidden;transform:rotate(-3deg) translate(10px,14px);box-shadow:-6px -6px 0 rgba(0,0,0,.14)}
+.tile__img img{width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top left}
+.tile__go{position:absolute;top:1.3rem;right:1.3rem;width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--cream);display:grid;place-items:center;transition:transform .4s var(--bounce)}
+.tile:hover .tile__go{transform:rotate(-45deg) scale(1.1)}
+.tile__go svg{width:20px;height:20px}
+.tile h3,.tile p{padding-right:3rem}
+@media (min-width:640px){.tiles{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible;margin:0;padding:0}}
+@media (min-width:1000px){.tiles{grid-template-columns:repeat(3,1fr);gap:1.2rem}.tile{min-height:330px}}
+.more{display:flex;justify-content:center;margin-top:2.5rem}
+
+/* Proyectos */
+.violet{background:var(--violet);color:#fff}
+.pcar{position:relative}
+.pcar__view{overflow:hidden;margin-inline:-1.25rem;padding:0 1.25rem 18px}
+.pcar__track{display:flex;gap:1.25rem;transition:transform .9s var(--ease)}
+.pslide{flex:none;width:88%;display:grid;gap:1.1rem;opacity:.45;transition:opacity .6s}
+.pslide.is-active{opacity:1}
+.pslide__img{position:relative;display:block;border-radius:28px;overflow:hidden;background:#3b27b0;box-shadow:12px 14px 0 rgba(10,4,40,.45)}
+.pslide__img img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top}
+.pslide__img .sticker{position:absolute;left:1rem;top:1rem;transform:rotate(-4deg)}
+.pslide h3{font-family:var(--disp);font-weight:800;font-size:clamp(2rem,4vw,3.3rem);line-height:.95;letter-spacing:-.025em;font-variation-settings:"wdth" 88}
+.pslide p{opacity:.85;max-width:44ch}
+.pslide .arrow{color:var(--sun);justify-self:start}
+.pcar__ui{display:flex;align-items:center;gap:.8rem;margin-top:2rem}
+.pcar__count{font-family:var(--disp);font-weight:800;font-size:2.4rem;letter-spacing:-.04em;margin-right:auto;line-height:1}
+.pcar__count span{opacity:.5;font-size:1.3rem}
+.rbtn{width:58px;height:58px;border-radius:50%;border:0;background:var(--sun);color:var(--ink);display:grid;place-items:center;transition:transform .35s var(--bounce),background .2s}
+.rbtn:hover{transform:scale(1.08) rotate(-8deg);background:#fff}
+.rbtn svg{width:22px;height:22px}
+.rbtn--ghost{background:rgba(255,255,255,.14);color:#fff}
+.pcar__bar{height:6px;border-radius:6px;background:rgba(255,255,255,.18);margin-top:1.4rem;overflow:hidden}
+.pcar__bar i{display:block;height:100%;width:100%;background:var(--sun);transform-origin:left;transform:scaleX(0)}
+.pcar__bar i.run{animation:fill var(--dur,6s) linear forwards}
+.pcar.is-paused .pcar__bar i{animation-play-state:paused}
+.pcar.no-auto .pcar__bar{display:none}
+@keyframes fill{to{transform:scaleX(1)}}
+@media (min-width:900px){.pslide{width:64%}.pcar__view{margin-inline:0;padding:0 0 18px}}
+
+/* Proceso */
+.sun{background:var(--sun);color:var(--ink)}
+.steps{display:grid;gap:2.2rem}
+.step{position:relative;display:grid;gap:.6rem}
+.step__n{font-family:var(--disp);font-weight:800;font-size:clamp(5.5rem,11vw,9rem);line-height:.8;letter-spacing:-.03em;color:transparent;-webkit-text-stroke:3px var(--ink);font-variation-settings:"wdth" 80}
+.step:nth-child(2) .step__n{color:var(--tomato);-webkit-text-stroke:0}
+.step h3{font-family:var(--disp);font-weight:800;font-size:2rem;letter-spacing:-.035em;line-height:1}
+.step p{font-weight:600;max-width:28ch;color:var(--ink-2)}
+@media (min-width:860px){.steps{grid-template-columns:repeat(3,1fr);gap:3rem}}
+
+/* Contacto */
+.tomato{background:var(--tomato);color:var(--ink);overflow:hidden}
+.cta{display:grid;gap:2rem;position:relative}
+.cta__big{font-size:clamp(4rem,16vw,14rem);line-height:.85;letter-spacing:-.035em}
+.cta__row{display:grid;gap:1.6rem;align-items:end}
+.cta p{font-size:1.25rem;font-weight:600;max-width:30ch}
+.cta .badge{position:absolute;right:0;top:-3.9rem;left:auto;bottom:auto;width:clamp(92px,16vw,170px)}
+@media (min-width:900px){.cta .badge{top:-1rem}}
+.cta .badge::after{background:var(--sun)}
+@media (min-width:900px){.cta__row{grid-template-columns:1fr auto}}
+
+/* Pie */
+.foot{background:var(--ink);color:var(--cream);padding:4rem 0 2rem}
+.foot__grid{display:grid;gap:2.5rem}
+.foot .brand{font-size:2rem}
+.foot .brand__mark{width:48px;height:48px;font-size:1.2rem}
+.foot__tag{opacity:.7;margin-top:.8rem;max-width:32ch}
+.foot__cols{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.foot h3{font-family:var(--disp);font-size:.85rem;text-transform:uppercase;letter-spacing:.12em;color:var(--sun);margin-bottom:.8rem}
+.foot li{margin:.3rem 0;font-weight:600}
+.foot li a:hover{color:var(--pink)}
+.foot__bot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem;margin-top:3rem;padding-top:1.4rem;border-top:2px solid rgba(255,244,230,.12);font-size:.85rem;opacity:.65}
+@media (min-width:860px){.foot__grid{grid-template-columns:1.3fr 1fr}}
+
+/* Aparición */
+.js .rv{opacity:0;transform:translateY(30px) rotate(.6deg);transition:opacity .7s var(--ease),transform .8s var(--bounce)}
+.js .rv.in{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .js .rv{opacity:1;transform:none}
+  .mq{overflow-x:auto;scrollbar-width:thin}
+  .mq__row,.strip ul,.badge svg,.blob{animation:none!important}
+  .hl path{animation:none;stroke-dashoffset:0}
+  .strip{justify-content:center}.strip ul{flex-wrap:wrap;justify-content:center;flex:1}.strip ul+ul{display:none}
+  *,*::before,*::after{transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2c0 1.3.9 2.5 1 2.7.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></symbol>
+  <symbol id="i-arr" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M6 13l6 6 6-6"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" d="M7 5h4v14H7zM13 5h4v14h-4z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M7 4.5v15l12.5-7.5z"/></symbol>
+  <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="currentColor"/></symbol>
+  <symbol id="i-ring" viewBox="0 0 200 200"><defs><path id="ring" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/></defs><text font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="19" fill="currentColor"><textPath href="#ring" textLength="458" lengthAdjust="spacing">PÁGINAS WEB · SANTIAGO · TODO CHILE ·</textPath></text></symbol>
+</svg>
+
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<header class="top" id="top">
+  <div class="wrap top__in">
+    <a class="brand" href="/"><span class="brand__mark" aria-hidden="true">JA</span>Julio Acuña</a>
+    <nav class="nav" id="menu" aria-label="Principal">
+      <ul>
+        <li><a href="/" aria-current="page">Inicio</a></li>
+        <li><a href="/servicios">Servicios</a></li>
+        <li><a href="/proyectos">Proyectos</a></li>
+        <li><a href="/restaurantes">Restaurantes</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/contacto">Contacto</a></li>
+      </ul>
+      <div class="nav__foot">
+        <a class="btn btn--ink" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Escríbeme por WhatsApp</a>
+        <span>Santiago · negocios de todo Chile</span>
+      </div>
+    </nav>
+    <a class="btn btn--ink btn--sm top__wa" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp</a>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="menu"><span class="sr">Abrir menú</span><i aria-hidden="true"></i></button>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap hero__in">
+      <div class="hero__copy">
+        <p class="sticker sticker--sun"><svg aria-hidden="true"><use href="#i-dot"/></svg>Santiago · negocios de todo Chile</p>
+        <h1 class="disp mega">
+          <span class="l">Páginas web</span>
+          <span class="l"><span class="pill" aria-hidden="true"><img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=360&q=70&auto=format&fit=crop" width="360" height="180" alt=""></span> que <span class="hl">venden<svg viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 20 C 60 6, 120 28, 170 14 S 260 8, 296 16" fill="none" stroke="#16120F" stroke-width="7" stroke-linecap="round"/></svg></span></span>
+          <span class="l">por ti. <span class="pill pill--b" aria-hidden="true"><img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=360&q=70&auto=format&fit=crop" width="360" height="180" alt=""></span></span>
+        </h1>
+        <div class="hero__row">
+          <p class="lead">Página web, menú QR, pedidos por WhatsApp y sistemas a medida para restaurantes, comercios y empresas.</p>
+          <div class="actions">
+            <a class="btn btn--ink" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Escríbeme por WhatsApp</a>
+            <a class="btn btn--sun" href="#rubros">Ver ejemplos<svg aria-hidden="true"><use href="#i-down"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <div class="hero__art" aria-hidden="true">
+        <div class="blob"></div>
+        <div class="blob2"></div>
+        <div class="phone"><img src="img/movil-simple.webp" width="620" height="1256" alt=""></div>
+        <div class="badge"><svg viewBox="0 0 200 200"><use href="#i-ring"/></svg></div>
+        <div class="bubble"><i><svg><use href="#i-wa"/></svg></i><span>Nuevo pedido<small>2 pizzas · retiro 20:30</small></span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip-wrap" role="region" aria-label="Lo que hago">
+    <div class="strip">
+      <ul><li>Página web</li><li>Menú QR</li><li>Pedidos por WhatsApp</li><li>Tienda online</li><li>Google y SEO</li><li>Sistemas a medida</li></ul>
+      <ul aria-hidden="true"><li>Página web</li><li>Menú QR</li><li>Pedidos por WhatsApp</li><li>Tienda online</li><li>Google y SEO</li><li>Sistemas a medida</li></ul>
+    </div>
+  </div>
+
+  <!-- Rubros -->
+  <section class="sec dark" id="rubros" aria-labelledby="t-rubros">
+    <div class="wrap">
+      <div class="sec__head sec__head--split rv">
+        <p class="sticker sticker--pink">Ejemplos por rubro</p>
+        <h2 class="h2" id="t-rubros"><span class="c-sun">13 rubros.</span><br>3 versiones de cada uno.</h2>
+        <p class="sub">Simple-page, Multi-page o Plataforma web. Elige el tuyo y mira cómo se vería.</p>
+      </div>
+    </div>
+
+    <div class="mq" style="--t:70s" data-mq>
+      <ul class="mq__row" aria-label="Rubros de comida">
+        <li class="card"><a href="/demos/pizzeria/"><img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--sun">Pruébala ya</span><span class="card__name">Pizzería</span></span></a></li>
+        <li class="card"><a href="#" data-wa="sushi"><img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--pink">3 versiones · pronto</span><span class="card__name">Sushi</span></span></a></li>
+        <li class="card"><a href="#" data-wa="pastelería"><img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--mint">3 versiones · pronto</span><span class="card__name">Pastelería</span></span></a></li>
+        <li class="card"><a href="#" data-wa="panadería"><img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--sun">3 versiones · pronto</span><span class="card__name">Panadería</span></span></a></li>
+        <li class="card"><a href="#" data-wa="comida peruana"><img src="https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--pink">3 versiones · pronto</span><span class="card__name">Comida peruana</span></span></a></li>
+        <li class="card"><a href="#" data-wa="comida china"><img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--mint">3 versiones · pronto</span><span class="card__name">Comida china</span></span></a></li>
+        <li class="card"><a href="#" data-wa="comida variada"><img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--sun">3 versiones · pronto</span><span class="card__name">Comida variada</span></span></a></li>
+      </ul>
+    </div>
+    <div class="mq mq--rev" style="--t:64s" data-mq>
+      <ul class="mq__row" aria-label="Rubros de comercio y servicios">
+        <li class="card"><a href="#" data-wa="carnicería"><img src="https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--pink">3 versiones · pronto</span><span class="card__name">Carnicería</span></span></a></li>
+        <li class="card"><a href="#" data-wa="taller mecánico"><img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--sun">3 versiones · pronto</span><span class="card__name">Taller mecánico</span></span></a></li>
+        <li class="card"><a href="#" data-wa="botillería"><img src="https://images.unsplash.com/photo-1597290282695-edc43d0e7129?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--mint">3 versiones · pronto</span><span class="card__name">Botillería</span></span></a></li>
+        <li class="card"><a href="#" data-wa="almacén"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--pink">3 versiones · pronto</span><span class="card__name">Almacén</span></span></a></li>
+        <li class="card"><a href="#" data-wa="ferretería"><img src="https://images.unsplash.com/photo-1426927308491-6380b6a9936f?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--sun">3 versiones · pronto</span><span class="card__name">Ferretería</span></span></a></li>
+        <li class="card"><a href="#" data-wa="peluquería"><img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600&q=70&auto=format&fit=crop" width="600" height="800" alt="" loading="lazy"><span class="card__txt"><span class="sticker sticker--mint">3 versiones · pronto</span><span class="card__name">Peluquería</span></span></a></li>
+      </ul>
+    </div>
+
+    <div class="wrap">
+      <div class="mq-ctrl">
+        <p>Toca un rubro para verlo. Los que dicen «pronto» se piden por WhatsApp.</p>
+        <button class="pbtn" type="button" data-mq-toggle aria-pressed="false"><svg aria-hidden="true"><use href="#i-pause"/></svg><span>Pausar movimiento</span></button>
+      </div>
+
+      <div class="trio">
+        <div class="trio__head rv">
+          <p class="sticker sticker--sun">Ya funcionando</p>
+          <h3>La pizzería, en sus 3 versiones. Ábrela en tu celular.</h3>
+        </div>
+        <ul class="trio__list rv">
+          <li class="ver" style="--c:var(--tomato);--r:-6deg">
+            <a class="ver__stage" href="/demos/pizzeria/simple/" aria-label="Ver Simple-page: La Vecina Rosa"><span class="ver__phone"><img src="img/movil-simple.webp" width="620" height="1256" alt="" loading="lazy"></span></a>
+            <h4>Simple-page</h4>
+            <p>Todo en una página, con WhatsApp y QR.</p>
+            <a class="arrow" href="/demos/pizzeria/simple/">Ver ejemplo<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+          </li>
+          <li class="ver" style="--c:var(--pink);--r:4deg">
+            <a class="ver__stage" href="/demos/pizzeria/multi/" aria-label="Ver Multi-page: Forno Ottavia"><span class="ver__phone"><img src="img/movil-multi.webp" width="620" height="1256" alt="" loading="lazy"></span></a>
+            <h4>Multi-page</h4>
+            <p>Varias páginas, platos en 3D y pedido armado.</p>
+            <a class="arrow" href="/demos/pizzeria/multi/">Ver ejemplo<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+          </li>
+          <li class="ver" style="--c:var(--violet);--r:-3deg">
+            <a class="ver__stage" href="/demos/pizzeria/plataforma/" aria-label="Ver Plataforma web: Cohete Pizza"><span class="ver__phone"><img src="img/movil-plataforma.webp" width="620" height="1256" alt="" loading="lazy"></span></a>
+            <h4>Plataforma web</h4>
+            <p>Tienda online con cuentas y panel del dueño.</p>
+            <a class="arrow" href="/demos/pizzeria/plataforma/">Ver ejemplo<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Servicios -->
+  <section class="sec" id="servicios" aria-labelledby="t-svc">
+    <div class="wrap">
+      <div class="sec__head sec__head--split rv">
+        <p class="sticker sticker--ink">Servicios</p>
+        <h2 class="h2" id="t-svc">Todo para <span class="c-tom">vender</span> más.</h2>
+        <p class="sub">Partes por lo básico y sumas lo demás cuando lo necesites.</p>
+      </div>
+      <ul class="tiles rv">
+        <li><a class="tile" href="/servicios" style="--bg:var(--sun)"><span><h3>Página web</h3><p>Rápida en el celular, con WhatsApp a un toque.</p></span><span class="tile__img"><img src="/demos/pizzeria/img/simple.webp" width="800" height="600" alt="" loading="lazy"></span><span class="tile__go" aria-hidden="true"><svg><use href="#i-arr"/></svg></span></a></li>
+        <li><a class="tile" href="/servicios" style="--bg:var(--pink)"><span><h3>Menú QR y 3D</h3><p>Tu carta en el celular, sin reimprimir.</p></span><span class="tile__img"><img src="/assets/img/servicios/menu-qr-3d.webp" width="1200" height="750" alt="" loading="lazy"></span><span class="tile__go" aria-hidden="true"><svg><use href="#i-arr"/></svg></span></a></li>
+        <li><a class="tile" href="/servicios" style="--bg:var(--mint)"><span><h3>Pedidos por WhatsApp</h3><p>Pedidos listos, sin comisión de apps.</p></span><span class="tile__img"><img src="/assets/img/servicios/pedidos-directos.webp" width="1200" height="750" alt="" loading="lazy"></span><span class="tile__go" aria-hidden="true"><svg><use href="#i-arr"/></svg></span></a></li>
+        <li><a class="tile" href="/servicios" style="--bg:var(--violet);--fg:#fff"><span><h3>Tienda online</h3><p>Catálogo, carrito, cuentas y panel.</p></span><span class="tile__img"><img src="/assets/img/servicios/tienda-online.webp" width="1200" height="750" alt="" loading="lazy"></span><span class="tile__go" aria-hidden="true"><svg><use href="#i-arr"/></svg></span></a></li>
+        <li><a class="tile" href="/servicios" style="--bg:var(--tomato)"><span><h3>Google y SEO</h3><p>Que te encuentren en Maps y en Google.</p></span><span class="tile__img"><img src="/assets/img/servicios/google-perfil.webp" width="1200" height="750" alt="" loading="lazy"></span><span class="tile__go" aria-hidden="true"><svg><use href="#i-arr"/></svg></span></a></li>
+        <li><a class="tile" href="/servicios" style="--bg:var(--cream-2)"><span><h3>Sistemas a medida</h3><p>De planillas a un sistema ordenado.</p></span><span class="tile__img"><img src="/assets/img/projects/intranet-agencia.webp" width="1200" height="750" alt="" loading="lazy"></span><span class="tile__go" aria-hidden="true"><svg><use href="#i-arr"/></svg></span></a></li>
+      </ul>
+      <div class="more"><a class="btn btn--ink" href="/servicios">Ver todos los servicios<svg aria-hidden="true"><use href="#i-arr"/></svg></a></div>
+    </div>
+  </section>
+
+  <!-- Proyectos -->
+  <section class="sec violet" id="proyectos" aria-labelledby="t-proy">
+    <div class="wrap">
+      <div class="sec__head sec__head--split rv">
+        <p class="sticker sticker--sun">Proyectos destacados</p>
+        <h2 class="h2" id="t-proy">Funcionando de verdad.</h2>
+        <a class="arrow" href="/proyectos">Ver todos los proyectos<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+      </div>
+
+      <div class="pcar rv" data-pcar data-interval="6000" role="region" aria-roledescription="carrusel" aria-label="Proyectos destacados">
+        <div class="pcar__view">
+          <div class="pcar__track" aria-live="off">
+            <article class="pslide is-active" role="group" aria-roledescription="diapositiva" aria-label="1 de 5">
+              <a class="pslide__img" href="/proyecto/ridelsip-cl" tabindex="-1" aria-hidden="true"><img src="/assets/img/projects/ridelsip-cl.webp" width="1200" height="750" alt="" loading="lazy"><span class="sticker sticker--sun">Tienda + gestión</span></a>
+              <h3>RIDEL-SIP</h3>
+              <p>Tienda de casas prefabricadas y un sistema que ordena ventas, fábrica e inventario.</p>
+              <a class="arrow" href="/proyecto/ridelsip-cl">Ver proyecto<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+            </article>
+            <article class="pslide" role="group" aria-roledescription="diapositiva" aria-label="2 de 5">
+              <a class="pslide__img" href="/proyecto/intranet-agencia" tabindex="-1" aria-hidden="true"><img src="/assets/img/projects/intranet-agencia.webp" width="1200" height="750" alt="" loading="lazy"><span class="sticker sticker--pink">Intranet</span></a>
+              <h3>Intranet y academia</h3>
+              <p>Un portal para todo el equipo, con permisos por persona y cursos propios.</p>
+              <a class="arrow" href="/proyecto/intranet-agencia">Ver proyecto<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+            </article>
+            <article class="pslide" role="group" aria-roledescription="diapositiva" aria-label="3 de 5">
+              <a class="pslide__img" href="/proyecto/saturnus-aura" tabindex="-1" aria-hidden="true"><img src="/assets/img/projects/saturnus-aura.webp" width="1200" height="750" alt="" loading="lazy"><span class="sticker sticker--mint">Inteligencia artificial</span></a>
+              <h3>AURA</h3>
+              <p>Responde preguntas sobre los documentos de tu empresa, citando la fuente.</p>
+              <a class="arrow" href="/proyecto/saturnus-aura">Ver proyecto<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+            </article>
+            <article class="pslide" role="group" aria-roledescription="diapositiva" aria-label="4 de 5">
+              <a class="pslide__img" href="/proyecto/suitechile-cl" tabindex="-1" aria-hidden="true"><img src="/assets/img/projects/suitechile-cl.webp" width="1200" height="750" alt="" loading="lazy"><span class="sticker sticker--sun">Inmobiliaria</span></a>
+              <h3>SUITE Properties</h3>
+              <p>Proyectos de inversión y paneles para administrador, bróker e inversionista.</p>
+              <a class="arrow" href="/proyecto/suitechile-cl">Ver proyecto<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+            </article>
+            <article class="pslide" role="group" aria-roledescription="diapositiva" aria-label="5 de 5">
+              <a class="pslide__img" href="/proyecto/obrascivilesmys-cl" tabindex="-1" aria-hidden="true"><img src="/assets/img/projects/obrascivilesmys-cl.webp" width="1200" height="750" alt="" loading="lazy"><span class="sticker sticker--pink">Página web</span></a>
+              <h3>MS Obras Civiles</h3>
+              <p>Servicios y cotización en línea para una empresa de Coquimbo.</p>
+              <a class="arrow" href="/proyecto/obrascivilesmys-cl">Ver proyecto<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+            </article>
+          </div>
+        </div>
+        <div class="pcar__bar" aria-hidden="true"><i></i></div>
+        <div class="pcar__ui">
+          <p class="pcar__count" aria-hidden="true"><b data-cur>01</b><span> / 05</span></p>
+          <button class="rbtn rbtn--ghost" type="button" data-pause aria-label="Pausar carrusel"><svg aria-hidden="true"><use href="#i-pause"/></svg></button>
+          <button class="rbtn" type="button" data-prev aria-label="Proyecto anterior"><svg aria-hidden="true"><use href="#i-prev"/></svg></button>
+          <button class="rbtn" type="button" data-next aria-label="Proyecto siguiente"><svg aria-hidden="true"><use href="#i-next"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo trabajo -->
+  <section class="sec sun" id="proceso" aria-labelledby="t-proc">
+    <div class="wrap">
+      <div class="sec__head rv">
+        <p class="sticker sticker--ink">Cómo trabajo</p>
+        <h2 class="h2" id="t-proc">Tres pasos. Cero enredos.</h2>
+      </div>
+      <ol class="steps">
+        <li class="step rv"><span class="step__n" aria-hidden="true">01</span><h3>Conversamos</h3><p>Me cuentas cómo funciona tu negocio y qué necesitas.</p></li>
+        <li class="step rv"><span class="step__n" aria-hidden="true">02</span><h3>Te propongo</h3><p>Una propuesta clara: qué incluye, plazo y precio.</p></li>
+        <li class="step rv"><span class="step__n" aria-hidden="true">03</span><h3>Lo dejo andando</h3><p>Lo publico, te enseño a usarlo y quedo de soporte.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Contacto -->
+  <section class="sec tomato" id="contacto" aria-labelledby="t-cta">
+    <div class="wrap cta">
+      <div class="badge" aria-hidden="true"><svg viewBox="0 0 200 200"><use href="#i-ring"/></svg></div>
+      <h2 class="disp cta__big rv" id="t-cta">¿Ha&shy;bla&shy;mos?</h2>
+      <div class="cta__row rv">
+        <p>Escríbeme y te respondo con una propuesta clara, sin compromiso.</p>
+        <div class="actions">
+          <a class="btn btn--ink" href="https://wa.me/56973537642?text=Hola%20Julio%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20cotizar." target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Escríbeme por WhatsApp</a>
+          <a class="btn btn--cream" href="mailto:Julio0acuna123@gmail.com">Por correo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__grid">
+      <div>
+        <a class="brand" href="/"><span class="brand__mark" aria-hidden="true">JA</span>Julio Acuña</a>
+        <p class="foot__tag">Páginas web y sistemas para negocios. Santiago · todo Chile.</p>
+      </div>
+      <div class="foot__cols">
+        <div><h3>Sitio</h3><ul><li><a href="/servicios">Servicios</a></li><li><a href="/proyectos">Proyectos</a></li><li><a href="/restaurantes">Restaurantes</a></li><li><a href="/blog">Blog</a></li><li><a href="/contacto">Contacto</a></li></ul></div>
+        <div><h3>Contacto</h3><ul><li><a href="https://wa.me/56973537642" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="mailto:Julio0acuna123@gmail.com">Correo</a></li><li><a href="https://www.linkedin.com/in/julio-0acuna/" target="_blank" rel="noopener">LinkedIn</a></li><li><a href="https://github.com/Julio-0Acuna/" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+      </div>
+    </div>
+    <div class="foot__bot"><span>© 2026 Julio Acuña · Santiago, Chile</span><span>Fotos de rubros: Unsplash</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var d=document;
+  d.documentElement.classList.add('js');
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var top=d.getElementById('top');
+  var onScroll=function(){top.classList.toggle('is-scrolled',window.scrollY>8)};
+  onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
+
+  // Menú móvil
+  var burger=d.querySelector('.burger'), menu=d.getElementById('menu');
+  function setMenu(open){
+    burger.setAttribute('aria-expanded',open);
+    burger.querySelector('.sr').textContent=open?'Cerrar menú':'Abrir menú';
+    menu.classList.toggle('is-open',open); d.body.style.overflow=open?'hidden':'';
+  }
+  burger.addEventListener('click',function(){setMenu(burger.getAttribute('aria-expanded')!=='true')});
+  menu.addEventListener('click',function(e){if(e.target.closest('a'))setMenu(false)});
+  d.addEventListener('keydown',function(e){if(e.key==='Escape'&&menu.classList.contains('is-open')){setMenu(false);burger.focus()}});
+
+  // Rubros pronto → WhatsApp
+  d.querySelectorAll('[data-wa]').forEach(function(a){
+    a.href='https://wa.me/56973537642?text='+encodeURIComponent('Hola Julio, quiero una página web para mi negocio ('+a.dataset.wa+').');
+    a.target='_blank'; a.rel='noopener';
+    a.setAttribute('aria-label',a.querySelector('.card__name').textContent+': ejemplo pronto. Pedir el mío por WhatsApp');
+  });
+
+  // Cintas de rubros: duplicar para el bucle
+  var rows=d.querySelectorAll('[data-mq] .mq__row');
+  if(!reduce){
+    rows.forEach(function(row){
+      [].slice.call(row.children).forEach(function(li){
+        var c=li.cloneNode(true); c.setAttribute('aria-hidden','true');
+        c.querySelectorAll('a').forEach(function(a){a.tabIndex=-1}); row.appendChild(c);
+      });
+    });
+  }
+  var tg=d.querySelector('[data-mq-toggle]'), still=reduce;
+  function paintToggle(){
+    d.getElementById('rubros').classList.toggle('is-still',still);
+    tg.setAttribute('aria-pressed',still);
+    tg.querySelector('span').textContent=still?'Reanudar movimiento':'Pausar movimiento';
+    tg.querySelector('use').setAttribute('href',still?'#i-play':'#i-pause');
+  }
+  if(reduce) tg.hidden=true;
+  tg.addEventListener('click',function(){still=!still;paintToggle()}); paintToggle();
+
+  // Aparición
+  var rv=d.querySelectorAll('.rv');
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
+    rv.forEach(function(el){io.observe(el)});
+  } else rv.forEach(function(el){el.classList.add('in')});
+
+  // Carrusel de proyectos
+  var car=d.querySelector('[data-pcar]');
+  if(car){
+    var track=car.querySelector('.pcar__track'), slides=[].slice.call(car.querySelectorAll('.pslide'));
+    var bar=car.querySelector('.pcar__bar i'), cur=car.querySelector('[data-cur]'), pauseBtn=car.querySelector('[data-pause]');
+    var ms=+car.dataset.interval||6000, i=0, timer=null, userPaused=reduce, hold=false, visible=true, left=ms, t0=0, ticking=false;
+    car.style.setProperty('--dur',ms+'ms');
+    function paint(){
+      track.style.transform='translateX('+(-(slides[i].offsetLeft-slides[0].offsetLeft))+'px)';
+      slides.forEach(function(s,n){var on=n===i;s.classList.toggle('is-active',on);s.setAttribute('aria-hidden',!on);if('inert' in s)s.inert=!on});
+      cur.textContent=('0'+(i+1)).slice(-2);
+      bar.classList.remove('run'); void bar.offsetWidth; bar.classList.add('run');
+    }
+    function running(){return !userPaused&&!hold&&visible&&!d.hidden}
+    function sync(){
+      var run=running();
+      if(run&&!ticking){t0=Date.now();timer=setTimeout(function(){go(i+1)},left);ticking=true}
+      else if(!run&&ticking){clearTimeout(timer);left=Math.max(0,left-(Date.now()-t0));ticking=false}
+      car.classList.toggle('is-paused',!run);
+    }
+    var schedule=sync;
+    function go(n,user){clearTimeout(timer);ticking=false;left=ms;i=(n+slides.length)%slides.length;if(user)track.setAttribute('aria-live','polite');paint();sync()}
+    function setPaused(p){userPaused=p;pauseBtn.setAttribute('aria-label',p?'Reproducir carrusel':'Pausar carrusel');pauseBtn.querySelector('use').setAttribute('href',p?'#i-play':'#i-pause');sync()}
+    car.querySelector('[data-prev]').addEventListener('click',function(){go(i-1,true)});
+    car.querySelector('[data-next]').addEventListener('click',function(){go(i+1,true)});
+    pauseBtn.addEventListener('click',function(){setPaused(!userPaused)});
+    car.addEventListener('mouseenter',function(){hold=true;schedule()});
+    car.addEventListener('mouseleave',function(){hold=false;schedule()});
+    car.addEventListener('focusin',function(){hold=true;schedule()});
+    car.addEventListener('focusout',function(e){if(!car.contains(e.relatedTarget)){hold=false;schedule()}});
+    d.addEventListener('visibilitychange',schedule);
+    window.addEventListener('resize',function(){track.style.transition='none';paint();void track.offsetWidth;track.style.transition=''});
+    if('IntersectionObserver' in window)new IntersectionObserver(function(es){visible=es[0].isIntersecting;schedule()}).observe(car);
+    if(reduce)car.classList.add('no-auto');
+    paint(); setPaused(userPaused);
+  }
+})();
+</script>
+</body>
+</html>
