@@ -1,0 +1,4 @@
+# Solo index.php (y los archivos estáticos) son públicos. Configuración, seed y el reinicio por CLI no se sirven.
+<FilesMatch "^(config|seed|reset)\.php$">
+  Require all denied
+</FilesMatch>
