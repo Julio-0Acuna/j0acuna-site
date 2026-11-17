@@ -6,6 +6,7 @@ $items = [
     'servicios' => ['/servicios', 'Servicios'],
     'proyectos' => ['/proyectos', 'Proyectos'],
     'restaurantes' => ['/restaurantes', 'Restaurantes'],
+    'blog' => ['/blog', 'Blog'],
     'contacto' => ['/contacto', 'Contacto'],
 ];
 ?>

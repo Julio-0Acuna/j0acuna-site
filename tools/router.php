@@ -14,6 +14,7 @@ $rutas = [
     '#^/servicios/?$#' => 'servicios.php',
     '#^/proyectos/?$#' => 'proyectos.php',
     '#^/contacto/?$#' => 'contacto.php',
+    '#^/blog/?$#' => 'blog.php',
 ];
 foreach ($rutas as $patron => $archivo) {
     if (preg_match($patron, $path)) {
@@ -25,6 +26,12 @@ foreach ($rutas as $patron => $archivo) {
 if (preg_match('#^/proyectos/([a-z0-9-]+)/?$#', $path, $m)) {
     $_GET['id'] = $m[1];
     require $root . '/seccion.php';
+    return true;
+}
+
+if (preg_match('#^/blog/([a-z0-9-]+)/?$#', $path, $m)) {
+    $_GET['slug'] = $m[1];
+    require $root . '/articulo.php';
     return true;
 }
 

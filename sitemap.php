@@ -6,11 +6,16 @@ if (PHP_SAPI !== 'cli') {
 }
 
 require_once __DIR__ . '/includes/view.php';
+require_once __DIR__ . '/includes/blog.php';
 
 $site = portfolio_load_site();
+$posts = blog_posts();
 
 // --- sitemap.xml
-$urls = ['/', '/servicios', '/proyectos', '/restaurantes', '/contacto'];
+$urls = ['/', '/servicios', '/proyectos', '/restaurantes', '/contacto', '/blog'];
+foreach ($posts as $p) {
+    $urls[] = blog_url($p);
+}
 
 // Ejemplos por rubro: /demos/ y la página de cada rubro (las versiones son noindex).
 $rubros = [];
@@ -69,6 +74,10 @@ if ($rubros) {
     foreach ($rubros as $r) {
         $l .= '  - ' . ucfirst($r) . ': ' . absolute_url('/demos/' . $r . '/') . "\n";
     }
+}
+$l .= '- Blog con guías para negocios: ' . absolute_url('/blog') . "\n";
+foreach ($posts as $p) {
+    $l .= "  - {$p['titulo']}: " . absolute_url(blog_url($p)) . "\n";
 }
 $l .= '- Contacto: ' . absolute_url('/contacto') . "\n";
 file_put_contents(__DIR__ . '/llms.txt', $l);
