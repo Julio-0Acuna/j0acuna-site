@@ -41,7 +41,9 @@ debe_contar_exacto() {
 
 # --- Generales: valen con datos de prueba y con el contenido real
 debe_responder  /  200
-debe_contener   /  'id="caminos"'
+# Portada C (17/11): los rubros reemplazan a los tres caminos; carruseles propios, sin Bootstrap
+debe_contener   /  'id="rubros"'
+debe_contener   /  'href="/demos/pizzeria/"'
 debe_contener   /  'id="destacados"'
 debe_contener   /  'Santiago'
 debe_contener   /  'Desarrollador web en Santiago'
@@ -52,8 +54,9 @@ debe_contener   /  'href="/contacto"'
 debe_contener   /  'aria-current="page"'
 no_debe_contener / 'data-filtro'
 no_debe_contener / 'hero-mosaic'
-debe_contener   /  'data-bs-ride="carousel"'
-debe_contener   /  'carousel-indicators'
+debe_contener   /  'data-rbx'
+debe_contener   /  'aria-roledescription="carrusel"'
+no_debe_contener / 'bootstrap'
 no_debe_contener / 'Todos los proyectos'
 no_debe_contener / 'admin/login.php'
 debe_responder  /servicios  200
@@ -90,7 +93,8 @@ debe_contener   /restaurantes  'Página web para restaurantes'
 no_debe_contener /restaurantes 'integración directa'
 debe_contener   /restaurantes  'og-restaurantes.jpg'
 # Rediseño 17/11: servicios en carrusel con tecnologías, mosaicos en proyectos, escalera en restaurantes
-debe_contener   /servicios  'data-bs-ride="carousel"'
+debe_contener   /servicios  'data-carrusel'
+no_debe_contener /servicios 'bootstrap'
 debe_contener   /servicios  'aria-roledescription="carrusel"'
 debe_contener   /servicios  'data-pausa'
 debe_contener   /servicios  'id="tecnologias"'
@@ -136,8 +140,8 @@ no_debe_contener /restaurantes 'Apps de delivery'
 debe_contener   /restaurantes  'href="/proyecto/restaurante-a"'
 no_debe_contener /restaurantes 'Servicio empresas'
 no_debe_contener /restaurantes 'href="/demos/'
-debe_contar_exacto /servicios 'class="carousel-item' 3
-debe_contar_exacto /servicios 'data-bs-target="#carrusel-servicios" data-bs-slide-to=' 3
+debe_contar_exacto /servicios 'class="srv__slide' 3
+debe_contar_exacto /servicios 'data-srv-tab' 3
 debe_responder  /proyectos/ejemplos 404
 no_debe_contener /proyectos 'href="/proyectos/ejemplos"'
 else
@@ -174,8 +178,10 @@ debe_contener   /  'href="/proyecto/intranet-agencia"'
 debe_contener   /  'href="/proyecto/saturnus-aura"'
 debe_contener   /  'href="/proyecto/suitechile-cl"'
 debe_contener   /  'href="/proyecto/obrascivilesmys-cl"'
+debe_contener   /  'data-carrusel'
 # Servicios: 9 diapositivas, una imagen de referencia por servicio, tecnologías y ejemplo de cada uno
-debe_contar_exacto /servicios 'class="carousel-item' 9
+debe_contar_exacto /servicios 'class="srv__slide' 9
+debe_contar_exacto /servicios 'data-srv-tab' 9
 debe_contar_exacto /servicios 'alt="Ejemplo de referencia:' 9
 debe_contar     /servicios  'class="tech-chips"' 14
 debe_contener   /servicios  'src="/assets/img/servicios/menu-qr-3d.webp"'

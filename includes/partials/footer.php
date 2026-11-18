@@ -1,21 +1,34 @@
 <?php /** @var array $site */ ?>
-<footer class="site-footer">
-  <div class="container footer-grid">
-    <div>
-      <strong><?= e($site['profile']['name']) ?></strong>
-      <span>&copy; <?= date('Y') ?> · <?= e($site['profile']['location']) ?></span>
+<footer class="foot">
+  <div class="wrap">
+    <hr class="hr">
+    <div class="foot__row">
+      <a class="brand" href="/"><span class="brand__dot" aria-hidden="true"></span><?= e($site['profile']['name']) ?></a>
+      <nav aria-label="Pie de página">
+        <ul>
+          <li><a href="/servicios">Servicios</a></li>
+          <li><a href="/proyectos">Proyectos</a></li>
+          <li><a href="/restaurantes">Restaurantes</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/contacto">Contacto</a></li>
+        </ul>
+      </nav>
+      <ul class="foot__soc" aria-label="Redes y contacto">
+        <?php if ($site['links']['whatsapp'] !== ''): ?>
+          <li><a href="<?= e(wa_link($site['links']['whatsapp'], $site['profile']['whatsapp_mensaje'])) ?>" target="_blank" rel="noopener">WhatsApp</a></li>
+        <?php endif; ?>
+        <li><a href="mailto:<?= e($site['links']['email']) ?>">Correo</a></li>
+        <li><a href="<?= e($site['links']['linkedin']) ?>" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="<?= e($site['links']['github']) ?>" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
     </div>
-    <nav aria-label="Enlaces del pie de página">
-      <?php if ($site['links']['whatsapp'] !== ''): ?>
-        <a href="<?= e(wa_link($site['links']['whatsapp'], $site['profile']['whatsapp_mensaje'])) ?>" target="_blank" rel="noopener">WhatsApp</a>
-      <?php endif; ?>
-      <a href="mailto:<?= e($site['links']['email']) ?>">Correo</a>
-      <a href="<?= e($site['links']['linkedin']) ?>" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="<?= e($site['links']['github']) ?>" target="_blank" rel="noopener">GitHub</a>
-    </nav>
+    <p class="foot__big" aria-hidden="true"><?= e($site['profile']['name']) ?></p>
+    <div class="foot__bot">
+      <span>&copy; <?= date('Y') ?> · <?= e($site['profile']['location']) ?></span>
+      <span>Desarrollo web para negocios de <?= e($site['profile']['area']) ?></span>
+    </div>
   </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="<?= e(asset('assets/js/main.js')) ?>"></script>
+<script src="<?= e(asset('assets/js/main.js')) ?>" defer></script>
 </body>
 </html>

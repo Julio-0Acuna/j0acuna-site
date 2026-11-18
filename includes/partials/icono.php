@@ -19,6 +19,13 @@ $trazos = [
     'play' => '<path d="M7 4.5v15l12-7.5z"/>',
     'izquierda' => '<path d="M15 5l-7 7 7 7"/>',
     'derecha' => '<path d="M9 5l7 7-7 7"/>',
+    'qr' => '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v.01M20 20h-3v-3M14 20h.01"/>',
+    'bolsa' => '<path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+    'capas' => '<path d="M12 3 3 7.5l9 4.5 9-4.5L12 3z"/><path d="m3 12 9 4.5 9-4.5M3 16.5 12 21l9-4.5"/>',
+    'flecha' => '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    'correo' => '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/>',
+    'codigo' => '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>',
+    'persona' => '<circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/>',
 ];
 $trazo = $trazos[$icono ?? ''] ?? '';
 if ($trazo !== ''):

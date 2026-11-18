@@ -2,13 +2,20 @@
 declare(strict_types=1);
 
 // /demos/ : lista de rubros con ejemplos (página del portafolio, indexable).
+// Los rubros se calculan solos: un rubro tiene ejemplos cuando existe demos/<rubro>/_rubro.php;
+// los demás del catálogo (includes/view.php) se muestran como "pronto".
 require_once __DIR__ . '/_comun/portafolio.php';
 
 $site = portfolio_load_site();
-// Cada rubro trae su demos/<rubro>/_rubro.php; aparece aquí solo al existir.
-$rubros = array_map(static fn (string $f): array => require $f, glob(__DIR__ . '/*/_rubro.php') ?: []);
-$proximos = ['Sushi', 'Pastelería', 'Panadería', 'Carnicería', 'Restaurante peruano', 'Comida china', 'Comida variada', 'Taller mecánico', 'Botillería', 'Almacén o minimarket', 'Ferretería', 'Peluquería o barbería'];
+$rubros = portfolio_rubros(__DIR__);
+$listos = array_values(array_filter($rubros, static fn (array $r): bool => $r['disponible']));
+$pronto = array_values(array_filter($rubros, static fn (array $r): bool => !$r['disponible']));
 $mensaje = 'Hola Julio, vi los ejemplos por rubro y quiero una página para mi negocio.';
+$versiones = [
+    ['Simple-page', 'Para empezar', ['Una sola página, rápida en el celular', 'Menú o catálogo con QR y botón de WhatsApp', 'Horario, mapa y sección de Google']],
+    ['Multi-page', 'El más completo sin cuentas', ['De 4 a 6 páginas: inicio, menú, nosotros, contacto…', 'Productos en 3D y «Ver en tu mesa» (rubros de comida)', 'Pedido armado que llega por WhatsApp']],
+    ['Plataforma web', 'Tienda online', ['Carrito, retiro o despacho por comuna', 'Cuentas de clientes y precios mayoristas', 'Panel del dueño con pedidos, stock y ventas']],
+];
 
 render_partial('head', [
     'title' => 'Ejemplos de páginas web por rubro | ' . $site['profile']['name'],
@@ -19,7 +26,7 @@ render_partial('head', [
 ]);
 render_partial('nav', ['site' => $site, 'actual' => '']);
 ?>
-<main>
+<main id="main">
   <?php render_partial('page-header', [
       'eyebrow' => 'Ejemplos por rubro',
       'titulo' => 'Ejemplos de páginas web por rubro',
@@ -27,48 +34,75 @@ render_partial('nav', ['site' => $site, 'actual' => '']);
       'migas' => [['Ejemplos por rubro', '/demos/']],
   ]); ?>
 
-  <section class="section-band pt-0">
-    <div class="container">
+  <section class="sec pt-0" aria-labelledby="titulo-listos">
+    <div class="wrap">
       <p class="demos-intro">Los negocios de los ejemplos son inventados: los nombres, productos y reseñas son de muestra. Los pedidos de prueba llegan a mi WhatsApp, así vives el flujo real.</p>
-      <div class="demos-rubros">
-        <?php foreach ($rubros as $r): $simple = $r['versiones']['simple']; ?>
-        <article class="demos-rubro">
-          <a class="demos-rubro__img" href="<?= e($r['url_rubro']) ?>" aria-hidden="true" tabindex="-1">
-            <img src="<?= e($r['url_rubro'] . 'img/' . $simple['captura'] . '.webp') ?>" alt="" width="800" height="600" loading="lazy">
-          </a>
-          <div class="demos-rubro__cuerpo">
-            <h2><?= e(mb_strtoupper(mb_substr($r['rubro_nombre'], 0, 1)) . mb_substr($r['rubro_nombre'], 1)) ?></h2>
-            <p>Tres versiones: <?= e(implode(', ', array_column($r['versiones'], 'plan'))) ?>. Menú con QR, platos en 3D y pedidos por WhatsApp.</p>
-            <a class="minimal-btn minimal-btn-outline mt-2 align-self-start" href="<?= e($r['url_rubro']) ?>"><span>Ver ejemplos de <?= e($r['rubro_nombre']) ?></span></a>
-          </div>
-        </article>
-        <?php endforeach; ?>
+      <div class="sub-head">
+        <h2 class="h3" id="titulo-listos">Listos para ver <span class="soft"><?= count($listos) ?></span></h2>
+        <p class="kicker">3 versiones cada uno</p>
       </div>
-      <div class="demos-pronto">
-        <p>En preparación:</p>
-        <ul>
-          <?php foreach ($proximos as $p): ?><li><?= e($p) ?></li><?php endforeach; ?>
-        </ul>
+      <ul class="rb-grid">
+        <?php foreach ($listos as $r): ?>
+          <li class="rb rb--on rv">
+            <a href="<?= e($r['url']) ?>">
+              <?php if ($r['foto'] !== ''): ?><img src="<?= e($r['foto']) ?>" width="600" height="830" alt="" loading="lazy"><?php endif; ?>
+              <span class="rb__st rb__st--on"><i></i>Disponible</span>
+              <span class="rb__txt">
+                <span class="rb__name"><?= e($r['nombre']) ?></span>
+                <span class="rb__v">
+                  <?php foreach ($r['versiones'] as $plan): ?><span><?= e(trim(preg_replace('/-page$|\s+web$/i', '', $plan))) ?></span><?php endforeach; ?>
+                </span>
+              </span>
+            </a>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+
+      <?php if ($pronto): ?>
+        <div class="demos-pronto">
+          <div class="sub-head">
+            <h2 class="h3">En preparación <span class="soft"><?= count($pronto) ?></span></h2>
+            <p class="kicker">¿Es tu rubro? Pide el tuyo</p>
+          </div>
+          <ul class="chips">
+            <?php foreach ($pronto as $r): $enlace = rubro_wa($site, $r); ?>
+              <li><a class="chip" href="<?= e($enlace) ?>"<?= str_starts_with($enlace, 'http') ? ' target="_blank" rel="noopener"' : '' ?>><?= e($r['nombre']) ?><small>pronto</small></a></li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
+      <?php endif; ?>
+    </div>
+  </section>
+
+  <hr class="hr">
+  <section class="sec" aria-labelledby="titulo-versiones">
+    <div class="wrap">
+      <div class="sec__head sec__head--row rv">
+        <p class="kicker">Cómo funcionan</p>
+        <h2 class="h2" id="titulo-versiones">Tres versiones. <span class="soft">Parte simple y crece.</span></h2>
+        <p class="sub">Cada rubro tiene las tres, cada una con su propio diseño.</p>
+      </div>
+      <div class="demos-versiones">
+        <?php foreach ($versiones as $k => [$plan, $nivel, $puntos]): ?>
+          <div class="card rv">
+            <p class="kicker"><b><?= sprintf('%02d', $k + 1) ?></b> <?= e($nivel) ?></p>
+            <h3><?= e($plan) ?></h3>
+            <ul class="dots">
+              <?php foreach ($puntos as $punto): ?><li><?= e($punto) ?></li><?php endforeach; ?>
+            </ul>
+          </div>
+        <?php endforeach; ?>
       </div>
     </div>
   </section>
 
-  <section class="contact-section">
-    <div class="container">
-      <div class="contact-shell">
-        <div>
-          <h2>¿Tu rubro no está?</h2>
-          <p>Cuéntame de tu negocio y te muestro cómo se vería.</p>
-        </div>
-        <div class="contact-actions">
-          <?php if ($site['links']['whatsapp'] !== ''): ?>
-          <a class="minimal-btn minimal-btn-dark" href="<?= e(wa_link($site['links']['whatsapp'], $mensaje)) ?>" target="_blank" rel="noopener"><span>WhatsApp</span></a>
-          <?php endif; ?>
-          <a class="minimal-btn minimal-btn-outline" href="/restaurantes"><span>Servicios para restaurantes</span></a>
-        </div>
-      </div>
-    </div>
-  </section>
+  <?php render_partial('cta', [
+      'site' => $site,
+      'titulo' => '¿Tu rubro no está?',
+      'texto' => 'Cuéntame de tu negocio y te muestro cómo se vería.',
+      'mensaje' => $mensaje,
+      'secundario' => ['Servicios para restaurantes', '/restaurantes'],
+  ]); ?>
 </main>
 <?php
 render_partial('whatsapp-fab', ['site' => $site, 'mensaje' => $mensaje]);

@@ -47,9 +47,10 @@ revisa 'correo trae el mensaje' 'grep -q "Quiero una web" "$CONTACTO_DIR"/*.eml'
 OKHTML=$(curl -s -b "$JAR" "$BASE/contacto?enviado=1")
 revisa 'mensaje de exito' '[[ "$OKHTML" == *"Mensaje enviado"* ]]'
 
-ERRHTML=$(curl -s -b "$JAR" -c "$JAR" --data-urlencode "csrf_token=$TOKEN" --data-urlencode "nombre=" --data-urlencode "correo=malo" --data-urlencode "mensaje=" "$BASE/contacto")
+ERRHTML=$(curl -s -b "$JAR" -c "$JAR" --data-urlencode "csrf_token=$TOKEN" --data-urlencode "nombre=" --data-urlencode "negocio=<script>alert(1)</script>" --data-urlencode "correo=malo" --data-urlencode "mensaje=" "$BASE/contacto")
 revisa 'errores visibles' '[[ "$ERRHTML" == *"Escribe un correo válido."* ]]'
 revisa 'conserva lo escrito y escapa' '! [[ "$ERRHTML" == *"<script>"* ]]'
+revisa 'lo escrito vuelve escapado' '[[ "$ERRHTML" == *"&lt;script&gt;alert(1)&lt;/script&gt;"* ]]'
 
 SPAM=$(curl -s -o /dev/null -w "%{http_code}" -b "$JAR" -c "$JAR" --data-urlencode "csrf_token=$TOKEN" --data-urlencode "nombre=Bot" --data-urlencode "correo=bot@example.cl" --data-urlencode "mensaje=spam" --data-urlencode "acepto=1" --data-urlencode "sitio_web=http://spam" "$BASE/contacto")
 revisa 'spam no genera correo nuevo' '[ "$(ls "$CONTACTO_DIR" | wc -l)" = "1" ]'

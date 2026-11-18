@@ -39,13 +39,58 @@ t('head emite og absolutos', function () {
     no_contiene($h, 'href="assets/');
 });
 
-t('bootstrap por CDN con integridad', function () {
+t('sin Bootstrap: estilos y JS propios, fuentes Geist', function () {
     ob_start();
     render_partial('head', ['title' => 'T', 'description' => 'D']);
     render_partial('footer', ['site' => portfolio_load_site()]);
     $h = ob_get_clean();
-    contiene($h, 'integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"');
-    contiene($h, 'integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"');
+    contiene($h, 'href="/assets/css/styles.css"');
+    contiene($h, 'src="/assets/js/main.js"');
+    contiene($h, 'family=Geist');
+    no_contiene($h, 'bootstrap');
+    // Todo script de otro dominio lleva integridad (aquí no hay ninguno).
+    ok(!preg_match('#<script[^>]+src="https://(?![^"]*integrity)#', $h), 'script externo sin integridad');
+});
+
+t('titulo_grad escapa y pone las últimas palabras en degradado', function () {
+    eq(titulo_grad('Páginas web que «venden» & más', 3), 'Páginas web que <span class="grad">«venden» &amp; más</span>');
+    eq(titulo_grad('Ideas para vender <b>más</b>', 1), 'Ideas para vender <span class="grad">&lt;b&gt;más&lt;/b&gt;</span>');
+    eq(titulo_grad('Hola', 2), '<span class="grad">Hola</span>');
+    eq(titulo_grad('Sin degradado', 0), 'Sin degradado');
+});
+
+t('rubros: los que tienen _rubro.php enlazan a su página; el resto queda "pronto"', function () {
+    $dir = sys_get_temp_dir() . '/rubros-' . bin2hex(random_bytes(4));
+    $rubro = static function (string $carpeta, string $nombre) use ($dir): void {
+        mkdir($dir . '/' . $carpeta, 0777, true);
+        file_put_contents($dir . '/' . $carpeta . '/_rubro.php', '<?php return ' . var_export([
+            'rubro_nombre' => $nombre,
+            'url_rubro' => '/demos/' . $carpeta . '/',
+            'versiones' => ['simple' => ['plan' => 'Simple-page', 'captura' => 'simple'], 'multi' => ['plan' => 'Multi-page', 'captura' => 'multi']],
+        ], true) . ';');
+    };
+    $rubro('pizzeria', 'pizzería');
+    $rubro('peruano', 'comida peruana');   // alias de "peruana"
+    $rubro('cafeteria', 'cafetería');      // no está en el catálogo: aparece igual
+    $r = portfolio_rubros($dir);
+    $por = array_column($r, null, 'slug');
+    eq($por['pizzeria']['disponible'], true);
+    eq($por['pizzeria']['url'], '/demos/pizzeria/');
+    eq($por['pizzeria']['versiones'], ['Simple-page', 'Multi-page']);
+    eq($por['peruana']['disponible'], true);
+    eq($por['peruana']['url'], '/demos/peruano/');
+    eq($por['cafeteria']['disponible'], true);
+    eq($por['cafeteria']['nombre'], 'Cafetería');
+    eq($por['cafeteria']['foto'], '/demos/cafeteria/img/simple.webp');
+    eq($por['sushi']['disponible'], false);
+    eq($por['sushi']['url'], '');
+    // Los disponibles van primero y ningún rubro se repite.
+    eq(array_slice(array_column($r, 'disponible'), 0, 3), [true, true, true]);
+    eq(count($r), count(array_unique(array_column($r, 'slug'))));
+    eq(count($r), count(portfolio_rubros_catalogo()) + 1);
+    // Un rubro "pronto" abre WhatsApp con el rubro en el mensaje.
+    contiene(rubro_wa(portfolio_load_site(), $por['sushi']), 'https://wa.me/56973537642?text=');
+    contiene(rubro_wa(portfolio_load_site(), $por['sushi']), '%28sushi%29');
 });
 
 t('nav sin admin y con enlaces absolutos', function () {

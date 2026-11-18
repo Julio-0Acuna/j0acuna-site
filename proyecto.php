@@ -14,23 +14,18 @@ if ($p === null) {
         'canonical' => '/proyectos',
     ]);
     render_partial('nav', ['site' => $site, 'actual' => 'proyectos']);
-    ?>
-    <main class="detail-page">
-      <div class="container">
-        <p class="eyebrow">Error 404</p>
-        <h1>Proyecto no encontrado</h1>
-        <p class="detail-lead">Este proyecto no existe o ya no está publicado.</p>
-        <a class="minimal-btn minimal-btn-dark" href="/proyectos"><span>Ver todos los proyectos</span></a>
-      </div>
-    </main>
-    <?php
+    render_partial('error-404', [
+        'site' => $site,
+        'titulo' => 'Proyecto no encontrado',
+        'texto' => 'Este proyecto no existe o ya no está publicado.',
+        'boton' => ['Ver todos los proyectos', '/proyectos'],
+    ]);
     render_partial('footer', ['site' => $site]);
     return;
 }
 
-$wa = $site['links']['whatsapp'] !== ''
-    ? wa_link($site['links']['whatsapp'], 'Hola Julio, vi el proyecto «' . $p['title'] . '» y quiero algo así para mi negocio.')
-    : '';
+$mensaje = 'Hola Julio, vi el proyecto «' . $p['title'] . '» y quiero algo así para mi negocio.';
+$wa = site_wa($site, $mensaje);
 $imagenes = array_values(array_filter(array_merge([$p['image_url']], $p['galeria']), static fn ($img): bool => is_string($img) && $img !== ''));
 $imagenes = array_slice(array_values(array_unique($imagenes)), 0, 4);
 $meta = array_filter([
@@ -47,6 +42,7 @@ if ($seccion !== null) {
 }
 $migas[] = [$p['title'], project_url($p)];
 $snippet = portfolio_snippet($p);
+$n = 0;
 
 render_partial('head', [
     'title' => $p['title'] . ' | ' . $site['profile']['name'],
@@ -58,69 +54,79 @@ render_partial('head', [
 ]);
 render_partial('nav', ['site' => $site, 'actual' => 'proyectos']);
 ?>
-<main class="detail-page">
-  <div class="container">
-    <nav class="breadcrumbs" aria-label="Estás en">
-      <a href="/">Inicio</a>
-      <?php foreach ($migas as $i => [$nombre, $ruta]): ?>
-        <span aria-hidden="true">›</span>
-        <?php if ($i === count($migas) - 1): ?>
-          <span aria-current="page"><?= e($nombre) ?></span>
-        <?php else: ?>
-          <a href="<?= e($ruta) ?>"><?= e($nombre) ?></a>
-        <?php endif; ?>
-      <?php endforeach; ?>
-    </nav>
-    <header class="detail-header">
-      <p class="eyebrow"><?= e(category_name($p['categoria_id'])) ?></p>
+<main id="main" class="detail-page">
+  <header class="pd-hd">
+    <div class="wrap pd-hd__in">
+      <nav class="crumbs" aria-label="Estás en">
+        <a href="/">Inicio</a>
+        <?php foreach ($migas as $i => [$nombre, $ruta]): ?>
+          <span aria-hidden="true">/</span>
+          <?php if ($i === count($migas) - 1): ?>
+            <span aria-current="page"><?= e($nombre) ?></span>
+          <?php else: ?>
+            <a href="<?= e($ruta) ?>"><?= e($nombre) ?></a>
+          <?php endif; ?>
+        <?php endforeach; ?>
+      </nav>
+      <p class="kicker"><?= e(category_name($p['categoria_id'])) ?></p>
       <h1><?= e($p['title']) ?></h1>
-      <p class="detail-lead"><?= e($p['description']) ?></p>
-      <ul class="detail-meta">
+      <p class="page-lead"><?= e($p['description']) ?></p>
+      <ul class="pd-meta" aria-label="Datos del proyecto">
         <?php foreach ($meta as $item): ?>
-          <li><?= e($item) ?></li>
+          <li class="pill"><?= e($item) ?></li>
         <?php endforeach; ?>
       </ul>
       <?php if ($p['credito'] !== ''): ?>
-        <p class="detail-credit"><?= e($p['credito']) ?></p>
+        <p class="pd-credit"><?= e($p['credito']) ?></p>
       <?php endif; ?>
-    </header>
+    </div>
+  </header>
 
+  <div class="wrap">
     <?php if ($imagenes): ?>
-      <div class="detail-gallery detail-gallery-<?= count($imagenes) ?>">
-        <?php foreach ($imagenes as $img): ?>
-          <img src="<?= e(asset($img)) ?>" alt="Vista de <?= e($p['title']) ?>" loading="lazy" width="1200" height="750">
-        <?php endforeach; ?>
+      <div class="gallery rv">
+        <figure class="frame">
+          <span class="frame__bar" aria-hidden="true"><i></i><i></i><i></i><span><?= e(proyecto_barra($p)) ?></span></span>
+          <span class="frame__img"><img src="<?= e(asset($imagenes[0])) ?>" alt="Vista de <?= e($p['title']) ?>" width="1200" height="750"></span>
+        </figure>
+        <?php if (count($imagenes) > 1): ?>
+          <div class="gallery__more gallery__more--<?= count($imagenes) - 1 ?>">
+            <?php foreach (array_slice($imagenes, 1) as $k => $img): ?>
+              <img src="<?= e(asset($img)) ?>" alt="Vista <?= $k + 2 ?> de <?= e($p['title']) ?>" loading="lazy" width="1200" height="750">
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
       </div>
       <?php if ($p['imagen_ejemplo']): ?>
         <p class="image-note">Imagen con datos de ejemplo: el sistema real trabaja con información de clientes que no se muestra.</p>
       <?php endif; ?>
     <?php endif; ?>
 
-    <div class="detail-grid">
-      <div>
+    <div class="pd-grid">
+      <div class="pd-main">
         <?php foreach ($secciones as $titulo => $texto): ?>
-          <?php if ($texto !== ''): ?>
-            <section class="detail-section">
-              <h2><?= e($titulo) ?></h2>
+          <?php if ($texto !== ''): $n++; ?>
+            <section class="pd-sec rv">
+              <h2><small><?= sprintf('%02d', $n) ?></small><?= e($titulo) ?></h2>
               <p><?= e($texto) ?></p>
             </section>
           <?php endif; ?>
         <?php endforeach; ?>
-        <?php if ($p['funcionalidades']): ?>
-          <section class="detail-section">
-            <h2>Qué incluye</h2>
-            <ul class="detail-list">
+        <?php if ($p['funcionalidades']): $n++; ?>
+          <section class="pd-sec rv">
+            <h2><small><?= sprintf('%02d', $n) ?></small>Qué incluye</h2>
+            <ul class="checks">
               <?php foreach ($p['funcionalidades'] as $f): ?>
-                <li><?= e($f) ?></li>
+                <li><?php render_partial('icono', ['icono' => 'check', 'tam' => 18]); ?><span><?= e($f) ?></span></li>
               <?php endforeach; ?>
             </ul>
           </section>
         <?php endif; ?>
         <?php if ($snippet !== null): ?>
-          <?php render_partial('code-block', ['snippet' => $snippet]); ?>
+          <?php render_partial('code-block', ['snippet' => $snippet, 'numero' => sprintf('%02d', $n + 1)]); ?>
         <?php endif; ?>
       </div>
-      <aside class="detail-aside">
+      <aside class="pd-aside" aria-label="Tecnologías y enlaces">
         <?php if ($p['technologies']): ?>
           <h2>Tecnologías</h2>
           <div class="tech-list">
@@ -129,23 +135,34 @@ render_partial('nav', ['site' => $site, 'actual' => 'proyectos']);
             <?php endforeach; ?>
           </div>
         <?php endif; ?>
-        <div class="detail-actions">
+        <div class="pd-actions">
           <?php if ($wa !== ''): ?>
-            <a class="minimal-btn minimal-btn-dark" href="<?= e($wa) ?>" target="_blank" rel="noopener"><span>Quiero algo así</span></a>
+            <a class="btn btn--light" href="<?= e($wa) ?>" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Quiero algo así</a>
           <?php endif; ?>
           <?php if ($p['demo_url'] !== ''): ?>
-            <a class="minimal-btn minimal-btn-outline" href="<?= e($p['demo_url']) ?>" target="_blank" rel="noopener"><span>Ver sitio</span></a>
+            <a class="btn btn--glass" href="<?= e($p['demo_url']) ?>" target="_blank" rel="noopener">Ver sitio<svg aria-hidden="true"><use href="#i-out"/></svg></a>
           <?php endif; ?>
           <?php if ($p['repo_url'] !== ''): ?>
-            <a class="minimal-btn minimal-btn-outline" href="<?= e($p['repo_url']) ?>" target="_blank" rel="noopener"><span>Ver código</span></a>
+            <a class="btn btn--glass" href="<?= e($p['repo_url']) ?>" target="_blank" rel="noopener">Ver código<svg aria-hidden="true"><use href="#i-out"/></svg></a>
           <?php endif; ?>
         </div>
+        <?php if ($seccion !== null): ?>
+          <a class="more" href="<?= e($seccion['url']) ?>"><svg aria-hidden="true"><use href="#i-back"/></svg><?= e($seccion['nombre']) ?></a>
+        <?php endif; ?>
       </aside>
     </div>
   </div>
+
+  <?php render_partial('cta', [
+      'site' => $site,
+      'titulo' => '¿Quieres algo así?',
+      'texto' => 'Cuéntame qué necesita tu negocio y te digo cómo lo haría, sin compromiso.',
+      'mensaje' => $mensaje,
+      'secundario' => ['Ver más proyectos', '/proyectos'],
+  ]); ?>
 </main>
 <?php
-render_partial('whatsapp-fab', ['site' => $site, 'mensaje' => 'Hola Julio, vi el proyecto «' . $p['title'] . '» y quiero algo así para mi negocio.']);
+render_partial('whatsapp-fab', ['site' => $site, 'mensaje' => $mensaje]);
 if ($snippet !== null) {
     echo prism_scripts($snippet['lenguaje']);
 }

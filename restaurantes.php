@@ -3,11 +3,16 @@ require_once __DIR__ . '/includes/view.php';
 
 $site = portfolio_load_site();
 $mensaje = 'Hola Julio, tengo un local y quiero vender más.';
-$wa = $site['links']['whatsapp'] !== '' ? wa_link($site['links']['whatsapp'], $mensaje) : '';
+$wa = site_wa($site, $mensaje);
 $servicios = portfolio_visible_services($site, 'restaurantes');
 $pruebas = portfolio_restaurant_projects($site);
 $hayEjemplos = in_array('ejemplos', array_column(portfolio_categories_in_use($site), 'id'), true)
     && is_dir(__DIR__ . '/demos/pizzeria');
+
+// Rubros de los ejemplos, calculados desde demos/<rubro>/_rubro.php (sin lista fija).
+$rubros = $hayEjemplos ? portfolio_rubros() : [];
+$listos = array_values(array_filter($rubros, static fn (array $r): bool => $r['disponible'] && $r['slug'] !== 'pizzeria'));
+$pronto = array_values(array_filter($rubros, static fn (array $r): bool => !$r['disponible']));
 
 // Niveles de §6.3: nombre, ícono y una línea que explica para qué sirve.
 $niveles = [
@@ -43,47 +48,52 @@ render_partial('head', [
 ]);
 render_partial('nav', ['site' => $site, 'actual' => 'restaurantes']);
 ?>
-<main>
-  <section class="rest-hero">
-    <div class="container rest-hero-grid">
-      <div>
-        <p class="eyebrow">Restaurantes y comercios · Santiago y todo Chile</p>
-        <h1>Página web para restaurantes, con menú QR y pedidos por WhatsApp</h1>
-        <p class="lead">Hago la página de tu local en Santiago o en cualquier parte de Chile: menú con código QR, pedidos sin comisión y apoyo para vender en Uber Eats y PedidosYa. Tú atiendes tu negocio; yo me encargo de la parte digital.</p>
-        <div class="hero-actions">
+<main id="main">
+  <section class="rh">
+    <div class="wrap rh__grid">
+      <div class="rh__txt">
+        <p class="badge"><i aria-hidden="true"></i>Restaurantes y comercios<span class="hide-sm"> · <?= e($site['profile']['ciudad']) ?> y todo Chile</span></p>
+        <h1>Página web para restaurantes, con menú QR y <span class="grad">pedidos por WhatsApp</span></h1>
+        <p class="page-lead">Hago la página de tu local en <?= e($site['profile']['ciudad']) ?> o en cualquier parte de Chile: menú con código QR, pedidos sin comisión y apoyo para vender en Uber Eats y PedidosYa. Tú atiendes tu negocio; yo me encargo de la parte digital.</p>
+        <div class="actions">
           <?php if ($wa !== ''): ?>
-            <a class="minimal-btn minimal-btn-light" href="<?= e($wa) ?>" target="_blank" rel="noopener"><span>Conversemos por WhatsApp</span></a>
+            <a class="btn btn--light" href="<?= e($wa) ?>" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Conversemos por WhatsApp</a>
           <?php endif; ?>
           <?php if ($hayEjemplos): ?>
-            <a class="minimal-btn minimal-btn-ghost" href="#ejemplos"><span>Ver ejemplos</span></a>
+            <a class="btn btn--glass" href="#ejemplos">Ver ejemplos<svg aria-hidden="true"><use href="#i-down"/></svg></a>
           <?php endif; ?>
         </div>
       </div>
-      <figure class="rest-hero-media">
+      <figure class="rh__media">
         <picture>
           <source media="(max-width: 991.98px)" srcset="<?= e($foto(720, 360)) ?> 720w, <?= e($foto(1080, 540)) ?> 1080w" sizes="100vw" width="720" height="360">
           <img src="<?= e($foto(600, 660)) ?>" srcset="<?= e($foto(600, 660)) ?> 600w, <?= e($foto(1000, 1100)) ?> 1000w" sizes="(min-width: 992px) 45vw, 100vw" alt="Mesa de restaurante con varios platos servidos" width="600" height="660" fetchpriority="high">
         </picture>
+        <figcaption class="rh__chip"><i aria-hidden="true"></i><span><b>Sin comisión</b> · el pedido llega a tu WhatsApp</span></figcaption>
       </figure>
     </div>
   </section>
 
   <?php if ($porNivel): ?>
-    <section id="niveles" class="section-band">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Lo que te ofrezco</p>
-          <h2>Elige por dónde empezar</h2>
-          <p class="section-sub">Parte por el primer escalón y suma los demás cuando tu local lo necesite.</p>
+    <hr class="hr">
+    <section id="niveles" class="sec" aria-labelledby="titulo-niveles">
+      <div class="wrap">
+        <div class="sec__head sec__head--row rv">
+          <p class="kicker"><b>01</b> Lo que te ofrezco</p>
+          <h2 class="h2" id="titulo-niveles">Elige por dónde <span class="soft">empezar.</span></h2>
+          <p class="sub">Parte por el primer escalón y suma los demás cuando tu local lo necesite.</p>
         </div>
         <ol class="stairs" style="--pasos: <?= count($porNivel) ?>">
           <?php $paso = 0; ?>
           <?php foreach ($niveles as $clave => [$nombre, $icono, $linea]): ?>
             <?php if (!empty($porNivel[$clave])): ?>
               <?php $paso++; ?>
-              <li class="stair stair-<?= e($clave) ?>" style="--i: <?= $paso ?>">
-                <span class="stair-icon"><?php render_partial('icono', ['icono' => $icono, 'tam' => 24]); ?></span>
-                <span class="stair-step">Paso <?= $paso ?></span>
+              <li class="stair stair-<?= e($clave) ?> rv" style="--i: <?= $paso ?>">
+                <span class="stair-riser" aria-hidden="true"></span>
+                <span class="stair-head">
+                  <span class="stair-step">Paso <?= $paso ?></span>
+                  <span class="ico" aria-hidden="true"><?php render_partial('icono', ['icono' => $icono, 'tam' => 22]); ?></span>
+                </span>
                 <h3><?= e($nombre) ?></h3>
                 <p class="stair-lead"><?= e($linea) ?></p>
                 <ul class="stair-list">
@@ -91,84 +101,102 @@ render_partial('nav', ['site' => $site, 'actual' => 'restaurantes']);
                     <li><a href="/servicios#<?= e($s['id']) ?>"><?php render_partial('icono', ['icono' => 'check', 'tam' => 18]); ?><span><?= e($s['titulo']) ?></span></a></li>
                   <?php endforeach; ?>
                 </ul>
-                <span class="stair-riser" aria-hidden="true"></span>
               </li>
             <?php endif; ?>
           <?php endforeach; ?>
         </ol>
-        <p class="stairs-more"><a class="more-link" href="/servicios">Ver cada servicio en detalle <span aria-hidden="true">→</span></a></p>
+        <p class="stairs-more"><a class="more" href="/servicios">Ver cada servicio en detalle<svg aria-hidden="true"><use href="#i-arr"/></svg></a></p>
       </div>
     </section>
   <?php endif; ?>
 
   <?php if ($hayEjemplos): ?>
-    <section id="ejemplos" class="section-band section-alt">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Ejemplos por rubro</p>
-          <h2>Mira cómo se vería tu local</h2>
-          <p class="section-sub">Tres versiones de una pizzería inventada, funcionando. Ábrelas en tu celular y prueba hacer un pedido.</p>
+    <hr class="hr">
+    <section id="ejemplos" class="sec" aria-labelledby="titulo-ejemplos">
+      <div class="wrap">
+        <div class="sec__head sec__head--row rv">
+          <p class="kicker"><b>02</b> Ejemplos por rubro</p>
+          <h2 class="h2" id="titulo-ejemplos">Mira cómo se vería <span class="soft">tu local.</span></h2>
+          <p class="sub">Tres versiones de una pizzería inventada, funcionando. Ábrelas en tu celular y prueba hacer un pedido.</p>
         </div>
-        <div class="tiles tiles-3 tiles-list">
-          <?php foreach ($versiones as [$ruta, $plan, $titulo, $texto]): ?>
-            <?php render_partial('mosaico', [
-                'url' => '/demos/pizzeria/' . $ruta . '/',
-                'imagen' => 'demos/pizzeria/img/' . $ruta . '.webp',
-                'titulo' => $titulo,
-                'etiqueta' => $plan,
-                'texto' => $texto,
-                'mas' => 'Ver ejemplo →',
-            ]); ?>
-          <?php endforeach; ?>
+        <div class="block">
+          <div class="tiles tiles-3 tiles-list">
+            <?php foreach ($versiones as [$ruta, $plan, $titulo, $texto]): ?>
+              <div class="rv">
+                <?php render_partial('mosaico', [
+                    'url' => '/demos/pizzeria/' . $ruta . '/',
+                    'imagen' => 'demos/pizzeria/img/' . $ruta . '.webp',
+                    'titulo' => $titulo,
+                    'etiqueta' => $plan,
+                    'texto' => $texto,
+                    'mas' => 'Ver ejemplo',
+                ]); ?>
+              </div>
+            <?php endforeach; ?>
+          </div>
         </div>
-        <p class="soon"><strong>Pronto:</strong> sushi, pastelería, panadería, carnicería, comida peruana, china y más.</p>
+
+        <?php if ($listos): ?>
+          <div class="block rv">
+            <div class="sub-head">
+              <h3>Otros rubros, también con 3 versiones</h3>
+              <a class="more" href="/demos/pizzeria/">Comparar las 3 versiones de la pizzería<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
+            </div>
+            <div class="rubros-mini">
+              <?php foreach ($listos as $r): ?>
+                <a class="rmini" href="<?= e($r['url']) ?>">
+                  <?php if ($r['foto'] !== ''): ?><img src="<?= e($r['foto']) ?>" alt="" width="64" height="64" loading="lazy"><?php endif; ?>
+                  <span><strong><?= e($r['nombre']) ?></strong><small><?= count($r['versiones']) ?> versiones · ver ejemplos</small></span>
+                </a>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        <?php endif; ?>
+
+        <?php if ($pronto): ?>
+          <p class="soon"><strong>Pronto:</strong> <?php foreach ($pronto as $r): ?><span><?= e($r['nombre']) ?></span> <?php endforeach; ?></p>
+        <?php endif; ?>
         <p class="inline-links">
-          <a class="more-link" href="/demos/pizzeria/">Comparar las 3 versiones <span aria-hidden="true">→</span></a>
-          <a class="more-link" href="/demos/">Todos los ejemplos <span aria-hidden="true">→</span></a>
+          <?php if (!$listos): ?><a class="more" href="/demos/pizzeria/">Comparar las 3 versiones<svg aria-hidden="true"><use href="#i-arr"/></svg></a><?php endif; ?>
+          <a class="more" href="/demos/">Todos los ejemplos<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
         </p>
       </div>
     </section>
   <?php endif; ?>
 
   <?php if ($pruebas): ?>
-    <section id="pruebas" class="section-band">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Ya lo hice antes</p>
-          <h2>Proyectos reales para restaurantes y comercios</h2>
+    <hr class="hr">
+    <section id="pruebas" class="sec" aria-labelledby="titulo-pruebas">
+      <div class="wrap">
+        <div class="sec__head sec__head--row rv">
+          <p class="kicker"><b><?= $hayEjemplos ? '03' : '02' ?></b> Ya lo hice antes</p>
+          <h2 class="h2" id="titulo-pruebas">Proyectos reales para <span class="soft">restaurantes y comercios.</span></h2>
+          <a class="more" href="/proyectos">Ver todos mis proyectos<svg aria-hidden="true"><use href="#i-arr"/></svg></a>
         </div>
         <div class="tiles tiles-3 tiles-list">
           <?php foreach ($pruebas as $project): ?>
-            <?php render_partial('mosaico', [
-                'url' => project_url($project),
-                'imagen' => $project['image_url'],
-                'titulo' => $project['title'],
-                'etiqueta' => category_name($project['categoria_id']),
-                'texto' => $project['description'],
-            ]); ?>
+            <div class="rv">
+              <?php render_partial('mosaico', [
+                  'url' => project_url($project),
+                  'imagen' => $project['image_url'],
+                  'titulo' => $project['title'],
+                  'etiqueta' => category_name($project['categoria_id']),
+                  'texto' => $project['description'],
+              ]); ?>
+            </div>
           <?php endforeach; ?>
         </div>
-        <p class="inline-links mt-4"><a class="more-link" href="/proyectos">Ver todos mis proyectos <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
   <?php endif; ?>
 
-  <section class="contact-section section-alt">
-    <div class="container">
-      <div class="contact-shell">
-        <div>
-          <h2>¿Conversamos?</h2>
-          <p>Te cuento qué conviene para tu local, sin compromiso.</p>
-        </div>
-        <div class="contact-actions">
-          <?php if ($wa !== ''): ?>
-            <a class="minimal-btn minimal-btn-dark" href="<?= e($wa) ?>" target="_blank" rel="noopener"><span>WhatsApp</span></a>
-          <?php endif; ?>
-          <a class="minimal-btn minimal-btn-outline" href="/proyectos"><span>Ver todos mis proyectos</span></a>
-        </div>
-      </div>
-    </div>
-  </section>
+  <?php render_partial('cta', [
+      'site' => $site,
+      'titulo' => '¿Conversamos?',
+      'texto' => 'Te cuento qué conviene para tu local, sin compromiso.',
+      'mensaje' => $mensaje,
+      'secundario' => ['Ver todos mis proyectos', '/proyectos'],
+  ]); ?>
 </main>
 <?php
 render_partial('whatsapp-fab', ['site' => $site, 'mensaje' => $mensaje]);

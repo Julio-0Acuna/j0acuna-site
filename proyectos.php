@@ -14,7 +14,7 @@ render_partial('head', [
 ]);
 render_partial('nav', ['site' => $site, 'actual' => 'proyectos']);
 ?>
-<main>
+<main id="main">
   <?php render_partial('page-header', [
       'eyebrow' => 'Portafolio',
       'titulo' => 'Portafolio de proyectos web',
@@ -23,37 +23,38 @@ render_partial('nav', ['site' => $site, 'actual' => 'proyectos']);
   ]); ?>
 
   <?php if (count($sections) > 1): ?>
-    <nav class="container" aria-label="Secciones del portafolio">
-      <ul class="jump-nav mt-0">
+    <nav class="wrap jump" aria-label="Secciones del portafolio">
+      <ul class="chips">
         <?php foreach ($sections as $s): ?>
-          <li><a href="#seccion-<?= e($s['id']) ?>"><?= e($s['nombre']) ?> <small>(<?= (int) $s['cantidad'] ?>)</small></a></li>
+          <li><a class="chip" href="#seccion-<?= e($s['id']) ?>"><?= e($s['nombre']) ?><small><?= (int) $s['cantidad'] ?></small></a></li>
         <?php endforeach; ?>
       </ul>
     </nav>
   <?php endif; ?>
 
-  <div class="container pb-5">
-    <?php foreach ($sections as $s): ?>
+  <div class="wrap">
+    <?php foreach ($sections as $n => $s): ?>
       <?php
       $muestra = array_slice(portfolio_section_projects($site, $s['id']), 0, $porFila);
       $uno = count($muestra) === 1;
       ?>
       <section class="proj-section" id="seccion-<?= e($s['id']) ?>" aria-labelledby="titulo-<?= e($s['id']) ?>">
-        <div class="proj-head">
+        <div class="proj-head rv">
           <div>
+            <p class="kicker"><b><?= sprintf('%02d', $n + 1) ?></b> <?= $s['cantidad'] === 1 ? '1 proyecto' : (int) $s['cantidad'] . ' proyectos' ?></p>
             <h2 id="titulo-<?= e($s['id']) ?>"><a href="<?= e($s['url']) ?>"><?= e($s['nombre']) ?></a></h2>
             <p><?= e($s['resumen']) ?></p>
           </div>
-          <a class="more-link" href="<?= e($s['url']) ?>">Ver <?= $s['cantidad'] === 1 ? 'el proyecto' : 'los ' . (int) $s['cantidad'] . ' proyectos' ?> <span aria-hidden="true">→</span></a>
+          <a class="more" href="<?= e($s['url']) ?>">Ver <?= $s['cantidad'] === 1 ? 'el proyecto' : 'los ' . (int) $s['cantidad'] . ' proyectos' ?><svg aria-hidden="true"><use href="#i-arr"/></svg></a>
         </div>
-        <div class="tiles <?= $uno ? 'tiles-1' : 'tiles-4' ?>">
+        <div class="tiles <?= $uno ? 'tiles-1' : 'tiles-4' ?> rv">
           <?php foreach ($muestra as $p): ?>
             <?php render_partial('mosaico', [
                 'url' => project_url($p),
                 'imagen' => $p['image_url'],
                 'titulo' => $p['title'],
                 'texto' => $uno ? $p['description'] : '',
-                'mas' => $uno ? 'Ver proyecto →' : '',
+                'mas' => $uno ? 'Ver proyecto' : '',
                 'clase' => $uno ? 'tile-wide' : '',
             ]); ?>
           <?php endforeach; ?>
@@ -62,22 +63,12 @@ render_partial('nav', ['site' => $site, 'actual' => 'proyectos']);
     <?php endforeach; ?>
   </div>
 
-  <section class="contact-section section-alt">
-    <div class="container">
-      <div class="contact-shell">
-        <div>
-          <h2>¿Quieres algo así para tu negocio?</h2>
-          <p>Cuéntame qué necesitas y te digo cómo lo haría.</p>
-        </div>
-        <div class="contact-actions">
-          <?php if ($site['links']['whatsapp'] !== ''): ?>
-            <a class="minimal-btn minimal-btn-dark" href="<?= e(site_wa($site, $site['profile']['whatsapp_mensaje'])) ?>" target="_blank" rel="noopener"><span>WhatsApp</span></a>
-          <?php endif; ?>
-          <a class="minimal-btn minimal-btn-outline" href="/servicios"><span>Ver servicios</span></a>
-        </div>
-      </div>
-    </div>
-  </section>
+  <?php render_partial('cta', [
+      'site' => $site,
+      'titulo' => '¿Quieres algo así para tu negocio?',
+      'texto' => 'Cuéntame qué necesitas y te digo cómo lo haría.',
+      'secundario' => ['Ver servicios', '/servicios'],
+  ]); ?>
 </main>
 <?php
 render_partial('whatsapp-fab', ['site' => $site, 'mensaje' => $site['profile']['whatsapp_mensaje']]);
