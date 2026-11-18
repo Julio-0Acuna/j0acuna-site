@@ -4,7 +4,7 @@
 #      SITE_JSON=data/site.json bash tests/pages.sh   (contenido real)
 cd "$(dirname "$0")/.." || exit 1
 
-PORT=8099
+PORT=$(( 8099 + ${PUERTO_DESFASE:-0} ))
 BASE="http://127.0.0.1:$PORT"
 export PORTFOLIO_SITE_FILE="${SITE_JSON:-tests/fixtures/site.json}"
 export PORTFOLIO_SITE_URL="$BASE"

@@ -4,9 +4,9 @@
 # Uso: bash tests/demos.sh  (con agentes en paralelo: DEMOS_PORT=81xx DEMOS_PORT2=81yy bash tests/demos.sh)
 cd "$(dirname "$0")/.." || exit 1
 
-PORT=${DEMOS_PORT:-8098}
+PORT=${DEMOS_PORT:-$(( 8098 + ${PUERTO_DESFASE:-0} ))}
 # Segundo servidor: tienda de prueba del motor con fecha de entrega y textos propios (fuera de demos/).
-PORT2=${DEMOS_PORT2:-8089}
+PORT2=${DEMOS_PORT2:-$(( 8089 + ${PUERTO_DESFASE:-0} ))}
 BASE="http://127.0.0.1:$PORT"
 TIENDA="/demos/pizzeria/plataforma/"
 # Ruta absoluta: el router hace chdir a la carpeta de cada página.

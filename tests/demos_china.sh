@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Pruebas del rubro comida china (demos/china/): levanta `php -S` con el router en el puerto 8091 y revisa con curl.
+# Pruebas del rubro comida china (demos/china/): levanta `php -S` con el router en el puerto 8109 y revisa con curl.
 # Mismo alcance que tests/demos.sh (pizzería), más reglas propias del rubro: carta numerada y menús para 2, 4 y 6
 # en la Simple-page, reservas de mesa validadas en el servidor en la Multi-page, y en la Plataforma web pedido
 # mínimo, despacho por comuna y cuentas de empresas y eventos (bandejas de cóctel y colaciones).
 # Uso: bash tests/demos_china.sh
 cd "$(dirname "$0")/.." || exit 1
 
-PORT=8091
+PORT=$(( 8109 + ${PUERTO_DESFASE:-0} ))
 BASE="http://127.0.0.1:$PORT"
 RUBRO="/demos/china/"
 SIMPLE="${RUBRO}simple/"

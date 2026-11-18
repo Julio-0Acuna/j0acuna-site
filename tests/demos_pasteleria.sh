@@ -5,7 +5,7 @@
 # Uso: bash tests/demos_pasteleria.sh
 cd "$(dirname "$0")/.." || exit 1
 
-PORT=8092
+PORT=$(( 8111 + ${PUERTO_DESFASE:-0} ))
 BASE="http://127.0.0.1:$PORT"
 R="/demos/pasteleria"
 TIENDA="$R/plataforma/"

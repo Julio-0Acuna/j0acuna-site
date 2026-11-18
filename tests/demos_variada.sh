@@ -4,7 +4,7 @@
 # Uso: bash tests/demos_variada.sh
 cd "$(dirname "$0")/.." || exit 1
 
-PORT=8092
+PORT=$(( 8115 + ${PUERTO_DESFASE:-0} ))
 BASE="http://127.0.0.1:$PORT"
 RUBRO="/demos/variada"
 SIMPLE="$RUBRO/simple/"

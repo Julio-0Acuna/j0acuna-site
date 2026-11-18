@@ -2,7 +2,7 @@
 # Pruebas del formulario de /contacto con php -S. El correo se escribe en un directorio temporal.
 cd "$(dirname "$0")/.." || exit 1
 
-PORT=8097
+PORT=$(( 8097 + ${PUERTO_DESFASE:-0} ))
 BASE="http://127.0.0.1:$PORT"
 TMP=$(mktemp -d)
 export PORTFOLIO_SITE_FILE="tests/fixtures/site.json"

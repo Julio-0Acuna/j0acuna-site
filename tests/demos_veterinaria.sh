@@ -4,7 +4,7 @@
 # Uso: bash tests/demos_veterinaria.sh   (puerto 8105; otro con VET_PORT=…)
 cd "$(dirname "$0")/.." || exit 1
 
-PORT=${VET_PORT:-8105}
+PORT=${VET_PORT:-$(( 8105 + ${PUERTO_DESFASE:-0} ))}
 BASE="http://127.0.0.1:$PORT"
 RUBRO="/demos/veterinaria"
 SIMPLE="$RUBRO/simple/"

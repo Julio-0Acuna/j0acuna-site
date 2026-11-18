@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Pruebas del rubro sushi (demos/sushi/): levanta `php -S` con el router en el puerto 8091 y revisa con curl.
+# Pruebas del rubro sushi (demos/sushi/): levanta `php -S` con el router en el puerto 8113 y revisa con curl.
 # Mismo alcance que tests/demos.sh (pizzería), más reglas propias del rubro:
 # fotos con créditos, pedido mínimo y costo de despacho por comuna en la Plataforma web.
 # Uso: bash tests/demos_sushi.sh
 cd "$(dirname "$0")/.." || exit 1
 
-PORT=8091
+PORT=$(( 8113 + ${PUERTO_DESFASE:-0} ))
 BASE="http://127.0.0.1:$PORT"
 RUBRO="/demos/sushi/"
 SIMPLE="${RUBRO}simple/"

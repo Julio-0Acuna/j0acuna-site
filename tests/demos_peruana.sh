@@ -5,7 +5,7 @@
 # Uso: bash tests/demos_peruana.sh
 cd "$(dirname "$0")/.." || exit 1
 
-PORT=8090
+PORT=$(( 8112 + ${PUERTO_DESFASE:-0} ))
 BASE="http://127.0.0.1:$PORT"
 RUBRO="/demos/peruana"
 SIMPLE="$RUBRO/simple/"

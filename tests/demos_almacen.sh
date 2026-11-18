@@ -5,7 +5,7 @@
 # Uso: bash tests/demos_almacen.sh
 cd "$(dirname "$0")/.." || exit 1
 
-PORT=${ALMACEN_PORT:-8101}
+PORT=${ALMACEN_PORT:-$(( 8101 + ${PUERTO_DESFASE:-0} ))}
 BASE="http://127.0.0.1:$PORT"
 RUBRO="/demos/almacen"
 SIMPLE="$RUBRO/simple/"

@@ -2,7 +2,7 @@
 # Pruebas de /blog y /blog/<slug> con artículos de prueba (tests/fixtures/blog).
 cd "$(dirname "$0")/.." || exit 1
 
-PORT=8094
+PORT=$(( 8094 + ${PUERTO_DESFASE:-0} ))
 BASE="http://127.0.0.1:$PORT"
 export PORTFOLIO_SITE_FILE="tests/fixtures/site.json"
 export PORTFOLIO_SITE_URL="$BASE"
