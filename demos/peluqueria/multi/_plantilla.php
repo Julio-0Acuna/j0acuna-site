@@ -22,10 +22,10 @@ function mz_rubro(): array
 function mz_nota(): string
 {
     $r = mz_rubro();
-    return demo_nota($r['rubro_nombre'], $r['versiones']['multi']['plan']);
+    return demo_nota($r['rubro_nombre'], $r['versiones']['multi']['plan'], 'Reserva');
 }
 
-/** WhatsApp con la nota de pedido de prueba. */
+/** WhatsApp con la nota de reserva de prueba. */
 function mz_wa(string $texto): string
 {
     return demo_wa($texto . "\n" . mz_nota());
@@ -57,7 +57,10 @@ function mz_duracion(int $min): string
     return trim(($h > 0 ? $h . ' h' : '') . ($m > 0 ? ' ' . $m . ' min' : ''));
 }
 
-/** Configuración del carrito en el navegador (_comun/js/carrito.js). */
+/**
+ * Configuración del carrito en el navegador (_comun/js/carrito.js): una reserva de hora. La entrega solo
+ * aplica a los productos (retiro en el estudio el día de la hora o despacho), así que sus líneas lo dicen.
+ */
 function mz_config_carrito(): array
 {
     $n = mz();
@@ -72,6 +75,13 @@ function mz_config_carrito(): array
         'numero' => DEMO_WHATSAPP,
         'comunas' => $n['comunas_despacho'],
         'catalogo' => $catalogo,
+        'textos' => [
+            'saludo' => 'Hola, quiero reservar hora en {negocio}:',
+            'retiro' => 'Lugar: en el estudio',
+            'despacho' => 'Productos: despacho a {direccion}, {comuna}',
+            'costo_despacho' => 'Despacho de productos a {comuna}: {costo}',
+            'gratis_retiro' => 'Sin costo',
+        ],
     ];
 }
 

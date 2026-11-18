@@ -1,18 +1,24 @@
 <?php
 /**
  * Portada de Filo Barbería (reemplaza la del motor): agenda por barbero, sucursales, planes y empresas.
+ * "Reservar con…" enlaza ?barbero=<id>: como en la URL del checkout del motor, la opción (validada contra
+ * 'checkout_campos') queda en la sesión y el checkout la trae preseleccionada.
  * @var array $cfg @var ?array $usuario @var string $q @var string $cat @var array $categorias
  */
+$opcionesBarbero = m_checkout_campos($cfg)['barbero']['opciones'];
+$pedido = $_GET['barbero'] ?? null;
+if (is_string($pedido) && isset($opcionesBarbero[$pedido])) {
+    $_SESSION['checkout_precarga']['barbero'] = $pedido;
+}
 if ($q !== '' || $cat !== '') {
     return;
 }
-require_once dirname(__DIR__) . '/_barberos.php';
 
 $estado = demo_horario_estado($cfg['negocio']['horario']);
 $fechas = m_fechas_entrega($cfg);
 $horas = m_horas_entrega($cfg);
 $proxima = $fechas ? reset($fechas) : '';
-$elegido = fb_recordar_barbero($cfg);
+$elegido = $_SESSION['checkout_precarga']['barbero'] ?? '';
 ?>
 <section class="fb-hero" aria-labelledby="fb-hero-titulo">
   <div class="fb-hero__texto">
@@ -66,7 +72,7 @@ $elegido = fb_recordar_barbero($cfg);
         <?php if ($elegido === $bid): ?>
         <span class="fb-barbero__sello">Elegido</span>
         <?php else: ?>
-        <a class="fb-barbero__elegir" href="<?= m_e(m_url('inicio', ['con' => $bid])) ?>#menu" aria-label="Reservar con <?= m_e($b['nombre']) ?> en <?= m_e($s['nombre']) ?>">Reservar</a>
+        <a class="fb-barbero__elegir" href="<?= m_e(m_url('inicio', ['barbero' => $bid])) ?>#menu" aria-label="Reservar con <?= m_e($b['nombre']) ?> en <?= m_e($s['nombre']) ?>">Reservar</a>
         <?php endif; ?>
       </div>
     </li>
@@ -75,7 +81,7 @@ $elegido = fb_recordar_barbero($cfg);
   <div class="fb-cualquiera">
     <p><strong>¿Te da lo mismo quién?</strong> Te atiende el primero que se desocupe en:</p>
     <?php foreach ($cfg['sucursales'] as $sid => $s): ?>
-    <a class="fb-cualquiera__op<?= $elegido === 'cualquiera-' . $sid ? ' is-elegido' : '' ?>" href="<?= m_e(m_url('inicio', ['con' => 'cualquiera-' . $sid])) ?>#menu"<?= $elegido === 'cualquiera-' . $sid ? ' aria-current="true"' : '' ?>><?= m_e($s['nombre']) ?></a>
+    <a class="fb-cualquiera__op<?= $elegido === 'cualquiera-' . $sid ? ' is-elegido' : '' ?>" href="<?= m_e(m_url('inicio', ['barbero' => 'cualquiera-' . $sid])) ?>#menu"<?= $elegido === 'cualquiera-' . $sid ? ' aria-current="true"' : '' ?>><?= m_e($s['nombre']) ?></a>
     <?php endforeach; ?>
   </div>
 </section>

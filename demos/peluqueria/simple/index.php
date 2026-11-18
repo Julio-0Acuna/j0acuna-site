@@ -6,9 +6,9 @@ require_once dirname(__DIR__, 2) . '/_comun/comun.php';
 $rubro = require dirname(__DIR__) . '/_rubro.php';
 $n = require __DIR__ . '/_datos.php';
 $version = $rubro['versiones']['simple']['plan'];
-$nota = demo_nota($rubro['rubro_nombre'], $version);
+$nota = demo_nota($rubro['rubro_nombre'], $version, 'Reserva');
 
-/** Enlace de WhatsApp con la nota de pedido de prueba. */
+/** Enlace de WhatsApp con la nota de reserva de prueba. */
 $wa = static fn (string $texto): string => demo_wa($texto . "\n" . $nota);
 $waGeneral = $wa('Hola, quiero pedir una hora en ' . $n['nombre'] . '.');
 $estado = demo_horario_estado($n['horario']);

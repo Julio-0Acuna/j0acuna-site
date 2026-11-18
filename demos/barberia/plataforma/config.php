@@ -2,8 +2,8 @@
 declare(strict_types=1);
 
 // Filo Barbería (Ñuñoa, Providencia y Maipú): negocio ficticio de la versión Plataforma web.
-// Cadena de barberías con agenda por barbero (día y hora validados en el servidor, barbero en la nota
-// con _barberos.php), tienda de productos, planes mensuales y cuentas "Empresa" para convenios corporativos.
+// Cadena de barberías con agenda por barbero (día, hora y barbero validados en el servidor por el motor:
+// 'entrega' y 'checkout_campos'), tienda de productos, planes mensuales y cuentas "Empresa" para convenios corporativos.
 require_once dirname(__DIR__, 2) . '/_comun/comun.php';
 
 $rubro = require dirname(__DIR__) . '/_rubro.php';
@@ -16,6 +16,31 @@ $horario = [
     6 => ['10:00', '20:00'],
     7 => null,
 ];
+
+// Sucursales y barberos: los muestran vistas/portada.php y vistas/layout.php, y arman las opciones
+// del campo "Barbero" del checkout (por sucursal: primero "el primero disponible", después cada barbero).
+$sucursales = [
+    'nunoa' => ['nombre' => 'Ñuñoa', 'detalle' => 'Casa matriz · 6 sillones', 'foto' => '1792735207211-a96ca7e6ea77', 'alt' => 'Barbería luminosa con sillones de cuero negro y cromo frente a grandes espejos con marco de madera'],
+    'providencia' => ['nombre' => 'Providencia', 'detalle' => 'A pasos del metro · 5 sillones', 'foto' => '1576168056582-0a851a87ab8e', 'alt' => 'Salón de barbería con sillones de cuero burdeos y pared de rayas blancas y negras'],
+    'maipu' => ['nombre' => 'Maipú', 'detalle' => 'La más nueva · 4 sillones', 'foto' => '1536520002442-39764a41e987', 'alt' => 'Barbería larga con sillones en fila, lámparas colgantes y muro de ladrillo'],
+];
+$barberos = [
+    'benjamin' => ['nombre' => 'Benjamín', 'sucursal' => 'nunoa', 'oficio' => 'Degradados y diseños', 'dias' => 'Lun a vie', 'foto' => '1676989859871-150f3579862a', 'alt' => 'Barbero de barba con camiseta blanca y brazos cruzados, sonriendo'],
+    'matias' => ['nombre' => 'Matías', 'sucursal' => 'nunoa', 'oficio' => 'Barba y afeitado', 'dias' => 'Mar a sáb', 'foto' => '1562004760-aceed7bb0fe3', 'alt' => 'Barbero con jopo peinado y camisa azul frente a un muro de ladrillo'],
+    'rodrigo' => ['nombre' => 'Rodrigo', 'sucursal' => 'providencia', 'oficio' => 'Cortes clásicos y ejecutivos', 'dias' => 'Lun a vie', 'foto' => '1544225917-1bf66feace19', 'alt' => 'Barbero calvo de barba larga con chaqueta gris'],
+    'felipe' => ['nombre' => 'Felipe', 'sucursal' => 'providencia', 'oficio' => 'Barba larga y tinte', 'dias' => 'Mié a sáb', 'foto' => '1649058047388-b49c028df9ac', 'alt' => 'Barbero de barba tupida con gorro negro y chaqueta beige'],
+    'cristobal' => ['nombre' => 'Cristóbal', 'sucursal' => 'maipu', 'oficio' => 'Fade y texturizados', 'dias' => 'Lun a sáb', 'foto' => '1587776535733-b4c80a99ef82', 'alt' => 'Retrato de perfil en blanco y negro de un barbero de barba corta'],
+    'sebastian' => ['nombre' => 'Sebastián', 'sucursal' => 'maipu', 'oficio' => 'Cortes con tijera', 'dias' => 'Mar a sáb', 'foto' => '1577577815304-55481157868e', 'alt' => 'Barbero joven con jopo y barba corta en un local iluminado'],
+];
+$opcionesBarbero = [];
+foreach ($sucursales as $sid => $s) {
+    $opcionesBarbero['cualquiera-' . $sid] = 'El primero disponible (' . $s['nombre'] . ')';
+    foreach ($barberos as $bid => $b) {
+        if ($b['sucursal'] === $sid) {
+            $opcionesBarbero[$bid] = $b['nombre'] . ' (' . $s['nombre'] . ')';
+        }
+    }
+}
 
 return [
     'demo' => true,
@@ -36,20 +61,8 @@ return [
         'horario' => $horario,
     ],
 
-    // Sucursales y barberos (los usan vistas/portada.php y _barberos.php; el motor no los lee).
-    'sucursales' => [
-        'nunoa' => ['nombre' => 'Ñuñoa', 'detalle' => 'Casa matriz · 6 sillones', 'foto' => '1792735207211-a96ca7e6ea77', 'alt' => 'Barbería luminosa con sillones de cuero negro y cromo frente a grandes espejos con marco de madera'],
-        'providencia' => ['nombre' => 'Providencia', 'detalle' => 'A pasos del metro · 5 sillones', 'foto' => '1576168056582-0a851a87ab8e', 'alt' => 'Salón de barbería con sillones de cuero burdeos y pared de rayas blancas y negras'],
-        'maipu' => ['nombre' => 'Maipú', 'detalle' => 'La más nueva · 4 sillones', 'foto' => '1536520002442-39764a41e987', 'alt' => 'Barbería larga con sillones en fila, lámparas colgantes y muro de ladrillo'],
-    ],
-    'barberos' => [
-        'benjamin' => ['nombre' => 'Benjamín', 'sucursal' => 'nunoa', 'oficio' => 'Degradados y diseños', 'dias' => 'Lun a vie', 'foto' => '1676989859871-150f3579862a', 'alt' => 'Barbero de barba con camiseta blanca y brazos cruzados, sonriendo'],
-        'matias' => ['nombre' => 'Matías', 'sucursal' => 'nunoa', 'oficio' => 'Barba y afeitado', 'dias' => 'Mar a sáb', 'foto' => '1562004760-aceed7bb0fe3', 'alt' => 'Barbero con jopo peinado y camisa azul frente a un muro de ladrillo'],
-        'rodrigo' => ['nombre' => 'Rodrigo', 'sucursal' => 'providencia', 'oficio' => 'Cortes clásicos y ejecutivos', 'dias' => 'Lun a vie', 'foto' => '1544225917-1bf66feace19', 'alt' => 'Barbero calvo de barba larga con chaqueta gris'],
-        'felipe' => ['nombre' => 'Felipe', 'sucursal' => 'providencia', 'oficio' => 'Barba larga y tinte', 'dias' => 'Mié a sáb', 'foto' => '1649058047388-b49c028df9ac', 'alt' => 'Barbero de barba tupida con gorro negro y chaqueta beige'],
-        'cristobal' => ['nombre' => 'Cristóbal', 'sucursal' => 'maipu', 'oficio' => 'Fade y texturizados', 'dias' => 'Lun a sáb', 'foto' => '1587776535733-b4c80a99ef82', 'alt' => 'Retrato de perfil en blanco y negro de un barbero de barba corta'],
-        'sebastian' => ['nombre' => 'Sebastián', 'sucursal' => 'maipu', 'oficio' => 'Cortes con tijera', 'dias' => 'Mar a sáb', 'foto' => '1577577815304-55481157868e', 'alt' => 'Barbero joven con jopo y barba corta en un local iluminado'],
-    ],
+    'sucursales' => $sucursales,
+    'barberos' => $barberos,
 
     // Cuentas "Empresa": convenios corporativos con precios por volumen.
     'mayoristas' => true,
@@ -75,6 +88,15 @@ return [
         'dias_max' => 14,
         'cerrado' => [7, '2026-12-08', '2026-12-25', '2027-01-01'],
         'horas' => ['10:00', '19:30'],
+    ],
+    // Barbero y sucursal: el motor lo valida contra la lista y lo muestra en el pedido, el panel, Mi cuenta y el
+    // WhatsApp ("Barbero: Benjamín (Ñuñoa)"). "Reservar con…" de la portada lo deja elegido (?barbero=benjamin).
+    'checkout_campos' => [
+        [
+            'nombre' => 'barbero', 'etiqueta' => 'Barbero', 'tipo' => 'opcion', 'opciones' => $opcionesBarbero,
+            'ayuda' => 'Queda anotado en tu reserva. Si ese día no atiende, te ofrecemos otra hora por WhatsApp.',
+            'error' => 'Elige con quién te atiendes (o el primero disponible de una sucursal).',
+        ],
     ],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Barbería: sin menú QR ni modelos 3D.
@@ -108,13 +130,39 @@ return [
         'retiro_texto' => 'Llega 5 minutos antes. Los productos los retiras en caja.',
         'despacho_titulo' => 'Barbero a domicilio u oficina',
         'fecha_titulo' => 'Día de tu hora',
-        'fecha_ayuda' => 'De lunes a sábado, con horas cada 30 minutos. Justo abajo eliges a tu barbero (si no aparece, escríbelo en la nota).',
+        'fecha_ayuda' => 'De lunes a sábado, con horas cada 30 minutos.',
         'hora_titulo' => 'Hora',
         'hora_cualquiera' => 'La primera hora libre',
         'hora_entrega_fecha' => 'A las {hora}',
         'pedido_titulo' => '¡Hora reservada!',
         'pedido_exito_prueba' => '¡Pago de prueba aprobado! Tu hora quedó reservada.',
         'pedido_exito_al_recibir' => '¡Reserva recibida! Pagas en la sucursal.',
+        // Checkout de una reserva y el barbero.
+        'checkout_titulo' => 'Reservar hora',
+        'checkout_como_recibes' => '¿Dónde te atendemos?',
+        'checkout_extra_opcion' => 'Elige barbero y sucursal',
+        'checkout_tu_pedido' => 'Tu reserva',
+        'checkout_resumen' => 'Resumen de la reserva',
+        'checkout_confirmar' => 'Confirmar reserva',
+        'checkout_despacho' => 'A domicilio',
+        'carrito_gratis_retiro' => 'Sin costo',
+        'checkout_comprando_como' => 'Reservando como {nombre}',
+        'pago_al_recibir' => 'Pagar en la sucursal',
+        'pago_al_recibir_texto' => 'Efectivo, débito o crédito, después del corte.',
+        // Estados de una reserva: hora reservada → confirmada → en atención (en la sucursal o barbero en camino) → atendida.
+        'pedido_paso_nuevo' => 'Hora reservada',
+        'pedido_codigo' => 'Reserva {codigo}',
+        'pedido_cancelado' => 'Reserva cancelada',
+        'estado_nuevo' => 'Nueva',
+        'estado_preparando' => 'Confirmada',
+        'estado_listo' => 'En atención',
+        'estado_listo_retiro' => 'En la sucursal',
+        'estado_listo_despacho' => 'Barbero en camino',
+        'estado_entregado' => 'Atendida',
+        'estado_cancelado' => 'Cancelada',
+        'panel_avanzar_nuevo' => 'Confirmar hora',
+        'panel_avanzar_preparando' => 'Marcar en atención',
+        'panel_avanzar_listo' => 'Marcar atendida',
     ],
 
     'cuentas_prueba' => [

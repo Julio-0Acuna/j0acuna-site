@@ -22,10 +22,10 @@ function cp_rubro(): array
 function cp_nota(): string
 {
     $r = cp_rubro();
-    return demo_nota($r['rubro_nombre'], $r['versiones']['multi']['plan']);
+    return demo_nota($r['rubro_nombre'], $r['versiones']['multi']['plan'], 'Reserva');
 }
 
-/** WhatsApp con la nota de pedido de prueba. */
+/** WhatsApp con la nota de reserva de prueba. */
 function cp_wa(string $texto): string
 {
     return demo_wa($texto . "\n" . cp_nota());
@@ -49,7 +49,10 @@ function cp_desde(array $s): int
     return min($s['variantes']);
 }
 
-/** Configuración del carrito en el navegador (_comun/js/carrito.js). */
+/**
+ * Configuración del carrito en el navegador (_comun/js/carrito.js): una reserva de hora en la clínica
+ * ("retiro") o con visita a domicilio ("despacho", costo por comuna); sus líneas del mensaje lo dicen así.
+ */
 function cp_config_carrito(): array
 {
     $n = cp();
@@ -64,6 +67,13 @@ function cp_config_carrito(): array
         'numero' => DEMO_WHATSAPP,
         'comunas' => $n['comunas_domicilio'],
         'catalogo' => $catalogo,
+        'textos' => [
+            'saludo' => 'Hola, quiero reservar hora en {negocio}:',
+            'retiro' => 'Atención: en la clínica',
+            'despacho' => 'Atención: visita a domicilio en {direccion}, {comuna}',
+            'costo_despacho' => 'Visita a domicilio en {comuna}: {costo}',
+            'gratis_retiro' => 'Sin costo',
+        ],
     ];
 }
 

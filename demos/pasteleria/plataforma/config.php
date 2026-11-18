@@ -2,7 +2,8 @@
 declare(strict_types=1);
 
 // Merengue Club (Macul): negocio ficticio de la versión Plataforma web.
-// Configuración del motor (demos/_motor), más 'dias_encargo' para la fecha de entrega (ver _encargo.php).
+// Configuración del motor (demos/_motor): día y hora de entrega con 'entrega' (modo 'fecha') y el mensaje en la
+// torta como campo extra del checkout ('checkout_campos'); el motor los valida, los guarda y los muestra.
 require_once dirname(__DIR__, 2) . '/_comun/comun.php';
 
 $rubro = require dirname(__DIR__) . '/_rubro.php';
@@ -50,11 +51,12 @@ return [
     ],
     'despacho_gratis_desde' => 35000,
     'pedido_minimo' => 8000,
-    'horas_entrega' => ['10:00', '19:30'],
-    // Fecha de entrega en el checkout: cuántos días hacia adelante se pueden elegir (desde mañana).
-    'dias_encargo' => 21,
-    // vistas/pedido.php ya agrega al WhatsApp la nota separada en día, mensaje y resto (ver _encargo.php).
-    'resumen_con_nota' => false,
+    // Día y hora de entrega o retiro: hoy (lo que hay en vitrina, mientras queden horas) y hasta tres semanas.
+    'entrega' => ['modo' => 'fecha', 'dias_min' => 0, 'dias_max' => 21, 'horas' => ['10:00', '19:30']],
+    // Mensaje en la torta: se ve en el pedido, el panel, Mi cuenta y el WhatsApp ("Mensaje en la torta: …").
+    'checkout_campos' => [
+        ['nombre' => 'mensaje_torta', 'etiqueta' => 'Mensaje en la torta', 'requerido' => false, 'max' => 40, 'ayuda' => 'Sin costo, hasta 40 caracteres. Ej.: Feliz cumpleaños, Sofi'],
+    ],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     'menu_qr' => true,
     'modelos3d' => ['torta'],
@@ -72,6 +74,10 @@ return [
         'qr_titulo' => 'La tienda, en cada caja',
         'qr_texto' => 'Este QR va en la tapa de cada caja y en el mesón: abre la tienda, muestra las tortas en 3D y permite repetir el pedido en un toque.',
         'pedido_titulo' => '¡Tu pedido entró al horno!',
+        'fecha_ayuda' => 'Las tortas enteras se preparan para el día siguiente o después; hoy solo despachamos lo que hay en vitrina.',
+        // Estados: recibido → en el horno → listo para retiro o en camino → entregado.
+        'estado_preparando' => 'En el horno',
+        'panel_avanzar_nuevo' => 'Pasar al horno',
     ],
 
     'cuentas_prueba' => [

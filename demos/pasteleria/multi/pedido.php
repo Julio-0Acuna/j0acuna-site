@@ -36,7 +36,7 @@ al_titular('Para llevar', 'Tu <em>pedido</em>', 'Revisa lo que elegiste, la fech
           <h2>Fecha y entrega</h2>
           <div class="al-campo">
             <label for="fecha">¿Para qué día?</label>
-            <select id="fecha" name="fecha">
+            <select id="fecha" name="fecha" data-carrito-extra="Fecha">
               <?php foreach ($dias as $valor => $texto): ?>
               <option value="<?= demo_e($valor) ?>"<?= $valor === $desdeTortas ? ' selected' : '' ?>><?= demo_e($texto) ?></option>
               <?php endforeach; ?>
@@ -70,17 +70,16 @@ al_titular('Para llevar', 'Tu <em>pedido</em>', 'Revisa lo que elegiste, la fech
           </div>
           <div class="al-campo">
             <label for="mensaje_torta">Mensaje en la torta <small>(opcional)</small></label>
-            <input id="mensaje_torta" name="mensaje_torta" maxlength="40" autocomplete="off" placeholder="Ej.: Feliz cumpleaños, Ana">
+            <input id="mensaje_torta" name="mensaje_torta" maxlength="40" autocomplete="off" placeholder="Ej.: Feliz cumpleaños, Ana" data-carrito-extra="Mensaje en la torta">
           </div>
           <div class="al-campo">
             <label for="nombre">Tu nombre</label>
             <input id="nombre" name="nombre" maxlength="60" autocomplete="off" required>
           </div>
           <div class="al-campo">
-            <label for="comentario">Comentario <small>(opcional)</small></label>
-            <textarea id="comentario" name="comentario" rows="2" maxlength="120" placeholder="Ej.: sin flores comestibles"></textarea>
+            <label for="nota">Comentario <small>(opcional)</small></label>
+            <textarea id="nota" name="nota" rows="2" maxlength="120" placeholder="Ej.: sin flores comestibles"></textarea>
           </div>
-          <input type="hidden" name="nota" value="">
           <p class="al-pequeno">Esta es una demo: no guardamos tus datos. El pedido se arma en tu navegador y se envía por WhatsApp.</p>
         </div>
 
@@ -101,4 +100,4 @@ al_titular('Para llevar', 'Tu <em>pedido</em>', 'Revisa lo que elegiste, la fech
     </div>
   </section>
 </main>
-<?php al_cerrar(['encargo']);
+<?php al_cerrar();

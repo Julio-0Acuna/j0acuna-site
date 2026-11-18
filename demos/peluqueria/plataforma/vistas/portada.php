@@ -1,5 +1,16 @@
 <?php
-/** Portada de Onda Salones (reemplaza la del motor). @var array $cfg @var ?array $usuario @var string $q @var string $cat @var array $categorias */
+/**
+ * Portada de Onda Salones (reemplaza la del motor).
+ * "Reservar con…" enlaza ?estilista=<id>&sede=<sede>: como en la URL del checkout del motor, cada opción
+ * (validada contra 'checkout_campos') queda en la sesión y el checkout la trae preseleccionada.
+ * @var array $cfg @var ?array $usuario @var string $q @var string $cat @var array $categorias
+ */
+foreach (m_checkout_campos($cfg) as $nombre => $campo) {
+    $pedido = $_GET[$nombre] ?? null;
+    if ($campo['tipo'] === 'opcion' && is_string($pedido) && isset($campo['opciones'][$pedido])) {
+        $_SESSION['checkout_precarga'][$nombre] = $pedido;
+    }
+}
 if ($q !== '' || $cat !== '') {
     return;
 }
@@ -57,10 +68,10 @@ $primera = $fechas ? reset($fechas) : '';
     <li class="on-estilista">
       <div class="on-estilista__foto"><?= demo_img($e['foto'], $e['alt'], ['ancho' => 480, 'alto' => 600, 'anchos' => [320, 480, 720], 'sizes' => '(max-width: 700px) 62vw, 220px']) ?></div>
       <div class="on-estilista__texto">
-        <p class="on-estilista__sede"><?= m_e($e['sede']) ?></p>
+        <p class="on-estilista__sede"><?= m_e($cfg['sedes'][$e['sede']]['nombre']) ?></p>
         <h3><?= m_e($e['nombre']) ?></h3>
         <p><?= m_e($e['oficio']) ?></p>
-        <a class="on-estilista__btn" href="<?= m_e(m_url('inicio', ['con' => $id])) ?>#menu" data-on-con="<?= m_e($id) ?>">Reservar con <?= m_e($e['nombre']) ?></a>
+        <a class="on-estilista__btn" href="<?= m_e(m_url('inicio', ['estilista' => $id, 'sede' => $e['sede']])) ?>#menu">Reservar con <?= m_e($e['nombre']) ?></a>
       </div>
     </li>
     <?php endforeach; ?>

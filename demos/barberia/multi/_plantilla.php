@@ -22,10 +22,10 @@ function eg_rubro(): array
 function eg_nota(): string
 {
     $r = eg_rubro();
-    return demo_nota($r['rubro_nombre'], $r['versiones']['multi']['plan']);
+    return demo_nota($r['rubro_nombre'], $r['versiones']['multi']['plan'], 'Reserva');
 }
 
-/** WhatsApp con la nota de pedido de prueba. */
+/** WhatsApp con la nota de reserva de prueba. */
 function eg_wa(string $texto): string
 {
     return demo_wa($texto . "\n" . eg_nota());
@@ -43,7 +43,10 @@ function eg_paginas(): array
     ];
 }
 
-/** Configuración del carrito en el navegador (_comun/js/carrito.js). */
+/**
+ * Configuración del carrito en el navegador (_comun/js/carrito.js): una reserva en el salón, sin retiro ni
+ * despacho ('entrega' => false: el formulario no tiene campos entrega, comuna ni dirección).
+ */
 function eg_config_carrito(): array
 {
     $n = eg();
@@ -56,8 +59,9 @@ function eg_config_carrito(): array
         'negocio' => $n['nombre'],
         'nota' => eg_nota(),
         'numero' => DEMO_WHATSAPP,
-        'comunas' => [],
         'catalogo' => $catalogo,
+        'entrega' => false,
+        'textos' => ['saludo' => 'Hola, quiero reservar hora en {negocio}:'],
     ];
 }
 

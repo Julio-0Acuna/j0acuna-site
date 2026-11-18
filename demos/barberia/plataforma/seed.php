@@ -59,13 +59,14 @@ return [
         ['email' => 'pendiente@demo.cl', 'clave' => bin2hex(random_bytes(12)), 'nombre' => 'Sofía Demo', 'tipo' => 'mayorista', 'estado' => 'pendiente', 'empresa' => 'Agencia Puerto (ficticio)', 'telefono' => '+56 2 0000 0000'],
     ],
 
-    // Reservas de ejemplo: hace_min = minutos antes del reinicio; fecha_entrega = días desde el reinicio.
+    // Reservas de ejemplo: hace_min = minutos antes del reinicio; fecha_entrega = días desde el reinicio (el motor
+    // salta los días cerrados); extras = el campo "Barbero" del checkout, con el texto de su opción en config.php.
     'pedidos' => [
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 64800, 'estado' => 'entregado', 'entrega' => 'retiro', 'fecha_entrega' => -44, 'cuando' => '18:00', 'pago' => 'prueba', 'nota' => 'Barbero: Benjamín (Ñuñoa). Degradado bajo, dejar largo arriba.', 'items' => [['degradado', 1], ['pomada', 1]]],
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 20160, 'estado' => 'entregado', 'entrega' => 'retiro', 'fecha_entrega' => -14, 'cuando' => '19:00', 'pago' => 'al_recibir', 'nota' => 'Barbero: Benjamín (Ñuñoa).', 'items' => [['corte-barba', 1]]],
-        ['usuario' => 'mayorista@demo.cl', 'hace_min' => 4320, 'estado' => 'entregado', 'entrega' => 'despacho', 'comuna' => 'Providencia', 'direccion' => 'Pasaje Inventado 900, piso 4 (Sala de reuniones grande)', 'fecha_entrega' => -2, 'cuando' => '15:00', 'pago' => 'al_recibir', 'nota' => 'Barbero: el primero disponible (Providencia). Jornada para el equipo comercial.', 'items' => [['jornada', 1]]],
-        ['usuario' => 'mayorista@demo.cl', 'hace_min' => 90, 'estado' => 'nuevo', 'entrega' => 'retiro', 'fecha_entrega' => 3, 'cuando' => '12:00', 'pago' => 'al_recibir', 'nota' => 'Barbero: Rodrigo (Providencia). Primeros dos cortes del pack para gerencia.', 'items' => [['pack-10', 1]]],
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 35, 'estado' => 'preparando', 'entrega' => 'retiro', 'fecha_entrega' => 1, 'cuando' => '18:30', 'pago' => 'prueba', 'nota' => 'Barbero: Matías (Ñuñoa). Afeitado antes de un matrimonio.', 'items' => [['afeitado', 1], ['aceite', 1]]],
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 8, 'estado' => 'nuevo', 'entrega' => 'retiro', 'fecha_entrega' => 2, 'cuando' => '11:00', 'pago' => 'prueba', 'nota' => 'Barbero: Cristóbal (Maipú).', 'items' => [['corte-clasico', 1], ['cejas', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 64800, 'estado' => 'entregado', 'entrega' => 'retiro', 'fecha_entrega' => -44, 'cuando' => '18:00', 'pago' => 'prueba', 'extras' => [['Barbero', 'Benjamín (Ñuñoa)']], 'nota' => 'Degradado bajo, dejar largo arriba.', 'items' => [['degradado', 1], ['pomada', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 20160, 'estado' => 'entregado', 'entrega' => 'retiro', 'fecha_entrega' => -14, 'cuando' => '19:00', 'pago' => 'al_recibir', 'extras' => [['Barbero', 'Benjamín (Ñuñoa)']], 'items' => [['corte-barba', 1]]],
+        ['usuario' => 'mayorista@demo.cl', 'hace_min' => 4320, 'estado' => 'entregado', 'entrega' => 'despacho', 'comuna' => 'Providencia', 'direccion' => 'Pasaje Inventado 900, piso 4 (Sala de reuniones grande)', 'fecha_entrega' => -2, 'cuando' => '15:00', 'pago' => 'al_recibir', 'extras' => [['Barbero', 'El primero disponible (Providencia)']], 'nota' => 'Jornada para el equipo comercial.', 'items' => [['jornada', 1]]],
+        ['usuario' => 'mayorista@demo.cl', 'hace_min' => 90, 'estado' => 'nuevo', 'entrega' => 'retiro', 'fecha_entrega' => 3, 'cuando' => '12:00', 'pago' => 'al_recibir', 'extras' => [['Barbero', 'Rodrigo (Providencia)']], 'nota' => 'Primeros dos cortes del pack para gerencia.', 'items' => [['pack-10', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 35, 'estado' => 'preparando', 'entrega' => 'retiro', 'fecha_entrega' => 1, 'cuando' => '18:30', 'pago' => 'prueba', 'extras' => [['Barbero', 'Matías (Ñuñoa)']], 'nota' => 'Afeitado antes de un matrimonio.', 'items' => [['afeitado', 1], ['aceite', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 8, 'estado' => 'nuevo', 'entrega' => 'retiro', 'fecha_entrega' => 2, 'cuando' => '11:00', 'pago' => 'prueba', 'extras' => [['Barbero', 'Cristóbal (Maipú)']], 'items' => [['corte-clasico', 1], ['cejas', 1]]],
     ],
 ];

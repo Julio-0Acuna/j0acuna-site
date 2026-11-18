@@ -6,10 +6,6 @@ declare(strict_types=1);
  * Productos genéricos, precios en CLP. Fotos: IDs de Unsplash (ver demos/pasteleria/CREDITOS.md).
  * Cuentas de prueba: contraseñas públicas, solo valen en esta demo.
  */
-require_once __DIR__ . '/_encargo.php';
-
-/** Fecha de entrega relativa a hoy, con el formato que guarda el checkout. */
-$fecha = static fn (string $cuando): string => 'Fecha: ' . mc_fecha_larga(new DateTimeImmutable($cuando, new DateTimeZone(DEMO_ZONA_HORARIA)));
 
 return [
     'categorias' => [
@@ -68,13 +64,14 @@ return [
         ['email' => 'pendiente@demo.cl', 'clave' => bin2hex(random_bytes(12)), 'nombre' => 'Martina Demo', 'tipo' => 'mayorista', 'estado' => 'pendiente', 'empresa' => 'Casino Las Lilas (ficticio)', 'telefono' => '+56 2 0000 0000'],
     ],
 
-    // Pedidos de ejemplo: hace_min = minutos antes del reinicio.
+    // Pedidos de ejemplo: hace_min = minutos antes del reinicio; fecha_entrega = días desde el reinicio;
+    // extras = el campo "Mensaje en la torta" del checkout (ver config.php).
     'pedidos' => [
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 5760, 'estado' => 'entregado', 'entrega' => 'despacho', 'comuna' => 'Macul', 'direccion' => 'Av. Ejemplo 2345, depto. 81 (Torre A)', 'pago' => 'prueba', 'nota' => $fecha('-4 days') . ' · Mensaje en la torta: «Feliz cumple, Isi»', 'items' => [['frutilla-pop', 1], ['cupcakes-6', 1]]],
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 20160, 'estado' => 'entregado', 'entrega' => 'retiro', 'pago' => 'al_recibir', 'items' => [['brownies', 1], ['galletas-xl', 2]]],
-        ['usuario' => 'mayorista@demo.cl', 'hace_min' => 2880, 'estado' => 'entregado', 'entrega' => 'despacho', 'comuna' => 'Ñuñoa', 'direccion' => 'Pasaje Inventado 321', 'pago' => 'al_recibir', 'items' => [['red-velvet-precortada', 2], ['brownies-bandeja', 1]]],
-        ['usuario' => 'mayorista@demo.cl', 'hace_min' => 70, 'estado' => 'nuevo', 'entrega' => 'despacho', 'comuna' => 'Ñuñoa', 'direccion' => 'Pasaje Inventado 321', 'pago' => 'al_recibir', 'nota' => 'Recibe Ignacio en la barra, antes de las 9.', 'items' => [['galletas-granel', 1], ['cupcakes-24', 1]]],
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 40, 'estado' => 'preparando', 'entrega' => 'retiro', 'cuando' => '17:00', 'pago' => 'prueba', 'items' => [['arcoiris', 1], ['macarons', 1]]],
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 12, 'estado' => 'nuevo', 'entrega' => 'despacho', 'comuna' => 'Macul', 'direccion' => 'Av. Ejemplo 2345, depto. 81 (Torre A)', 'pago' => 'prueba', 'nota' => $fecha('+2 days') . ' · Mensaje en la torta: «Felicidades, Mati»', 'items' => [['menta', 1], ['cupcake-limon', 4]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 5760, 'estado' => 'entregado', 'entrega' => 'despacho', 'comuna' => 'Macul', 'direccion' => 'Av. Ejemplo 2345, depto. 81 (Torre A)', 'fecha_entrega' => -4, 'pago' => 'prueba', 'extras' => [['Mensaje en la torta', 'Feliz cumple, Isi']], 'items' => [['frutilla-pop', 1], ['cupcakes-6', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 20160, 'estado' => 'entregado', 'entrega' => 'retiro', 'fecha_entrega' => -14, 'pago' => 'al_recibir', 'items' => [['brownies', 1], ['galletas-xl', 2]]],
+        ['usuario' => 'mayorista@demo.cl', 'hace_min' => 2880, 'estado' => 'entregado', 'entrega' => 'despacho', 'comuna' => 'Ñuñoa', 'direccion' => 'Pasaje Inventado 321', 'fecha_entrega' => -2, 'pago' => 'al_recibir', 'items' => [['red-velvet-precortada', 2], ['brownies-bandeja', 1]]],
+        ['usuario' => 'mayorista@demo.cl', 'hace_min' => 70, 'estado' => 'nuevo', 'entrega' => 'despacho', 'comuna' => 'Ñuñoa', 'direccion' => 'Pasaje Inventado 321', 'fecha_entrega' => 1, 'pago' => 'al_recibir', 'nota' => 'Recibe Ignacio en la barra, antes de las 11.', 'items' => [['galletas-granel', 1], ['cupcakes-24', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 40, 'estado' => 'preparando', 'entrega' => 'retiro', 'fecha_entrega' => 0, 'cuando' => '17:00', 'pago' => 'prueba', 'items' => [['arcoiris', 1], ['macarons', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 12, 'estado' => 'nuevo', 'entrega' => 'despacho', 'comuna' => 'Macul', 'direccion' => 'Av. Ejemplo 2345, depto. 81 (Torre A)', 'fecha_entrega' => 2, 'pago' => 'prueba', 'extras' => [['Mensaje en la torta', 'Felicidades, Mati']], 'items' => [['menta', 1], ['cupcake-limon', 4]]],
     ],
 ];

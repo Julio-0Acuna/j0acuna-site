@@ -88,14 +88,14 @@ debe_contener    "$SIMPLE" '1 h 15 min'
 debe_contener    "$SIMPLE" 'Brushing a $12.000'
 debe_contener    "$SIMPLE" 'name="con" value="karen"'
 debe_contener    "$SIMPLE" 'Shampoo sin sulfatos 500 ml'
-debe_contener    "$SIMPLE" '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20peluquer%C3%ADa%20%E2%80%93%20Simple-page%29'
+debe_contener    "$SIMPLE" '%28Reserva%20de%20prueba%20desde%20la%20demo%20de%20peluquer%C3%ADa%20%E2%80%93%20Simple-page%29'
 debe_contener    "$SIMPLE" 'href="tel:+56973537642"'
 debe_contener    "${SIMPLE}?servicio=trenzas" '<option value="trenzas" selected>'
 DIA=$(curl -s "$BASE$SIMPLE" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | head -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
 DOMINGOS=$(curl -s "$BASE$SIMPLE" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | while read -r d; do date -d "$d" +%u; done | grep -c '^7$')
 [ -n "$DIA" ] && [ "$DOMINGOS" = "0" ] && pasa "días para reservar sin domingos (primero: $DIA)" || falla "días de la Simple-page: primero '$DIA', domingos $DOMINGOS"
 R=$(curl -s -o /dev/null -w "%{http_code} %{redirect_url}" --data-urlencode "servicio=brushing" --data-urlencode "con=yanet" --data-urlencode "dia=$DIA" --data-urlencode "bloque=tarde" --data-urlencode "nombre=Clienta Prueba" --data-urlencode "comentario=Pelo bajo los hombros" "$BASE$SIMPLE")
-case "$R" in "303 https://wa.me/56973537642?text="*Servicio%3A%20Brushing%20dominicano%20%28desde%20%2415.000%20%C2%B7%201%20h%2015%20min%29*Con%3A%20Yanet*Bloque%3A%20Tarde*Nombre%3A%20Clienta%20Prueba*Comentario%3A%20Pelo%20bajo*Simple-page%29) pasa "la ficha arma el WhatsApp con servicio, duración, estilista, día, bloque y nombre";; *) falla "ficha de reserva: $R";; esac
+case "$R" in "303 https://wa.me/56973537642?text="*Servicio%3A%20Brushing%20dominicano%20%28desde%20%2415.000%20%C2%B7%201%20h%2015%20min%29*Con%3A%20Yanet*Bloque%3A%20Tarde*Nombre%3A%20Clienta%20Prueba*Comentario%3A%20Pelo%20bajo*%28Reserva%20de%20prueba*Simple-page%29) pasa "la ficha arma el WhatsApp con servicio, duración, estilista, día, bloque y nombre";; *) falla "ficha de reserva: $R";; esac
 R=$(curl -s -o /dev/null -w "%{http_code} %{redirect_url}" --data-urlencode "servicio=cejas" --data-urlencode "dia=$DIA" --data-urlencode "bloque=manana" --data-urlencode "nombre=Ana" "$BASE$SIMPLE")
 case "$R" in 303*Con%3A%20quien%20est%C3%A9%20libre*) pasa "sin estilista elegida: «quien esté libre»";; *) falla "reserva sin estilista: $R";; esac
 R=$(curl -s -o "$TMP/simple.html" -w "%{http_code}" --data-urlencode "servicio=brushing" --data-urlencode "dia=$DIA" --data-urlencode "bloque=tarde" "$BASE$SIMPLE")
@@ -129,7 +129,9 @@ debe_responder   "${MULTI}reserva.js" 200
 DOMINGOS=$(curl -s "$BASE${MULTI}reserva.php" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | while read -r d; do date -d "$d" +%u; done | grep -cE '^(1|7)$')
 [ "$DOMINGOS" = "0" ] && pasa "la Multi-page no ofrece lunes ni domingos (estudio cerrado)" || falla "la Multi-page ofrece $DOMINGOS días cerrados"
 debe_contener    "$MULTI" 'id="demo-carrito-config"'
-debe_contener    "$MULTI" '(Pedido de prueba desde la demo de peluquería – Multi-page)'
+debe_contener    "$MULTI" '(Reserva de prueba desde la demo de peluquería – Multi-page)'
+debe_contener    "$MULTI" '"saludo":"Hola, quiero reservar hora en {negocio}:"'
+debe_contener    "$MULTI" '"retiro":"Lugar: en el estudio","despacho":"Productos: despacho a {direccion}, {comuna}"'
 debe_contener    "$MULTI" '"Balayage a mano alzada","variantes":{"Pelo corto":89990,"Pelo medio":119990,"Pelo largo":149990}'
 grep -q 'Require all denied' demos/peluqueria/plataforma/data/.htaccess && pasa 'data/.htaccess niega todo' || falla 'data/.htaccess no niega'
 grep -q 'Require all denied' demos/peluqueria/plataforma/vistas/.htaccess && pasa 'vistas/.htaccess niega todo' || falla 'vistas/.htaccess no niega'
@@ -147,12 +149,14 @@ FOTOS=$(for p in "$SIMPLE" "$MULTI" "${MULTI}servicios.php" "${MULTI}estudio.php
 debe_responder   "${TIENDA}data/tienda.sqlite" 403
 debe_responder   "${TIENDA}reset.php" 404
 no_debe_contener "${TIENDA}config.php" 'dueno123'
-debe_responder   "${TIENDA}reserva.js" 200
+[ ! -e demos/peluqueria/plataforma/reserva.js ] && pasa "sin reserva.js: sede y estilista son campos del checkout del motor" || falla "sigue demos/peluqueria/plataforma/reserva.js"
 debe_contener    "$TIENDA" 'Corte y brushing'
 debe_contener    "$TIENDA" 'Aceite de argán 50 ml'
 debe_contener    "$TIENDA" 'Primera hora libre'
 debe_contener    "$TIENDA" 'Elige a tu estilista'
-debe_contener    "$TIENDA" 'data-on-con="catalina"'
+debe_contener    "$TIENDA" 'href="/demos/peluqueria/plataforma/?estilista=catalina&amp;sede=las-condes#menu"'
+no_debe_contener "$TIENDA" 'data-on-con'
+no_debe_contener "$TIENDA" 'reserva.js'
 debe_contener    "$TIENDA" '¿Eres estilista, manicurista o tienes tu salón?'
 no_debe_contener "$TIENDA" 'Oxidante en crema 20 vol. 1 L'
 no_debe_contener "$TIENDA" 'id="on-estilistas"'
@@ -195,11 +199,21 @@ R=$(post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode
 case "$R" in 303*) pasa "agregar un servicio a la reserva ($R)";; *) falla "agregar al carrito: $R";; esac
 curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF '<strong>Corte y brushing</strong>' && pasa "el carrito tiene el servicio" || falla "carrito vacío"
 
-# Checkout: día de la hora calculado en el servidor (sin domingos ni feriados) y selector de estilista
+# "Reservar con Catalina" (?estilista=&sede=) deja ambas opciones en la sesión; una que no existe se ignora
+curl -s -b "$J1" -c "$J1" -o /dev/null "$BASE${TIENDA}?estilista=catalina&sede=las-condes"
+curl -s -b "$J1" -c "$J1" -o /dev/null "$BASE${TIENDA}?estilista=..%2Fintrusa"
+# Checkout: día de la hora calculado en el servidor (sin domingos ni feriados), sede y estilista del motor
 CHECK=$(curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout")
 printf '%s' "$CHECK" | grep -qF 'Día de tu hora' && pasa "checkout pide el día de la hora" || falla "checkout sin selector de día"
 printf '%s' "$CHECK" | grep -qF 'En el salón' && pasa "checkout con «En el salón»" || falla "checkout sin texto de retiro del rubro"
-printf '%s' "$CHECK" | grep -qF 'id="on-estilistas"' && printf '%s' "$CHECK" | grep -qF 'data-texto="Con Catalina (Las Condes)."' && pasa "checkout trae la lista de estilistas para la nota" || falla "checkout sin lista de estilistas"
+printf '%s' "$CHECK" | grep -qF '<h1>Reservar hora</h1>' && printf '%s' "$CHECK" | grep -qF 'Confirmar reserva</button>' && pasa "checkout con textos de reserva (Reservar hora, Confirmar reserva)" || falla "checkout sin los textos de reserva"
+printf '%s' "$CHECK" | grep -qF 'Pagar en el salón' && pasa "checkout con «Pagar en el salón»" || falla "checkout sin el pago del rubro"
+printf '%s' "$CHECK" | grep -qF '<p class="t-subtitulo">¿Con quién te atiendes?</p>' && pasa "campos de sede y estilista con su título" || falla "checkout sin el título de sede y estilista"
+printf '%s' "$CHECK" | grep -qF '<div class="t-campo t-campo--extra" data-solo-entrega="retiro">' && printf '%s' "$CHECK" | grep -qF '<select id="extra-sede" name="extra[sede]" data-requerido>' && pasa "la sede se pide solo al atenderse en el salón" || falla "checkout sin el campo Sede solo para retiro"
+printf '%s' "$CHECK" | grep -qF '<option value="las-condes" selected>Las Condes</option>' && printf '%s' "$CHECK" | grep -qF '<option value="catalina" selected>Catalina · color y balayage (Las Condes)</option>' && pasa "«Reservar con Catalina» deja preseleccionadas la sede y la estilista" || falla "sede o estilista no preseleccionadas"
+printf '%s' "$CHECK" | grep -qF 'id="on-estilistas"' && falla "el layout aún inserta su selector" || pasa "sin el selector propio del layout"
+curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout&estilista=valentina" | grep -qF '<option value="valentina" selected>' && pasa "precarga ?estilista= en la URL del checkout" || falla "?estilista= en el checkout no preselecciona"
+curl -s -b "$J1" -c "$J1" -o /dev/null "$BASE${TIENDA}?estilista=catalina"
 FECHA=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | head -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
 DOMINGOS=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | while read -r d; do date -d "$d" +%u; done | grep -c '^7$')
 [ -n "$FECHA" ] && [ "$DOMINGOS" = "0" ] && pasa "días ofrecidos sin domingos (primero: $FECHA)" || falla "días ofrecidos: primero '$FECHA', domingos $DOMINGOS"
@@ -207,9 +221,19 @@ printf '%s' "$CHECK" | grep -qF 'option value="2026-12-25"' && falla "se ofrece 
 T=$(printf '%s' "$CHECK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=2020-01-06" --data-urlencode "cuando=11:00" --data-urlencode "pago=al_recibir")
 case "$R" in 422*) pasa "un día fuera de la lista se rechaza (422)";; *) falla "día inválido aceptado: $R";; esac
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=21:00" --data-urlencode "pago=al_recibir")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=21:00" --data-urlencode "pago=al_recibir" --data-urlencode "extra[sede]=nunoa" --data-urlencode "extra[estilista]=cualquiera")
 case "$R" in 422*) pasa "una hora fuera del horario se rechaza (422)";; *) falla "hora inválida aceptada: $R";; esac
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Macul" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=11:00" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Con Catalina (Las Condes). Peinado para un matrimonio")
+# Campo requerido ausente (sede al atenderse en el salón) y estilista que no existe: 422 con su error
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir" --data-urlencode "extra[estilista]=cualquiera")
+case "$R" in 422*) grep -qF '<p class="t-error" id="err-extra_sede">Elige en qué sede te atendemos.</p>' "$TMP/ultima.html" && pasa "en el salón sin sede: 422 con su error" || falla "sin sede: 422 sin el error";; *) falla "reserva sin sede aceptada: $R";; esac
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir" --data-urlencode "extra[sede]=nunoa" --data-urlencode "extra[estilista]=karen")
+case "$R" in 422*) grep -qF '<p class="t-error" id="err-extra_estilista">Elige una opción en «Estilista».</p>' "$TMP/ultima.html" && pasa "una estilista que no existe: 422 con su error" || falla "estilista inexistente: 422 sin el error";; *) falla "estilista inexistente aceptada: $R";; esac
+# La reserva se completa con los campos que trae el HTML del checkout (name leídos del formulario)
+EXTRAS=$(printf '%s' "$CHECK" | grep -oE 'name="extra\[[a-z_]+\]"' | sed -E 's/name="([^"]+)"/\1/' | tr '\n' ' ')
+FALTAN=$(for k in csrf entrega direccion_id calle comuna fecha_entrega cuando pago nota; do printf '%s' "$CHECK" | grep -qF "name=\"$k\"" || echo "$k"; done)
+[ "$EXTRAS" = "extra[sede] extra[estilista] " ] && [ -z "$FALTAN" ] && pasa "el formulario del checkout trae todos los campos que se envían ($EXTRAS)" || falla "al formulario del checkout le faltan: $FALTAN (extras: '$EXTRAS')"
+EXTRA_ESTILISTA=$(printf '%s' "$EXTRAS" | grep -oE 'extra\[estilista\]')
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Macul" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=11:00" --data-urlencode "pago=al_recibir" --data-urlencode "$EXTRA_ESTILISTA=catalina" --data-urlencode "nota=Peinado para un matrimonio")
 case "$R" in 303*r=pedido*) pasa "checkout crea la reserva ($R)";; *) falla "checkout: $R";; esac
 PEDIDO_URL="${R#* }"
 PAGINA=$(curl -s -b "$J1" "$PEDIDO_URL")
@@ -219,7 +243,10 @@ printf '%s' "$PAGINA" | grep -qF '¡Hora reservada!' && pasa "título propio del
 printf '%s' "$PAGINA" | grep -qF 'Enviar resumen por WhatsApp' && pasa "reserva ofrece enviar resumen por WhatsApp" || falla "reserva sin botón de WhatsApp"
 printf '%s' "$PAGINA" | grep -qF '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20peluquer%C3%ADa%20%E2%80%93%20Plataforma%20web%29' && pasa "resumen con la nota de prueba" || falla "resumen sin la nota de prueba"
 printf '%s' "$PAGINA" | grep -qF 'a%20las%2011%3A00' && pasa "resumen con el día y la hora" || falla "resumen sin la hora"
-printf '%s' "$PAGINA" | grep -qF 'Nota%3A%20Con%20Catalina%20%28Las%20Condes%29' && pasa "resumen con la estilista elegida (en la nota)" || falla "resumen sin la estilista"
+printf '%s' "$PAGINA" | grep -qF 'Estilista%3A%20Catalina%20%C2%B7%20color%20y%20balayage%20%28Las%20Condes%29' && printf '%s' "$PAGINA" | grep -qF 'Nota%3A%20Peinado%20para%20un%20matrimonio' && pasa "WhatsApp con «Estilista: Catalina…» y la nota" || falla "resumen sin la estilista"
+printf '%s' "$PAGINA" | grep -qF 'Sede%3A' && falla "a domicilio no debería pedir la sede" || pasa "a domicilio no se guarda la sede (solo en el salón)"
+printf '%s' "$PAGINA" | grep -qF '<dt>Estilista</dt><dd>Catalina · color y balayage (Las Condes)</dd>' && pasa "la reserva muestra la estilista" || falla "la reserva no muestra la estilista"
+printf '%s' "$PAGINA" | grep -qF 'Reserva ON-' && pasa "la página dice «Reserva ON-…»" || falla "la página sin «Reserva ON-…»"
 # $24.990 + traslado a domicilio en Macul $6.990 = $31.980
 printf '%s' "$PAGINA" | grep -qF '$31.980' && pasa "total con servicio a domicilio en Macul (\$31.980)" || falla "total de la reserva inesperado"
 
@@ -227,13 +254,15 @@ printf '%s' "$PAGINA" | grep -qF '$31.980' && pasa "total con servicio a domicil
 T=$(csrf "$J1" "$TIENDA")
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID" --data-urlencode "cantidad=1" > /dev/null
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=prueba")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=prueba" --data-urlencode "extra[sede]=nunoa" --data-urlencode "extra[estilista]=cualquiera")
 case "$R" in 303*r=pago*) pasa "pago de prueba lleva a la pantalla simulada";; *) falla "pago de prueba: $R";; esac
 curl -s -b "$J1" "$BASE${TIENDA}?r=pago" | grep -qF 'PAGO DE PRUEBA' && pasa "pantalla de pago marcada como prueba" || falla "pantalla de pago sin aviso"
 T=$(csrf "$J1" "${TIENDA}?r=pago")
 R=$(post "$J1" "${TIENDA}?r=pago" --data-urlencode "csrf=$T" --data-urlencode "accion=aprobar")
 case "$R" in 303*r=pedido*) pasa "aprobar pago de prueba crea la reserva";; *) falla "aprobar pago: $R";; esac
-curl -s -b "$J1" "${R#* }" | grep -qF 'Tu hora quedó reservada' && pasa "mensaje de éxito propio del rubro" || falla "sin mensaje de éxito del rubro"
+PAGADA=$(curl -s -b "$J1" "${R#* }")
+printf '%s' "$PAGADA" | grep -qF 'Tu hora quedó reservada' && pasa "mensaje de éxito propio del rubro" || falla "sin mensaje de éxito del rubro"
+printf '%s' "$PAGADA" | grep -qF '<dt>Sede</dt><dd>Ñuñoa</dd>' && printf '%s' "$PAGADA" | grep -qF '<dt>Estilista</dt><dd>Quien tenga la hora libre</dd>' && pasa "el pago de prueba conserva sede y estilista" || falla "el pago de prueba perdió sede o estilista"
 
 # Repetir desde el historial
 T=$(csrf "$J1" "${TIENDA}?r=cuenta")
@@ -249,7 +278,10 @@ PANEL=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel&ver=pedidos")
 printf '%s' "$PANEL" | grep -qF "$CODIGO" && pasa "la dueña ve $CODIGO en el panel" || falla "la dueña no ve la reserva"
 printf '%s' "$PANEL" | grep -qF 'Cliente Prueba' && pasa "el panel muestra a la clienta" || falla "el panel no muestra a la clienta"
 printf '%s' "$PANEL" | grep -qF ' · para el ' && pasa "el panel muestra el día de cada reserva" || falla "el panel sin el día de la reserva"
-curl -s -b "$J2" "$PEDIDO_URL" | grep -qF 'Con Catalina (Las Condes).' && pasa "la dueña ve la estilista elegida en el detalle de la reserva" || falla "el detalle de la reserva sin la estilista"
+printf '%s' "$PANEL" | grep -qF '<p class="t-pequeno t-pedido-panel__extras">Estilista: Catalina · color y balayage (Las Condes)</p>' && pasa "la lista del panel muestra «Estilista: Catalina…»" || falla "la lista del panel sin la estilista"
+printf '%s' "$PANEL" | grep -qF 'Sede: Las Condes · Estilista: Tomás · cortes y lavado spa (Las Condes)' && pasa "las reservas de ejemplo traen sede y estilista como campos" || falla "las reservas de ejemplo sin sede ni estilista"
+printf '%s' "$PANEL" | grep -qF '>Confirmar hora</button>' && pasa "el panel avanza con «Confirmar hora»" || falla "el panel sin el texto de avance de reserva"
+curl -s -b "$J2" "$PEDIDO_URL" | grep -qF '<dt>Estilista</dt><dd>Catalina · color y balayage (Las Condes)</dd>' && pasa "la dueña ve la estilista elegida en el detalle de la reserva" || falla "el detalle de la reserva sin la estilista"
 RESUMEN=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel")
 printf '%s' "$RESUMEN" | grep -qF 'Ventas de hoy' && pasa "panel con ventas del día" || falla "panel sin ventas del día"
 printf '%s' "$RESUMEN" | grep -qF 'Stock bajo: Extensiones de pestañas (3)' && pasa "panel avisa cupos bajos" || falla "panel sin aviso de cupos bajos"
@@ -262,7 +294,8 @@ curl -s -b "$J1" -o /dev/null -w "%{http_code}" "$BASE${TIENDA}?r=panel" | grep 
 ID_NUM=$(printf '%s' "$PEDIDO_URL" | grep -oE 'id=[0-9]+' | grep -oE '[0-9]+')
 T=$(csrf "$J2" "${TIENDA}?r=panel&ver=pedidos")
 R=$(post "$J2" "${TIENDA}?r=panel" --data-urlencode "csrf=$T" --data-urlencode "accion=avanzar" --data-urlencode "id=$ID_NUM" --data-urlencode "ver=pedidos")
-curl -s -b "$J1" "$PEDIDO_URL" | grep -qF 'aria-current="step">Preparando' && pasa "la clienta ve su reserva en «Preparando»" || falla "estado de la reserva no cambió ($R)"
+curl -s -b "$J1" "$PEDIDO_URL" | grep -qF 'aria-current="step">Confirmada' && pasa "la clienta ve su reserva «Confirmada»" || falla "estado de la reserva no cambió ($R)"
+curl -s -b "$J1" "$PEDIDO_URL" | grep -qF '<li class="is-hecho">Hora reservada</li>' && pasa "primer paso «Hora reservada»" || falla "sin el paso «Hora reservada»"
 
 # Profesional: precios de distribuidor e insumos; pendiente hasta aprobación
 T=$(csrf "$J3" "${TIENDA}?r=ingresar")

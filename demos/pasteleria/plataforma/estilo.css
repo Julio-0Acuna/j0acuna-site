@@ -169,7 +169,8 @@
 .mc .t-prueba { border: 2px dashed var(--tinta); background: var(--limon-claro); }
 .mc .t-prueba__lista li { background: #fff; border: 0; }
 .mc .t-pasos li.is-hecho::before { background: var(--frutilla); color: var(--tinta); }
-.mc-aviso-encargo { margin: -4px 0 14px; padding: 10px 14px; border-radius: 14px; background: var(--limon-claro); color: var(--tinta); }
+/* Aviso bajo el día y la hora del checkout del motor (texto 'fecha_ayuda') */
+.mc-vista-checkout .t-form-grid + .t-pequeno { margin: -4px 0 14px; padding: 10px 14px; border-radius: 14px; background: var(--limon-claro); color: var(--tinta); }
 .mc .t-google .demo-google__intro h2 { font-weight: 800; letter-spacing: -.04em; }
 .mc .demo-google__perfil, .mc .demo-google__mapa, .mc .demo-google__resena { border-radius: 24px; }
 

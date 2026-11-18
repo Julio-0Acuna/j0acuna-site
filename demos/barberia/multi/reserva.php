@@ -22,11 +22,6 @@ eg_abrir('reserva', 'Tu reserva', 'Reserva tu hora en ' . $n['nombre'] . ': serv
       </div>
 
       <form class="eg-reserva__form" data-carrito-form hidden novalidate>
-        <input type="hidden" name="entrega" value="retiro">
-        <div hidden data-solo-despacho>
-          <select name="comuna" aria-label="Comuna"><option value=""></option></select>
-          <input name="direccion" type="hidden" value="">
-        </div>
         <div class="eg-reserva__datos">
           <fieldset class="eg-caja">
             <legend><span class="eg-num">I</span> Servicios y productos</legend>
@@ -96,7 +91,6 @@ eg_abrir('reserva', 'Tu reserva', 'Reserva tu hora en ' . $n['nombre'] . ': serv
             <div><dt>Servicios y productos</dt><dd data-carrito-subtotal>$0</dd></div>
             <div class="eg-totales__total"><dt>Total a pagar en el salón</dt><dd data-carrito-total>$0</dd></div>
           </dl>
-          <span data-carrito-despacho hidden></span>
           <p class="eg-pequeno">Se paga en el salón, después del servicio. Efectivo, débito, crédito o transferencia.</p>
           <button class="eg-btn eg-btn--bloque" type="submit"><?= demo_icono_wa() ?> Enviar reserva por WhatsApp</button>
           <div class="eg-reserva__enviada" data-carrito-enviado hidden>

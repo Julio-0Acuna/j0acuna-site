@@ -2,8 +2,9 @@
 declare(strict_types=1);
 
 // Onda Salones (Las Condes y Ñuñoa): negocio ficticio de la versión Plataforma web.
-// Salón con dos sedes: agenda online (día y hora validados en el servidor), elección de estilista,
-// tienda de productos y cuentas "Profesional" (estilistas y salones que compran a precio de distribuidor).
+// Salón con dos sedes: agenda online (día, hora, sede y estilista validados en el servidor por el motor:
+// 'entrega' y 'checkout_campos'), tienda de productos y cuentas "Profesional" (estilistas y salones que
+// compran a precio de distribuidor).
 require_once dirname(__DIR__, 2) . '/_comun/comun.php';
 
 $rubro = require dirname(__DIR__) . '/_rubro.php';
@@ -16,6 +17,25 @@ $horario = [
     6 => ['10:00', '19:00'],
     7 => null,
 ];
+
+// Sedes (solo la comuna: el negocio es ficticio) y estilistas ('sede' = clave de la sede). Los muestran
+// vistas/portada.php y vistas/layout.php, y arman las opciones de los campos "Sede" y "Estilista" del checkout.
+$sedes = [
+    'las-condes' => ['nombre' => 'Las Condes', 'detalle' => '8 sillones, 2 boxes de uñas y una sala de novias'],
+    'nunoa' => ['nombre' => 'Ñuñoa', 'detalle' => '5 sillones y un box de cejas y pestañas'],
+];
+$estilistas = [
+    'catalina' => ['nombre' => 'Catalina', 'oficio' => 'Color y balayage', 'sede' => 'las-condes', 'foto' => '1638064432648-bc2f9a91b06b', 'alt' => 'Pelo largo con ondas y balayage caramelo, tocado por una estilista'],
+    'tomas' => ['nombre' => 'Tomás', 'oficio' => 'Cortes y lavado spa', 'sede' => 'las-condes', 'foto' => '1675034743469-4e262c2ff3ef', 'alt' => 'Estilista lava el pelo de una clienta junto a un espejo redondo iluminado'],
+    'rocio' => ['nombre' => 'Rocío', 'oficio' => 'Cejas y pestañas', 'sede' => 'las-condes', 'foto' => '1792679430669-caa0d70a9c52', 'alt' => 'Perfilado de cejas con pinza, de muy cerca'],
+    'javiera' => ['nombre' => 'Javiera', 'oficio' => 'Novias y peinados de evento', 'sede' => 'nunoa', 'foto' => '1769869174682-19e960909bdb', 'alt' => 'Recogido de novia adornado con flores pequeñas'],
+    'valentina' => ['nombre' => 'Valentina', 'oficio' => 'Manicure y pedicure', 'sede' => 'nunoa', 'foto' => '1772322586754-34c9e6f5be6f', 'alt' => 'Mano con manicure francesa y detalles brillantes'],
+    'ana' => ['nombre' => 'Ana', 'oficio' => 'Alisados y tratamientos', 'sede' => 'nunoa', 'foto' => '1779350676620-fde279b1d023', 'alt' => 'Pelo castaño liso y brillante, visto de espalda'],
+];
+$opcionesEstilista = ['cualquiera' => 'Quien tenga la hora libre'];
+foreach ($estilistas as $id => $e) {
+    $opcionesEstilista[$id] = $e['nombre'] . ' · ' . mb_strtolower($e['oficio']) . ' (' . $sedes[$e['sede']]['nombre'] . ')';
+}
 
 return [
     'demo' => true,
@@ -35,21 +55,8 @@ return [
         'comuna' => 'Las Condes',
         'horario' => $horario,
     ],
-    // Sedes (solo la comuna: el negocio es ficticio).
-    'sedes' => [
-        'las-condes' => ['nombre' => 'Las Condes', 'detalle' => '8 sillones, 2 boxes de uñas y una sala de novias'],
-        'nunoa' => ['nombre' => 'Ñuñoa', 'detalle' => '5 sillones y un box de cejas y pestañas'],
-    ],
-    // Estilistas que el cliente puede elegir al reservar (vistas/portada.php y reserva.js).
-    // La elección viaja en la nota del pedido: "Con Catalina (Las Condes)."
-    'estilistas' => [
-        'catalina' => ['nombre' => 'Catalina', 'oficio' => 'Color y balayage', 'sede' => 'Las Condes', 'foto' => '1638064432648-bc2f9a91b06b', 'alt' => 'Pelo largo con ondas y balayage caramelo, tocado por una estilista'],
-        'tomas' => ['nombre' => 'Tomás', 'oficio' => 'Cortes y lavado spa', 'sede' => 'Las Condes', 'foto' => '1675034743469-4e262c2ff3ef', 'alt' => 'Estilista lava el pelo de una clienta junto a un espejo redondo iluminado'],
-        'rocio' => ['nombre' => 'Rocío', 'oficio' => 'Cejas y pestañas', 'sede' => 'Las Condes', 'foto' => '1792679430669-caa0d70a9c52', 'alt' => 'Perfilado de cejas con pinza, de muy cerca'],
-        'javiera' => ['nombre' => 'Javiera', 'oficio' => 'Novias y peinados de evento', 'sede' => 'Ñuñoa', 'foto' => '1769869174682-19e960909bdb', 'alt' => 'Recogido de novia adornado con flores pequeñas'],
-        'valentina' => ['nombre' => 'Valentina', 'oficio' => 'Manicure y pedicure', 'sede' => 'Ñuñoa', 'foto' => '1772322586754-34c9e6f5be6f', 'alt' => 'Mano con manicure francesa y detalles brillantes'],
-        'ana' => ['nombre' => 'Ana', 'oficio' => 'Alisados y tratamientos', 'sede' => 'Ñuñoa', 'foto' => '1779350676620-fde279b1d023', 'alt' => 'Pelo castaño liso y brillante, visto de espalda'],
-    ],
+    'sedes' => $sedes,
+    'estilistas' => $estilistas,
 
     // Clientes "Profesional": estilistas independientes, manicuristas y salones que compran insumos.
     'mayoristas' => true,
@@ -76,6 +83,20 @@ return [
         'dias_max' => 30,
         'cerrado' => [7, '2026-12-08', '2026-12-25', '2027-01-01'],
         'horas' => ['10:00', '18:30'],
+    ],
+    // Sede (solo al atenderse en el salón) y estilista: el motor los valida contra la lista y los muestra en la
+    // reserva, el panel, Mi cuenta y el WhatsApp ("Estilista: Catalina · color y balayage (Las Condes)").
+    // "Reservar con…" de la portada los deja elegidos (?estilista=catalina&sede=las-condes).
+    'checkout_campos' => [
+        [
+            'nombre' => 'sede', 'etiqueta' => 'Sede', 'tipo' => 'opcion', 'solo' => 'retiro',
+            'opciones' => array_map(static fn (array $s): string => $s['nombre'], $sedes),
+            'error' => 'Elige en qué sede te atendemos.',
+        ],
+        [
+            'nombre' => 'estilista', 'etiqueta' => 'Estilista', 'tipo' => 'opcion', 'opciones' => $opcionesEstilista,
+            'defecto' => 'cualquiera', 'ayuda' => 'Cada estilista atiende en su sede.',
+        ],
     ],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Peluquería: sin menú QR ni modelos 3D.
@@ -107,13 +128,39 @@ return [
         'retiro_texto' => 'Te atendemos en Las Condes o Ñuñoa. Los productos te los entregamos en tu cita.',
         'despacho_titulo' => 'A domicilio: novias, eventos o envío de productos',
         'fecha_titulo' => 'Día de tu hora',
-        'fecha_ayuda' => 'Atendemos de lunes a sábado. ¿Quieres a alguien en particular? Escríbelo en la nota (Catalina, Tomás, Rocío, Javiera, Valentina o Ana) o déjala vacía y te asignamos a quien tenga la hora libre.',
+        'fecha_ayuda' => 'Atendemos de lunes a sábado, con horas cada 30 minutos.',
         'hora_titulo' => 'Hora',
         'hora_cualquiera' => 'La primera libre',
         'hora_entrega_fecha' => 'A las {hora}',
         'pedido_titulo' => '¡Hora reservada!',
         'pedido_exito_prueba' => '¡Pago de prueba aprobado! Tu hora quedó reservada.',
         'pedido_exito_al_recibir' => '¡Reserva recibida! Pagas en el salón.',
+        // Checkout de una reserva, con sede y estilista.
+        'checkout_titulo' => 'Reservar hora',
+        'checkout_como_recibes' => '¿Dónde te atendemos?',
+        'checkout_campos_titulo' => '¿Con quién te atiendes?',
+        'checkout_tu_pedido' => 'Tu reserva',
+        'checkout_resumen' => 'Resumen de la reserva',
+        'checkout_confirmar' => 'Confirmar reserva',
+        'checkout_despacho' => 'A domicilio',
+        'carrito_gratis_retiro' => 'Sin costo',
+        'checkout_comprando_como' => 'Reservando como {nombre}',
+        'pago_al_recibir' => 'Pagar en el salón',
+        'pago_al_recibir_texto' => 'Efectivo, débito o crédito, el día de tu hora.',
+        // Estados de una reserva: hora reservada → confirmada → en atención (en el salón o en camino) → atendida.
+        'pedido_paso_nuevo' => 'Hora reservada',
+        'pedido_codigo' => 'Reserva {codigo}',
+        'pedido_cancelado' => 'Reserva cancelada',
+        'estado_nuevo' => 'Nueva',
+        'estado_preparando' => 'Confirmada',
+        'estado_listo' => 'En atención',
+        'estado_listo_retiro' => 'En el salón',
+        'estado_listo_despacho' => 'En camino',
+        'estado_entregado' => 'Atendida',
+        'estado_cancelado' => 'Cancelada',
+        'panel_avanzar_nuevo' => 'Confirmar hora',
+        'panel_avanzar_preparando' => 'Marcar en atención',
+        'panel_avanzar_listo' => 'Marcar atendida',
     ],
 
     'cuentas_prueba' => [

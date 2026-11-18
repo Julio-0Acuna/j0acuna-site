@@ -88,13 +88,14 @@ return [
         ['email' => 'pendiente@demo.cl', 'clave' => bin2hex(random_bytes(12)), 'nombre' => 'Sofía Demo', 'tipo' => 'mayorista', 'estado' => 'pendiente', 'empresa' => 'Criadero Los Maitenes (ficticio)', 'telefono' => '+56 2 0000 0000'],
     ],
 
-    // Pedidos y horas de ejemplo: hace_min = minutos antes del reinicio; fecha_entrega = días desde el reinicio.
+    // Pedidos y horas de ejemplo: hace_min = minutos antes del reinicio; fecha_entrega = días desde el reinicio (el motor
+    // salta los días cerrados); extras = los datos de la mascota (campos del checkout, ver config.php).
     'pedidos' => [
         ['usuario' => 'cliente@demo.cl', 'hace_min' => 64800, 'estado' => 'entregado', 'entrega' => 'despacho', 'comuna' => 'Maipú', 'direccion' => 'Av. Ejemplo 1234, depto. 52 (Torre B, conserjería)', 'fecha_entrega' => -44, 'cuando' => '11:00', 'pago' => 'prueba', 'nota' => 'Dejar en conserjería', 'items' => [['perro-adulto-15', 1], ['arena-10', 2]]],
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 20160, 'estado' => 'entregado', 'entrega' => 'retiro', 'fecha_entrega' => -12, 'cuando' => '10:30', 'pago' => 'al_recibir', 'nota' => 'Luna · gata · 3 años · control y vacuna', 'items' => [['vacuna-gato', 1], ['gato-esterilizado-3', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 20160, 'estado' => 'entregado', 'entrega' => 'retiro', 'fecha_entrega' => -12, 'cuando' => '10:30', 'pago' => 'al_recibir', 'extras' => [['Mascota', 'Luna'], ['Especie', 'Gato'], ['Edad', '3 años']], 'nota' => 'Control y vacuna.', 'items' => [['vacuna-gato', 1], ['gato-esterilizado-3', 1]]],
         ['usuario' => 'mayorista@demo.cl', 'hace_min' => 4320, 'estado' => 'entregado', 'entrega' => 'despacho', 'comuna' => 'Padre Hurtado', 'direccion' => 'Camino Inventado 1500 (Portón azul)', 'fecha_entrega' => -2, 'cuando' => '', 'pago' => 'al_recibir', 'nota' => 'Descargar en la bodega del fondo', 'items' => [['pack-sacos', 2], ['pack-arena', 1]]],
         ['usuario' => 'mayorista@demo.cl', 'hace_min' => 90, 'estado' => 'nuevo', 'entrega' => 'despacho', 'comuna' => 'Padre Hurtado', 'direccion' => 'Camino Inventado 1500 (Portón azul)', 'fecha_entrega' => 3, 'cuando' => '10:00', 'pago' => 'al_recibir', 'nota' => '12 perros adultos y 3 cachorros', 'items' => [['jornada-vacunas', 1]]],
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 35, 'estado' => 'preparando', 'entrega' => 'retiro', 'fecha_entrega' => 1, 'cuando' => '12:00', 'pago' => 'prueba', 'nota' => 'Toby · perro · 6 años · peluquería y uñas', 'items' => [['pelu-mediano', 1], ['galletas', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 35, 'estado' => 'preparando', 'entrega' => 'retiro', 'fecha_entrega' => 1, 'cuando' => '12:00', 'pago' => 'prueba', 'extras' => [['Mascota', 'Toby'], ['Especie', 'Perro'], ['Edad', '6 años']], 'nota' => 'Peluquería y uñas.', 'items' => [['pelu-mediano', 1], ['galletas', 1]]],
         ['usuario' => 'cliente@demo.cl', 'hace_min' => 8, 'estado' => 'nuevo', 'entrega' => 'despacho', 'comuna' => 'Maipú', 'direccion' => 'Av. Ejemplo 1234, depto. 52 (Torre B, conserjería)', 'fecha_entrega' => 2, 'cuando' => '', 'pago' => 'prueba', 'nota' => '', 'items' => [['gato-adulto-7', 1], ['arena-10', 1]]],
     ],
 ];

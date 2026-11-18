@@ -103,9 +103,17 @@ debe_contener    "$R/multi/tortas.php?ocasion=matrimonio" 'id="torta-flores-blan
 no_debe_contener "$R/multi/tortas.php?ocasion=matrimonio" 'id="torta-pavlova"'
 debe_contener    $R/multi/pedido.php 'data-carrito-form'
 debe_contener    $R/multi/pedido.php 'name="fecha"'
-debe_contener    $R/multi/pedido.php "$R/multi/encargo.js"
+# Fecha y mensaje van al WhatsApp con data-carrito-extra y el comentario es la nota: sin JS propio en el pedido
+debe_contener    $R/multi/pedido.php 'name="fecha" data-carrito-extra="Fecha"'
+debe_contener    $R/multi/pedido.php 'data-carrito-extra="Mensaje en la torta"'
+debe_contener    $R/multi/pedido.php '<textarea id="nota" name="nota"'
+no_debe_contener $R/multi/pedido.php 'type="hidden" name="nota"'
+no_debe_contener $R/multi/pedido.php "$R/multi/encargo.js"
+debe_contener    $R/multi/encargo.php "$R/multi/encargo.js"
+no_debe_contener $R/multi/encargo.js 'data-carrito-form'
 debe_contener    $R/multi/ 'id="demo-carrito-config"'
 debe_contener    $R/multi/ '(Pedido de prueba desde la demo de pastelería – Multi-page)'
+debe_contener    $R/multi/ '"textos":{"retiro":"Entrega: retiro en el atelier","despacho":"Entrega: despacho refrigerado a {direccion}, {comuna}"}'
 debe_contener    "$R/multi/encargo.php?torta=pavlova" '<option value="pavlova" data-precios'
 
 # Encargo de torta (POST, sin guardar nada): válido → WhatsApp armado; inválido → errores
@@ -124,7 +132,11 @@ LUNES=$(date -d "+7 days" +%F); while [ "$(date -d "$LUNES" +%u)" != 1 ]; do LUN
 curl -s --data-urlencode "torta=pavlova" --data-urlencode "tamano=8 porciones" --data-urlencode "fecha=$LUNES" --data-urlencode "nombre=Prueba" "$BASE$R/multi/encargo.php" | grep -qF 'el atelier está cerrado' && pasa "encargo no acepta un lunes (cerrado)" || falla "encargo acepta un día cerrado"
 
 grep -q 'Require all denied' demos/pasteleria/plataforma/data/.htaccess && pasa 'data/.htaccess niega todo' || falla 'data/.htaccess no niega'
-grep -q '_encargo' demos/pasteleria/plataforma/.htaccess && pasa 'plataforma/.htaccess bloquea config, seed, reset y _encargo' || falla 'plataforma/.htaccess incompleto'
+grep -q 'config|seed|reset' demos/pasteleria/plataforma/.htaccess && pasa 'plataforma/.htaccess bloquea config, seed y reset' || falla 'plataforma/.htaccess incompleto'
+grep -q 'Require all denied' demos/pasteleria/plataforma/vistas/.htaccess && pasa 'vistas/.htaccess niega todo' || falla 'vistas/.htaccess no niega'
+for f in _encargo.php vistas/checkout.php vistas/pedido.php; do
+  [ ! -e "demos/pasteleria/plataforma/$f" ] && pasa "sin $f propio: día y mensaje con las opciones del motor" || falla "sigue demos/pasteleria/plataforma/$f"
+done
 
 # Sin CDN sin versión: todo <script src=https> lleva integrity
 SIN_SRI=$(for p in $R/simple/ $R/multi/carta.php $R/multi/tortas.php "$TIENDA"; do curl -s "$BASE$p"; done | grep -oE '<script[^>]+src="https://[^"]+"[^>]*>' | grep -vc 'integrity=')
@@ -173,13 +185,22 @@ RR=$(post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencod
 case "$RR" in 303*) pasa "agregar al carrito ($RR)";; *) falla "agregar al carrito: $RR";; esac
 curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'Torta Frutilla Pop' && pasa "el carrito tiene el producto" || falla "carrito vacío"
 
-# Checkout con día de entrega y mensaje en la torta (se guardan en la nota del pedido)
+# Checkout del motor: día de entrega (modo 'fecha') y mensaje en la torta (campo extra del checkout)
 CHK=$(curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout")
-printf '%s' "$CHK" | grep -qF 'name="mensaje_torta"' && pasa "checkout pide el mensaje para la torta" || falla "checkout sin mensaje para la torta"
+printf '%s' "$CHK" | grep -qF '<input id="extra-mensaje_torta" name="extra[mensaje_torta]" maxlength="40"' && pasa "checkout pide el mensaje para la torta" || falla "checkout sin mensaje para la torta"
+printf '%s' "$CHK" | grep -qF '<select id="fecha_entrega" name="fecha_entrega" required>' && pasa "checkout con el día de entrega del motor" || falla "checkout sin el día de entrega del motor"
+printf '%s' "$CHK" | grep -qF 'hoy solo despachamos lo que hay en vitrina' && pasa "checkout con el aviso de las tortas enteras" || falla "checkout sin el aviso de la vitrina"
 DIA=$(printf '%s' "$CHK" | grep -oE '<option value="20[0-9]{2}-[0-9]{2}-[0-9]{2}"' | sed -n 2p | grep -oE '20[0-9-]+')
 [ -n "$DIA" ] && pasa "checkout ofrece días de entrega ($DIA)" || falla "checkout sin días de entrega"
 T=$(printf '%s' "$CHK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
-RR=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Macul" --data-urlencode "pago=al_recibir" --data-urlencode "fecha=$DIA" --data-urlencode "cuando=17:00" --data-urlencode "mensaje_torta=Feliz cumple Ana" --data-urlencode "nota=Velas de numero 7")
+# Mensaje de más de 40 caracteres: 422 con su error junto al campo
+RR=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$DIA" --data-urlencode "extra[mensaje_torta]=$(printf 'x%.0s' $(seq 1 41))")
+case "$RR" in 422*) grep -qF '<p class="t-error" id="err-extra_mensaje_torta">«Mensaje en la torta» puede tener hasta 40 caracteres.</p>' "$TMP/ultima.html" && pasa "mensaje de más de 40 caracteres: 422 con su error" || falla "mensaje largo: 422 sin el error";; *) falla "mensaje largo aceptado: $RR";; esac
+# El pedido se completa con los campos que trae el HTML del checkout (name leídos del formulario)
+EXTRA=$(printf '%s' "$CHK" | grep -oE '<input id="extra-mensaje_torta" name="[^"]+"' | sed -E 's/.*name="([^"]+)"/\1/')
+FALTAN=$(for k in csrf entrega direccion_id calle comuna pago fecha_entrega cuando nota; do printf '%s' "$CHK" | grep -qF "name=\"$k\"" || echo "$k"; done)
+[ "$EXTRA" = "extra[mensaje_torta]" ] && [ -z "$FALTAN" ] && pasa "el formulario del checkout trae todos los campos que se envían ($EXTRA)" || falla "al formulario del checkout le faltan: $FALTAN (mensaje: '$EXTRA')"
+RR=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Macul" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$DIA" --data-urlencode "cuando=17:00" --data-urlencode "$EXTRA=Feliz cumple Ana" --data-urlencode "nota=Velas de numero 7")
 case "$RR" in 303*r=pedido*) pasa "checkout crea el pedido ($RR)";; *) falla "checkout: $RR";; esac
 PEDIDO_URL="${RR#* }"
 PAGINA=$(curl -s -b "$J1" "$PEDIDO_URL")
@@ -187,24 +208,26 @@ CODIGO=$(printf '%s' "$PAGINA" | grep -oE 'MC-[0-9]+' | head -1)
 [ -n "$CODIGO" ] && pasa "página del pedido muestra $CODIGO" || falla "página del pedido sin código"
 printf '%s' "$PAGINA" | grep -qF 'Enviar resumen por WhatsApp' && pasa "pedido ofrece enviar resumen por WhatsApp" || falla "pedido sin botón de WhatsApp"
 printf '%s' "$PAGINA" | grep -qF '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20pasteler%C3%ADa%20%E2%80%93%20Plataforma%20web%29' && pasa "resumen con la nota de prueba" || falla "resumen sin la nota de prueba"
-printf '%s' "$PAGINA" | grep -qF '«Feliz cumple Ana»' && pasa "el pedido guarda el mensaje en la torta" || falla "el pedido no muestra el mensaje en la torta"
+printf '%s' "$PAGINA" | grep -qF '<dt>Mensaje en la torta</dt><dd>Feliz cumple Ana</dd>' && pasa "el pedido guarda el mensaje en la torta" || falla "el pedido no muestra el mensaje en la torta"
+printf '%s' "$PAGINA" | grep -qF '<dt>Nota</dt><dd>Velas de numero 7</dd>' && pasa "la nota queda aparte del mensaje" || falla "la nota no se ve aparte"
 printf '%s' "$PAGINA" | grep -qE '<dt>Para</dt><dd>[^<]+ [0-9]+ de [a-z]+, a las 17:00</dd>' && pasa "el pedido muestra el día y la hora de entrega" || falla "el pedido no muestra el día de entrega"
-printf '%s' "$PAGINA" | grep -qF 'Mensaje%20en%20la%20torta%3A%20%C2%ABFeliz%20cumple%20Ana%C2%BB' && pasa "el resumen de WhatsApp lleva el mensaje" || falla "el resumen de WhatsApp no lleva el mensaje"
+printf '%s' "$PAGINA" | grep -qF 'Mensaje%20en%20la%20torta%3A%20Feliz%20cumple%20Ana' && printf '%s' "$PAGINA" | grep -qF 'Nota%3A%20Velas%20de%20numero%207' && pasa "el resumen de WhatsApp lleva «Mensaje en la torta: …» y la nota" || falla "el resumen de WhatsApp no lleva el mensaje"
+printf '%s' "$PAGINA" | grep -qE 'Para%20el%20[a-z%0-9A-F]+%20[0-9]+%20de%20[a-z]+%20a%20las%2017%3A00' && pasa "el resumen de WhatsApp lleva el día y la hora" || falla "el resumen de WhatsApp sin el día"
 # $27.990 × 2 + despacho Macul $0 (gratis sobre $35.000) = $55.980
 printf '%s' "$PAGINA" | grep -qF '$55.980' && pasa "total con despacho gratis sobre \$35.000" || falla "total del pedido inesperado"
 
-# Una fecha que no está en la lista se ignora (no se guarda)
+# Una fecha que no está en la lista se rechaza (422) y no crea el pedido
 T=$(csrf "$J1" "$TIENDA")
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID" > /dev/null
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
-RR=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha=1999-01-01")
-curl -s -b "$J1" "${RR#* }" | grep -qF '<dt>Para</dt><dd>Hoy, lo antes posible</dd>' && pasa "fecha fuera de la lista se ignora" || falla "fecha inválida aceptada ($RR)"
+RR=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=1999-01-01")
+case "$RR" in 422*) grep -qF 'id="err-fecha_entrega"' "$TMP/ultima.html" && pasa "fecha fuera de la lista: 422 con su error" || falla "fecha inválida: 422 sin el error";; *) falla "fecha inválida aceptada ($RR)";; esac
 
 # Pago de prueba: checkout → pantalla simulada → aprobar
 T=$(csrf "$J1" "$TIENDA")
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID" > /dev/null
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
-RR=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=prueba" --data-urlencode "fecha=$DIA")
+RR=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=prueba" --data-urlencode "fecha_entrega=$DIA")
 case "$RR" in 303*r=pago*) pasa "pago de prueba lleva a la pantalla simulada";; *) falla "pago de prueba: $RR";; esac
 curl -s -b "$J1" "$BASE${TIENDA}?r=pago" | grep -qF 'PAGO DE PRUEBA' && pasa "pantalla de pago marcada como prueba" || falla "pantalla de pago sin aviso"
 T=$(csrf "$J1" "${TIENDA}?r=pago")
@@ -225,7 +248,10 @@ case "$RR" in 303*r=panel*) pasa "dueño entra a su panel";; *) falla "login due
 PANEL=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel&ver=pedidos")
 printf '%s' "$PANEL" | grep -qF "$CODIGO" && pasa "el dueño ve $CODIGO en el panel" || falla "el dueño no ve el pedido"
 printf '%s' "$PANEL" | grep -qF 'Cliente Prueba' && pasa "el panel muestra al cliente" || falla "el panel no muestra al cliente"
-curl -s -b "$J2" "$PEDIDO_URL" | grep -qF '«Feliz cumple Ana»' && pasa "el dueño ve el mensaje para la torta" || falla "el dueño no ve el mensaje"
+curl -s -b "$J2" "$PEDIDO_URL" | grep -qF '<dt>Mensaje en la torta</dt><dd>Feliz cumple Ana</dd>' && pasa "el dueño ve el mensaje para la torta" || falla "el dueño no ve el mensaje"
+printf '%s' "$PANEL" | grep -qF '<p class="t-pequeno t-pedido-panel__extras">Mensaje en la torta: Feliz cumple Ana</p>' && pasa "la lista del panel muestra «Mensaje en la torta: …»" || falla "la lista del panel sin el mensaje"
+printf '%s' "$PANEL" | grep -qF 'Mensaje en la torta: Felicidades, Mati' && pasa "los pedidos de ejemplo traen el mensaje como campo" || falla "los pedidos de ejemplo sin el mensaje"
+printf '%s' "$PANEL" | grep -qF '>Pasar al horno</button>' && pasa "el panel avanza con «Pasar al horno»" || falla "el panel sin «Pasar al horno»"
 curl -s -b "$J2" "$BASE${TIENDA}?r=panel" | grep -qF 'Ventas de hoy' && pasa "panel con ventas del día" || falla "panel sin ventas del día"
 debe_responder "${TIENDA}?r=panel" 303
 curl -s -b "$J1" -o /dev/null -w "%{http_code}" "$BASE${TIENDA}?r=panel" | grep -qx 403 && pasa "un cliente no entra al panel (403)" || falla "un cliente entra al panel"

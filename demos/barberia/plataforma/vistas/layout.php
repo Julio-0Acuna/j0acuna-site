@@ -2,11 +2,10 @@
 /**
  * Layout de Filo Barbería: cadena de barberías con agenda por barbero, tienda y cuentas para empresas.
  * Franja del poste de barbero, cabecera hueso con buscador y barra de categorías en tinta.
- * En el checkout agrega el selector de barbero (ver _barberos.php).
- * @var string $contenido @var string $titulo @var string $vista @var array $cfg @var ?array $usuario @var array $previo
+ * En el catálogo y el carrito recuerda con quién reservas (el barbero elegido en la portada, que el checkout
+ * del motor trae preseleccionado en su campo "Barbero").
+ * @var string $contenido @var string $titulo @var string $vista @var array $cfg @var ?array $usuario
  */
-require_once dirname(__DIR__) . '/_barberos.php';
-
 $cfg ??= m_config();
 $usuario ??= m_usuario();
 $vista ??= '';
@@ -18,11 +17,11 @@ $qActual = is_string($_GET['q'] ?? null) ? mb_substr(trim($_GET['q']), 0, 40) : 
 $cuentaUrl = m_url($usuario ? ($esDueno ? 'panel' : 'cuenta') : 'ingresar');
 $cuentaTexto = $usuario ? ($esDueno ? 'Panel' : 'Mi cuenta') : 'Ingresar';
 $empresaUrl = m_es_mayorista($usuario) ? m_url('inicio', ['cat' => 'empresas']) . '#menu' : m_url('registro');
-$barbero = fb_recordar_barbero($cfg);
-if ($vista === 'checkout') {
-    $contenido = fb_checkout_con_barbero($contenido, $cfg, is_array($previo ?? null) ? $previo : [], $barbero);
-}
-$opcion = $barbero !== '' ? fb_opciones($cfg)[$barbero] : null;
+// Barbero elegido en la portada (?barbero=, ver vistas/portada.php): la precarga del checkout del motor.
+$elegido = $_SESSION['checkout_precarga']['barbero'] ?? '';
+$elegido = is_string($elegido) && isset(m_checkout_campos($cfg)['barbero']['opciones'][$elegido]) ? $elegido : '';
+$conBarbero = $cfg['barberos'][$elegido] ?? null;
+$sucursalElegida = $cfg['sucursales'][$conBarbero['sucursal'] ?? substr($elegido, strlen('cualquiera-'))]['nombre'] ?? '';
 
 demo_head([
     'titulo' => ($titulo ?? $cfg['negocio']['nombre']) . ' · ' . $cfg['negocio']['nombre'] . ' (demo)',
@@ -80,8 +79,8 @@ demo_aviso($cfg['rubro']);
   <?php elseif (m_es_mayorista($usuario)): ?>
     <p class="fb-modo-empresa"><strong>Cuenta de empresa</strong> · <?= m_e($usuario['empresa']) ?> · ves precios de convenio, packs y jornadas en tu oficina</p>
   <?php endif; ?>
-  <?php if ($opcion !== null && in_array($vista, ['inicio', 'carrito'], true)): ?>
-    <p class="fb-elegido"><span>Reservando con <strong><?= m_e($opcion[1] === 'el primero disponible' ? 'el primer barbero disponible' : $opcion[1]) ?></strong> · Sucursal <?= m_e($cfg['sucursales'][$opcion[2]]['nombre']) ?></span> <a href="<?= m_e($cfg['url_base']) ?>#barberos">Cambiar</a></p>
+  <?php if ($elegido !== '' && $sucursalElegida !== '' && in_array($vista, ['inicio', 'carrito'], true)): ?>
+    <p class="fb-elegido"><span>Reservando con <strong><?= m_e($conBarbero['nombre'] ?? 'el primer barbero disponible') ?></strong> · Sucursal <?= m_e($sucursalElegida) ?></span> <a href="<?= m_e($cfg['url_base']) ?>#barberos">Cambiar</a></p>
   <?php endif; ?>
   <?php m_parcial('_mensajes'); ?>
   <?= $contenido ?>

@@ -53,7 +53,7 @@ $accesos = [
 
 <ol class="ho-pasos" aria-label="Cómo agendar una hora en Hocico">
   <li><span class="ho-pasos__num" aria-hidden="true">1</span><div><strong>Elige el servicio</strong><span>Vacuna, control o peluquería, con precio a la vista. Suma el alimento si quieres.</span></div></li>
-  <li><span class="ho-pasos__num" aria-hidden="true">2</span><div><strong>Día y hora</strong><span>De lunes a sábado, cada 30 minutos. En la nota, el nombre y la edad de tu mascota.</span></div></li>
+  <li><span class="ho-pasos__num" aria-hidden="true">2</span><div><strong>Día y hora</strong><span>De lunes a sábado, cada 30 minutos, con el nombre, la especie y la edad de tu mascota.</span></div></li>
   <li><span class="ho-pasos__num" aria-hidden="true">3</span><div><strong>Paga como quieras</strong><span>En línea o en la tienda. Te llega el resumen por WhatsApp.</span></div></li>
 </ol>
 

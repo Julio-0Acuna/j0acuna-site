@@ -37,7 +37,7 @@ $avisos = ['Despacho gratis sobre ' . m_clp((int) $cfg['despacho_gratis_desde'])
 
 <ol class="mc-pasos" aria-label="Cómo funciona">
   <li class="mc-paso mc-paso--1"><span class="mc-paso__num">1</span><strong>Elige tu torta</strong><span>Tortas, cupcakes, cajas y mesas dulces, con fotos y en 3D.</span></li>
-  <li class="mc-paso mc-paso--2"><span class="mc-paso__num">2</span><strong>Día y mensaje</strong><span>Agéndala hasta con <?= (int) ($cfg['dias_encargo'] ?? 14) ?> días y dinos qué le escribimos.</span></li>
+  <li class="mc-paso mc-paso--2"><span class="mc-paso__num">2</span><strong>Día y mensaje</strong><span>Agéndala hasta con <?= (int) $cfg['entrega']['dias_max'] ?> días y dinos qué le escribimos.</span></li>
   <li class="mc-paso mc-paso--3"><span class="mc-paso__num">3</span><strong>Sigue tu pedido</strong><span>Recibido, en el horno, listo y entregado: lo ves en tu cuenta.</span></li>
   <li class="mc-paso mc-paso--4" id="cafeterias"><span class="mc-paso__num" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16M8 3v3M12 3v3"/></svg></span><strong>¿Tienes una cafetería?</strong><span><?php if (m_es_mayorista($usuario)): ?><a href="<?= m_e(m_url('inicio', ['cat' => 'cafeterias'])) ?>#menu">Ver productos para cafeterías</a><?php else: ?>Precios por mayor y tortas precortadas. <a href="<?= m_e(m_url('registro')) ?>">Crea tu cuenta mayorista</a><?php endif; ?></span></li>
 </ol>

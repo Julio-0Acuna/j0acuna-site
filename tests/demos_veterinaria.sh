@@ -97,7 +97,7 @@ debe_contener    "$SIMPLE" '<small>desde</small> $18.000'
 debe_contener    "$SIMPLE" '<dd>$125.000</dd>'
 debe_contener    "$SIMPLE" 'name="mascota"'
 debe_contener    "$SIMPLE" 'name="especie" value="gato"'
-debe_contener    "$SIMPLE" '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20veterinaria%20%E2%80%93%20Simple-page%29'
+debe_contener    "$SIMPLE" '%28Reserva%20de%20prueba%20desde%20la%20demo%20de%20veterinaria%20%E2%80%93%20Simple-page%29'
 debe_contener    "$SIMPLE" 'href="tel:+56973537642"'
 debe_contener    "${SIMPLE}?servicio=peluqueria" '<option value="peluqueria" selected>'
 PAG_SIMPLE=$(curl -s "$BASE$SIMPLE")
@@ -106,7 +106,7 @@ SABADO=$(printf '%s' "$PAG_SIMPLE" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[
 DOMINGOS=$(printf '%s' "$PAG_SIMPLE" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | while read -r d; do date -d "$d" +%u; done | grep -c '^7$')
 [ -n "$DIA" ] && [ "$DOMINGOS" = "0" ] && pasa "días de la reserva sin domingos (primero: $DIA)" || falla "días de la reserva: '$DIA', domingos $DOMINGOS"
 R=$(curl -s -o /dev/null -w "%{http_code} %{redirect_url}" --data-urlencode "servicio=vacuna-gato" --data-urlencode "mascota=Luna" --data-urlencode "especie=gato" --data-urlencode "edad=3 anos" --data-urlencode "dia=$DIA" --data-urlencode "bloque=manana" --data-urlencode "motivo=Control anual" "$BASE$SIMPLE")
-case "$R" in "303 https://wa.me/56973537642?text="*Servicio%3A%20Vacuna%20triple%20felina%20%28desde%20%2418.000%29*Mascota%3A%20Luna*Especie%3A%20Gato*Edad%3A%203%20anos*Bloque%3A%20Ma%C3%B1ana*Simple-page%29) pasa "la ficha arma el WhatsApp con servicio, mascota, especie, edad, día, bloque y nota";; *) falla "ficha de reserva: $R";; esac
+case "$R" in "303 https://wa.me/56973537642?text="*Servicio%3A%20Vacuna%20triple%20felina%20%28desde%20%2418.000%29*Mascota%3A%20Luna*Especie%3A%20Gato*Edad%3A%203%20anos*Bloque%3A%20Ma%C3%B1ana*%28Reserva%20de%20prueba*Simple-page%29) pasa "la ficha arma el WhatsApp con servicio, mascota, especie, edad, día, bloque y nota";; *) falla "ficha de reserva: $R";; esac
 R=$(curl -s -o "$TMP/simple.html" -w "%{http_code}" --data-urlencode "servicio=consulta" --data-urlencode "mascota=" --data-urlencode "especie=perro" --data-urlencode "dia=$DIA" --data-urlencode "bloque=manana" "$BASE$SIMPLE")
 [ "$R" = "422" ] && grep -qF 'Cuéntanos cómo se llama tu mascota.' "$TMP/simple.html" && pasa "sin nombre de mascota: 422 con el error junto al campo" || falla "mascota vacía: $R"
 R=$(curl -s -o /dev/null -w "%{http_code}" --data-urlencode "servicio=../../etc" --data-urlencode "mascota=Luna" --data-urlencode "especie=gato" --data-urlencode "dia=$DIA" --data-urlencode "bloque=manana" "$BASE$SIMPLE")
@@ -130,14 +130,18 @@ debe_contener    "${MULTI}especialidades.php?q=conejo" 'id="s-conejo" data-busca
 curl -s "$BASE${MULTI}especialidades.php?q=conejo" | grep -F 'id="s-consulta"' | grep -qF ' hidden>' && pasa "el buscador sin JS oculta lo que no coincide" || falla "el buscador sin JS no oculta"
 debe_contener    "${MULTI}equipo.php" 'Dra. Camila Ortiz'
 debe_contener    "${MULTI}reserva.php" 'data-carrito-form'
-for extra in Mascota Especie Edad 'Peso aprox.' 'Primera visita' Día Bloque Profesional Atención; do
+# "En la clínica / Visita a domicilio" ya no va como campo extra: lo dicen los textos del carrito (retiro, despacho)
+no_debe_contener "${MULTI}reserva.php" 'data-carrito-extra="Atención"'
+for extra in Mascota Especie Edad 'Peso aprox.' 'Primera visita' Día Bloque Profesional; do
   debe_contener  "${MULTI}reserva.php" "data-carrito-extra=\"$extra\""
 done
 debe_contener    "${MULTI}reserva.php" 'name="entrega" value="despacho"'
 debe_contener    "${MULTI}reserva.php" '<option value="Ñuñoa">Ñuñoa · $9.990</option>'
 no_debe_contener "${MULTI}reserva.php" '>Domingo '
 debe_contener    "$MULTI" 'id="demo-carrito-config"'
-debe_contener    "$MULTI" '(Pedido de prueba desde la demo de veterinaria – Multi-page)'
+debe_contener    "$MULTI" '(Reserva de prueba desde la demo de veterinaria – Multi-page)'
+debe_contener    "$MULTI" '"saludo":"Hola, quiero reservar hora en {negocio}:"'
+debe_contener    "$MULTI" '"retiro":"Atención: en la clínica","despacho":"Atención: visita a domicilio en {direccion}, {comuna}"'
 debe_contener    "$MULTI" '"Vacuna anual","variantes":{"Perro":24000,"Gato":23000,"Antirrábica":15000}'
 grep -q 'Require all denied' demos/veterinaria/plataforma/data/.htaccess && pasa 'data/.htaccess niega todo' || falla 'data/.htaccess no niega'
 grep -q 'Require all denied' demos/veterinaria/plataforma/vistas/.htaccess && pasa 'vistas/.htaccess niega todo' || falla 'vistas/.htaccess no niega'
@@ -207,7 +211,11 @@ curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF '<strong>Consulta veterin
 CHECK=$(curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout")
 printf '%s' "$CHECK" | grep -qF 'Día de tu hora o del despacho' && pasa "checkout pide el día de la hora o del despacho" || falla "checkout sin selector de día"
 printf '%s' "$CHECK" | grep -qF 'Voy a la tienda' && pasa "checkout con «Voy a la tienda»" || falla "checkout sin texto de retiro del rubro"
-printf '%s' "$CHECK" | grep -qF 'el nombre, la especie y la edad de tu mascota' && pasa "checkout pide los datos de la mascota en la nota" || falla "checkout sin ayuda de la mascota"
+printf '%s' "$CHECK" | grep -qF '¿Reservaste una hora? Cuéntanos de tu mascota' && pasa "checkout con los datos de la mascota (campos del motor)" || falla "checkout sin los datos de la mascota"
+printf '%s' "$CHECK" | grep -qF '<input id="extra-mascota" name="extra[mascota]" maxlength="30"' && printf '%s' "$CHECK" | grep -qF '<option value="huron">Hurón</option>' && printf '%s' "$CHECK" | grep -qF 'name="extra[edad]" maxlength="20"' && pasa "campos Mascota, Especie y Edad" || falla "faltan campos de la mascota"
+printf '%s' "$CHECK" | grep -qF 'Mascota <small>(opcional)</small>' && pasa "los datos de la mascota son opcionales (también se compra solo alimento)" || falla "mascota no marcada como opcional"
+printf '%s' "$CHECK" | grep -qF 'Confirmar y agendar</button>' && pasa "checkout con «Confirmar y agendar»" || falla "checkout sin el botón del rubro"
+printf '%s' "$CHECK" | grep -qF 'en la nota' && falla "el checkout aún pide datos en la nota" || pasa "el checkout ya no pide los datos en la nota"
 FECHA=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | head -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
 DOMINGOS=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | while read -r d; do date -d "$d" +%u; done | grep -c '^7$')
 [ -n "$FECHA" ] && [ "$DOMINGOS" = "0" ] && pasa "días ofrecidos sin domingos (primero: $FECHA)" || falla "días ofrecidos: primero '$FECHA', domingos $DOMINGOS"
@@ -216,7 +224,16 @@ R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencod
 case "$R" in 422*) pasa "un día fuera de la lista se rechaza (422)";; *) falla "día inválido aceptado: $R";; esac
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=03:00" --data-urlencode "pago=al_recibir")
 case "$R" in 422*) pasa "una hora fuera del horario se rechaza (422)";; *) falla "hora inválida aceptada: $R";; esac
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Cerrillos" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Luna gata 3 anos control a domicilio")
+# Especie que no existe y edad demasiado larga: 422 con su error; lo escrito vuelve escapado
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir" --data-urlencode "extra[mascota]=<script>x</script>" --data-urlencode "extra[especie]=dragon" --data-urlencode "extra[edad]=$(printf '9%.0s' $(seq 1 21))")
+case "$R" in 422*) grep -qF '<p class="t-error" id="err-extra_especie">Elige una opción en «Especie».</p>' "$TMP/ultima.html" && grep -qF '<p class="t-error" id="err-extra_edad">«Edad» puede tener hasta 20 caracteres.</p>' "$TMP/ultima.html" && pasa "especie inexistente y edad larga: 422 con sus errores" || falla "especie o edad inválidas: 422 sin los errores";; *) falla "especie inexistente aceptada: $R";; esac
+grep -qF 'value="&lt;script&gt;x&lt;/script&gt;"' "$TMP/ultima.html" && ! grep -qF '<script>x</script>' "$TMP/ultima.html" && pasa "el nombre de la mascota vuelve escapado" || falla "el nombre de la mascota no se escapa"
+# La hora se agenda con los campos que trae el HTML del checkout (name leídos del formulario)
+EXTRAS=$(printf '%s' "$CHECK" | grep -oE 'name="extra\[[a-z_]+\]"' | sed -E 's/name="([^"]+)"/\1/' | tr '\n' ' ')
+FALTAN=$(for k in csrf entrega direccion_id calle comuna fecha_entrega cuando pago nota; do printf '%s' "$CHECK" | grep -qF "name=\"$k\"" || echo "$k"; done)
+[ "$EXTRAS" = "extra[mascota] extra[especie] extra[edad] " ] && [ -z "$FALTAN" ] && pasa "el formulario del checkout trae todos los campos que se envían ($EXTRAS)" || falla "al formulario del checkout le faltan: $FALTAN (extras: '$EXTRAS')"
+read -r EX1 EX2 EX3 <<< "$EXTRAS"
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Cerrillos" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" --data-urlencode "$EX1=Luna" --data-urlencode "$EX2=gato" --data-urlencode "$EX3=3 anos" --data-urlencode "nota=Control a domicilio")
 case "$R" in 303*r=pedido*) pasa "checkout agenda la hora ($R)";; *) falla "checkout: $R";; esac
 PEDIDO_URL="${R#* }"
 PAGINA=$(curl -s -b "$J1" "$PEDIDO_URL")
@@ -226,7 +243,9 @@ printf '%s' "$PAGINA" | grep -qF '¡Todo agendado!' && pasa "título propio del 
 printf '%s' "$PAGINA" | grep -qF 'Enviar resumen por WhatsApp' && pasa "el pedido ofrece enviar resumen por WhatsApp" || falla "pedido sin botón de WhatsApp"
 printf '%s' "$PAGINA" | grep -qF '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20veterinaria%20%E2%80%93%20Plataforma%20web%29' && pasa "resumen con la nota de prueba" || falla "resumen sin la nota de prueba"
 printf '%s' "$PAGINA" | grep -qF 'a%20las%2010%3A00' && pasa "resumen con el día y la hora" || falla "resumen sin la hora"
-printf '%s' "$PAGINA" | grep -qF 'Nota%3A%20Luna%20gata%203%20anos' && pasa "resumen con la nota del cliente (mascota)" || falla "resumen sin la nota del cliente"
+printf '%s' "$PAGINA" | grep -qF 'Mascota%3A%20Luna%0AEspecie%3A%20Gato%0AEdad%3A%203%20anos' && printf '%s' "$PAGINA" | grep -qF 'Nota%3A%20Control%20a%20domicilio' && pasa "WhatsApp con «Mascota: Luna», «Especie: Gato», «Edad: 3 anos» y la nota" || falla "resumen sin los datos de la mascota"
+printf '%s' "$PAGINA" | grep -qF '<dt>Mascota</dt><dd>Luna</dd>' && printf '%s' "$PAGINA" | grep -qF '<dt>Especie</dt><dd>Gato</dd>' && pasa "el pedido muestra los datos de la mascota" || falla "el pedido sin los datos de la mascota"
+printf '%s' "$PAGINA" | grep -qF '<li class="is-hecho is-actual" aria-current="step">Agendado</li>' && pasa "primer paso «Agendado»" || falla "sin el paso «Agendado»"
 # $20.000 + despacho a Cerrillos $3.990 = $23.990
 printf '%s' "$PAGINA" | grep -qF '$23.990' && pasa "total con visita a domicilio en Cerrillos (\$23.990)" || falla "total del pedido inesperado"
 
@@ -256,6 +275,8 @@ PANEL=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel&ver=pedidos")
 printf '%s' "$PANEL" | grep -qF "$CODIGO" && pasa "la dueña ve $CODIGO en el panel" || falla "la dueña no ve el pedido"
 printf '%s' "$PANEL" | grep -qF 'Cliente Prueba' && pasa "el panel muestra al cliente" || falla "el panel no muestra al cliente"
 printf '%s' "$PANEL" | grep -qF ' · para el ' && pasa "el panel muestra el día de cada hora o despacho" || falla "el panel sin el día"
+printf '%s' "$PANEL" | grep -qF '<p class="t-pequeno t-pedido-panel__extras">Mascota: Luna · Especie: Gato · Edad: 3 anos</p>' && pasa "la lista del panel muestra los datos de la mascota" || falla "la lista del panel sin la mascota"
+printf '%s' "$PANEL" | grep -qF 'Mascota: Toby · Especie: Perro · Edad: 6 años' && pasa "las horas de ejemplo traen la mascota como campos" || falla "las horas de ejemplo sin la mascota"
 RESUMEN=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel")
 printf '%s' "$RESUMEN" | grep -qF 'Ventas de hoy' && pasa "panel con ventas del día" || falla "panel sin ventas del día"
 printf '%s' "$RESUMEN" | grep -qF 'Stock bajo: Peluquería perro grande (3)' && pasa "panel avisa cupos bajos" || falla "panel sin aviso de cupos bajos"

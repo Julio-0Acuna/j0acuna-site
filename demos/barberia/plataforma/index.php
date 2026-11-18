@@ -2,10 +2,7 @@
 declare(strict_types=1);
 
 // Filo Barbería · Plataforma web: cadena con agenda por barbero, tienda y cuentas para empresas,
-// sobre el motor común (demos/_motor). El barbero elegido se valida aquí y va en la nota (ver _barberos.php).
+// sobre el motor común (demos/_motor). El barbero es un campo extra del checkout ('checkout_campos' en config.php).
 require dirname(__DIR__, 2) . '/_motor/motor.php';
-require __DIR__ . '/_barberos.php';
 
-$cfg = require __DIR__ . '/config.php';
-fb_post_checkout($cfg);
-m_ejecutar($cfg);
+m_ejecutar(require __DIR__ . '/config.php');

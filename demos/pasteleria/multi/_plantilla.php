@@ -116,6 +116,10 @@ function al_config_carrito(): array
         'numero' => DEMO_WHATSAPP,
         'comunas' => $n['comunas_despacho'],
         'catalogo' => $catalogo,
+        'textos' => [
+            'retiro' => 'Entrega: retiro en el atelier',
+            'despacho' => 'Entrega: despacho refrigerado a {direccion}, {comuna}',
+        ],
     ];
 }
 

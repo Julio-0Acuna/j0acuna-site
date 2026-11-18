@@ -1,6 +1,6 @@
 /*
- * Atelier Lúcuma (Multi-page): mejoras del formulario de encargo y del pedido.
- * Todo se valida igual en el servidor (encargo.php); sin JavaScript el formulario funciona.
+ * Atelier Lúcuma (Multi-page): mejoras del formulario de encargo de torta (encargo.php).
+ * Todo se valida igual en el servidor; sin JavaScript el formulario funciona.
  */
 (function () {
   'use strict';
@@ -48,18 +48,4 @@
     form.addEventListener('change', function (ev) { if (ev.target !== torta) { actualizar(false); } });
     actualizar(false);
   }
-
-  /* ---------- Pedido (carrito.js): la fecha, el mensaje y el comentario van en la nota */
-  document.addEventListener('submit', function (ev) {
-    var f = ev.target;
-    if (!f.matches || !f.matches('form[data-carrito-form]')) { return; }
-    var partes = [];
-    var fecha = f.elements.fecha;
-    if (fecha && fecha.value) { partes.push('Para el ' + fecha.options[fecha.selectedIndex].text); }
-    var mensaje = f.elements.mensaje_torta;
-    if (mensaje && mensaje.value.trim()) { partes.push('Mensaje en la torta: «' + mensaje.value.trim().slice(0, 40) + '»'); }
-    var comentario = f.elements.comentario;
-    if (comentario && comentario.value.trim()) { partes.push(comentario.value.trim()); }
-    f.elements.nota.value = partes.join(' · ').slice(0, 200);
-  }, true);
 })();

@@ -9,12 +9,6 @@ declare(strict_types=1);
  * Cuentas de prueba: contraseñas públicas, solo valen en esta demo.
  */
 
-// Días de las reservas de ejemplo contados desde hoy, corridos para no caer en domingo (salón cerrado).
-$dia = static function (int $n): int {
-    $d = (new DateTimeImmutable('today', new DateTimeZone(DEMO_ZONA_HORARIA)))->modify(($n >= 0 ? '+' : '') . $n . ' days');
-    return (int) $d->format('N') === 7 ? $n + ($n >= 0 ? 1 : -1) : $n;
-};
-
 return [
     'categorias' => [
         ['slug' => 'cortes', 'nombre' => 'Corte y peinado'],
@@ -91,13 +85,14 @@ return [
         ['email' => 'pendiente@demo.cl', 'clave' => bin2hex(random_bytes(12)), 'nombre' => 'Daniela Demo', 'tipo' => 'mayorista', 'estado' => 'pendiente', 'empresa' => 'Uñas Bonitas Macul (ficticio)', 'telefono' => '+56 2 0000 0000'],
     ],
 
-    // Reservas de ejemplo: hace_min = minutos antes del reinicio; fecha_entrega = días desde el reinicio.
+    // Reservas de ejemplo: hace_min = minutos antes del reinicio; fecha_entrega = días desde el reinicio (el motor
+    // salta los domingos y feriados); extras = los campos "Sede" y "Estilista" del checkout, con los textos de config.php.
     'pedidos' => [
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 50400, 'estado' => 'entregado', 'entrega' => 'retiro', 'fecha_entrega' => $dia(-33), 'cuando' => '11:00', 'pago' => 'prueba', 'nota' => 'Con Catalina (Las Condes). Quiero aclarar dos tonos.', 'items' => [['balayage', 1], ['mascarilla', 1]]],
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 15840, 'estado' => 'entregado', 'entrega' => 'retiro', 'fecha_entrega' => $dia(-10), 'cuando' => '18:00', 'pago' => 'al_recibir', 'nota' => 'Con Valentina (Ñuñoa).', 'items' => [['permanente', 1], ['perfilado', 1]]],
-        ['usuario' => 'mayorista@demo.cl', 'hace_min' => 4320, 'estado' => 'entregado', 'entrega' => 'despacho', 'comuna' => 'Ñuñoa', 'direccion' => 'Pasaje Inventado 450 (Timbre 2)', 'fecha_entrega' => $dia(-2), 'cuando' => '', 'pago' => 'al_recibir', 'nota' => 'Factura a nombre del estudio.', 'items' => [['oxidante', 4], ['aluminio', 2], ['guantes', 3]]],
-        ['usuario' => 'mayorista@demo.cl', 'hace_min' => 120, 'estado' => 'nuevo', 'entrega' => 'retiro', 'fecha_entrega' => $dia(1), 'cuando' => '', 'pago' => 'al_recibir', 'nota' => 'Retiro en Ñuñoa en la tarde.', 'items' => [['pestanas', 2], ['pinceles', 1]]],
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 40, 'estado' => 'preparando', 'entrega' => 'retiro', 'fecha_entrega' => $dia(1), 'cuando' => '10:30', 'pago' => 'prueba', 'nota' => 'Con Tomás (Las Condes). Corte más corto atrás.', 'items' => [['corte-mujer', 1], ['hidratacion', 1]]],
-        ['usuario' => 'cliente@demo.cl', 'hace_min' => 9, 'estado' => 'nuevo', 'entrega' => 'despacho', 'comuna' => 'Las Condes', 'direccion' => 'Av. Ejemplo 1234, depto. 51 (Torre B, conserjería)', 'fecha_entrega' => $dia(4), 'cuando' => '09:00', 'pago' => 'al_recibir', 'nota' => 'Con Javiera (Ñuñoa). Matrimonio civil a las 13:00: peinado y maquillaje en casa.', 'items' => [['peinado-evento', 1], ['maquillaje', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 50400, 'estado' => 'entregado', 'entrega' => 'retiro', 'fecha_entrega' => -33, 'cuando' => '11:00', 'pago' => 'prueba', 'extras' => [['Sede', 'Las Condes'], ['Estilista', 'Catalina · color y balayage (Las Condes)']], 'nota' => 'Quiero aclarar dos tonos.', 'items' => [['balayage', 1], ['mascarilla', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 15840, 'estado' => 'entregado', 'entrega' => 'retiro', 'fecha_entrega' => -10, 'cuando' => '18:00', 'pago' => 'al_recibir', 'extras' => [['Sede', 'Ñuñoa'], ['Estilista', 'Valentina · manicure y pedicure (Ñuñoa)']], 'items' => [['permanente', 1], ['perfilado', 1]]],
+        ['usuario' => 'mayorista@demo.cl', 'hace_min' => 4320, 'estado' => 'entregado', 'entrega' => 'despacho', 'comuna' => 'Ñuñoa', 'direccion' => 'Pasaje Inventado 450 (Timbre 2)', 'fecha_entrega' => -2, 'cuando' => '', 'pago' => 'al_recibir', 'nota' => 'Factura a nombre del estudio.', 'items' => [['oxidante', 4], ['aluminio', 2], ['guantes', 3]]],
+        ['usuario' => 'mayorista@demo.cl', 'hace_min' => 120, 'estado' => 'nuevo', 'entrega' => 'retiro', 'fecha_entrega' => 1, 'cuando' => '', 'pago' => 'al_recibir', 'extras' => [['Sede', 'Ñuñoa']], 'nota' => 'Paso a buscarlos en la tarde.', 'items' => [['pestanas', 2], ['pinceles', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 40, 'estado' => 'preparando', 'entrega' => 'retiro', 'fecha_entrega' => 1, 'cuando' => '10:30', 'pago' => 'prueba', 'extras' => [['Sede', 'Las Condes'], ['Estilista', 'Tomás · cortes y lavado spa (Las Condes)']], 'nota' => 'Corte más corto atrás.', 'items' => [['corte-mujer', 1], ['hidratacion', 1]]],
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 9, 'estado' => 'nuevo', 'entrega' => 'despacho', 'comuna' => 'Las Condes', 'direccion' => 'Av. Ejemplo 1234, depto. 51 (Torre B, conserjería)', 'fecha_entrega' => 4, 'cuando' => '09:00', 'pago' => 'al_recibir', 'extras' => [['Estilista', 'Javiera · novias y peinados de evento (Ñuñoa)']], 'nota' => 'Matrimonio civil a las 13:00: peinado y maquillaje en casa.', 'items' => [['peinado-evento', 1], ['maquillaje', 1]]],
     ],
 ];

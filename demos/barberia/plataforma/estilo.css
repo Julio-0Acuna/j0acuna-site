@@ -179,9 +179,9 @@
 .fb-empresas__texto p:not(.fb-sobre) { color: var(--t-suave); }
 @media (min-width: 900px) { .fb-empresas { grid-template-columns: 1fr 1fr; } .fb-empresas__foto { border-right: 2px solid var(--t-tinta); } .fb-empresas__texto { padding: 40px; align-self: center; } }
 
-/* Checkout: selector de barbero */
-.fb-campo-barbero { padding: 14px; background: var(--t-acento-suave); border: 2px solid var(--t-acento); }
-.fb-campo-barbero small { font-size: .85rem; }
+/* Checkout: campo "Barbero" del motor ('checkout_campos', parcial _campos_extra) */
+.fb .t-campo--extra { padding: 14px; background: var(--t-acento-suave); border: 2px solid var(--t-acento); }
+.fb .t-campo--extra small { font-size: .85rem; }
 
 /* Pie */
 .fb-pie { background: var(--t-tinta); color: #d6d4cf; padding: 46px 0 34px; margin-top: 30px; border-top: 8px solid transparent; border-image: repeating-linear-gradient(-55deg, var(--fb-rojo) 0 12px, #fff 12px 18px, var(--fb-azul-poste) 18px 30px, #fff 30px 36px) 8; }

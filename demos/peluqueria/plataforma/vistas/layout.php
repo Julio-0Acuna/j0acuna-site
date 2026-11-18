@@ -121,22 +121,7 @@ demo_aviso($cfg['rubro']);
   </div>
   <div class="on-ancho"><?php demo_aviso_pie($cfg['rubro']); ?></div>
 </footer>
-<?php if ($vista === 'checkout' && !empty($cfg['estilistas'])): ?>
-<template id="on-estilistas">
-  <div class="t-campo on-elegir">
-    <label for="on-estilista">¿Con quién te atiendes?</label>
-    <select id="on-estilista">
-      <option value="" data-texto="">Me da lo mismo: la primera libre</option>
-      <?php foreach ($cfg['estilistas'] as $id => $e): ?>
-      <option value="<?= m_e($id) ?>" data-texto="<?= m_e('Con ' . $e['nombre'] . ' (' . $e['sede'] . ').') ?>"><?= m_e($e['nombre'] . ' · ' . $e['oficio'] . ' · ' . $e['sede']) ?></option>
-      <?php endforeach; ?>
-    </select>
-    <small>Lo anotamos al comienzo de la nota de tu reserva.</small>
-  </div>
-</template>
-<?php endif; ?>
 <?php demo_scripts(); ?>
 <script src="<?= m_e(demo_asset(DEMO_URL_COMUN . 'js/tienda.js')) ?>" defer></script>
-<script src="<?= m_e(demo_asset($cfg['url_base'] . 'reserva.js')) ?>" defer></script>
 </body>
 </html>

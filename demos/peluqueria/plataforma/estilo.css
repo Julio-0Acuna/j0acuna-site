@@ -179,9 +179,11 @@
 .on .t-opcion { border-radius: 16px; }
 .on .t-campo input, .on .t-campo select, .on .t-campo textarea { border-radius: 14px; border: 1.5px solid var(--on-borde); min-height: 48px; }
 .on .t-campo input:focus, .on .t-campo select:focus, .on .t-campo textarea:focus { border-color: var(--on-violeta); outline: 3px solid var(--on-lila-suave); outline-offset: 0; }
-.on-elegir { padding: 14px; border-radius: 18px; background: var(--on-lila-suave); }
-.on-elegir label { font-weight: 700; }
-.on-elegir small { color: var(--on-suave); font-size: .82rem; }
+/* Sede y estilista: campos extra del checkout del motor ('checkout_campos', parcial _campos_extra) */
+.on .t-campos-extra { margin: 0 0 14px; padding: 14px; border-radius: 18px; background: var(--on-lila-suave); }
+.on .t-campos-extra .t-campo:last-child { margin-bottom: 0; }
+.on .t-campos-extra .t-subtitulo { margin: 0 0 10px; font-weight: 700; }
+.on .t-campos-extra small { color: var(--on-suave); font-size: .82rem; }
 .on .t-resumen__total strong, .on .t-pedido-panel__total { font-family: var(--t-fuente-titulos); font-weight: 800; }
 .on .t-kpi { border-radius: 20px; }
 .on .t-kpi strong { font-family: var(--t-fuente-titulos); font-weight: 800; color: var(--on-violeta-osc); }

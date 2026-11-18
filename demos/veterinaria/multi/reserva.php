@@ -83,8 +83,8 @@ cp_abrir('reserva', 'Tu reserva', 'Reserva tu hora en ' . $n['nombre'] . ': serv
             </div>
             <p class="cp-pequeno">Los sábados atendemos hasta las 18:00 y el domingo solo urgencias. Te confirmamos la hora exacta por WhatsApp.</p>
             <div class="cp-opciones" role="radiogroup" aria-label="¿Dónde atendemos a tu mascota?">
-              <label class="cp-opcion"><input type="radio" name="entrega" value="retiro" checked data-carrito-extra="Atención" data-carrito-extra-valor="En la clínica"> <span><strong>En la clínica</strong><small>Sin costo adicional. Te esperamos en el bloque elegido.</small></span></label>
-              <label class="cp-opcion"><input type="radio" name="entrega" value="despacho" data-carrito-extra="Atención" data-carrito-extra-valor="Visita a domicilio"> <span><strong>Visita a domicilio</strong><small>Para controles, vacunas y mascotas nerviosas. Costo según comuna.</small></span></label>
+              <label class="cp-opcion"><input type="radio" name="entrega" value="retiro" checked> <span><strong>En la clínica</strong><small>Sin costo adicional. Te esperamos en el bloque elegido.</small></span></label>
+              <label class="cp-opcion"><input type="radio" name="entrega" value="despacho"> <span><strong>Visita a domicilio</strong><small>Para controles, vacunas y mascotas nerviosas. Costo según comuna.</small></span></label>
             </div>
             <div class="cp-form-grid">
               <div class="cp-campo" data-solo-despacho hidden>
