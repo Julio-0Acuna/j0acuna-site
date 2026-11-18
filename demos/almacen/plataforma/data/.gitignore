@@ -1,0 +1,5 @@
+# Base de la demo: se crea sola desde seed.php (no va al repositorio).
+*.sqlite
+*.sqlite-*
+*.lock
+*.nueva-*

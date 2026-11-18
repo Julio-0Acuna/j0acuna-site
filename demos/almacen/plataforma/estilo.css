@@ -1,0 +1,209 @@
+/*
+ * Bodega Surtido (Plataforma web): distribuidora y almacén online.
+ * Cartón kraft, azul marino y rojo de cinta de embalaje; letras de esténcil para la marca y los números
+ * (Stardos Stencil), grotesca para títulos (Familjen Grotesk) y Libre Franklin para leer.
+ */
+.bs {
+  --bs-marino: #16233f;
+  --bs-marino-2: #22335a;
+  --bs-kraft: #d8b685;
+  --bs-kraft-claro: #f4ead9;
+  --bs-kraft-osc: #8a6a3d;
+  --bs-rojo: #cf2e27;
+  --bs-crema: #fcf8f1;
+  --bs-estencil: "Stardos Stencil", Georgia, serif;
+  --t-fondo: var(--bs-kraft-claro);
+  --t-superficie: #fffdf9;
+  --t-tinta: var(--bs-marino);
+  --t-suave: #5b6274;
+  --t-borde: #e3d5bf;
+  --t-acento: var(--bs-marino);
+  --t-acento-tinta: #fff;
+  --t-acento-suave: #f6e7cf;
+  --t-radio: 10px;
+  --t-radio-chico: 8px;
+  --t-sombra: 0 2px 0 rgba(22, 35, 63, .08);
+  --t-fuente: "Libre Franklin", system-ui, sans-serif;
+  --t-fuente-titulos: "Familjen Grotesk", system-ui, sans-serif;
+  --t-ancho: 1200px;
+  --demo-foco: var(--bs-rojo);
+}
+.bs h1, .bs h2, .bs h3 { letter-spacing: -.02em; }
+.bs a { color: inherit; }
+.bs-ancho { width: min(var(--t-ancho), 100% - 32px); margin: 0 auto; }
+.bs-sobre { margin: 0 0 10px; font: 700 .76rem/1.2 var(--t-fuente); letter-spacing: .16em; text-transform: uppercase; color: var(--bs-rojo); }
+.bs-sobre--claro { color: var(--bs-kraft); }
+
+/* ---------- Cinta de embalaje */
+.bs-cinta {
+  background: var(--bs-rojo); color: #fff; font-size: .84rem; position: relative;
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .14), inset 0 -3px 0 rgba(0, 0, 0, .12);
+}
+.bs-cinta p { margin: 0 auto; padding: 8px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.bs-cinta strong { font-weight: 700; }
+.bs-cinta__sep { width: 18px; height: 2px; background: rgba(255, 255, 255, .55); }
+.bs-cinta__enlace { margin-left: auto; font-weight: 700; color: #fff; text-underline-offset: 3px; }
+@media (max-width: 760px) { .bs-cinta__extra, .bs-cinta__sep { display: none; } .bs-cinta p { font-size: .8rem; gap: 2px 14px; } .bs-cinta__enlace { margin-left: 0; } }
+
+/* ---------- Cabecera */
+.bs-cabecera { background: var(--bs-marino); color: #fff; }
+.bs-cabecera__fila { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; padding: 14px 0; }
+.bs-logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; margin: 0; }
+.bs .bs-logo { color: #fff; }
+.bs-logo__caja { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 8px; background: var(--bs-kraft); color: var(--bs-marino); }
+.bs-logo__texto { display: grid; line-height: 1; }
+.bs-logo__bodega { font: 600 .7rem/1 var(--t-fuente); letter-spacing: .32em; text-transform: uppercase; color: var(--bs-kraft); }
+.bs-logo__nombre { font: 700 1.9rem/1 var(--bs-estencil); letter-spacing: .04em; text-transform: uppercase; }
+.bs-buscar { order: 3; flex: 1 1 100%; display: flex; align-items: center; background: var(--bs-crema); border-radius: 8px; padding: 4px; border: 2px solid var(--bs-kraft); }
+.bs-buscar input { flex: 1; min-width: 0; border: 0; background: transparent; padding: 9px 12px; font: inherit; color: var(--bs-marino); }
+.bs-buscar input:focus { outline: none; }
+.bs-buscar button { display: grid; place-items: center; width: 42px; height: 40px; border: 0; border-radius: 6px; background: var(--bs-rojo); color: #fff; cursor: pointer; }
+@media (min-width: 900px) { .bs-buscar { order: 0; flex: 1 1 auto; max-width: 540px; margin: 0 auto; } }
+.bs-acciones { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+@media (min-width: 900px) { .bs-acciones { margin-left: 0; } }
+.bs-accion { position: relative; display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 8px 12px; border-radius: 8px; color: #fff; text-decoration: none; font-weight: 600; font-size: .92rem; }
+.bs .bs-accion { color: #fff; }
+.bs-accion:hover, .bs-accion.is-activo { background: var(--bs-marino-2); }
+.bs-accion--pedido { background: var(--bs-kraft); }
+.bs .bs-accion--pedido { color: var(--bs-marino); }
+.bs-accion--pedido:hover, .bs-accion--pedido.is-activo { background: #e6c898; }
+.bs-burbuja { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; display: grid; place-items: center; background: var(--bs-rojo); color: #fff; font-size: .78rem; font-weight: 700; }
+.bs-salir button { min-height: 40px; padding: 6px 10px; border: 1px solid rgba(255, 255, 255, .3); border-radius: 8px; background: transparent; color: #fff; font: inherit; font-size: .85rem; cursor: pointer; }
+@media (max-width: 520px) { .bs-accion span:not(.bs-burbuja) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } .bs-logo__nombre { font-size: 1.6rem; } }
+.bs-pasillos { background: var(--bs-kraft); border-top: 3px solid var(--bs-marino); }
+.bs-pasillos__fila { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+.bs-pasillos__fila::-webkit-scrollbar { display: none; }
+.bs-pasillos a { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 12px 14px; text-decoration: none; font: 600 .92rem/1 var(--t-fuente-titulos); color: var(--bs-marino); border-bottom: 4px solid transparent; }
+.bs-pasillos a:hover { background: rgba(255, 255, 255, .25); }
+.bs-pasillos a.is-activo { border-color: var(--bs-rojo); background: var(--bs-kraft-claro); }
+.bs-pasillos__cajas { margin-left: auto; }
+.bs .bs-pasillos__cajas { color: var(--bs-marino); text-decoration: underline; text-decoration-color: var(--bs-rojo); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.bs-pasillos__cajas svg { color: var(--bs-rojo); }
+
+/* ---------- Avisos de la cuenta y del pedido mínimo */
+.bs-principal { padding-top: 24px; }
+.bs-modo-negocio { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 18px; padding: 10px 14px; border-radius: 8px; background: var(--bs-marino); color: #fff; font-size: .92rem; }
+.bs-modo-negocio__sello { padding: 3px 10px; border-radius: 4px; background: var(--bs-kraft); color: var(--bs-marino); font-weight: 700; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+.bs-minimo { max-width: 980px; margin: 0 auto 18px; padding: 12px 16px; border-radius: 8px; border: 2px dashed var(--bs-rojo); background: #fff4ee; }
+.bs-minimo p { margin: 0 0 8px; font-weight: 700; }
+.bs-minimo__barra { height: 10px; border-radius: 999px; background: #f0d9cc; overflow: hidden; }
+.bs-minimo__barra span { display: block; height: 100%; background: var(--bs-rojo); border-radius: inherit; }
+.bs-minimo--gratis, .bs-minimo--ok { border-color: var(--bs-marino); background: var(--bs-crema); }
+.bs-minimo--gratis .bs-minimo__barra, .bs-minimo--ok .bs-minimo__barra { background: var(--t-borde); }
+.bs-minimo--gratis .bs-minimo__barra span, .bs-minimo--ok .bs-minimo__barra span { background: var(--bs-marino); }
+
+/* ---------- Portada */
+.bs-hero { display: grid; gap: 26px; align-items: center; margin: 8px 0 30px; }
+@media (min-width: 920px) { .bs-hero { grid-template-columns: .95fr 1.05fr; gap: 44px; } }
+.bs-hero h1 { font-size: clamp(2.3rem, 6.6vw, 4.1rem); line-height: 1; margin-bottom: 16px; letter-spacing: -.035em; }
+.bs-hero h1 span { display: block; color: var(--bs-rojo); }
+.bs-hero__texto > p:not(.bs-sobre) { font-size: 1.08rem; color: var(--t-suave); max-width: 520px; margin: 0 0 24px; }
+.bs-hero__acciones { display: flex; flex-wrap: wrap; gap: 10px; }
+.bs-btn-grande { min-height: 52px; padding: 12px 24px; font-size: 1.02rem; }
+.bs-btn-borde { min-height: 52px; padding: 12px 22px; border: 2px solid var(--bs-marino); background: transparent; }
+.bs-hero__foto { position: relative; margin: 0; }
+.bs-hero__foto img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; box-shadow: 10px 10px 0 var(--bs-kraft); }
+.bs-envio {
+  position: absolute; right: -6px; bottom: -22px; width: min(280px, 82%); display: grid; gap: 8px; padding: 14px 16px 12px;
+  background: #fff; color: var(--bs-marino); border: 2px solid var(--bs-marino); border-radius: 4px; transform: rotate(2deg);
+  box-shadow: 0 16px 30px -18px rgba(22, 35, 63, .7);
+}
+.bs-envio__cabeza { font: 700 .72rem/1 var(--t-fuente); letter-spacing: .2em; text-transform: uppercase; color: var(--bs-rojo); padding-bottom: 8px; border-bottom: 2px solid var(--bs-marino); }
+.bs-envio__fila { display: grid; gap: 1px; }
+.bs-envio__fila small { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--t-suave); }
+.bs-envio__fila strong { font: 700 1.05rem/1.15 var(--t-fuente-titulos); }
+.bs-envio__dos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 8px; border-top: 1px dashed var(--t-borde); }
+.bs-envio__codigo { height: 34px; background: repeating-linear-gradient(90deg, var(--bs-marino) 0 2px, transparent 2px 4px, var(--bs-marino) 4px 7px, transparent 7px 9px, var(--bs-marino) 9px 10px, transparent 10px 13px); }
+@media (max-width: 600px) { .bs-envio { right: 8px; bottom: -40px; } .bs-hero { margin-bottom: 56px; } }
+
+.bs-publicos { display: grid; gap: 16px; margin: 56px 0 30px; }
+@media (min-width: 860px) { .bs-publicos { grid-template-columns: repeat(3, 1fr); } }
+.bs-publico { display: flex; flex-direction: column; background: var(--t-superficie); border: 2px solid var(--bs-marino); border-radius: 10px; overflow: hidden; }
+.bs-publico__foto { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-bottom: 2px solid var(--bs-marino); }
+.bs-publico__cuerpo { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.bs-publico__num { margin: 0; font: 700 2rem/1 var(--bs-estencil); color: var(--bs-kraft-osc); }
+.bs-publico h3 { font-size: 1.35rem; margin: 2px 0 4px; }
+.bs-publico p { margin: 0 0 12px; color: var(--t-suave); flex: 1; }
+.bs-publico a { font-weight: 700; color: var(--bs-rojo); text-underline-offset: 3px; }
+
+.bs-pasos { list-style: none; margin: 0 0 30px; padding: 0; display: grid; gap: 0; background: var(--bs-marino); color: #fff; border-radius: 10px; overflow: hidden; }
+@media (min-width: 860px) { .bs-pasos { grid-template-columns: repeat(3, 1fr); } }
+.bs-pasos li { display: flex; gap: 14px; align-items: flex-start; padding: 22px; border-bottom: 1px dashed rgba(255, 255, 255, .2); }
+@media (min-width: 860px) { .bs-pasos li { border-bottom: 0; border-right: 1px dashed rgba(255, 255, 255, .2); } .bs-pasos li:last-child { border-right: 0; } }
+.bs-pasos__num { font: 700 2.4rem/1 var(--bs-estencil); color: var(--bs-kraft); }
+.bs-pasos li div { display: grid; gap: 2px; }
+.bs-pasos strong { font: 700 1.1rem/1.2 var(--t-fuente-titulos); }
+.bs-pasos span:not(.bs-pasos__num) { color: #c8cfe0; font-size: .92rem; }
+
+.bs-negocios { display: grid; gap: 0; margin: 0 0 36px; background: var(--bs-marino); color: #fff; border-radius: 10px; overflow: hidden; }
+@media (min-width: 860px) { .bs-negocios { grid-template-columns: .9fr 1.1fr; } }
+.bs-negocios__foto { width: 100%; height: 100%; min-height: 240px; object-fit: cover; display: block; }
+.bs-negocios__texto { padding: 30px 28px; }
+.bs-negocios__texto h2 { color: #fff; font-size: clamp(1.6rem, 4vw, 2.2rem); }
+.bs-negocios__texto p { color: #d5dbea; }
+.bs-negocios__texto ul { margin: 0 0 22px; padding: 0; list-style: none; display: grid; gap: 8px; }
+.bs-negocios__texto li { padding-left: 26px; position: relative; }
+.bs-negocios__texto li::before { content: ""; position: absolute; left: 0; top: .45em; width: 14px; height: 10px; border-left: 3px solid var(--bs-kraft); border-bottom: 3px solid var(--bs-kraft); transform: rotate(-45deg); }
+
+
+/* ---------- Catálogo y tarjetas tipo caja */
+.bs .t-seccion > h2, .bs .t-catalogo__cabeza h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+.bs .t-destacados h2::before, .bs .t-catalogo__cabeza h2::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 10px; background: var(--bs-rojo); transform: rotate(45deg) translateY(-3px); }
+.bs .t-btn { border-radius: 8px; font-weight: 700; }
+.bs .t-btn--primario { background: var(--bs-marino); border-color: var(--bs-marino); }
+.bs .t-btn--primario:hover { filter: none; background: var(--bs-marino-2); }
+.bs .t-btn--primario, .bs a.t-btn--primario { color: #fff; }
+.bs .bs-negocios .t-btn--primario { background: var(--bs-rojo); border-color: var(--bs-rojo); }
+.bs .bs-negocios .t-btn--primario:hover { background: #b2241e; }
+@media (min-width: 900px) {
+  .bs .t-chips { flex-wrap: wrap; overflow: visible; }
+  .bs .t-destacados .t-carrusel { grid-auto-flow: row; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); overflow: visible; }
+}
+.bs .t-buscar input { border-radius: 8px; border: 2px solid var(--t-borde); }
+.bs .t-buscar .t-btn { border-radius: 8px; }
+.bs .t-chips a { border-radius: 6px; border: 2px solid var(--t-borde); background: var(--t-superficie); font-weight: 600; }
+.bs .t-chips a.is-activo { background: var(--bs-marino); border-color: var(--bs-marino); color: #fff; }
+.bs .t-categoria__titulo { display: flex; align-items: center; gap: 10px; padding-bottom: 8px; border-bottom: 2px solid var(--bs-marino); font-size: 1.35rem; }
+.bs .t-grilla { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+@media (max-width: 520px) { .bs .t-grilla { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .bs .t-producto__cuerpo { padding: 10px 10px 12px; } .bs .t-producto__desc { display: none; } }
+.bs .t-producto { border: 2px solid var(--t-borde); box-shadow: none; border-radius: 10px; transition: border-color .15s, transform .15s; }
+.bs .t-producto:hover { border-color: var(--bs-kraft-osc); transform: translateY(-2px); }
+.bs .t-producto__foto { border-bottom: 2px dashed var(--t-borde); }
+.bs .t-producto__cuerpo h3 { font-size: 1rem; line-height: 1.2; }
+.bs .t-producto__desc { font-size: .85rem; }
+.bs .t-producto__precio strong { font: 700 1.35rem/1 var(--t-fuente-titulos); }
+.bs .t-sello { left: auto; right: -8px; top: 12px; padding: 5px 16px 5px 12px; border-radius: 2px; background: var(--bs-rojo); color: #fff; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; transform: rotate(4deg); box-shadow: 0 2px 0 rgba(0, 0, 0, .15); }
+.bs .t-sello--mayorista { background: var(--bs-marino); }
+.bs .t-etiqueta { border-radius: 4px; background: var(--bs-kraft); color: var(--bs-marino); }
+.bs .t-producto__stock { color: var(--bs-rojo); }
+.bs .t-carrusel { grid-auto-columns: minmax(220px, 46%); }
+@media (min-width: 900px) { .bs .t-carrusel { grid-auto-columns: minmax(220px, 23%); } }
+.bs .t-aviso-mayorista { background: var(--bs-kraft); color: var(--bs-marino); border: 2px solid var(--bs-marino); }
+.bs .t-aviso-mayorista .t-btn { background: var(--bs-marino); border-color: var(--bs-marino); color: #fff; }
+
+/* ---------- Vistas del motor: cajas, pasos y panel */
+.bs .t-caja { border: 2px solid var(--t-borde); box-shadow: none; }
+.bs .t-caja legend { font-family: var(--t-fuente-titulos); }
+.bs .t-opcion { border-width: 2px; }
+.bs .t-opcion:has(input:checked) { border-color: var(--bs-marino); background: var(--bs-crema); }
+.bs .t-lineas, .bs .t-tabla-envoltura { border-width: 2px; }
+.bs .t-pasos li.is-hecho::before { background: var(--bs-rojo); }
+.bs .t-pestanas a.is-activo { border-color: var(--bs-rojo); }
+.bs .t-kpi { border-width: 2px; }
+.bs .t-kpi strong { font-family: var(--t-fuente-titulos); }
+.bs-vista-ingresar .t-pagina h1, .bs-vista-registro .t-pagina h1, .bs-vista-carrito .t-pagina h1, .bs-vista-checkout .t-pagina h1, .bs-vista-cuenta .t-pagina h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); }
+
+/* ---------- Google */
+.bs .t-google { margin-top: 48px; }
+.bs .demo-google__intro h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+
+/* ---------- Pie */
+.bs-pie { background: var(--bs-marino); color: #cfd6e6; padding: 46px 0 28px; border-top: 8px solid var(--bs-kraft); }
+.bs .bs-pie a { color: #fff; }
+.bs-pie__grid { display: grid; gap: 28px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); padding-bottom: 26px; border-bottom: 1px dashed rgba(255, 255, 255, .2); }
+.bs-pie p { margin: 0 0 8px; }
+.bs-pie__titulo { font: 700 .76rem/1 var(--t-fuente); letter-spacing: .16em; text-transform: uppercase; color: var(--bs-kraft); margin-bottom: 14px !important; }
+.bs-pie__comunas { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: .9rem; }
+.bs-pie__comunas li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dotted rgba(255, 255, 255, .15); padding-bottom: 3px; }
+.bs-pie__horario { font-size: .92rem; }
+.bs-pie .demo-aviso-pie { margin-top: 16px; }
