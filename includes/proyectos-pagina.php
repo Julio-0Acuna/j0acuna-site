@@ -226,10 +226,10 @@ render_partial('nav', ['site' => $site, 'actual' => 'proyectos']);
       'site' => $site,
       'titulo' => $actual === null ? '¿Quieres algo así para tu negocio?' : '¿Quieres algo así?',
       'texto' => $actual === null ? 'Cuéntame qué necesitas y te digo cómo lo haría.' : 'Cuéntame qué necesita tu negocio y te digo cómo lo haría.',
-      'mensaje' => $actual === null ? $site['profile']['whatsaprj_mensaje'] : 'Hola Julio, vi tus proyectos de «' . $actual['nombre'] . '» y quiero algo así.',
+      'mensaje' => $actual === null ? $site['profile']['whatsapp_mensaje'] : 'Hola Julio, vi tus proyectos de «' . $actual['nombre'] . '» y quiero algo así.',
       'secundario' => ['Ver servicios', '/servicios'],
   ]); ?>
 </main>
 <?php
-render_partial('whatsapp-fab', ['site' => $site, 'mensaje' => $site['profile']['whatsaprj_mensaje']]);
+render_partial('whatsapp-fab', ['site' => $site, 'mensaje' => $site['profile']['whatsapp_mensaje']]);
 render_partial('footer', ['site' => $site]);

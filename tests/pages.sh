@@ -229,6 +229,23 @@ debe_contar_exacto /restaurantes 'class="stair stair-' 4
 debe_contener   /restaurantes  'href="/servicios#menu-qr-3d"'
 fi
 
+# Ninguna página muestra avisos de PHP (ej. una clave de arreglo mal escrita) ni los deja en el registro.
+for ruta in / /servicios /proyectos /proyectos/restaurantes /proyectos/ejemplos /restaurantes /blog /contacto /demos/; do
+    if curl -s "$BASE$ruta" | grep -qE '(Warning|Notice|Deprecated|Fatal error)(</b>)?: '; then
+        falla "$ruta muestra un aviso de PHP"
+    else
+        pasa "$ruta sin avisos de PHP"
+    fi
+done
+for id in $(curl -s "$BASE/proyectos" | grep -oE 'href="/proyecto/[a-z0-9-]+"' | sort -u | sed -E 's#href="/proyecto/##; s#"##'); do
+    if curl -s "$BASE/proyecto/$id" | grep -qE '(Warning|Notice|Deprecated|Fatal error)(</b>)?: '; then falla "/proyecto/$id muestra un aviso de PHP"; else pasa "/proyecto/$id sin avisos de PHP"; fi
+done
+if grep -qE 'PHP (Warning|Notice|Deprecated|Fatal error)' /tmp/pages_server.log; then
+    falla "el registro del servidor tiene avisos de PHP: $(grep -m1 -E 'PHP (Warning|Notice|Deprecated|Fatal)' /tmp/pages_server.log)"
+else
+    pasa "registro del servidor sin avisos de PHP"
+fi
+
 echo
 echo "$OK ok / $FAIL fallas"
 [ "$FAIL" -eq 0 ]
