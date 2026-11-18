@@ -1,0 +1,396 @@
+/*
+ * Cava Ocre (Multi-page): vinoteca y destilados de especialidad con catas.
+ * Estilo editorial de revista de vinos: papel hueso, tinto oscuro y ocre, filetes finos,
+ * fichas numeradas y fotos verticales. Tipografías: Newsreader (títulos) y Libre Franklin (texto).
+ */
+.co {
+  --co-tinto: #3b0d18;
+  --co-tinto-2: #521624;
+  --co-tinto-3: #6d2233;
+  --co-ocre: #c98b3a;
+  --co-ocre-claro: #e8c58f;
+  --co-hueso: #f1e8da;
+  --co-papel: #fbf8f2;
+  --co-tinta: #1e1512;
+  --co-suave: #6b5d55;
+  --co-filete: #dccfbd;
+  --co-ancho-max: 1180px;
+  --demo-tinta: var(--co-tinta);
+  --demo-suave: var(--co-suave);
+  --demo-borde: var(--co-filete);
+  --demo-superficie: #fff;
+  --demo-radio: 4px;
+  --demo-foco: #c98b3a;
+  --demo-fuente-titulos: "Newsreader", Georgia, serif;
+  margin: 0;
+  background: var(--co-papel);
+  color: var(--co-tinta);
+  font-family: "Libre Franklin", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.co h1, .co h2, .co h3 { font-family: "Newsreader", Georgia, serif; font-weight: 400; margin: 0; line-height: 1.08; letter-spacing: -.01em; }
+.co h1 em, .co h2 em { font-style: italic; color: var(--co-ocre); }
+:where(.co) a { color: inherit; }
+.co-ancho { width: min(var(--co-ancho-max), 100% - 32px); margin-inline: auto; }
+.co-centro { text-align: center; margin-top: 36px; }
+.co-pequeno { font-size: .875rem; color: var(--co-suave); }
+
+.co-sobre {
+  display: flex; align-items: center; gap: 12px; margin: 0 0 14px;
+  font-size: .74rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--co-ocre);
+}
+.co-sobre::before { content: ""; width: 28px; height: 1px; background: currentColor; flex: none; }
+
+/* ---------- Botones */
+.co-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 48px; padding: 12px 24px; border: 1px solid var(--co-tinto); border-radius: 2px;
+  background: var(--co-tinto); color: #fff; text-decoration: none; cursor: pointer;
+  font: 600 .8rem/1.2 "Libre Franklin", sans-serif; letter-spacing: .14em; text-transform: uppercase;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.co-btn:hover { background: var(--co-tinto-3); border-color: var(--co-tinto-3); }
+.co-btn--ocre { background: var(--co-ocre); border-color: var(--co-ocre); color: var(--co-tinto); }
+.co-btn--ocre:hover { background: var(--co-ocre-claro); border-color: var(--co-ocre-claro); }
+.co-btn--linea { background: transparent; border-color: rgba(255, 255, 255, .6); color: #fff; }
+.co-btn--linea:hover { background: rgba(255, 255, 255, .1); border-color: #fff; }
+.co-btn--linea-oscura { background: transparent; border-color: var(--co-tinto); color: var(--co-tinto); }
+.co-btn--linea-oscura:hover { background: var(--co-tinto); color: #fff; }
+.co-btn--bloque { width: 100%; }
+.co-btn--wa { background: #1f7a4a; border-color: #1f7a4a; }
+.co-btn--wa:hover { background: #17633b; border-color: #17633b; }
+.co-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.co-acciones--columna { flex-direction: column; align-items: stretch; }
+.co-enlace { display: inline-flex; gap: 8px; font-weight: 600; font-size: .9rem; letter-spacing: .04em; text-decoration: none; border-bottom: 1px solid var(--co-ocre); padding-bottom: 3px; color: var(--co-tinto); }
+.co-enlace::after { content: "→"; }
+.co-enlace:hover { color: var(--co-ocre); }
+.co-enlace--claro { color: #fff; }
+
+/* ---------- Tira +18 y cabecera */
+.co-tira {
+  margin: 0; display: flex; justify-content: center; align-items: center; gap: 8px; text-align: center;
+  background: var(--co-tinto); color: var(--co-ocre-claro); font-size: .78rem; letter-spacing: .04em; padding: 7px 14px; line-height: 1.35;
+}
+.co-tira svg { flex: none; }
+.co-cabecera { position: sticky; top: 0; z-index: 40; background: rgba(251, 248, 242, .94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--co-filete); }
+.co-cabecera__fila { display: flex; align-items: center; gap: 22px; min-height: 74px; }
+.co-logo-enlace { text-decoration: none; margin-right: auto; }
+.co-logo { display: inline-flex; align-items: center; gap: 12px; color: var(--co-tinto); }
+.co-logo__sello {
+  width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; flex: none;
+  background: radial-gradient(circle at 35% 30%, #7a2a3b, var(--co-tinto) 70%); color: var(--co-ocre-claro);
+  font: italic 500 1rem/1 "Newsreader", serif; letter-spacing: .02em;
+  box-shadow: inset 0 0 0 3px rgba(232, 197, 143, .25), 0 2px 0 rgba(0, 0, 0, .15);
+}
+.co-logo__nombre { font: 400 1.75rem/1 "Newsreader", serif; letter-spacing: -.01em; }
+.co-logo__nombre em { color: var(--co-ocre); }
+.co-nav { display: none; gap: 26px; }
+.co-nav a { text-decoration: none; font-size: .78rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--co-suave); padding: 8px 0; border-bottom: 1px solid transparent; }
+.co-nav a:hover, .co-nav a.is-activo { color: var(--co-tinto); border-color: var(--co-ocre); }
+.co-bolsa { position: relative; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--co-tinto); font-weight: 600; font-size: .85rem; min-height: 44px; padding: 0 4px; }
+.co-bolsa__num { min-width: 22px; height: 22px; border-radius: 999px; background: var(--co-ocre); color: var(--co-tinto); font-size: .75rem; font-weight: 700; display: inline-grid; place-items: center; padding: 0 6px; }
+.co-bolsa__num[hidden] { display: none; }
+.co-menu-movil { position: relative; }
+.co-menu-movil summary { list-style: none; width: 44px; height: 44px; display: grid; place-content: center; gap: 7px; cursor: pointer; }
+.co-menu-movil summary::-webkit-details-marker { display: none; }
+.co-menu-movil summary span { display: block; width: 24px; height: 1.5px; background: var(--co-tinto); transition: transform .2s; }
+.co-menu-movil[open] summary span:first-child { transform: translateY(4.5px) rotate(45deg); }
+.co-menu-movil[open] summary span:last-child { transform: translateY(-4.5px) rotate(-45deg); }
+.co-menu-movil nav { position: absolute; right: 0; top: 54px; width: min(280px, calc(100vw - 32px)); background: var(--co-papel); border: 1px solid var(--co-filete); box-shadow: 0 20px 40px rgba(30, 21, 18, .15); display: grid; padding: 8px; }
+.co-menu-movil nav a { padding: 13px 14px; text-decoration: none; font: 400 1.25rem/1.2 "Newsreader", serif; border-bottom: 1px solid var(--co-filete); }
+.co-menu-movil nav a:last-child { border-bottom: 0; }
+.co-menu-movil nav a.is-activo { color: var(--co-ocre); font-style: italic; }
+@media (min-width: 1000px) { .co-nav { display: flex; } .co-menu-movil { display: none; } }
+@media (max-width: 420px) { .co-bolsa__texto { display: none; } .co-logo__nombre { font-size: 1.5rem; } }
+
+/* ---------- Portada */
+.co-portada { position: relative; min-height: min(88vh, 760px); display: grid; align-items: end; color: #fff; overflow: hidden; background: var(--co-tinto); }
+.co-portada__foto { position: absolute; inset: 0; margin: 0; }
+.co-portada__foto img { width: 100%; height: 100%; object-fit: cover; display: block; transform: scaleX(-1); }
+.co-portada__foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(36, 8, 14, .92) 0%, rgba(36, 8, 14, .6) 45%, rgba(36, 8, 14, .15) 100%), linear-gradient(0deg, rgba(36, 8, 14, .8), transparent 50%); }
+.co-portada__texto { position: relative; padding: 120px 0 64px; }
+.co-portada .co-sobre { color: var(--co-ocre-claro); }
+.co-portada h1 { font-size: clamp(3.2rem, 11vw, 7.2rem); max-width: 8.5em; line-height: .95; }
+.co-portada h1 em { color: var(--co-ocre-claro); }
+.co-portada__bajada { max-width: 34em; font-size: 1.1rem; color: #eadfd2; margin: 24px 0 30px; }
+.co-portada__estado { margin: 30px 0 0; font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; color: #d7c6b4; display: inline-flex; align-items: center; gap: 10px; }
+.co-portada__estado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #e07a6a; }
+.co-portada__estado.is-abierto::before { background: #7bd39a; }
+
+/* ---------- Cifras */
+.co-cifras { background: var(--co-tinto); color: var(--co-hueso); border-top: 1px solid rgba(232, 197, 143, .25); }
+.co-cifras__fila { display: grid; grid-template-columns: repeat(2, 1fr); }
+.co-cifras p { margin: 0; padding: 22px 16px; display: grid; gap: 2px; border-left: 1px solid rgba(232, 197, 143, .2); }
+.co-cifras p:nth-child(odd) { border-left: 0; }
+.co-cifras strong { font: italic 400 2.4rem/1 "Newsreader", serif; color: var(--co-ocre-claro); }
+.co-cifras span { font-size: .8rem; color: #cdb9a6; }
+@media (min-width: 860px) { .co-cifras__fila { grid-template-columns: repeat(4, 1fr); } .co-cifras p:nth-child(odd) { border-left: 1px solid rgba(232, 197, 143, .2); } .co-cifras p:first-child { border-left: 0; } }
+
+/* ---------- Secciones */
+.co-seccion { padding: 88px 0; }
+.co-seccion--sin-arriba { padding-top: 24px; }
+.co-tinto { background: var(--co-tinto); color: var(--co-hueso); }
+.co-tinto h2 em, .co-tinto h1 em { color: var(--co-ocre-claro); }
+.co-hueso { background: var(--co-hueso); }
+.co-papel { background: #f6f1e8; }
+.co-encabezado { margin-bottom: 44px; max-width: 640px; }
+.co-encabezado h2 { font-size: clamp(2.4rem, 7vw, 4rem); }
+.co-encabezado--fila { max-width: none; display: grid; gap: 14px; align-items: end; }
+.co-encabezado--fila > p { margin: 0; color: var(--co-suave); max-width: 30em; }
+@media (min-width: 860px) { .co-encabezado--fila { grid-template-columns: 1fr 1fr; } .co-encabezado--fila > p { justify-self: end; } }
+
+/* ---------- La selección (fichas numeradas) */
+.co-seleccion { list-style: none; margin: 0; padding: 0; display: grid; gap: 40px 28px; counter-reset: ficha; }
+@media (min-width: 700px) { .co-seleccion { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .co-seleccion { grid-template-columns: repeat(4, 1fr); } }
+.co-ficha { counter-increment: ficha; position: relative; display: flex; flex-direction: column; }
+.co-ficha::before { content: "N.º " counter(ficha, decimal-leading-zero); font: italic 400 1rem/1 "Newsreader", serif; color: var(--co-ocre); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--co-filete); }
+.co-ficha__foto { margin: 0 0 18px; aspect-ratio: 3 / 4; overflow: hidden; background: var(--co-hueso); }
+.co-ficha__foto img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .8s cubic-bezier(.2, .7, .2, 1); }
+.co-ficha:hover .co-ficha__foto img { transform: scale(1.04); }
+.co-ficha__origen, .co-item__origen { margin: 0 0 6px; font-size: .7rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--co-suave); }
+.co-ficha h3 { font-size: 1.7rem; }
+.co-ficha__notas { margin: 8px 0 16px; color: var(--co-suave); font-style: italic; font-family: "Newsreader", serif; font-size: 1.08rem; line-height: 1.45; flex: 1; }
+
+/* Formulario "Agregar" */
+.co-agregar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin: 0; }
+.co-agregar select { min-height: 42px; padding: 8px 10px; font: inherit; font-size: .88rem; border: 1px solid var(--co-filete); border-radius: 2px; background: #fff; color: var(--co-tinta); max-width: 100%; }
+.co-agregar__precio { font: 500 1.35rem/1 "Newsreader", serif; color: var(--co-tinto); margin-right: auto; }
+.co-agregar button {
+  min-height: 42px; padding: 8px 18px; border: 1px solid var(--co-tinto); background: transparent; color: var(--co-tinto);
+  font: 600 .74rem/1 "Libre Franklin", sans-serif; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; border-radius: 2px;
+}
+.co-agregar button:hover { background: var(--co-tinto); color: #fff; }
+.co-tinto .co-agregar__precio { color: var(--co-ocre-claro); }
+.co-tinto .co-agregar button { background: var(--co-ocre); border-color: var(--co-ocre); color: var(--co-tinto); min-height: 48px; padding: 10px 22px; }
+.co-tinto .co-agregar button:hover { background: var(--co-ocre-claro); }
+
+/* ---------- Próxima cata */
+.co-proxima { display: grid; gap: 40px; align-items: center; }
+@media (min-width: 860px) { .co-proxima { grid-template-columns: 1fr 1fr; gap: 72px; } }
+.co-proxima__foto { margin: 0; aspect-ratio: 9 / 10; overflow: hidden; outline: 1px solid rgba(232, 197, 143, .35); outline-offset: 12px; }
+.co-proxima__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.co-fecha { display: flex; align-items: center; gap: 16px; margin: 0 0 18px; }
+.co-fecha strong { font: italic 400 5rem/.8 "Newsreader", serif; color: var(--co-ocre-claro); }
+.co-fecha span { font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: #cdb9a6; line-height: 1.6; border-left: 1px solid rgba(232, 197, 143, .4); padding-left: 16px; }
+.co-proxima h2 { font-size: clamp(2.1rem, 5.5vw, 3.2rem); margin-bottom: 16px; }
+.co-proxima__texto > p { color: #e6d8c8; }
+.co-incluye { list-style: none; margin: 18px 0; padding: 0; display: grid; gap: 8px; }
+.co-incluye li { display: flex; gap: 12px; align-items: baseline; }
+.co-incluye li::before { content: "✦"; color: var(--co-ocre); font-size: .8rem; flex: none; }
+.co-incluye--oscuro li { color: var(--co-suave); font-size: .92rem; }
+.co-cupos { margin: 18px 0 22px !important; font-size: .9rem; }
+.co-cupos strong { color: var(--co-ocre-claro); }
+
+/* ---------- La cava */
+.co-cava { display: grid; gap: 48px; align-items: center; }
+@media (min-width: 900px) { .co-cava { grid-template-columns: 1.05fr .95fr; gap: 72px; } }
+.co-cava h2 { font-size: clamp(2.2rem, 6vw, 3.6rem); margin-bottom: 18px; }
+.co-cava__texto > p { color: var(--co-suave); font-size: 1.05rem; max-width: 34em; }
+.co-principios { list-style: none; margin: 32px 0 0; padding: 0; border-top: 1px solid var(--co-filete); }
+.co-principios li { display: grid; grid-template-columns: 54px 1fr; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--co-filete); }
+.co-principios span { font: italic 400 1.6rem/1 "Newsreader", serif; color: var(--co-ocre); }
+.co-principios strong { font: 500 1.25rem/1.2 "Newsreader", serif; }
+.co-principios p { margin: 4px 0 0; color: var(--co-suave); font-size: .95rem; }
+.co-cava__fotos { position: relative; padding: 0 0 60px 0; }
+.co-cava__grande { margin: 0 0 0 auto; width: 82%; aspect-ratio: 4 / 5; overflow: hidden; }
+.co-cava__chica { position: absolute; left: 0; bottom: 0; width: 44%; aspect-ratio: 1; margin: 0; overflow: hidden; border: 10px solid var(--co-papel); }
+.co-cava__fotos img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ---------- Banda de destilados */
+.co-banda { position: relative; color: #fff; padding: 110px 0; overflow: hidden; background: #160a08; }
+.co-banda__foto { position: absolute; inset: 0; margin: 0; }
+.co-banda__foto img { width: 100%; height: 100%; object-fit: cover; object-position: center 60%; }
+.co-banda__foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(22, 10, 8, .92), rgba(22, 10, 8, .55) 60%, rgba(22, 10, 8, .2)); }
+.co-banda__texto { position: relative; max-width: var(--co-ancho-max); }
+.co-banda .co-sobre { color: var(--co-ocre-claro); }
+.co-banda h2 { font-size: clamp(2.2rem, 6vw, 3.8rem); max-width: 11em; }
+.co-banda h2 em { color: var(--co-ocre-claro); }
+.co-banda p:not(.co-sobre) { max-width: 30em; color: #e3d6c7; margin: 18px 0 28px; }
+
+/* ---------- Regalo */
+.co-regalo { display: grid; gap: 40px; align-items: center; }
+@media (min-width: 860px) { .co-regalo { grid-template-columns: 1fr 1fr; gap: 64px; } }
+.co-regalo__foto { margin: 0; aspect-ratio: 4 / 3; overflow: hidden; }
+.co-regalo__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.co-regalo h2 { font-size: clamp(2.1rem, 5.5vw, 3.2rem); margin-bottom: 16px; }
+.co-regalo p:not(.co-sobre) { color: var(--co-suave); margin-bottom: 26px; }
+
+/* ---------- Google */
+.co .demo-google__intro h2 { font-size: clamp(2rem, 5vw, 3rem); }
+
+/* ---------- Titular de páginas interiores */
+.co-titular { padding: 72px 0 36px; border-bottom: 1px solid var(--co-filete); margin-bottom: 36px; }
+.co-titular h1 { font-size: clamp(2.8rem, 9vw, 5.4rem); }
+.co-titular p:not(.co-sobre) { max-width: 36em; color: var(--co-suave); font-size: 1.05rem; margin: 18px 0 0; }
+.co-titular--foto { position: relative; color: #fff; border: 0; padding: 140px 0 64px; overflow: hidden; background: var(--co-tinto); margin-bottom: 0; }
+.co-titular__foto { position: absolute; inset: 0; margin: 0; }
+.co-titular__foto img { width: 100%; height: 100%; object-fit: cover; }
+.co-titular__foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(36, 8, 14, .95), rgba(36, 8, 14, .45)); }
+.co-titular--foto .co-ancho { position: relative; }
+.co-titular--foto .co-sobre { color: var(--co-ocre-claro); }
+.co-titular--foto h1 em { color: var(--co-ocre-claro); }
+.co-titular--foto p:not(.co-sobre) { color: #eadfd2; }
+.co-pagina-catas .co-seccion--sin-arriba { padding-top: 64px; }
+
+/* ---------- Catálogo */
+.co-catalogo__grid { display: grid; gap: 36px; padding-bottom: 88px; }
+@media (min-width: 1000px) { .co-catalogo__grid { grid-template-columns: 1fr 280px; align-items: start; } .co-catalogo__lado { position: sticky; top: 100px; } }
+.co-herramientas { display: grid; gap: 16px; margin-bottom: 18px; }
+.co-buscar label { display: block; font-size: .74rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--co-suave); margin-bottom: 8px; }
+.co-buscar__fila { display: flex; border-bottom: 2px solid var(--co-tinto); }
+.co-buscar input { flex: 1; min-width: 0; min-height: 52px; border: 0; background: transparent; font: italic 400 1.4rem/1.2 "Newsreader", serif; color: var(--co-tinta); padding: 6px 0; }
+.co-buscar input::placeholder { color: #a8998d; }
+.co-buscar input:focus { outline: none; }
+.co-buscar__fila:focus-within { border-color: var(--co-ocre); box-shadow: 0 2px 0 var(--co-ocre); }
+.co-buscar button { border: 0; background: none; font: 600 .74rem/1 "Libre Franklin", sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--co-tinto); cursor: pointer; padding: 0 4px 0 16px; min-height: 52px; }
+.co-categorias { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; }
+.co-categorias a { flex: none; text-decoration: none; padding: 8px 14px; border: 1px solid var(--co-filete); border-radius: 999px; font-size: .85rem; white-space: nowrap; background: #fff; }
+.co-categorias a:hover { border-color: var(--co-tinto); }
+.co-sin-resultados { padding: 28px; text-align: center; font: italic 400 1.2rem/1.4 "Newsreader", serif; border: 1px dashed var(--co-filete); }
+.co-categoria { margin-top: 44px; scroll-margin-top: 110px; }
+.co-categoria__cabeza { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding-bottom: 14px; border-bottom: 1px solid var(--co-tinto); }
+.co-categoria__cabeza h2 { font-size: clamp(1.9rem, 5vw, 2.6rem); }
+.co-categoria__cabeza p { margin: 0; color: var(--co-suave); font-style: italic; font-family: "Newsreader", serif; font-size: 1.05rem; }
+.co-lista { list-style: none; margin: 0; padding: 0; }
+.co-item { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 18px; padding: 22px 0; border-bottom: 1px solid var(--co-filete); scroll-margin-top: 110px; }
+.co-item[hidden] { display: none; }
+@media (min-width: 600px) { .co-item { grid-template-columns: 120px minmax(0, 1fr); gap: 26px; } }
+.co-item__foto { aspect-ratio: 4 / 5; overflow: hidden; background: var(--co-hueso); }
+.co-item__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.co-item__foto--sello { display: grid; place-items: center; background: var(--co-tinto); }
+.co-item__foto--sello span { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--co-ocre); color: var(--co-ocre-claro); font: italic 1.2rem "Newsreader", serif; }
+.co-item h3 { font-size: 1.55rem; }
+.co-item__notas { margin: 6px 0 14px; color: var(--co-suave); font-family: "Newsreader", serif; font-style: italic; font-size: 1.05rem; line-height: 1.45; }
+.co-edad-nota { display: flex; align-items: center; gap: 10px; margin-top: 30px; }
+.co-qr-caja { background: var(--co-tinto); color: var(--co-hueso); padding: 26px 22px; text-align: center; outline: 1px solid rgba(232, 197, 143, .4); outline-offset: -8px; }
+.co-qr-caja .co-sobre { justify-content: center; color: var(--co-ocre-claro); }
+.co-qr-caja .co-sobre::before { display: none; }
+.co-qr-caja > p:last-child { font-size: .88rem; color: #d8c7b5; margin: 14px 0 0; }
+.co-qr figcaption { color: #eadfd2; }
+.co-catalogo__lado .co-btn { margin-top: 14px; }
+
+/* ---------- Agenda de catas */
+.co-agenda { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--co-tinto); }
+.co-cata { display: grid; gap: 18px; padding: 30px 0; border-bottom: 1px solid var(--co-filete); grid-template-columns: 76px minmax(0, 1fr); grid-template-areas: "fecha texto" "foto foto" "reserva reserva"; scroll-margin-top: 110px; }
+.co-cata > * { min-width: 0; }
+.co-cata__fecha { grid-area: fecha; margin: 0; display: grid; justify-items: start; align-content: start; line-height: 1.1; }
+.co-cata__fecha strong { font: italic 400 3.6rem/.9 "Newsreader", serif; color: var(--co-tinto); }
+.co-cata__fecha span { font-size: .72rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--co-suave); }
+.co-cata__dia { color: var(--co-ocre) !important; margin-bottom: 8px; }
+.co-cata__foto { grid-area: foto; margin: 0; aspect-ratio: 16 / 9; overflow: hidden; }
+.co-cata__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.co-cata__texto { grid-area: texto; }
+.co-cata h3 { font-size: clamp(1.6rem, 4.5vw, 2.1rem); margin-bottom: 8px; }
+.co-cata__texto > p { margin: 0; color: var(--co-suave); }
+.co-cata__reserva { grid-area: reserva; display: grid; gap: 10px; align-content: start; }
+.co-cata__precio { margin: 0; font: 500 1.8rem/1 "Newsreader", serif; color: var(--co-tinto); }
+.co-cata__precio small { font: 400 .8rem "Libre Franklin", sans-serif; color: var(--co-suave); }
+.co-cata__cupos { margin: 0; font-size: .85rem; color: var(--co-suave); display: grid; gap: 6px; }
+.co-cata__cupos.is-pocos { color: #a3311f; font-weight: 600; }
+.co-cupos__barra { display: block; height: 4px; background: var(--co-filete); }
+.co-cupos__barra span { display: block; height: 100%; background: var(--co-ocre); }
+.co-cata__cupos.is-pocos .co-cupos__barra span { background: #a3311f; }
+.co-cata .co-agregar__precio { display: none; }
+.co-cata .co-agregar button { width: 100%; min-height: 48px; background: var(--co-tinto); color: #fff; }
+.co-cata .co-agregar button:hover { background: var(--co-tinto-3); }
+.co-cata .co-agregar { display: block; }
+@media (min-width: 900px) {
+  .co-cata { grid-template-columns: 96px 220px minmax(0, 1fr) 220px; grid-template-areas: "fecha foto texto reserva"; gap: 30px; align-items: start; }
+  .co-cata__foto { aspect-ratio: 1; }
+}
+.co-privada { display: grid; gap: 40px; align-items: center; }
+@media (min-width: 860px) { .co-privada { grid-template-columns: 1fr 1fr; gap: 64px; } }
+.co-privada__foto { margin: 0; aspect-ratio: 9 / 7; overflow: hidden; }
+.co-privada__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.co-privada h2 { font-size: clamp(2.2rem, 6vw, 3.4rem); margin-bottom: 16px; }
+.co-privada > div > p:not(.co-sobre) { color: #e6d8c8; }
+.co-pasos { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: paso; border-top: 1px solid var(--co-filete); }
+@media (min-width: 860px) { .co-pasos { grid-template-columns: repeat(4, 1fr); border-top: 0; } }
+.co-pasos li { counter-increment: paso; padding: 22px 0; border-bottom: 1px solid var(--co-filete); }
+@media (min-width: 860px) { .co-pasos li { padding: 0 24px; border-bottom: 0; border-left: 1px solid var(--co-filete); } .co-pasos li:first-child { border-left: 0; padding-left: 0; } }
+.co-pasos li::before { content: counter(paso, upper-roman); display: block; font: italic 400 2rem/1 "Newsreader", serif; color: var(--co-ocre); margin-bottom: 10px; }
+.co-pasos strong { font: 500 1.3rem/1.2 "Newsreader", serif; }
+.co-pasos p { margin: 6px 0 0; color: var(--co-suave); font-size: .95rem; }
+
+/* ---------- Preguntas */
+.co-preguntas { max-width: 820px; padding-bottom: 40px; }
+.co-pregunta { border-bottom: 1px solid var(--co-filete); }
+.co-pregunta summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 18px; padding: 22px 36px 22px 0; position: relative; font: 400 clamp(1.25rem, 3.5vw, 1.6rem)/1.25 "Newsreader", serif; }
+.co-pregunta summary::-webkit-details-marker { display: none; }
+.co-pregunta summary::after { content: "+"; position: absolute; right: 4px; top: 20px; font: 300 1.8rem/1 "Libre Franklin", sans-serif; color: var(--co-ocre); transition: transform .2s; }
+.co-pregunta[open] summary::after { transform: rotate(45deg); }
+.co-pregunta__num { font: italic 400 1rem/1 "Newsreader", serif; color: var(--co-ocre); flex: none; }
+.co-pregunta p { margin: 0 0 24px 38px; color: var(--co-suave); max-width: 40em; }
+
+/* ---------- Contacto */
+.co-estado { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; color: var(--co-tinta) !important; }
+.co-estado::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #c2412f; }
+.co-estado.is-abierto::before { background: #2f8a55; }
+.co-contacto { display: grid; gap: 18px; padding-bottom: 72px; }
+@media (min-width: 900px) { .co-contacto { grid-template-columns: repeat(3, 1fr); } }
+.co-tarjeta { background: #fff; border: 1px solid var(--co-filete); padding: 26px 24px; }
+.co-tarjeta h2 { font-size: 1.7rem; margin-bottom: 16px; }
+.co-tarjeta--tinto { background: var(--co-tinto); color: var(--co-hueso); border-color: var(--co-tinto); }
+.co-tarjeta--tinto p { color: #e6d8c8; }
+.co-despacho { list-style: none; margin: 0; padding: 0; }
+.co-despacho li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--co-filete); }
+
+/* ---------- Pedido */
+.co-pedido { padding-bottom: 60px; }
+.co-pedido__vacio { text-align: center; padding: 48px 20px; border: 1px dashed var(--co-filete); }
+.co-pedido__vacio p { font: italic 400 1.6rem/1.2 "Newsreader", serif; margin: 0 0 20px; }
+.co-pedido__vacio .co-acciones { justify-content: center; }
+.co-pedido__vacio[hidden], .co-pedido__form[hidden] { display: none; }
+.co-pedido__form { display: grid; gap: 18px; }
+@media (min-width: 960px) { .co-pedido__form { grid-template-columns: 1fr 1fr 340px; align-items: start; } .co-pedido__total { position: sticky; top: 100px; } }
+.co-pedido__lista { list-style: none; margin: 0 0 12px; padding: 0; }
+.co-pedido__lista .demo-carrito-btn { border-radius: 2px; }
+.co-opciones { border: 0; padding: 0; margin: 0 0 16px; display: grid; gap: 8px; }
+.co-opciones label { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--co-filete); cursor: pointer; }
+.co-opciones label:has(input:checked) { border-color: var(--co-tinto); background: #f7efe6; }
+.co-opciones input, .co-check input { accent-color: var(--co-tinto); width: 18px; height: 18px; flex: none; }
+.co-campo { display: grid; gap: 6px; margin-bottom: 14px; }
+.co-campo[hidden] { display: none; }
+.co-campo label { font-weight: 600; font-size: .88rem; }
+.co-campo small { font-weight: 400; color: var(--co-suave); }
+.co-campo input, .co-campo select, .co-campo textarea { font: inherit; min-height: 46px; padding: 10px 12px; border: 1px solid var(--co-filete); border-radius: 2px; background: #fff; color: var(--co-tinta); width: 100%; }
+.co-check { display: flex; gap: 12px; align-items: flex-start; margin: 4px 0 16px; cursor: pointer; font-size: .95rem; }
+.co-check input { margin-top: 3px; }
+.co-check--edad { padding: 14px; background: #f7efe6; border-left: 3px solid var(--co-ocre); font-size: .9rem; }
+.co-totales { margin: 0 0 18px; }
+.co-totales div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--co-filete); }
+.co-totales dt { color: var(--co-suave); }
+.co-totales dd { margin: 0; font-variant-numeric: tabular-nums; }
+.co-totales__total dt, .co-totales__total dd { font: 500 1.5rem/1.2 "Newsreader", serif; color: var(--co-tinto); }
+.co-pedido__enviado { margin-top: 16px; }
+.co-pedido__enviado[hidden] { display: none; }
+
+/* ---------- Pie */
+.co-pie { background: #24080e; color: #cdb9a6; padding: 64px 0 28px; font-size: .92rem; }
+.co-pie__grid { display: grid; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid rgba(232, 197, 143, .18); }
+@media (min-width: 860px) { .co-pie__grid { grid-template-columns: 1.3fr 1fr 1fr; } }
+.co-logo--pie { color: var(--co-hueso); }
+.co-pie__eslogan { font: italic 400 1.15rem/1.4 "Newsreader", serif; color: var(--co-hueso); margin: 16px 0 6px; }
+.co-pie p { margin: 0 0 6px; }
+.co-pie a { color: var(--co-hueso); text-decoration: none; border-bottom: 1px solid rgba(232, 197, 143, .4); }
+.co-pie a:hover { color: var(--co-ocre-claro); }
+.co-pie__titulo { font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; color: var(--co-ocre) !important; margin-bottom: 12px !important; font-weight: 600; }
+.co-pie__horario { font-size: .9rem; }
+.co-pie__legal { padding-top: 22px; }
+.co-pie__edad { display: flex; gap: 10px; align-items: center; color: var(--co-ocre-claro); }
+.co-pie__edad svg { flex: none; }
+.co-pie .demo-aviso-pie a { border: 0; text-decoration: underline; }
+
+/* ---------- Mayoría de edad */
+.co-edad { background: rgba(36, 8, 14, .88); }
+.co-edad .edad__caja { background: var(--co-papel); color: var(--co-tinta); border-radius: 0; padding: 36px 28px 26px; outline: 1px solid var(--co-ocre); outline-offset: -10px; }
+.co-edad .edad__marca { margin: 0 0 18px !important; display: flex; justify-content: center; }
+.co-edad .edad__sello { display: none; }
+.co-edad h2 { font-family: "Newsreader", Georgia, serif; font-weight: 400; font-style: italic; font-size: 2.2rem; color: var(--co-tinto); line-height: 1.1; }
+.co-edad #edad-texto { color: var(--co-suave); }
+.co-edad .edad__acciones button { border-radius: 2px; font: 600 .78rem/1 "Libre Franklin", sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+.co-edad .edad__si { background: var(--co-tinto); border-color: var(--co-tinto) !important; color: #fff; }
+.co-edad .edad__no { color: var(--co-tinto); }
+.co-edad .edad__mensaje { color: var(--co-tinto); }
