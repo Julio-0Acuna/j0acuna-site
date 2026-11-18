@@ -196,7 +196,7 @@ T=$(csrf "$J1" "$TIENDA")
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$BEB" > /dev/null
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir")
-case "$R" in 303*r=carrito*) curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'El pedido mínimo es $8.000' && pasa "pedido bajo \$8.000 se rechaza con aviso" || falla "pedido mínimo sin aviso";; *) falla "pedido bajo el mínimo: $R";; esac
+case "$R" in 422*) grep -qF 'para el pedido mínimo de $8.000.' "$TMP/ultima.html" && pasa "pedido bajo \$8.000 se rechaza en el checkout (422 con aviso)" || falla "pedido mínimo: 422 sin aviso";; *) falla "pedido bajo el mínimo: $R";; esac
 
 # Despacho con costo: gyozas × 2 ($8.980) + Vitacura $2.490 = $11.470
 T=$(csrf "$J1" "${TIENDA}?r=carrito")

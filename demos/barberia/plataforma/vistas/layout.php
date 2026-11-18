@@ -18,8 +18,7 @@ $cuentaUrl = m_url($usuario ? ($esDueno ? 'panel' : 'cuenta') : 'ingresar');
 $cuentaTexto = $usuario ? ($esDueno ? 'Panel' : 'Mi cuenta') : 'Ingresar';
 $empresaUrl = m_es_mayorista($usuario) ? m_url('inicio', ['cat' => 'empresas']) . '#menu' : m_url('registro');
 // Barbero elegido en la portada (?barbero=, ver vistas/portada.php): la precarga del checkout del motor.
-$elegido = $_SESSION['checkout_precarga']['barbero'] ?? '';
-$elegido = is_string($elegido) && isset(m_checkout_campos($cfg)['barbero']['opciones'][$elegido]) ? $elegido : '';
+$elegido = m_checkout_precarga('barbero');
 $conBarbero = $cfg['barberos'][$elegido] ?? null;
 $sucursalElegida = $cfg['sucursales'][$conBarbero['sucursal'] ?? substr($elegido, strlen('cualquiera-'))]['nombre'] ?? '';
 

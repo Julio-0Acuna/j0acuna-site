@@ -6,15 +6,11 @@ require __DIR__ . '/_plantilla.php';
 $n = tn();
 $q = is_string($_GET['q'] ?? null) ? mb_substr(trim($_GET['q']), 0, 40) : '';
 $cat = is_string($_GET['cat'] ?? null) && isset($n['pasillos'][$_GET['cat']]) ? $_GET['cat'] : '';
-$qn = demo_normalizar($q);
 
-/** ¿El producto coincide con la búsqueda? (mismo texto que usa js/buscador.js) */
-$coincide = static function (array $p) use ($n, $qn): bool {
-    if ($qn === '') {
-        return true;
-    }
+/** ¿El producto coincide con la búsqueda? (mismo texto y mismo criterio, demo_coincide, que js/buscador.js) */
+$coincide = static function (array $p) use ($n, $q): bool {
     $texto = $p['nombre'] . ' ' . $p['desc'] . ' ' . $n['pasillos'][$p['cat']][1] . ' ' . implode(' ', array_keys($p['variantes']));
-    return str_contains(demo_normalizar($texto), $qn);
+    return demo_coincide($texto, $q);
 };
 $total = 0;
 foreach ($n['productos'] as $p) {

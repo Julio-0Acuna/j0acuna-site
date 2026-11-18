@@ -204,7 +204,7 @@ printf '%s' "$CARRO" | grep -qF 'Te faltan $26.010 para despacho gratis.' && pas
 printf '%s' "$CARRO" | grep -qF '<span class="kj-cantidad" aria-label="500 g">500 g</span>' && pasa "el carrito sigue mostrando el peso (500 g)" || falla "el carrito no muestra el peso"
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir")
-case "$R" in 303*r=carrito*) curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'El pedido mínimo es $10.000.' && pasa "bajo el mínimo el servidor no crea el pedido y vuelve al carrito con el aviso" || falla "bajo el mínimo: sin mensaje";; *) falla "pedido bajo el mínimo: $R";; esac
+case "$R" in 422*) grep -qF 'Te faltan $1.010 para el pedido mínimo de $10.000.' "$TMP/ultima.html" && pasa "bajo el mínimo el checkout no crea el pedido (422 con el aviso del carrito)" || falla "bajo el mínimo: 422 sin el aviso";; *) falla "pedido bajo el mínimo: $R";; esac
 
 # Pago de prueba: checkout → pantalla simulada → aprobar
 T=$(csrf "$J1" "$TIENDA")

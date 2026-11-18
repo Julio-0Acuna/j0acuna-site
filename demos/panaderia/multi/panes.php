@@ -5,13 +5,12 @@ require __DIR__ . '/_plantilla.php';
 
 $n = ml();
 $q = is_string($_GET['q'] ?? null) ? mb_substr(trim($_GET['q']), 0, 40) : '';
-$qn = demo_normalizar($q);
 
 /** Texto en el que se busca cada producto. */
 $textoDe = static fn (array $p): string => $p['nombre'] . ' ' . $p['desc'] . ' ' . $n['categorias'][$p['cat']][0];
 
-// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide.
-$coincide = static fn (array $p): bool => $qn === '' || str_contains(demo_normalizar($textoDe($p)), $qn);
+// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide (demo_coincide, mismo criterio que buscador.js).
+$coincide = static fn (array $p): bool => demo_coincide($textoDe($p), $q);
 $hayResultados = count(array_filter($n['productos'], $coincide)) > 0;
 
 ml_abrir('panes', 'Panes de masa madre, lista con QR y panes en 3D', 'Panes de ' . $n['nombre'] . ': hogazas de masa madre, baguettes, moldes, bollería y despensa, con código QR y panes en 3D. Demo de panadería en ' . $n['comuna'] . '.');

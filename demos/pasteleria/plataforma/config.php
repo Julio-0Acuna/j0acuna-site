@@ -52,7 +52,8 @@ return [
     'despacho_gratis_desde' => 35000,
     'pedido_minimo' => 8000,
     // Día y hora de entrega o retiro: hoy (lo que hay en vitrina, mientras queden horas) y hasta tres semanas.
-    'entrega' => ['modo' => 'fecha', 'dias_min' => 0, 'dias_max' => 21, 'horas' => ['10:00', '19:30']],
+    // El checkout llega con mañana elegido ('fecha_defecto' => 1): las tortas se encargan con un día.
+    'entrega' => ['modo' => 'fecha', 'dias_min' => 0, 'dias_max' => 21, 'horas' => ['10:00', '19:30'], 'fecha_defecto' => 1],
     // Mensaje en la torta: se ve en el pedido, el panel, Mi cuenta y el WhatsApp ("Mensaje en la torta: …").
     'checkout_campos' => [
         ['nombre' => 'mensaje_torta', 'etiqueta' => 'Mensaje en la torta', 'requerido' => false, 'max' => 40, 'ayuda' => 'Sin costo, hasta 40 caracteres. Ej.: Feliz cumpleaños, Sofi'],

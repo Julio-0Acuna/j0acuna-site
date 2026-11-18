@@ -5,13 +5,12 @@ require __DIR__ . '/_plantilla.php';
 
 $n = fo();
 $q = is_string($_GET['q'] ?? null) ? mb_substr(trim($_GET['q']), 0, 40) : '';
-$qn = demo_normalizar($q);
 
 /** Texto en el que se busca cada plato. */
 $textoDe = static fn (array $p): string => $p['nombre'] . ' ' . $p['desc'] . ' ' . $n['categorias'][$p['cat']][0];
 
-// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide.
-$coincide = static fn (array $p): bool => $qn === '' || str_contains(demo_normalizar($textoDe($p)), $qn);
+// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide (demo_coincide, mismo criterio que buscador.js).
+$coincide = static fn (array $p): bool => demo_coincide($textoDe($p), $q);
 $hayResultados = count(array_filter($n['platos'], $coincide)) > 0;
 
 fo_abrir('menu', 'Menú con QR y platos en 3D', 'Menú de ' . $n['nombre'] . ': pizzas napolitanas, antipasti, dolci y bebidas, con código QR y platos en 3D. Demo de pizzería en ' . $n['comuna'] . '.');

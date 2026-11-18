@@ -226,8 +226,8 @@ T=$(printf '%s' "$INICIO" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 |
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$AGUA" --data-urlencode "cantidad=1" > /dev/null
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$FECHA")
-case "$R" in 303*r=carrito*) pasa "bajo el mínimo no se crea el pedido";; *) falla "pedido bajo el mínimo: $R";; esac
-curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'El pedido mínimo es $5.990' && pasa "el carrito avisa el pedido mínimo" || falla "sin aviso de pedido mínimo"
+case "$R" in 422*) pasa "bajo el mínimo no se crea el pedido (422)";; *) falla "pedido bajo el mínimo: $R";; esac
+grep -qF 'para el pedido mínimo de $5.990.' "$TMP/ultima.html" && pasa "el checkout avisa el pedido mínimo" || falla "sin aviso de pedido mínimo"
 
 # Pago de prueba: checkout → pantalla simulada → aprobar
 T=$(csrf "$J1" "$TIENDA")

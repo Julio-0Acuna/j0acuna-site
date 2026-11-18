@@ -81,8 +81,10 @@ declare(strict_types=1);
  *         ['nombre' => 'mayor', 'etiqueta' => 'Confirmo que soy mayor de 18 años', 'tipo' => 'casilla'],
  *         ['nombre' => 'obra', 'etiqueta' => 'Obra o empresa', 'requerido' => false, 'solo' => 'despacho'],
  *     ],
- *   Un checkout.php propio imprime los campos con m_parcial('_campos_extra', ['campos' => $campos_extra,
- *   'valores' => $valores_extra, 'errores' => $errores]); si no los imprime, sus errores salen arriba (_mensajes).
+ *   Un checkout.php propio DEBE imprimir los campos con m_parcial('_campos_extra', ['campos' => $campos_extra,
+ *   'valores' => $valores_extra, 'errores' => $errores]): si hay 'checkout_campos' y no lo hace, m_vista lanza
+ *   LogicException (el cliente no podría completarlos). Los errores sin campo a la vista (pedido mínimo, hora, extras
+ *   no impresos) salen arriba (_mensajes, m_errores_pendientes).
  *   Textos: checkout_campos_titulo (vacío = sin título), checkout_extra_* (mensajes de error con {campo}).
  *
  * Pedido mínimo y despacho gratis visibles: el carrito dice cuánto falta ('carrito_falta_minimo',
@@ -106,6 +108,58 @@ declare(strict_types=1);
  *     ['slug' => 'pastillas', 'categoria' => 'frenos', 'nombre' => 'Pastillas de freno', 'codigo' => 'CD-1101', ...],
  *
  * Panel: la lista de pedidos muestra la nota (recortada a 80 caracteres) y los campos extra.
+ *
+ * ---- Novedades (18/11, Fase 2.5). También opcionales: sin configurarlas, la tienda se ve igual.
+ *
+ * Día y hora del checkout:
+ *   - Gracia: el checkout acepta el día y la hora que se ofrecían hace 5 minutos (M_GRACIA_SEGUNDOS: el cliente tardó
+ *     en confirmar). Una hora que ya no se ofrece vuelve elegida, con su error junto al selector
+ *     ('checkout_hora_no_disponible'); si un checkout.php propio no lo muestra, sale en el resumen de arriba.
+ *   - Modo 'hoy' con servicio que pasa la medianoche: a las 00:40 (cierre 02:00) se ofrece lo que queda del servicio de
+ *     ayer; cuando ya no le quedan horas (01:40 con margen 30), se ofrece el servicio de hoy.
+ *   - "Lo antes posible" se acepta siempre (las demos se muestran a cualquier hora), pero si hoy ya no quedan horas dice
+ *     'cuando_pronto_cerrado' = 'Apenas abramos ({abre})' con la próxima apertura de negocio['horario']
+ *     (m_proxima_apertura(): 'mañana a las 12:30'; sin horario o un día de 24 horas, la primera hora de entrega).
+ *   - En modo 'fecha', la madrugada pertenece al día en que abrió el servicio: con 'horas' => ['12:30', '02:00'], el
+ *     pedido del martes a la 01:30 es la noche del martes. A las 00:40 del miércoles el martes ya no se ofrece (la lista
+ *     empieza en el miércoles; no hay "ayer"): quien quiera la madrugada en curso elige el modo 'hoy'.
+ *   - 'fecha_defecto' (en 'entrega'): días desde hoy del día preseleccionado (el primero ofrecido desde ahí); sin ella,
+ *     el primero de la lista.  'entrega' => ['modo' => 'fecha', 'dias_min' => 0, 'fecha_defecto' => 1],
+ *
+ * Pedido mínimo sin 'pedido_minimo_solo_despacho': el checkout rechaza también el retiro bajo el mínimo (422 con el
+ * mismo aviso del carrito, 'carrito_falta_minimo'). Una tienda sin despacho no avisa el mínimo de despacho.
+ * Avance: los avisos del carrito ([data-falta-minimo], [data-falta-gratis]) llevan style="--avance: 0..100"
+ * (m_avance(): 100 solo al llegar) para que el rubro dibuje una barra con CSS:
+ *     .t-falta-minimo::after { content: ''; display: block; height: 8px; background: linear-gradient(90deg, #0a7 calc(var(--avance) * 1%), #ddd 0); }
+ *
+ * Campos extra ('checkout_campos'), además de lo anterior:
+ *   - numero: el punto solo separa miles ('84.000' → 84000; '1.5' es un error, 'checkout_extra_entero'). 'decimales' =>
+ *     true (hasta 2 cifras, o un número de 1 a 4) acepta '1.5' y '1,5', y guarda '1,5'.
+ *   - opcion: 'grupos' => ['Ñuñoa' => ['benjamin' => 'Benjamín', 'nico' => 'Nico'], 'Providencia' => [...]] (<optgroup>),
+ *     solo o junto a 'opciones' (que van primero, sin grupo). Un valor repetido lanza LogicException.
+ *   - 'placeholder': en texto y número, el placeholder del campo; en una opción, el texto de la opción vacía.
+ *   - 'solo_tipo' => 'particular' | 'mayorista': el campo solo se pide (y se ve) a ese tipo de cliente (mayorista =
+ *     mayorista aprobado).
+ *   - normalizar 'patente' también quita «·» ('KX·PL·47' → 'KXPL47').
+ *   - Precarga desde cualquier página: ?barbero=benjamin en cualquier GET de la tienda (portada, catálogo, checkout)
+ *     queda en la sesión si es una opción válida (m_checkout_precargar($_GET), lo llama m_ejecutar) y el checkout la trae
+ *     elegida. En una vista propia se lee con m_checkout_precarga('barbero') ('' si no hay o ya no existe).
+ *   - Con 3 campos o más, dos columnas desde 720 px (.t-campos-extra--columnas, en tienda.css); el título y las casillas
+ *     (.t-campo--casilla) van a lo ancho.
+ *     ['nombre' => 'barbero', 'etiqueta' => 'Barbero', 'tipo' => 'opcion', 'placeholder' => 'Elige con quién',
+ *      'grupos' => ['Ñuñoa' => ['benjamin' => 'Benjamín'], 'Providencia' => ['vale' => 'Vale']]],
+ *     ['nombre' => 'rut', 'etiqueta' => 'RUT de la empresa', 'solo_tipo' => 'mayorista'],
+ *     ['nombre' => 'peso', 'etiqueta' => 'Peso (kg)', 'tipo' => 'numero', 'decimales' => true, 'max' => 80],
+ * Textos nuevos: checkout_nota_placeholder ('' = sin placeholder), resumen_* del WhatsApp de la Plataforma
+ * (resumen_saludo 'Hola, hice el pedido {codigo} en {negocio}:', resumen_linea, resumen_despacho, resumen_total,
+ * resumen_entrega_retiro 'Entrega: {retiro}' ({retiro} = 'retiro_titulo' en minúscula), resumen_entrega_despacho
+ * 'Entrega: despacho en {comuna}', resumen_para_fecha_hora, resumen_para_fecha, resumen_para_hora, resumen_pago_prueba,
+ * resumen_pago_al_recibir 'Pago: al recibir', resumen_nota).
+ *     'textos' => ['resumen_saludo' => 'Hola, reservé la hora {codigo} en {negocio}:', 'resumen_pago_al_recibir' => 'Pago: en el salón'],
+ * 'nota_tipo' => 'Reserva' (o 'Cotización'): la nota de prueba del WhatsApp es demo_nota($rubro, $plan, 'Reserva')
+ * (reemplaza 'nota_whatsapp'; sin 'nota_tipo', se usa 'nota_whatsapp' como siempre).
+ * Búsqueda: demo_normalizar() quita todas las tildes ('Carménère' → 'carmenere', como buscador.js) y la búsqueda
+ * compacta va por palabra ('a4' no encuentra 'Agua 4 litros'; 'cd1101' encuentra 'CD-1101' y 'df220', 'DF 220').
  */
 
 require_once dirname(__DIR__) . '/_comun/comun.php';
@@ -160,6 +214,11 @@ function m_config(?array $cfg = null): array
         $nueva['limites'] = array_replace($base['limites'], $cfg['limites'] ?? []);
         $nueva['entrega'] = m_entrega_cfg($nueva);
         m_checkout_campos($nueva); // valida 'checkout_campos': un campo mal escrito lanza LogicException aquí
+        // 'nota_tipo' => 'Reserva': la nota de prueba del WhatsApp dice "(Reserva de prueba desde la demo de …)".
+        if (is_string($nueva['nota_tipo'] ?? null) && $nueva['nota_tipo'] !== '' && isset($nueva['rubro']['rubro_nombre'])) {
+            $plan = (string) ($nueva['rubro']['versiones']['plataforma']['plan'] ?? 'Plataforma web');
+            $nueva['nota_whatsapp'] = demo_nota((string) $nueva['rubro']['rubro_nombre'], $plan, $nueva['nota_tipo']);
+        }
         if (!str_ends_with($nueva['url_base'], '/')) {
             $nueva['url_base'] .= '/';
         }
@@ -212,6 +271,7 @@ const M_TEXTOS = [
     'despacho_titulo' => 'Despacho a domicilio',
     'cuando_titulo' => '¿Para cuándo?',
     'cuando_pronto' => 'Lo antes posible',
+    'cuando_pronto_cerrado' => 'Apenas abramos ({abre})', // sin horas para hoy; {abre} = 'mañana a las 12:30'
     'hora_entrega' => 'Hoy a las {hora}',
     // Entrega (modo 'fecha')
     'fecha_titulo' => '¿Qué día?',
@@ -287,6 +347,7 @@ const M_TEXTOS = [
     'checkout_guardar_direccion' => 'Guardar esta dirección en mi cuenta',
     'checkout_nota' => 'Nota',
     'checkout_nota_ayuda' => '(opcional, máx. 300 caracteres)',
+    'checkout_nota_placeholder' => '', // vacío = sin placeholder
     'checkout_pago' => 'Pago',
     'checkout_resumen' => 'Resumen del pedido',
     'checkout_tu_pedido' => 'Tu pedido',
@@ -298,6 +359,7 @@ const M_TEXTOS = [
     'checkout_total' => 'Total',
     'checkout_confirmar' => 'Confirmar pedido',
     'checkout_comprando_como' => 'Comprando como {nombre}',
+    'checkout_hora_no_disponible' => 'Esa hora ya no está disponible. Elige otra.',
     'pago_en_linea' => 'Pago en línea',
     'pago_en_linea_etiqueta' => 'de prueba',
     'pago_en_linea_texto' => 'Pantalla de pago simulada: no se cobra nada.',
@@ -312,6 +374,7 @@ const M_TEXTOS = [
     'checkout_extra_marca' => 'Debes marcar «{campo}».',
     'checkout_extra_largo' => '«{campo}» puede tener hasta {max} caracteres.',
     'checkout_extra_numero' => '«{campo}» debe ser un número entre {min} y {max}.',
+    'checkout_extra_entero' => '«{campo}» debe ser un número entero (sin decimales).',
     'checkout_extra_formato' => '«{campo}» no tiene el formato correcto.',
     // Pago de prueba (pago)
     'pago_titulo' => 'Pago de prueba',
@@ -349,6 +412,19 @@ const M_TEXTOS = [
     'pedido_volver_panel' => 'Volver al panel',
     'pedido_mis_pedidos' => 'Ver mis pedidos',
     'pedido_seguir' => 'Seguir comprando',
+    // Resumen del pedido para WhatsApp (m_pedido_resumen_texto). {retiro} = 'retiro_titulo' con minúscula inicial.
+    'resumen_saludo' => 'Hola, hice el pedido {codigo} en {negocio}:',
+    'resumen_linea' => '• {cantidad} × {producto} – {total}',
+    'resumen_despacho' => 'Despacho: {costo}',
+    'resumen_total' => 'Total: {total}',
+    'resumen_entrega_retiro' => 'Entrega: {retiro}',
+    'resumen_entrega_despacho' => 'Entrega: despacho en {comuna}',
+    'resumen_para_fecha_hora' => 'Para el {fecha} a las {hora}',
+    'resumen_para_fecha' => 'Para el {fecha}',
+    'resumen_para_hora' => 'Para las {hora}',
+    'resumen_pago_prueba' => 'Pago: pago de prueba (simulado)',
+    'resumen_pago_al_recibir' => 'Pago: al recibir',
+    'resumen_nota' => 'Nota: {nota}',
     // Mi cuenta (cuenta)
     'cuenta_titulo' => 'Mi cuenta',
     'cuenta_hola' => 'Hola, {nombre}',
@@ -691,10 +767,30 @@ function m_vista(string $nombre, array $vars = [], int $codigo = 200): void
     if ($ruta === null) {
         throw new RuntimeException('Falta la vista ' . $nombre);
     }
+    m_campos_extra_impresos(false);
     ob_start();
-    m_parcial($nombre, $vars);
-    $contenido = (string) ob_get_clean();
+    try {
+        m_parcial($nombre, $vars);
+    } finally {
+        $contenido = (string) ob_get_clean();
+    }
+    // Un checkout.php propio debe imprimir los campos extra: sin ellos el cliente no podría completarlos nunca.
+    if ($nombre === 'checkout' && !m_campos_extra_impresos() && m_checkout_campos(m_config()) !== []) {
+        throw new LogicException("La vista $ruta no imprime los campos extra de 'checkout_campos'. Agrega "
+            . "<?php m_parcial('_campos_extra', ['campos' => \$campos_extra, 'valores' => \$valores_extra, 'errores' => \$errores]); ?> "
+            . 'dentro del formulario (o quita la vista para usar la del motor).');
+    }
     m_parcial('layout', $vars + ['contenido' => $contenido, 'vista' => $nombre]);
+}
+
+/** ¿El parcial _campos_extra se imprimió en esta página? El parcial lo marca (true); m_vista lo reinicia (false). */
+function m_campos_extra_impresos(?bool $marcar = null): bool
+{
+    static $impresos = false;
+    if ($marcar !== null) {
+        $impresos = $marcar;
+    }
+    return $impresos;
 }
 
 /** Datos comunes para todas las vistas (usuario, carrito, rubro). */
@@ -751,6 +847,9 @@ function m_ejecutar(array $cfg): void
     if (!in_array($metodo, ['GET', 'HEAD', 'POST'], true)) {
         http_response_code(405);
         return;
+    }
+    if ($metodo !== 'POST') {
+        m_checkout_precargar($_GET); // ?barbero=benjamin en cualquier página precarga el checkout
     }
     $fn = 'm_accion_' . $ruta;
     $fn($metodo === 'POST');

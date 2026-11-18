@@ -12,19 +12,33 @@
     return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
   }
 
+  function compactar(s) {
+    return s.replace(/[^a-z0-9]+/g, '');
+  }
+
+  /** ¿p está dentro de una palabra o empieza al comienzo de una y sigue por las siguientes? */
+  function coincideCompacto(palabras, p) {
+    return palabras.some(function (w, i) {
+      if (w.indexOf(p) !== -1) { return true; }
+      for (var j = i + 1; w.length < p.length && j < palabras.length; j++) { w += palabras[j]; }
+      return w.indexOf(p) === 0;
+    });
+  }
+
   /**
    * Cada palabra de la búsqueda debe estar en el texto (sin tildes ni mayúsculas); una palabra con números
-   * también vale sin espacios ni guiones ('cd1101' encuentra 'CD-1101'). Mismo criterio que demo_coincide() (comun.php).
+   * también vale sin espacios ni guiones ('cd1101' encuentra 'CD-1101'), comparada palabra por palabra del texto
+   * ('df220' encuentra 'DF 220', pero 'a4' no encuentra 'Agua 4 litros'). Mismo criterio que demo_coincide() (comun.php).
    */
   function coincide(texto, q) {
     var t = normalizar(texto);
-    var compacto = null;
+    var palabras = null;
     return normalizar(q).split(/\s+/).filter(Boolean).every(function (palabra) {
       if (t.indexOf(palabra) !== -1) { return true; }
       if (!/\d/.test(palabra)) { return false; }
-      if (compacto === null) { compacto = t.replace(/[^a-z0-9]+/g, ''); }
-      var p = palabra.replace(/[^a-z0-9]+/g, '');
-      return p !== '' && compacto.indexOf(p) !== -1;
+      if (palabras === null) { palabras = t.split(/\s+/).map(compactar).filter(Boolean); }
+      var p = compactar(palabra);
+      return p !== '' && coincideCompacto(palabras, p);
     });
   }
 

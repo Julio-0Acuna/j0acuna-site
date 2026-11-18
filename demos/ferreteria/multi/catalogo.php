@@ -5,13 +5,12 @@ require __DIR__ . '/_plantilla.php';
 
 $n = pg();
 $q = is_string($_GET['q'] ?? null) ? mb_substr(trim($_GET['q']), 0, 40) : '';
-$qn = demo_normalizar($q);
 
 /** Texto en el que se busca cada producto. */
 $textoDe = static fn (array $p): string => $p['nombre'] . ' ' . $p['desc'] . ' ' . $n['categorias'][$p['cat']][0] . ' ' . implode(' ', array_keys($p['variantes']));
 
-// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide.
-$coincide = static fn (array $p): bool => $qn === '' || str_contains(demo_normalizar($textoDe($p)), $qn);
+// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide (demo_coincide, mismo criterio que buscador.js).
+$coincide = static fn (array $p): bool => demo_coincide($textoDe($p), $q);
 $hayResultados = count(array_filter($n['productos'], $coincide)) > 0;
 
 pg_abrir('catalogo', 'Pinturas y terminaciones', 'Catálogo de ' . $n['nombre'] . ': látex, esmaltes al agua, pinturas para fachadas, barnices, anticorrosivos y herramientas de pintor, en ¼ galón, galón o tineta. Demo de tienda de pinturas en ' . $n['comuna'] . '.');

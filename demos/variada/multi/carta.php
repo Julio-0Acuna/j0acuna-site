@@ -5,13 +5,12 @@ require __DIR__ . '/_plantilla.php';
 
 $n = dp();
 $q = is_string($_GET['q'] ?? null) ? mb_substr(trim($_GET['q']), 0, 40) : '';
-$qn = demo_normalizar($q);
 
 /** Texto en el que se busca cada plato (nombre, descripción, categoría y estilos). */
 $textoDe = static fn (array $p): string => $p['nombre'] . ' ' . $p['desc'] . ' ' . $n['categorias'][$p['cat']][0] . ' ' . implode(' ', array_keys($p['variantes']));
 
-// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide.
-$coincide = static fn (array $p): bool => $qn === '' || str_contains(demo_normalizar($textoDe($p)), $qn);
+// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide (demo_coincide, mismo criterio que buscador.js).
+$coincide = static fn (array $p): bool => demo_coincide($textoDe($p), $q);
 $hayResultados = count(array_filter($n['platos'], $coincide)) > 0;
 
 dp_abrir('carta', 'Carta con QR y hamburguesas en 3D', 'Carta de ' . $n['nombre'] . ': churrascos, lomitos, completos, hamburguesas, chorrillana y jugos naturales, con código QR y hamburguesas en 3D. Demo de sanguchería en ' . $n['comuna'] . '.');

@@ -4,18 +4,29 @@
  * @var bool $con_fecha (modo entrega 'fecha') @var array $fechas ['AAAA-MM-DD' => 'Mañana, mié 18/11']
  * @var array $campos_extra @var array $valores_extra campos extra del checkout ('checkout_campos')
  * @var array $horas_por_fecha ['AAAA-MM-DD' => ['19:00', ...]] días con menos horas que $horas (hoy): van en data-horas
+ * @var string $hora_vencida hora elegida que ya no se ofrece (vuelve elegida, con su error 'cuando')
+ * @var string $proxima_apertura modo 'hoy' sin horas para hoy: 'mañana a las 12:30' (texto 'cuando_pronto_cerrado')
+ * @var string $fecha_defecto día preseleccionado (m_fecha_defecto: entrega['fecha_defecto'])
  */
 $con_fecha ??= false;
 $fechas ??= [];
 $horas_por_fecha ??= [];
 $campos_extra ??= [];
 $valores_extra ??= [];
+$hora_vencida ??= '';
+$proxima_apertura ??= '';
+$fecha_defecto ??= '';
 $val = static fn (string $k, string $def = ''): string => is_string($previo[$k] ?? null) ? $previo[$k] : $def;
-$fechaElegida = $val('fecha_entrega', (string) array_key_first($fechas));
+$fechaElegida = $val('fecha_entrega', $fecha_defecto !== '' ? $fecha_defecto : (string) array_key_first($fechas));
+$notaPlaceholder = m_texto('checkout_nota_placeholder');
 $entrega = $val('entrega', !empty($cfg['retiro']) ? 'retiro' : 'despacho');
 $pago = $val('pago', !empty($cfg['demo']) ? 'prueba' : 'al_recibir');
 $dirElegida = $val('direccion_id', $direcciones ? (string) $direcciones[0]['id'] : '0');
 $err = static fn (string $k): string => isset($errores[$k]) ? '<p class="t-error" id="err-' . m_e($k) . '">' . m_e($errores[$k]) . '</p>' : '';
+// La hora rechazada se muestra junto a su selector (y no se repite en el resumen de arriba).
+$attrCuando = isset($errores['cuando']) ? ' aria-invalid="true" aria-describedby="err-cuando"' : '';
+m_errores_pendientes(null, 'cuando');
+$horaVencida = $hora_vencida !== '' && !in_array($hora_vencida, $horas, true) ? $hora_vencida : '';
 ?>
 <section class="t-pagina t-checkout">
   <h1><?= m_e(m_texto('checkout_titulo')) ?></h1>
@@ -90,26 +101,30 @@ $err = static fn (string $k): string => isset($errores[$k]) ? '<p class="t-error
           </div>
           <div class="t-campo">
             <label for="cuando"><?= m_e(m_texto('hora_titulo')) ?></label>
-            <select id="cuando" name="cuando">
+            <select id="cuando" name="cuando"<?= $attrCuando ?>>
               <option value=""><?= m_e(m_texto('hora_cualquiera')) ?></option>
+              <?php if ($horaVencida !== ''): ?><option value="<?= m_e($horaVencida) ?>" selected><?= m_e(m_texto('hora_entrega_fecha', null, ['hora' => $horaVencida])) ?></option><?php endif; ?>
               <?php foreach ($horas as $h): ?><option value="<?= m_e($h) ?>"<?= $val('cuando') === $h ? ' selected' : '' ?>><?= m_e(m_texto('hora_entrega_fecha', null, ['hora' => $h])) ?></option><?php endforeach; ?>
             </select>
+            <?= $err('cuando') ?>
           </div>
         </div>
         <?php if (m_texto('fecha_ayuda') !== ''): ?><p class="t-pequeno"><?= m_e(m_texto('fecha_ayuda')) ?></p><?php endif; ?>
         <?php else: ?>
         <div class="t-campo">
           <label for="cuando"><?= m_e(m_texto('cuando_titulo')) ?></label>
-          <select id="cuando" name="cuando">
-            <option value=""><?= m_e(m_texto('cuando_pronto')) ?></option>
+          <select id="cuando" name="cuando"<?= $attrCuando ?>>
+            <option value=""><?= m_e($proxima_apertura !== '' ? m_texto('cuando_pronto_cerrado', null, ['abre' => $proxima_apertura]) : m_texto('cuando_pronto')) ?></option>
+            <?php if ($horaVencida !== ''): ?><option value="<?= m_e($horaVencida) ?>" selected><?= m_e(m_texto('hora_entrega', null, ['hora' => $horaVencida])) ?></option><?php endif; ?>
             <?php foreach ($horas as $h): ?><option value="<?= m_e($h) ?>"<?= $val('cuando') === $h ? ' selected' : '' ?>><?= m_e(m_texto('hora_entrega', null, ['hora' => $h])) ?></option><?php endforeach; ?>
           </select>
+          <?= $err('cuando') ?>
         </div>
         <?php endif; ?>
         <?php m_parcial('_campos_extra', ['campos' => $campos_extra, 'valores' => $valores_extra, 'errores' => $errores]); ?>
         <div class="t-campo">
           <label for="nota"><?= m_e(m_texto('checkout_nota')) ?> <small><?= m_e(m_texto('checkout_nota_ayuda')) ?></small></label>
-          <textarea id="nota" name="nota" maxlength="300" rows="2"><?= m_e($val('nota')) ?></textarea>
+          <textarea id="nota" name="nota" maxlength="300" rows="2"<?= $notaPlaceholder !== '' ? ' placeholder="' . m_e($notaPlaceholder) . '"' : '' ?>><?= m_e($val('nota')) ?></textarea>
           <?= $err('nota') ?>
         </div>
       </fieldset>

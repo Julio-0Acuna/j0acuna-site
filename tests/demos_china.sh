@@ -217,9 +217,10 @@ printf '%s' "$CHK" | grep -qE '>Hoy a las [0-9]{2}:[0-9]{2}</option>|<option val
 printf '%s' "$CHK" | grep -qF '¿Para cuándo lo quieres?' && pasa "checkout con texto propio «¿Para cuándo lo quieres?»" || falla "checkout sin texto propio"
 printf '%s' "$CHK" | grep -qF 'name="fecha_entrega"' && falla "el delivery pide fecha de entrega y no debería" || pasa "el delivery no pide fecha de entrega"
 # Horas reales del motor que pasan la medianoche: el servicio de cada noche llega hasta su cierre
-# (lun a jue 00:30, vie y sáb 02:00, dom 00:00) y a las 00:40 del sábado sigue el del viernes.
+# (lun a jue 00:30, vie y sáb 02:00, dom 00:00) y a las 00:40 del sábado sigue el del viernes. Cuando al servicio
+# de anoche ya no le quedan horas (martes 00:10: cierre 00:30 y margen 30), se ofrece el de hoy completo.
 HORAS_CHINA='require "demos/_motor/motor.php"; $c = require "demos/china/plataforma/config.php"; $t = new DateTimeImmutable($argv[1], new DateTimeZone("America/Santiago")); $c["entrega"]["horas"] = wk_horas_servicio($c["negocio"]["horario"], $t); echo implode(",", m_horas_entrega($c, "", $t->getTimestamp()));'
-for caso in '2026-11-21 00:40|01:30,02:00' '2026-11-20 23:00|23:30,00:00,00:30,01:00,01:30,02:00' '2026-11-22 22:00|22:30,23:00,23:30,00:00' '2026-11-19 23:50|00:30' '2026-11-17 00:10|'; do
+for caso in '2026-11-21 00:40|01:30,02:00' '2026-11-20 23:00|23:30,00:00,00:30,01:00,01:30,02:00' '2026-11-22 22:00|22:30,23:00,23:30,00:00' '2026-11-19 23:50|00:30' '2026-11-17 00:10|12:30,13:00,13:30,14:00,14:30,15:00,15:30,16:00,16:30,17:00,17:30,18:00,18:30,19:00,19:30,20:00,20:30,21:00,21:30,22:00,22:30,23:00,23:30,00:00,00:30'; do
   CUANDO="${caso%%|*}"; ESPERADO="${caso#*|}"
   OBTENIDO=$(tools/php.sh -r "$HORAS_CHINA" "$CUANDO")
   [ "$OBTENIDO" = "$ESPERADO" ] && pasa "horas de delivery a las $CUANDO: «$ESPERADO»" || falla "horas a las $CUANDO: «$OBTENIDO» (esperado «$ESPERADO»)"
@@ -255,7 +256,7 @@ T=$(csrf "$J1" "$TIENDA")
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$BEB" > /dev/null
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir")
-case "$R" in 303*r=carrito*) curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'El pedido mínimo es $6.000' && pasa "pedido bajo \$6.000 se rechaza con aviso" || falla "pedido mínimo sin aviso";; *) falla "pedido bajo el mínimo: $R";; esac
+case "$R" in 422*) grep -qF 'para el pedido mínimo de $6.000.' "$TMP/ultima.html" && pasa "pedido bajo \$6.000 se rechaza en el checkout (422 con aviso)" || falla "pedido mínimo: 422 sin aviso";; *) falla "pedido bajo el mínimo: $R";; esac
 
 # Despacho con costo: chaulafán de pollo × 2 ($11.980) + La Florida $2.490 = $14.470
 T=$(csrf "$J1" "${TIENDA}?r=carrito")

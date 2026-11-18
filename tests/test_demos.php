@@ -771,13 +771,13 @@ t('minimo: el checkout rechaza un despacho bajo el mínimo y, si no es solo desp
     [$id, $error] = m_pedido_crear($db, $cfg, $cli, ['entrega' => 'despacho', 'comuna' => 'Maipú', 'direccion' => 'Calle 1', 'cuando' => '', 'nota' => '', 'pago' => 'al_recibir'], false);
     eq($id, null);
     eq($error, 'El pedido mínimo es $15.000.');
-    // Sin 'pedido_minimo_solo_despacho' (como hoy en los rubros): el mínimo vale para todo y, como siempre,
-    // lo corta m_pedido_crear (la acción vuelve al carrito con el mensaje), no la validación.
+    // Sin 'pedido_minimo_solo_despacho' (como hoy en los rubros): el mínimo vale para todo; desde la Fase 2.5 (punto 10)
+    // el checkout también rechaza el retiro (422 con el mensaje del carrito) y m_pedido_crear sigue cortándolo.
     $cfg['pedido_minimo_solo_despacho'] = false;
     [$d, $e] = m_checkout_validar($db, $cfg, $cli, ['entrega' => 'retiro', 'pago' => 'al_recibir'], 9000);
-    eq($e, []);
+    eq([$d, $e], [null, ['minimo' => 'Te faltan $6.000 para el pedido mínimo de $15.000.']], 'retiro bajo el mínimo');
     $_SESSION = ['carrito' => [$agua => 2]];
-    [$id, $error] = m_pedido_crear($db, $cfg, $cli, $d, false);
+    [$id, $error] = m_pedido_crear($db, $cfg, $cli, ['entrega' => 'retiro', 'comuna' => '', 'direccion' => '', 'cuando' => '', 'nota' => '', 'pago' => 'al_recibir'], false);
     eq([$id, $error], [null, 'El pedido mínimo es $15.000.'], 'retiro bajo el mínimo');
     eq(m_aviso_minimo($cfg, 9000, 'retiro'), 'Te faltan $6.000 para el pedido mínimo de $15.000.');
     [, $e] = m_checkout_validar($db, $cfg, $cli, $despacho, 15000);
@@ -866,7 +866,7 @@ t('horas: 00:40 con cierre 02:00 es el servicio de ayer', function () {
     $cfg = ['horas_entrega' => ['12:30', '02:00']] + demos_cfg();
     eq(m_horas_entrega($cfg, '', demos_ahora('2026-11-18 00:40')), ['01:30', '02:00']);
     eq(m_horas_entrega($cfg, '', demos_ahora('2026-11-17 23:50')), ['00:30', '01:00', '01:30', '02:00']);
-    eq(m_horas_entrega($cfg, '', demos_ahora('2026-11-18 01:45')), [], 'cerrando: ya no quedan');
+    eq(m_horas_entrega($cfg, '', demos_ahora('2026-11-18 01:45'))[0], '12:30', 'cerrando: al servicio de ayer no le quedan horas, se ofrece el de hoy (punto 5)');
     eq(m_horas_entrega($cfg, '', demos_ahora('2026-11-18 03:00'))[0], '12:30', 'después del cierre: el servicio de hoy completo');
     // Modo fecha: el día elegido es el día en que empieza el servicio.
     $cfg = demos_cfg_entrega(['modo' => 'fecha', 'horas' => ['12:30', '02:00'], 'cerrado' => []]);
@@ -1102,8 +1102,490 @@ t('demo.css: el título del perfil de Google es más específico que los h3 de c
     contiene($css, '.demo-google .demo-google__perfil h3 { margin: 0 0 4px; font-size: 22px; font-weight: 500; color: #202124; font-family: inherit; }');
 });
 
+/* ---------------------------------------------------------------- Fase 2.5: correcciones de la revisión */
+
+/** Carrito de prueba de una línea (para renderizar el checkout). */
+function demos_carrito_uno(int $precio = 9000): array
+{
+    $p = ['id' => 1, 'nombre' => 'Agua', 'precio' => $precio, 'precio_mayorista' => null, 'stock' => 9, 'foto' => ''];
+    return ['lineas' => [['producto' => $p, 'cantidad' => 1, 'precio' => $precio, 'total' => $precio]], 'subtotal' => $precio, 'unidades' => 1, 'avisos' => []];
+}
+
+/** Vars del checkout del motor para demos_vista(). */
+function demos_vars_checkout(array $extra = []): array
+{
+    return $extra + ['carrito' => demos_carrito_uno(), 'direcciones' => [], 'errores' => [], 'previo' => [], 'horas' => ['19:00', '19:30'],
+        'usuario' => ['nombre' => 'Ana', 'tipo' => 'particular', 'estado' => 'activo']];
+}
+
+t('1. hora rechazada: el error se ve junto al selector y la hora sigue elegida', function () {
+    m_config(demos_cfg());
+    $_SESSION = ['csrf' => 'x'];
+    $msg = m_texto('checkout_hora_no_disponible');
+    eq($msg, 'Esa hora ya no está disponible. Elige otra.');
+    // Modo hoy: la hora que pasó (12:00) ya no está en la lista, pero vuelve elegida y con su error.
+    m_errores_pendientes(m_errores_sin_campo(['cuando' => $msg, 'calle' => 'Falta la calle.']));
+    $h = demos_vista('checkout', demos_vars_checkout(['errores' => ['cuando' => $msg], 'previo' => ['cuando' => '12:00'], 'hora_vencida' => '12:00']));
+    contiene($h, '<select id="cuando" name="cuando" aria-invalid="true" aria-describedby="err-cuando">');
+    contiene($h, '<option value="12:00" selected>Hoy a las 12:00</option>');
+    contiene($h, '<p class="t-error" id="err-cuando">' . m_e($msg) . '</p>');
+    eq(m_errores_pendientes(), [], 'la vista del motor lo mostró: no se repite arriba');
+    // Modo fecha: también junto al selector de hora.
+    m_errores_pendientes(['cuando' => $msg]);
+    $h = demos_vista('checkout', demos_vars_checkout(['errores' => ['cuando' => $msg], 'previo' => ['cuando' => '13:00', 'fecha_entrega' => '2026-11-21'],
+        'con_fecha' => true, 'fechas' => ['2026-11-21' => 'Sáb 21/11'], 'horas' => ['12:00', '13:00']]));
+    contiene($h, '<select id="cuando" name="cuando" aria-invalid="true" aria-describedby="err-cuando">');
+    contiene($h, '<option value="13:00" selected>');
+    contiene($h, 'id="err-cuando"');
+    eq(m_errores_pendientes(), []);
+    // Sin error, sin marcas.
+    $h = demos_vista('checkout', demos_vars_checkout());
+    contiene($h, '<select id="cuando" name="cuando">');
+    no_contiene($h, 'err-cuando');
+});
+
+t('1. hora rechazada: va al resumen de errores si la vista no la muestra', function () {
+    $e = ['cuando' => 'X', 'calle' => 'Falta la calle.', 'extra_patente' => 'P', 'minimo' => 'M', 'fecha_entrega' => 'F'];
+    eq(array_keys(m_errores_sin_campo($e)), ['cuando', 'extra_patente', 'minimo']);
+    eq(m_errores_sin_campo(['calle' => 'x']), []);
+});
+
+t('1. hora: 5 minutos de gracia al validar', function () {
+    $cfg = ['horas_entrega' => ['12:00', '23:00']] + demos_cfg();
+    m_config($cfg);
+    m_db_asegurar($cfg, true);
+    $db = m_db_abrir($cfg['db']);
+    $cli = m_usuario_por_email($db, 'c@demo.cl');
+    $base = ['entrega' => 'retiro', 'pago' => 'al_recibir'];
+    // A las 18:10 se ofrecía 19:00 (18:10 + 30 min); el cliente confirma a las 18:34: se acepta.
+    eq(m_horas_entrega($cfg, '', demos_ahora('2026-11-17 18:34'))[0], '19:30', 'a las 18:34 ya no se ofrece');
+    [$d, $e] = m_checkout_validar($db, $cfg, $cli, $base + ['cuando' => '19:00'], 5000, demos_ahora('2026-11-17 18:34'));
+    eq($e, [], 'dentro de los 5 minutos de gracia');
+    eq($d['cuando'], '19:00');
+    [, $e] = m_checkout_validar($db, $cfg, $cli, $base + ['cuando' => '19:00'], 5000, demos_ahora('2026-11-17 18:36'));
+    eq($e['cuando'] ?? '', 'Esa hora ya no está disponible. Elige otra.', 'pasados los 5 minutos');
+    // Pasada la medianoche: la gracia no quita las horas del servicio de hoy.
+    [, $e] = m_checkout_validar($db, $cfg, $cli, $base + ['cuando' => '12:00'], 5000, demos_ahora('2026-11-18 00:02'));
+    eq($e, [], '00:02: el servicio de hoy completo');
+    // Modo fecha: hoy, a las 22:32, aún vale el 23:00 que se ofreció a las 22:29.
+    $cfg = demos_cfg_entrega(['modo' => 'fecha', 'dias_min' => 0, 'dias_max' => 3, 'cerrado' => [], 'horas' => ['12:00', '23:00']]);
+    [$d, $e] = m_checkout_validar($db, $cfg, $cli, $base + ['fecha_entrega' => '2026-11-17', 'cuando' => '23:00'], 5000, demos_ahora('2026-11-17 22:32'));
+    eq($e, [], 'el día y la hora ofrecidos hace 3 minutos');
+    eq($d['fecha_entrega'], '2026-11-17');
+    [, $e] = m_checkout_validar($db, $cfg, $cli, $base + ['fecha_entrega' => '2026-11-17', 'cuando' => '23:00'], 5000, demos_ahora('2026-11-17 22:40'));
+    ok(isset($e['fecha_entrega']), 'a las 22:40 hoy ya no se ofrece');
+    m_config(demos_cfg());
+});
+
+/** Carpeta temporal con vistas propias de un rubro. */
+function demos_vistas_propias(string $nombre, array $archivos): string
+{
+    $dir = $GLOBALS['demos_tmp'] . '/vistas-' . $nombre;
+    @mkdir($dir);
+    foreach ($archivos as $archivo => $php) {
+        file_put_contents($dir . '/' . $archivo, $php);
+    }
+    return $dir;
+}
+
+t('2. checkout propio que no imprime _campos_extra con checkout_campos: LogicException clara', function () {
+    $_SESSION = ['csrf' => 'x'];
+    $layout = '<?= $contenido ?>';
+    $sin = demos_vistas_propias('sin-parcial', ['layout.php' => $layout, 'checkout.php' => '<h1>Checkout propio</h1>']);
+    $con = demos_vistas_propias('con-parcial', ['layout.php' => $layout,
+        'checkout.php' => "<h1>Checkout propio</h1><?php m_parcial('_campos_extra', ['campos' => \$campos_extra, 'valores' => \$valores_extra, 'errores' => \$errores]); ?>"]);
+    $render = static function (array $cfg): string {
+        m_config($cfg);
+        ob_start();
+        try {
+            m_vista('checkout', demos_vars_checkout(['campos_extra' => m_checkout_campos($cfg), 'valores_extra' => [], 'cfg' => $cfg]));
+        } finally {
+            $html = (string) ob_get_clean();
+        }
+        return $html;
+    };
+    $lanzo = '';
+    try {
+        $render(['vistas' => $sin] + demos_cfg_campos());
+    } catch (LogicException $e) {
+        $lanzo = $e->getMessage();
+    }
+    contiene($lanzo, 'checkout.php');
+    contiene($lanzo, "m_parcial('_campos_extra'");
+    // Imprime el parcial: sin excepción y con los campos.
+    contiene($render(['vistas' => $con] + demos_cfg_campos()), 'name="extra[patente]"');
+    // Sin checkout_campos, la vista propia no necesita el parcial.
+    contiene($render(['vistas' => $sin] + demos_cfg()), 'Checkout propio');
+    // Ningún rubro tiene hoy un checkout.php propio (si alguno lo agrega, debe imprimir el parcial).
+    eq(glob(__DIR__ . '/../demos/*/plataforma/vistas/checkout.php'), []);
+    m_config(demos_cfg());
+});
+
+t('3. búsqueda: quita todas las tildes, como buscador.js (NFD)', function () {
+    eq(demo_normalizar('Carménère'), 'carmenere');
+    eq(demo_normalizar('Crème Brûlée'), 'creme brulee');
+    eq(demo_normalizar('àèìòù âêîôû äëïöü ç ã õ ÀÉÎÕÜ Ñ'), 'aeiou aeiou aeiou c a o aeiou n');
+    ok(demo_coincide('Vino Carménère reserva', 'carmenere'));
+    ok(demo_coincide('Crème brûlée de la casa', 'creme'));
+    ok(demo_coincide('Crème brûlée de la casa', 'CRÈME brulee'));
+    ok(demo_coincide('Ñoquis de papa', 'ñoquis'));
+    ok(!demo_coincide('Carménère', 'merlot'));
+});
+
+t('4. campo numero: el punto solo como separador de miles; decimales si el campo los declara', function () {
+    $cfg = ['checkout_campos' => [
+        ['nombre' => 'km', 'etiqueta' => 'Kilometraje', 'tipo' => 'numero', 'max' => 9999999],
+        ['nombre' => 'peso', 'etiqueta' => 'Peso (kg)', 'tipo' => 'numero', 'min' => 0, 'max' => 80, 'decimales' => true, 'requerido' => false],
+    ]] + demos_cfg();
+    m_config($cfg);
+    $val = static fn (array $extra): array => m_checkout_campos_validar($cfg, ['extra' => $extra], 'retiro');
+    eq($val(['km' => '84.000'])[0], [['Kilometraje', '84000']]);
+    eq($val(['km' => '1.234.567'])[0], [['Kilometraje', '1234567']]);
+    eq($val(['km' => ' $ 84 000 '])[0], [['Kilometraje', '84000']]);
+    foreach (['1.5', '1,5', '84.00', '1.2345', '8.4.000'] as $malo) {
+        [$extras, $e] = $val(['km' => $malo]);
+        eq($extras, [], $malo);
+        eq($e['extra_km'] ?? '', '«Kilometraje» debe ser un número entero (sin decimales).', $malo);
+    }
+    foreach (['1.5' => '1,5', '1,5' => '1,5', '2,50' => '2,5', '12' => '12', '0,75' => '0,75', '1.500' => null, '80,1' => null, '3,333' => null] as $entrada => $esperado) {
+        [$extras, $e] = $val(['km' => '1', 'peso' => (string) $entrada]);
+        if ($esperado === null) {
+            ok(isset($e['extra_peso']), "peso $entrada rechazado");
+        } else {
+            eq($e, [], "peso $entrada");
+            eq($extras[1] ?? null, ['Peso (kg)', $esperado], "peso $entrada");
+        }
+    }
+    $_SESSION = ['csrf' => 'x'];
+    $h = demos_vista('_campos_extra', ['campos' => m_checkout_campos($cfg), 'valores' => [], 'errores' => []]);
+    contiene($h, 'id="extra-km" name="extra[km]" inputmode="numeric"');
+    contiene($h, 'id="extra-peso" name="extra[peso]" inputmode="decimal"');
+    m_config(demos_cfg());
+});
+
+t('5. modo hoy: si al servicio de ayer no le quedan horas, se ofrece el de hoy', function () {
+    $cfg = ['horas_entrega' => ['12:30', '02:00']] + demos_cfg();
+    $h = m_horas_entrega($cfg, '', demos_ahora('2026-11-18 01:40'));
+    eq($h[0], '12:30', '01:40 con cierre 02:00 y margen 30');
+    eq(count($h), 28, 'el servicio de hoy completo');
+    eq(m_horas_entrega($cfg, '', demos_ahora('2026-11-18 01:20')), ['02:00'], 'a las 01:20 aún queda el servicio de ayer');
+    // El checkout acepta esas horas.
+    m_config($cfg);
+    m_db_asegurar($cfg, true);
+    $db = m_db_abrir($cfg['db']);
+    [, $e] = m_checkout_validar($db, $cfg, m_usuario_por_email($db, 'c@demo.cl'), ['entrega' => 'retiro', 'pago' => 'al_recibir', 'cuando' => '13:00'], 5000, demos_ahora('2026-11-18 01:40'));
+    eq($e, []);
+    m_config(demos_cfg());
+});
+
+t('6. modo fecha: la madrugada es del día en que abrió el servicio; a las 00:40 ese día ya no se ofrece', function () {
+    $cfg = demos_cfg_entrega(['modo' => 'fecha', 'dias_min' => 0, 'dias_max' => 3, 'cerrado' => [], 'horas' => ['12:30', '02:00']]);
+    $f = m_fechas_entrega($cfg, demos_ahora('2026-11-18 00:40'));
+    eq(array_key_first($f), '2026-11-18', 'sin «ayer» en la lista');
+    eq(m_horas_entrega($cfg, '2026-11-18', demos_ahora('2026-11-18 00:40'))[0], '12:30');
+    $motor = (string) file_get_contents(__DIR__ . '/../demos/_motor/motor.php');
+    contiene($motor, "En modo 'fecha', la madrugada pertenece al día en que abrió el servicio");
+});
+
+t('7. «Lo antes posible» con la cocina cerrada: se acepta y dice cuándo abrimos', function () {
+    $horario = [1 => null, 2 => ['12:30', '23:00'], 3 => ['12:30', '23:00'], 4 => ['12:30', '23:00'], 5 => ['12:30', '23:00'], 6 => ['12:30', '23:00'], 7 => ['13:00', '22:00']];
+    $cfg = array_replace(demos_cfg(), ['negocio' => ['nombre' => 'Prueba', 'horario' => $horario], 'horas_entrega' => ['12:00', '23:00']]);
+    eq(m_proxima_apertura($cfg, demos_ahora('2026-11-17 22:45')), 'mañana a las 12:30', 'martes en la noche');
+    eq(m_proxima_apertura($cfg, demos_ahora('2026-11-17 10:00')), 'hoy a las 12:30', 'martes en la mañana');
+    eq(m_proxima_apertura($cfg, demos_ahora('2026-11-22 22:30')), 'el martes a las 12:30', 'domingo: el lunes cierra');
+    eq(m_proxima_apertura($cfg, demos_ahora('2026-11-17 01:00')), 'hoy a las 12:30');
+    // Sin horario del negocio: la primera hora de entrega; 24 horas: también la primera hora de entrega.
+    eq(m_proxima_apertura(['horas_entrega' => ['12:00', '23:00']] + demos_cfg(), demos_ahora('2026-11-17 22:45')), 'mañana a las 12:00');
+    $h24 = array_replace(demos_cfg(), ['negocio' => ['nombre' => 'X', 'horario' => array_fill(1, 7, ['00:00', '24:00'])], 'horas_entrega' => ['08:00', '23:00']]);
+    eq(m_proxima_apertura($h24, demos_ahora('2026-11-17 22:45')), 'mañana a las 08:00');
+    // Vista: sin horas para hoy, «Lo antes posible» pasa a «Apenas abramos (…)».
+    m_config($cfg);
+    $_SESSION = ['csrf' => 'x'];
+    eq(m_texto('cuando_pronto_cerrado', null, ['abre' => 'mañana a las 12:30']), 'Apenas abramos (mañana a las 12:30)');
+    $h = demos_vista('checkout', demos_vars_checkout(['horas' => [], 'proxima_apertura' => 'mañana a las 12:30']));
+    contiene($h, '<option value="">Apenas abramos (mañana a las 12:30)</option>');
+    no_contiene($h, 'Lo antes posible');
+    $h = demos_vista('checkout', demos_vars_checkout());
+    contiene($h, '<option value="">Lo antes posible</option>');
+    // El servidor lo sigue aceptando (las demos se muestran a cualquier hora).
+    m_db_asegurar($cfg, true);
+    $db = m_db_abrir($cfg['db']);
+    [$d, $e] = m_checkout_validar($db, $cfg, m_usuario_por_email($db, 'c@demo.cl'), ['entrega' => 'retiro', 'pago' => 'al_recibir', 'cuando' => ''], 5000, demos_ahora('2026-11-17 23:30'));
+    eq($e, []);
+    eq($d['cuando'], '');
+    m_config(demos_cfg());
+});
+
+/** Casos de búsqueda: [texto, búsqueda, ¿coincide?]. Los mismos están en la prueba de buscador.js de tests/demos.sh. */
+const DEMOS_BUSQUEDAS = [
+    ['Agua 4 litros', 'a4', false], ['Agua 4 litros', '4l', true], ['Agua 4 litros', 'agua 4', true], ['Hoja A4', 'a4', true],
+    ['Cód. CD-1101', 'cd1101', true], ['Cód. CD1101', 'CD-1101', true], ['Cód. CD-1101', 'cd 1101', true], ['Cód. CD-1101', '1101', true],
+    ['Disco DF 220', 'df220', true], ['Disco DF 220', 'f220', false], ['Disco DF 220', 'df-221', false],
+    ['Vino Carménère', 'carmenere', true], ['Crème brûlée', 'CREME', true], ['Pastillas de freno delanteras', 'pastilla freno', true],
+    ['Pastillas de freno delanteras', 'pastilla trasera', false], ['Ñoquis de papa', 'noquis', true], ['Lo que sea', '', true],
+];
+
+t('8. búsqueda compacta por palabra: «a4» no cruza «Agua 4», los códigos con o sin guion siguen', function () {
+    foreach (DEMOS_BUSQUEDAS as [$texto, $q, $esperado]) {
+        eq(demo_coincide($texto, $q), $esperado, "«{$q}» en «{$texto}»");
+    }
+});
+
+t('9. horario: 24 horas hoy aunque ayer cerrara pasada la medianoche', function () {
+    $tz = new DateTimeZone('America/Santiago');
+    $h = array_fill(1, 5, ['12:00', '22:00']) + [6 => ['19:00', '02:00'], 7 => ['00:00', '24:00']];
+    // Domingo 2026-11-22 a las 00:30: el sábado cierra a las 02:00, pero el domingo abre las 24 horas.
+    eq(demo_horario_estado($h, new DateTimeImmutable('2026-11-22 00:30', $tz)), ['abierto' => true, 'texto' => 'Abierto las 24 horas']);
+    eq(demo_horario_estado($h, new DateTimeImmutable('2026-11-22 03:00', $tz))['texto'], 'Abierto las 24 horas');
+    // Sin 24 horas el domingo, sigue el turno del sábado como siempre.
+    $h[7] = ['13:00', '22:00'];
+    eq(demo_horario_estado($h, new DateTimeImmutable('2026-11-22 00:30', $tz)), ['abierto' => true, 'texto' => 'Abierto · cierra a las 02:00']);
+});
+
+t('10. retiro bajo el mínimo sin pedido_minimo_solo_despacho: 422 con el mensaje del carrito', function () {
+    $cfg = ['pedido_minimo' => 15000] + demos_cfg();
+    m_config($cfg);
+    m_db_asegurar($cfg, true);
+    $db = m_db_abrir($cfg['db']);
+    $cli = m_usuario_por_email($db, 'c@demo.cl');
+    $msg = 'Te faltan $6.000 para el pedido mínimo de $15.000.';
+    [$d, $e] = m_checkout_validar($db, $cfg, $cli, ['entrega' => 'retiro', 'pago' => 'al_recibir'], 9000);
+    eq([$d, $e], [null, ['minimo' => $msg]]);
+    [, $e] = m_checkout_validar($db, $cfg, $cli, ['entrega' => 'despacho', 'pago' => 'al_recibir', 'calle' => 'Calle 1', 'comuna' => 'Maipú'], 9000);
+    eq($e, ['minimo' => $msg], 'despacho: el mismo mensaje');
+    [, $e] = m_checkout_validar($db, $cfg, $cli, ['entrega' => 'mesa', 'pago' => 'al_recibir'], 9000);
+    eq(array_keys($e), ['entrega'], 'sin entrega válida: solo ese error');
+    [, $e] = m_checkout_validar($db, $cfg, $cli, ['entrega' => 'retiro', 'pago' => 'al_recibir'], 15000);
+    eq($e, [], 'justo en el mínimo');
+    eq(m_errores_sin_campo(['minimo' => $msg]), ['minimo' => $msg], 'va al resumen de arriba');
+    m_config(demos_cfg());
+});
+
+t('11. catálogo: m_accion_inicio calcula el catálogo una sola vez', function () {
+    $cfg = demos_cfg_catalogo();
+    m_config($cfg);
+    m_db_asegurar($cfg, true);
+    $db = m_db_abrir($cfg['db']);
+    $todos = m_catalogo($db, null);
+    eq(m_catalogo_filtrar($todos, 'pastilla freno', ''), m_catalogo($db, null, 'pastilla freno'));
+    eq(array_column(m_catalogo_filtrar($todos, '', 'frenos'), 'nombre'), ['Pastillas de freno delanteras', 'Disco de freno']);
+    eq(m_catalogo_filtrar($todos, 'freno', 'pizzas'), []);
+    eq(m_categorias_de($todos), m_categorias_visibles($db, null));
+    $f = new ReflectionFunction('m_accion_inicio');
+    $fuente = implode('', array_slice(file($f->getFileName()), $f->getStartLine() - 1, $f->getEndLine() - $f->getStartLine() + 1));
+    eq(substr_count($fuente, 'm_catalogo('), 1, 'una sola consulta del catálogo');
+    no_contiene($fuente, 'm_categorias_visibles(');
+    m_config(demos_cfg());
+});
+
+t('11. Multi-page: las búsquedas sin JS usan demo_coincide (mismo criterio que buscador.js)', function () {
+    $paginas = glob(__DIR__ . '/../demos/*/multi/*.php');
+    $con = 0;
+    foreach ($paginas as $pagina) {
+        $php = (string) file_get_contents($pagina);
+        ok(!preg_match('/str_contains\(demo_normalizar\(/', $php), basename(dirname($pagina, 2)) . '/multi/' . basename($pagina) . ' todavía busca con str_contains(demo_normalizar(…))');
+        $con += (int) str_contains($php, 'demo_coincide(');
+    }
+    ok($con >= 15, "páginas con demo_coincide: $con");
+});
+
+t('12. carrito: sin despacho no avisa el mínimo de despacho', function () {
+    $_SESSION = ['csrf' => 'x'];
+    $carrito = demos_carrito_uno();
+    m_config(['pedido_minimo' => 15000, 'pedido_minimo_solo_despacho' => true, 'despacho' => false] + demos_cfg());
+    $h = demos_vista('carrito', ['carrito' => $carrito]);
+    no_contiene($h, 'Para despacho');
+    no_contiene($h, 'Te faltan');
+    contiene($h, 'href="/demos/test/?r=checkout"');
+    // Sin despacho y sin «solo despacho»: el mínimo vale para el retiro.
+    m_config(['pedido_minimo' => 15000, 'despacho' => false] + demos_cfg());
+    $h = demos_vista('carrito', ['carrito' => $carrito]);
+    contiene($h, 'Te faltan $6.000 para el pedido mínimo de $15.000.');
+    contiene($h, 'aria-disabled="true"');
+    m_config(demos_cfg());
+});
+
+t('12. tienda.js quita del DOM las horas que no se ofrecen (Safari iOS no oculta <option hidden>)', function () {
+    $js = (string) file_get_contents(__DIR__ . '/../demos/_comun/js/tienda.js');
+    no_contiene($js, 'h.hidden =');
+    contiene($js, 'removeChild');
+});
+
+t('13. resumen de WhatsApp de la Plataforma con textos configurables', function () {
+    $p = ['codigo' => 'TP-1001', 'items' => [['cantidad' => 1, 'nombre' => 'Corte', 'precio_unitario' => 12000]], 'costo_despacho' => 2000, 'total' => 14000,
+        'entrega' => 'retiro', 'comuna' => 'Maipú', 'cuando' => '17:00', 'fecha_entrega' => '2026-11-21', 'pago' => 'al_recibir', 'nota' => 'Sin apuro', 'extras' => ''];
+    m_config(demos_cfg());
+    // Por defecto, el mismo texto de siempre.
+    eq(m_pedido_resumen_texto($p), "Hola, hice el pedido TP-1001 en Prueba:\n• 1 × Corte – \$12.000\nDespacho: \$2.000\nTotal: \$14.000\nEntrega: retiro en el local\nPara el sábado 21 de noviembre a las 17:00\nPago: al recibir\nNota: Sin apuro");
+    eq(m_pedido_resumen_texto(['entrega' => 'despacho', 'pago' => 'prueba', 'fecha_entrega' => '', 'cuando' => ''] + $p),
+        "Hola, hice el pedido TP-1001 en Prueba:\n• 1 × Corte – \$12.000\nDespacho: \$2.000\nTotal: \$14.000\nEntrega: despacho en Maipú\nPago: pago de prueba (simulado)\nNota: Sin apuro");
+    m_config(['textos' => ['resumen_saludo' => 'Hola, reservé la hora {codigo} en {negocio}:', 'resumen_entrega_retiro' => 'Atención en el salón',
+        'resumen_para_fecha_hora' => 'El {fecha} a las {hora}', 'resumen_pago_al_recibir' => 'Pago: en el salón', 'resumen_total' => 'Total a pagar: {total}',
+        'resumen_nota' => 'Comentario: {nota}', 'retiro_titulo' => 'En el salón']] + demos_cfg());
+    $t = m_pedido_resumen_texto($p);
+    contiene($t, "Hola, reservé la hora TP-1001 en Prueba:\n");
+    contiene($t, "Total a pagar: \$14.000\nAtención en el salón\nEl sábado 21 de noviembre a las 17:00\nPago: en el salón\nComentario: Sin apuro");
+    // Sin clave propia, la entrega en retiro sigue tomando 'retiro_titulo' (como siempre).
+    m_config(['textos' => ['retiro_titulo' => 'Retiro en el taller']] + demos_cfg());
+    contiene(m_pedido_resumen_texto($p), "\nEntrega: retiro en el taller\n");
+    foreach (['resumen_saludo', 'resumen_linea', 'resumen_despacho', 'resumen_total', 'resumen_entrega_retiro', 'resumen_entrega_despacho',
+        'resumen_para_fecha_hora', 'resumen_para_fecha', 'resumen_para_hora', 'resumen_pago_prueba', 'resumen_pago_al_recibir', 'resumen_nota'] as $k) {
+        ok(isset(M_TEXTOS[$k]), "M_TEXTOS[$k]");
+    }
+    m_config(demos_cfg());
+});
+
+t('13. campos extra: dos columnas desde 720 px con 3 o más, patente sin «·» y solo_tipo', function () {
+    $css = (string) file_get_contents(__DIR__ . '/../demos/_comun/tienda.css');
+    contiene($css, '.t-campos-extra > .t-subtitulo {');
+    contiene($css, '@media (min-width: 720px) { .t-campos-extra--columnas {');
+    $_SESSION = ['csrf' => 'x'];
+    $cfg = demos_cfg_campos();
+    m_config($cfg);
+    $h = demos_vista('_campos_extra', ['campos' => m_checkout_campos($cfg), 'valores' => [], 'errores' => []]);
+    contiene($h, '<div class="t-campos-extra t-campos-extra--columnas">');
+    contiene($h, '<div class="t-campo t-campo--extra t-campo--casilla">');
+    $dos = ['checkout_campos' => array_slice($cfg['checkout_campos'], 0, 2)] + demos_cfg();
+    contiene(demos_vista('_campos_extra', ['campos' => m_checkout_campos($dos), 'valores' => [], 'errores' => []]), '<div class="t-campos-extra">');
+    [$extras] = m_checkout_campos_validar($cfg, ['extra' => ['patente' => 'kx·pl·47', 'vehiculo' => 'Kia', 'anio' => '2020', 'barbero' => 'nico', 'mayor' => '1']], 'retiro');
+    eq($extras[0], ['Patente', 'KXPL47']);
+    // solo_tipo: el RUT solo se pide a mayoristas (aprobados); un particular no lo ve ni se le exige.
+    $cfg = ['checkout_campos' => [['nombre' => 'rut', 'etiqueta' => 'RUT de la empresa', 'solo_tipo' => 'mayorista'], ['nombre' => 'giro', 'etiqueta' => 'Uso', 'solo_tipo' => 'particular', 'requerido' => false]]] + demos_cfg();
+    m_config($cfg);
+    eq(array_keys(m_checkout_campos($cfg)), ['rut', 'giro']);
+    eq(array_keys(m_checkout_campos($cfg, null, 'particular')), ['giro']);
+    eq(array_keys(m_checkout_campos($cfg, 'retiro', 'mayorista')), ['rut']);
+    m_db_asegurar($cfg, true);
+    $db = m_db_abrir($cfg['db']);
+    $base = ['entrega' => 'retiro', 'pago' => 'al_recibir'];
+    [, $e] = m_checkout_validar($db, $cfg, m_usuario_por_email($db, 'c@demo.cl'), $base, 5000);
+    eq($e, [], 'particular: sin RUT');
+    [, $e] = m_checkout_validar($db, $cfg, m_usuario_por_email($db, 'm@demo.cl'), $base, 5000);
+    eq(array_keys($e), ['extra_rut'], 'mayorista aprobado: RUT requerido');
+    $lanzo = false;
+    try {
+        m_config(['checkout_campos' => [['nombre' => 'x', 'solo_tipo' => 'empresa']]] + demos_cfg());
+    } catch (LogicException) {
+        $lanzo = true;
+    }
+    ok($lanzo, "solo_tipo desconocido");
+    m_config(demos_cfg());
+});
+
+t('14. avisos del carrito del motor con --avance (0 a 100)', function () {
+    $_SESSION = ['csrf' => 'x'];
+    m_config(['pedido_minimo' => 15000, 'despacho_gratis_desde' => 20000] + demos_cfg());
+    $h = demos_vista('carrito', ['carrito' => demos_carrito_uno()]);
+    contiene($h, 'id="falta-minimo" style="--avance: 60" data-falta-minimo>Te faltan $6.000');
+    contiene($h, '<p class="t-pequeno t-falta-gratis" style="--avance: 45" data-falta-gratis>Te faltan $11.000');
+    eq(m_avance(9000, 15000), 60);
+    eq(m_avance(20000, 30000), 66, 'hacia abajo: 100 solo al llegar');
+    eq(m_avance(50000, 30000), 100);
+    eq(m_avance(0, 30000), 0);
+    eq(m_avance(10, 0), 100, 'sin meta');
+    m_config(demos_cfg());
+});
+
+t('15. precarga de campos extra desde cualquier página de la tienda', function () {
+    $cfg = ['checkout_campos' => [
+        ['nombre' => 'barbero', 'etiqueta' => 'Barbero', 'tipo' => 'opcion', 'opciones' => ['cualquiera' => 'Cualquiera'],
+            'grupos' => ['Ñuñoa' => ['benjamin' => 'Benjamín', 'nico' => 'Nico'], 'Providencia' => ['vale' => 'Vale']]],
+        ['nombre' => 'patente', 'etiqueta' => 'Patente'],
+    ]] + demos_cfg();
+    m_config($cfg);
+    $_SESSION = [];
+    m_checkout_precargar(['barbero' => 'vale', 'patente' => 'AB12', 'r' => 'inicio']);
+    eq($_SESSION['checkout_precarga'] ?? null, ['barbero' => 'vale'], 'solo opciones válidas');
+    eq(m_checkout_precarga('barbero'), 'vale');
+    m_checkout_precargar(['barbero' => 'nadie']);
+    eq(m_checkout_precarga('barbero'), 'vale', 'un valor inválido no borra la elección');
+    m_checkout_precargar(['barbero' => ['vale']]);
+    eq(m_checkout_precarga('barbero'), 'vale');
+    eq(m_checkout_precarga('patente'), '');
+    eq(m_checkout_precarga('no-existe'), '');
+    $_SESSION['checkout_precarga']['barbero'] = 'despedido';
+    eq(m_checkout_precarga('barbero'), '', 'una opción que ya no existe no se precarga');
+    // Las vistas de barbería y peluquería ya no escriben la sesión a mano.
+    foreach (['barberia', 'peluqueria'] as $rubro) {
+        no_contiene((string) file_get_contents(__DIR__ . "/../demos/$rubro/plataforma/vistas/portada.php"), "\$_SESSION['checkout_precarga']");
+    }
+    $_SESSION = [];
+    m_config(demos_cfg());
+});
+
+t('15. opción con grupos (<optgroup>) y placeholder', function () {
+    $cfg = ['checkout_campos' => [
+        ['nombre' => 'barbero', 'etiqueta' => 'Barbero', 'tipo' => 'opcion', 'placeholder' => 'Elige con quién', 'opciones' => ['cualquiera' => 'Cualquiera'],
+            'grupos' => ['Ñuñoa' => ['benjamin' => 'Benjamín', 'nico' => 'Nico'], 'Providencia' => ['vale' => 'Vale']]],
+        ['nombre' => 'patente', 'etiqueta' => 'Patente', 'placeholder' => 'Ej.: KXPL47'],
+        ['nombre' => 'km', 'etiqueta' => 'Km', 'tipo' => 'numero', 'placeholder' => '84.000', 'requerido' => false],
+    ]] + demos_cfg();
+    m_config($cfg);
+    $c = m_checkout_campos($cfg)['barbero'];
+    eq($c['opciones'], ['cualquiera' => 'Cualquiera', 'benjamin' => 'Benjamín', 'nico' => 'Nico', 'vale' => 'Vale']);
+    [$extras, $e] = m_checkout_campos_validar($cfg, ['extra' => ['barbero' => 'vale', 'patente' => 'X']], 'retiro');
+    eq([$e, $extras[0]], [[], ['Barbero', 'Vale']]);
+    $_SESSION = ['csrf' => 'x'];
+    $h = demos_vista('_campos_extra', ['campos' => m_checkout_campos($cfg), 'valores' => ['barbero' => 'nico'], 'errores' => []]);
+    contiene($h, '<option value="">Elige con quién</option>');
+    contiene($h, '<optgroup label="Ñuñoa"><option value="benjamin">Benjamín</option><option value="nico" selected>Nico</option></optgroup><optgroup label="Providencia"><option value="vale">Vale</option></optgroup>');
+    ok(strpos($h, '<option value="cualquiera">Cualquiera</option>') < strpos($h, '<optgroup'), 'las opciones sueltas van antes de los grupos');
+    contiene($h, 'name="extra[patente]" maxlength="80" value="" autocomplete="off" placeholder="Ej.: KXPL47"');
+    contiene($h, 'placeholder="84.000"');
+    foreach ([['grupos' => ['A' => ['x' => 'X']], 'opciones' => ['x' => 'Otra X']], ['grupos' => ['A' => []]], ['grupos' => 'A'], ['grupos' => ['A' => ['x' => 'X'], 'B' => ['x' => 'X']]]] as $malo) {
+        $lanzo = false;
+        try {
+            m_config(['checkout_campos' => [['nombre' => 'b', 'tipo' => 'opcion'] + $malo]] + demos_cfg());
+        } catch (LogicException) {
+            $lanzo = true;
+        }
+        ok($lanzo, 'acepta ' . json_encode($malo));
+    }
+    // Placeholder de la nota: vacío por defecto (sin atributo).
+    m_config(demos_cfg());
+    eq(m_texto('checkout_nota_placeholder'), '');
+    no_contiene(demos_vista('checkout', demos_vars_checkout()), 'placeholder=');
+    m_config(['textos' => ['checkout_nota_placeholder' => 'Ej.: sin cebolla']] + demos_cfg());
+    contiene(demos_vista('checkout', demos_vars_checkout()), '<textarea id="nota" name="nota" maxlength="300" rows="2" placeholder="Ej.: sin cebolla">');
+    m_config(demos_cfg());
+});
+
+t('15. entrega.fecha_defecto: día preseleccionado', function () {
+    $cfg = demos_cfg_entrega(['modo' => 'fecha', 'dias_min' => 0, 'dias_max' => 7, 'cerrado' => [3], 'horas' => ['10:00', '19:00']]);
+    $martes = demos_ahora('2026-11-17 10:00');
+    $fechas = m_fechas_entrega($cfg, $martes);
+    eq(m_fecha_defecto($cfg, $fechas, $martes), '2026-11-17', 'sin fecha_defecto: la primera');
+    $cfg['entrega']['fecha_defecto'] = 1;
+    eq(m_entrega_cfg($cfg)['fecha_defecto'], 1);
+    eq(m_fecha_defecto($cfg, $fechas, $martes), '2026-11-19', 'mañana (miércoles) cierra: el jueves');
+    $cfg['entrega']['fecha_defecto'] = 30;
+    eq(m_fecha_defecto($cfg, $fechas, $martes), '2026-11-17', 'más allá de la lista: la primera');
+    eq(m_entrega_cfg(demos_cfg())['fecha_defecto'], null);
+    $_SESSION = ['csrf' => 'x'];
+    m_config(demos_cfg());
+    $h = demos_vista('checkout', demos_vars_checkout(['con_fecha' => true, 'fechas' => ['2026-11-17' => 'Hoy', '2026-11-18' => 'Mañana'], 'fecha_defecto' => '2026-11-18']));
+    contiene($h, '<option value="2026-11-18" selected>Mañana</option>');
+    // La pastelería vuelve a preseleccionar mañana.
+    eq((require __DIR__ . '/../demos/pasteleria/plataforma/config.php')['entrega']['fecha_defecto'] ?? null, 1);
+});
+
+t('15. nota_tipo: la nota de prueba de la Plataforma dice «Reserva»', function () {
+    $rubro = ['rubro_nombre' => 'barbería', 'url_rubro' => '/demos/', 'versiones' => ['plataforma' => ['plan' => 'Plataforma web']]];
+    m_config(['rubro' => $rubro, 'nota_tipo' => 'Reserva', 'nota_whatsapp' => '(Pedido de prueba)'] + demos_cfg());
+    eq(m_config()['nota_whatsapp'], '(Reserva de prueba desde la demo de barbería – Plataforma web)');
+    contiene(m_wa('Hola'), rawurlencode("Hola\n(Reserva de prueba desde la demo de barbería – Plataforma web)"));
+    m_config(['rubro' => $rubro, 'nota_whatsapp' => '(Pedido de prueba)'] + demos_cfg());
+    eq(m_config()['nota_whatsapp'], '(Pedido de prueba)', 'sin nota_tipo, la de siempre');
+    m_config(demos_cfg());
+});
+
 // Limpieza de archivos temporales.
 foreach (glob($GLOBALS['demos_tmp'] . '/*') as $f) {
+    if (is_dir($f)) {
+        array_map('unlink', glob($f . '/*') ?: []);
+        @rmdir($f);
+        continue;
+    }
     @unlink($f);
 }
 @rmdir($GLOBALS['demos_tmp']);

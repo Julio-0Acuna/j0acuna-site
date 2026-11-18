@@ -59,22 +59,27 @@
     form.addEventListener('change', actualizar);
     actualizar();
 
-    // Modo fecha: el día de hoy trae en data-horas las horas que quedan; las demás se ocultan.
+    // Modo fecha: el día de hoy trae en data-horas las horas que quedan; las demás salen del selector.
+    // Se quitan del DOM (no con hidden: Safari en iOS no oculta un <option hidden>) y vuelven al cambiar de día.
+    // Si el checkout volvió con la hora rechazada (aria-invalid), esa hora sigue elegida y a la vista junto a su error.
     var selFecha = form.querySelector('select[name="fecha_entrega"]');
     var selHora = form.querySelector('select[name="cuando"]');
     if (selFecha && selHora) {
+      var todasHoras = Array.prototype.slice.call(selHora.options);
+      var rechazada = selHora.getAttribute('aria-invalid') === 'true' ? selHora.value : '';
       var filtrarHoras = function () {
         var op = selFecha.options[selFecha.selectedIndex];
         var lista = op && op.hasAttribute('data-horas') ? op.getAttribute('data-horas').split(' ') : null;
-        Array.prototype.forEach.call(selHora.options, function (h) {
-          if (h.value === '') { return; }
-          var fuera = lista !== null && lista.indexOf(h.value) === -1;
-          h.hidden = fuera;
-          h.disabled = fuera;
+        var elegida = selHora.value;
+        todasHoras.forEach(function (h) {
+          var fuera = h.value !== '' && h.value !== rechazada && lista !== null && lista.indexOf(h.value) === -1;
+          if (fuera && h.parentNode) { h.parentNode.removeChild(h); }
+          if (!fuera) { selHora.appendChild(h); } // en su orden original
         });
-        if (selHora.selectedIndex > 0 && selHora.options[selHora.selectedIndex].disabled) { selHora.selectedIndex = 0; }
+        selHora.value = elegida;
+        if (selHora.selectedIndex < 0) { selHora.selectedIndex = 0; }
       };
-      selFecha.addEventListener('change', filtrarHoras);
+      selFecha.addEventListener('change', function () { rechazada = ''; filtrarHoras(); });
       filtrarHoras();
     }
   }

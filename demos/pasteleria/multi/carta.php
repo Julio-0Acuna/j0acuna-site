@@ -6,13 +6,12 @@ require __DIR__ . '/_plantilla.php';
 $n = al();
 $carta = al_carta();
 $q = is_string($_GET['q'] ?? null) ? mb_substr(trim($_GET['q']), 0, 40) : '';
-$qn = demo_normalizar($q);
 
 /** Texto en el que se busca cada plato. */
 $textoDe = static fn (array $p): string => $p['nombre'] . ' ' . $p['desc'] . ' ' . $n['categorias'][$p['cat']][0];
 
-// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide.
-$coincide = static fn (array $p): bool => $qn === '' || str_contains(demo_normalizar($textoDe($p)), $qn);
+// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide (demo_coincide, mismo criterio que buscador.js).
+$coincide = static fn (array $p): bool => demo_coincide($textoDe($p), $q);
 $hayResultados = count(array_filter($carta, $coincide)) > 0;
 
 al_abrir('carta', 'Carta con QR y tortas en 3D', 'Carta de ' . $n['nombre'] . ': pastelería individual, cajas para regalar, tortas enteras y café, con código QR, tortas en 3D y pedido por WhatsApp. Demo de pastelería en ' . $n['comuna'] . '.');

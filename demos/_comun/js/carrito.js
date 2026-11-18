@@ -28,6 +28,9 @@
  *   [data-carrito]              → página del pedido (lista + formulario)
  *   [data-carrito-minimo]       → aviso del pedido mínimo (oculto si no aplica)
  *   [data-carrito-gratis]       → cuánto falta para despacho gratis (oculto si no aplica)
+ *       Ambos reciben la propiedad CSS --avance (0 a 100: subtotal / meta, hacia abajo) para dibujar una barra:
+ *       .mi-aviso::before { content: ''; display: block; height: 8px;
+ *                           background: linear-gradient(90deg, #06c calc(var(--avance, 0) * 1%), #ddd 0); }
  *   Campos del formulario (se buscan por name, todos opcionales): entrega (radio o hidden), comuna, direccion,
  *   hora, nombre, nota.
  *   [data-carrito-extra="Etiqueta"] dentro del formulario del pedido → campo extra que va al mensaje
@@ -298,6 +301,7 @@
     raiz.querySelectorAll('[data-carrito-minimo]').forEach(function (n) {
       n.textContent = avisoMinimo;
       n.hidden = avisoMinimo === '';
+      ponerAvance(n, sub, minimo);
     });
     var boton = form ? form.querySelector('button[type="submit"], button:not([type])') : null;
     if (boton && boton.setCustomValidity) { boton.setCustomValidity(avisoMinimo); }
@@ -305,7 +309,14 @@
     raiz.querySelectorAll('[data-carrito-gratis]').forEach(function (n) {
       n.textContent = faltaGratis > 0 ? texto('falta_gratis', { falta: clp(faltaGratis) }) : '';
       n.hidden = faltaGratis === 0;
+      ponerAvance(n, sub, gratisDesde);
     });
+  }
+
+  /** --avance (0 a 100, hacia abajo: 100 solo al llegar) en un aviso, para que el rubro dibuje su barra con CSS. */
+  function ponerAvance(n, sub, meta) {
+    var avance = meta > 0 ? Math.max(0, Math.min(100, Math.floor(sub * 100 / meta))) : 100;
+    if (n.style && n.style.setProperty) { n.style.setProperty('--avance', String(avance)); }
   }
 
   function cambiar(i, delta) {

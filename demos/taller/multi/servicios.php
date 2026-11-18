@@ -5,13 +5,12 @@ require __DIR__ . '/_plantilla.php';
 
 $n = vg();
 $q = is_string($_GET['q'] ?? null) ? mb_substr(trim($_GET['q']), 0, 40) : '';
-$qn = demo_normalizar($q);
 
 /** Texto en el que se busca cada servicio. */
 $textoDe = static fn (array $s): string => $s['nombre'] . ' ' . $s['desc'] . ' ' . $n['categorias'][$s['cat']][0];
 
-// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide.
-$coincide = static fn (array $s): bool => $qn === '' || str_contains(demo_normalizar($textoDe($s)), $qn);
+// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide (demo_coincide, mismo criterio que buscador.js).
+$coincide = static fn (array $s): bool => demo_coincide($textoDe($s), $q);
 $hayResultados = count(array_filter($n['servicios'], $coincide)) > 0;
 
 vg_abrir('servicios', 'Servicios y precios', 'Servicios de ' . $n['nombre'] . ' con precio desde según el tipo de vehículo: mantención, frenos, suspensión, diagnóstico, neumáticos y aire acondicionado. Demo de taller en ' . $n['comuna'] . '.');

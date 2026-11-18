@@ -50,21 +50,22 @@ function m_accion_inicio(bool $post): void
     if ($cat !== '' && !in_array($cat, array_column($categorias, 'slug'), true)) {
         $cat = '';
     }
-    $productos = m_catalogo($db, $u, $q, $cat);
+    // El catálogo que este cliente puede ver se calcula una vez: de él salen la búsqueda, los destacados y los chips.
+    $todos = m_catalogo($db, $u);
     $porCategoria = [];
-    foreach ($productos as $p) {
+    foreach (m_catalogo_filtrar($todos, $q, $cat) as $p) {
         $porCategoria[$p['categoria_slug']][] = $p;
     }
     m_vista('inicio', m_contexto() + [
         'titulo' => m_config()['negocio']['nombre'] . ' · ' . m_texto('titulo_inicio', 'Tienda online'),
         'categorias' => $categorias,
         'por_categoria' => $porCategoria,
-        'destacados' => array_values(array_filter(m_catalogo($db, $u), static fn (array $p): bool => (int) $p['destacado'] === 1)),
+        'destacados' => array_values(array_filter($todos, static fn (array $p): bool => (int) $p['destacado'] === 1)),
         'q' => $q,
         'cat' => $cat,
         'hay_solo_mayorista' => (int) $db->query('SELECT COUNT(*) FROM productos WHERE solo_mayorista = 1 AND visible = 1')->fetchColumn() > 0,
         // Chips: solo las categorías con algún producto que este cliente puede ver.
-        'categorias_visibles' => m_categorias_visibles($db, $u),
+        'categorias_visibles' => m_categorias_de($todos),
     ]);
 }
 
@@ -109,16 +110,10 @@ function m_accion_checkout(bool $post): void
 {
     $db = m_db();
     $cfg = m_config();
-    $campos = m_checkout_campos($cfg);
-    // ?<nombre>=valor precarga una opción de 'checkout_campos' (ej. "Reservar con Benjamín": ?barbero=benjamin).
-    // Se guarda en la sesión antes de pedir inicio de sesión para que no se pierda en el camino.
-    foreach ($campos as $nombre => $c) {
-        $valor = $_GET[$nombre] ?? null;
-        if (!$post && $c['tipo'] === 'opcion' && is_string($valor) && array_key_exists($valor, $c['opciones'])) {
-            $_SESSION['checkout_precarga'][$nombre] = $valor;
-        }
-    }
+    // ?<nombre>=valor precarga una opción de 'checkout_campos' (ej. "Reservar con Benjamín": ?barbero=benjamin): lo hace
+    // m_ejecutar en cualquier GET (m_checkout_precargar), antes de pedir inicio de sesión, para que no se pierda.
     $u = m_exigir_sesion('checkout');
+    $campos = m_checkout_campos($cfg, null, m_tipo_cliente($u));
     $carrito = m_carrito($db, $u);
     if ($carrito['lineas'] === []) {
         m_flash('info', m_texto('carrito_vacio'));
@@ -146,15 +141,18 @@ function m_accion_checkout(bool $post): void
     }
     // Valores de los campos extra: lo enviado o, al abrir el checkout, la precarga por URL y el 'defecto'.
     $valoresExtra = [];
-    $precarga = is_array($_SESSION['checkout_precarga'] ?? null) ? $_SESSION['checkout_precarga'] : [];
     foreach ($campos as $nombre => $c) {
-        $valoresExtra[$nombre] = $post ? ($_POST['extra'][$nombre] ?? '') : ($precarga[$nombre] ?? $c['defecto']);
+        $precarga = m_checkout_precarga($nombre);
+        $valoresExtra[$nombre] = $post ? ($_POST['extra'][$nombre] ?? '') : ($precarga !== '' ? $precarga : $c['defecto']);
     }
-    // Errores sin campo propio en la vista (campos extra, pedido mínimo): si la vista del rubro no los muestra,
-    // _mensajes los lista arriba (el parcial _campos_extra marca los que sí mostró).
-    m_errores_pendientes(array_filter($errores, static fn (string $k): bool => str_starts_with($k, 'extra_') || $k === 'minimo', ARRAY_FILTER_USE_KEY));
+    // Errores que una vista propia podría no mostrar junto a su campo (campos extra, pedido mínimo, hora): _mensajes
+    // los lista arriba si la vista no los marcó como mostrados (el parcial _campos_extra y el checkout del motor lo hacen).
+    m_errores_pendientes(m_errores_sin_campo($errores));
+    // Hora que ya no se ofrece (pasó mientras el cliente llenaba el formulario): vuelve elegida, con su error.
+    $horaVencida = isset($errores['cuando']) && is_string($_POST['cuando'] ?? null) && in_array($_POST['cuando'], m_horas_servicio($cfg), true) ? $_POST['cuando'] : '';
     // Modo 'fecha': el selector de hora lista todas; para hoy (y cualquier día con menos horas) la vista
-    // marca en data-horas cuáles quedan, y tienda.js oculta las demás. El servidor valida con las mismas listas.
+    // marca en data-horas cuáles quedan, y tienda.js quita las demás del selector. El servidor valida con las mismas
+    // listas (más 5 minutos de gracia: m_horas_aceptadas).
     $horas = m_horas_entrega($cfg);
     $fechas = m_fechas_entrega($cfg);
     $horasPorFecha = [];
@@ -171,14 +169,50 @@ function m_accion_checkout(bool $post): void
         'errores' => $errores,
         'previo' => $previo,
         'horas' => $horas,
+        'hora_vencida' => $horaVencida,
+        // Modo 'hoy' sin horas para hoy: "Lo antes posible" pasa a "Apenas abramos (mañana a las 12:30)".
+        'proxima_apertura' => !m_entrega_con_fecha($cfg) && $horas === [] ? m_proxima_apertura($cfg) : '',
         // Modo entrega 'fecha': días para elegir (vacío en modo 'hoy') y las horas de los días que no las tienen todas.
         'con_fecha' => m_entrega_con_fecha($cfg),
         'fechas' => $fechas,
+        'fecha_defecto' => m_fecha_defecto($cfg, $fechas),
         'horas_por_fecha' => $horasPorFecha,
         // Campos extra ('checkout_campos'): la vista los imprime con m_parcial('_campos_extra', ...).
         'campos_extra' => $campos,
         'valores_extra' => $valoresExtra,
     ], $errores ? 422 : 200);
+}
+
+/**
+ * Precarga de campos extra desde cualquier página de la tienda: ?barbero=benjamin (si 'benjamin' es una opción de
+ * 'checkout_campos') queda en la sesión y el checkout la trae elegida. m_ejecutar la llama en cada GET; un valor que no
+ * es una opción se ignora (no borra la elección anterior). Solo campos 'opcion'.
+ */
+function m_checkout_precargar(array $get): void
+{
+    foreach (m_checkout_campos(m_config()) as $nombre => $c) {
+        $valor = $get[$nombre] ?? null;
+        if ($c['tipo'] === 'opcion' && is_string($valor) && array_key_exists($valor, $c['opciones'])) {
+            $_SESSION['checkout_precarga'][$nombre] = $valor;
+        }
+    }
+}
+
+/** Opción precargada de un campo extra ('' si no hay o ya no es una opción válida). Para leerla en una vista propia. */
+function m_checkout_precarga(string $nombre): string
+{
+    $valor = $_SESSION['checkout_precarga'][$nombre] ?? null;
+    $c = m_checkout_campos(m_config())[$nombre] ?? null;
+    return is_string($valor) && $c !== null && $c['tipo'] === 'opcion' && array_key_exists($valor, $c['opciones']) ? $valor : '';
+}
+
+/**
+ * Errores del checkout que van también al resumen de arriba si la vista no los muestra junto a su campo
+ * (m_errores_pendientes): campos extra ('extra_<nombre>'), pedido mínimo ('minimo') y hora ('cuando').
+ */
+function m_errores_sin_campo(array $errores): array
+{
+    return array_filter($errores, static fn (string $k): bool => str_starts_with($k, 'extra_') || $k === 'minimo' || $k === 'cuando', ARRAY_FILTER_USE_KEY);
 }
 
 function m_accion_pago(bool $post): void
@@ -230,31 +264,35 @@ function m_accion_pedido(bool $post): void
     m_vista('pedido', m_contexto() + ['titulo' => m_texto('pedido_codigo', null, ['codigo' => $p['codigo']]), 'pedido' => $p, 'wa' => m_wa(m_pedido_resumen_texto($p))]);
 }
 
-/** Resumen del pedido para enviarlo por WhatsApp. */
+/** Resumen del pedido para enviarlo por WhatsApp (textos 'resumen_*', configurables por rubro). */
 function m_pedido_resumen_texto(array $p): string
 {
     $cfg = m_config();
-    $lineas = ['Hola, hice el pedido ' . $p['codigo'] . ' en ' . $cfg['negocio']['nombre'] . ':'];
+    $lineas = [m_texto('resumen_saludo', null, ['codigo' => $p['codigo'], 'negocio' => $cfg['negocio']['nombre']])];
     foreach ($p['items'] as $it) {
-        $lineas[] = '• ' . $it['cantidad'] . ' × ' . $it['nombre'] . ' – ' . m_clp($it['precio_unitario'] * $it['cantidad']);
+        $lineas[] = m_texto('resumen_linea', null, ['cantidad' => $it['cantidad'], 'producto' => $it['nombre'], 'total' => m_clp($it['precio_unitario'] * $it['cantidad'])]);
     }
     if ((int) $p['costo_despacho'] > 0) {
-        $lineas[] = 'Despacho: ' . m_clp((int) $p['costo_despacho']);
+        $lineas[] = m_texto('resumen_despacho', null, ['costo' => m_clp((int) $p['costo_despacho'])]);
     }
-    $lineas[] = 'Total: ' . m_clp((int) $p['total']);
-    $lineas[] = $p['entrega'] === 'despacho' ? 'Entrega: despacho en ' . $p['comuna'] : 'Entrega: ' . m_minuscula(m_texto('retiro_titulo'));
+    $lineas[] = m_texto('resumen_total', null, ['total' => m_clp((int) $p['total'])]);
+    $lineas[] = $p['entrega'] === 'despacho'
+        ? m_texto('resumen_entrega_despacho', null, ['comuna' => $p['comuna']])
+        : m_texto('resumen_entrega_retiro', null, ['retiro' => m_minuscula(m_texto('retiro_titulo'))]);
     $fecha = m_fecha_texto((string) ($p['fecha_entrega'] ?? ''));
     if ($fecha !== '') {
-        $lineas[] = 'Para el ' . $fecha . ($p['cuando'] !== '' ? ' a las ' . $p['cuando'] : '');
+        $lineas[] = $p['cuando'] !== ''
+            ? m_texto('resumen_para_fecha_hora', null, ['fecha' => $fecha, 'hora' => $p['cuando']])
+            : m_texto('resumen_para_fecha', null, ['fecha' => $fecha]);
     } elseif ($p['cuando'] !== '') {
-        $lineas[] = 'Para las ' . $p['cuando'];
+        $lineas[] = m_texto('resumen_para_hora', null, ['hora' => $p['cuando']]);
     }
     foreach (m_pedido_extras($p) as [$etiqueta, $valor]) {
         $lineas[] = $etiqueta . ': ' . $valor;
     }
-    $lineas[] = 'Pago: ' . ($p['pago'] === 'prueba' ? 'pago de prueba (simulado)' : 'al recibir');
+    $lineas[] = m_texto($p['pago'] === 'prueba' ? 'resumen_pago_prueba' : 'resumen_pago_al_recibir');
     if (($cfg['resumen_con_nota'] ?? true) && trim((string) ($p['nota'] ?? '')) !== '') {
-        $lineas[] = 'Nota: ' . $p['nota'];
+        $lineas[] = m_texto('resumen_nota', null, ['nota' => $p['nota']]);
     }
     return implode("\n", $lineas);
 }

@@ -260,7 +260,7 @@ printf '%s' "$CARRO" | grep -qF 'aria-disabled="true" aria-describedby="falta-mi
 printf '%s' "$CARRO" | grep -qF 'Te faltan $54.510 para el reparto gratis.' && pasa "el carrito dice cuánto falta para el reparto gratis" || falla "carrito sin aviso de reparto gratis"
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir" --data-urlencode "extra[mayor]=1")
-case "$R" in 303*r=carrito*) curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'El pedido mínimo es $15.000.' && pasa "bajo el mínimo el servidor no crea el pedido y vuelve al carrito con el aviso" || falla "bajo el mínimo: sin mensaje";; *) falla "pedido bajo el mínimo: $R";; esac
+case "$R" in 422*) grep -qF 'Te faltan $9.510 para el pedido mínimo de $15.000.' "$TMP/ultima.html" && pasa "bajo el mínimo el checkout no crea el pedido (422 con el aviso del carrito)" || falla "bajo el mínimo: 422 sin el aviso";; *) falla "pedido bajo el mínimo: $R";; esac
 
 # Pago de prueba: checkout → pantalla simulada → aprobar
 T=$(csrf "$J1" "$TIENDA")

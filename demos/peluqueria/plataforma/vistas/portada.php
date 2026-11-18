@@ -1,16 +1,10 @@
 <?php
 /**
  * Portada de Onda Salones (reemplaza la del motor).
- * "Reservar con…" enlaza ?estilista=<id>&sede=<sede>: como en la URL del checkout del motor, cada opción
- * (validada contra 'checkout_campos') queda en la sesión y el checkout la trae preseleccionada.
+ * "Reservar con…" enlaza ?estilista=<id>&sede=<sede>: el motor guarda cada opción (validada contra 'checkout_campos')
+ * en la sesión (m_checkout_precargar, en cualquier página de la tienda) y el checkout la trae preseleccionada.
  * @var array $cfg @var ?array $usuario @var string $q @var string $cat @var array $categorias
  */
-foreach (m_checkout_campos($cfg) as $nombre => $campo) {
-    $pedido = $_GET[$nombre] ?? null;
-    if ($campo['tipo'] === 'opcion' && is_string($pedido) && isset($campo['opciones'][$pedido])) {
-        $_SESSION['checkout_precarga'][$nombre] = $pedido;
-    }
-}
 if ($q !== '' || $cat !== '') {
     return;
 }

@@ -144,6 +144,8 @@ debe_contener    "$MULTI" '"minimo_solo_despacho":true'
 debe_contener    "$MULTI" '"falta_minimo":"Te faltan {falta} para el despacho (mínimo {minimo}). Agrega algo más o elige retiro en el local."'
 debe_contener    "${MULTI}pedido.php" '<p class="tn-minimo" data-carrito-minimo aria-live="polite" hidden></p>'
 no_debe_contener "${MULTI}pedido.php" 'data-minimo-barra'
+# La barra de avance hacia el mínimo vuelve, dibujada por CSS con --avance (lo escribe carrito.js en [data-carrito-minimo]).
+grep -qE '^\.tn-minimo::before \{.*var\(--avance' demos/almacen/multi/estilo.css && pasa "Turno 24 dibuja la barra del mínimo con --avance" || falla "Turno 24 sin barra de avance (--avance)"
 ! grep -qE 'setCustomValidity|DemoCarrito|data-minimo' demos/almacen/multi/turno.js && pasa "turno.js ya no calcula el pedido mínimo (lo hace carrito.js)" || falla "turno.js sigue con lógica del pedido mínimo"
 # Abierto las 24 horas: ['00:00', '24:00'] en el horario (sección Google con «24 horas», no 00:00 – 23:59).
 for p in "$MULTI" "${MULTI}contacto.php"; do
@@ -211,7 +213,7 @@ R=$(post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode
 case "$R" in 303*) pasa "agregar la canasta al carrito ($R)";; *) falla "agregar al carrito: $R";; esac
 CARRO=$(curl -s -b "$J1" "$BASE${TIENDA}?r=carrito")
 printf '%s' "$CARRO" | grep -qF '<strong>Canasta familiar de la semana</strong>' && pasa "el carrito tiene la canasta" || falla "carrito vacío"
-printf '%s' "$CARRO" | grep -qF '<p class="t-pequeno t-falta-gratis" data-falta-gratis>Con $27.010 más, el reparto es gratis.</p>' && pasa "el carrito del motor avisa cuánto falta para el reparto gratis" || falla "carrito sin aviso de reparto gratis"
+printf '%s' "$CARRO" | grep -qF '<p class="t-pequeno t-falta-gratis" style="--avance: 54" data-falta-gratis>Con $27.010 más, el reparto es gratis.</p>' && pasa "el carrito del motor avisa cuánto falta para el reparto gratis (con --avance 54: \$32.990 de \$60.000)" || falla "carrito sin aviso de reparto gratis"
 [ "$(printf '%s' "$CARRO" | grep -o 'el reparto es gratis' | wc -l)" = "1" ] && pasa "el aviso del reparto gratis sale una sola vez en el carrito" || falla "aviso del reparto gratis repetido"
 printf '%s' "$CARRO" | grep -qF 'bs-minimo' && falla "el layout repite el aviso en el carrito" || pasa "el layout ya no repite el aviso del motor en el carrito"
 printf '%s' "$CARRO" | grep -qF 'El reparto se calcula según tu comuna en el siguiente paso (gratis desde $60.000).' && pasa "nota del reparto con el texto del rubro" || falla "nota del reparto sin el texto del rubro"
@@ -254,10 +256,10 @@ printf '%s' "$CARRO" | grep -qF 'data-falta-minimo>Te faltan $14.110 para el ped
 printf '%s' "$CARRO" | grep -qF 'aria-disabled="true" aria-describedby="falta-minimo">Continuar</a>' && pasa "bajo el mínimo el carrito no deja continuar (retiro y reparto)" || falla "bajo el mínimo el carrito deja continuar"
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir")
-case "$R" in 303*r=carrito*) curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'El pedido mínimo es $15.000.' && pasa "un retiro bajo el mínimo no se crea y vuelve al carrito" || falla "pedido mínimo: sin mensaje";; *) falla "retiro bajo el mínimo: $R";; esac
+case "$R" in 422*) grep -qF 'role="alert">Te faltan $14.110 para el pedido mínimo de $15.000.</p>' "$TMP/ultima.html" && pasa "un retiro bajo el mínimo: el checkout lo rechaza (422 con el aviso del carrito)" || falla "pedido mínimo: 422 sin el aviso";; *) falla "retiro bajo el mínimo: $R";; esac
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Renca" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir")
-case "$R" in 303*r=carrito*) pasa "un reparto bajo el mínimo tampoco se crea (el servidor lo rechaza)";; *) falla "reparto bajo el mínimo: $R";; esac
+case "$R" in 422*) grep -qF 'Te faltan $14.110 para el pedido mínimo de $15.000.' "$TMP/ultima.html" && pasa "un reparto bajo el mínimo tampoco se crea (422 con el aviso)" || falla "reparto bajo el mínimo: 422 sin el aviso";; *) falla "reparto bajo el mínimo: $R";; esac
 T=$(csrf "$J1" "${TIENDA}?r=carrito")
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=vaciar" > /dev/null
 

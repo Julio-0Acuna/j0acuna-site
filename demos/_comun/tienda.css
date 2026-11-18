@@ -82,6 +82,9 @@ fieldset.t-caja { margin: 0 0 16px; }
 .t-campo [aria-invalid="true"] { border-color: #b91c1c; }
 .t-form-grid { display: grid; gap: 0 16px; }
 @media (min-width: 720px) { .t-form-grid { grid-template-columns: 1fr 1fr; } .t-campo--ancho { grid-column: 1 / -1; } }
+/* Campos extra del checkout ('checkout_campos'): título con aire y, con 3 campos o más, dos columnas desde 720 px. */
+.t-campos-extra > .t-subtitulo { margin: 4px 0 12px; }
+@media (min-width: 720px) { .t-campos-extra--columnas { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; align-items: start; } .t-campos-extra--columnas > .t-subtitulo, .t-campos-extra--columnas > .t-campo--casilla { grid-column: 1 / -1; } }
 .t-opciones { display: grid; gap: 10px; margin: 0 0 14px; border: 0; padding: 0; min-width: 0; }
 .t-opciones--fila { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 .t-opciones legend { font-weight: 600; margin-bottom: 8px; padding: 0; }

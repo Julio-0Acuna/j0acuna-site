@@ -5,14 +5,13 @@ require __DIR__ . '/_plantilla.php';
 
 $n = vt();
 $q = is_string($_GET['q'] ?? null) ? mb_substr(trim($_GET['q']), 0, 40) : '';
-$qn = demo_normalizar($q);
 
 /** Texto en el que se busca cada corte (nombre, descripción, categoría y usos). */
 $textoDe = static fn (array $c): string => $c['nombre'] . ' ' . $c['desc'] . ' ' . $n['categorias'][$c['cat']][0] . ' '
     . implode(' ', array_map(static fn (string $u): string => $n['usos'][$u], $c['usos']));
 
-// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide.
-$coincide = static fn (array $c): bool => $qn === '' || str_contains(demo_normalizar($textoDe($c)), $qn);
+// Sin JavaScript el buscador funciona con ?q=: el servidor oculta lo que no coincide (demo_coincide, mismo criterio que buscador.js).
+$coincide = static fn (array $c): bool => demo_coincide($textoDe($c), $q);
 $hayResultados = count(array_filter($n['cortes'], $coincide)) > 0;
 
 vt_abrir('cortes', 'Carta de cortes con QR y 3D', 'Carta de ' . $n['nombre'] . ': cortes madurados en seco por peso, cortes de parrilla, cajas parrilleras y despensa, con código QR y cortes en 3D. Demo de carnicería en ' . $n['comuna'] . '.');

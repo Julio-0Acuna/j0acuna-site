@@ -1,9 +1,12 @@
 <?php
 /** @var array $carrito @var ?array $usuario @var array $cfg */
 // Pedido mínimo: con 'pedido_minimo_solo_despacho' solo se avisa (el retiro no tiene mínimo); si no, no se puede continuar.
-$avisoMinimo = m_aviso_minimo($cfg, (int) $carrito['subtotal'], 'despacho');
+// Una tienda sin despacho mira el mínimo del retiro (con «solo despacho», no hay aviso).
+$avisoMinimo = m_aviso_minimo($cfg, (int) $carrito['subtotal'], !empty($cfg['despacho']) ? 'despacho' : 'retiro');
 $bloqueado = $avisoMinimo !== '' && empty($cfg['pedido_minimo_solo_despacho']);
 $faltaGratis = !empty($cfg['despacho']) ? m_falta_gratis($cfg, (int) $carrito['subtotal']) : 0;
+// --avance (0 a 100) en los avisos: el rubro puede dibujar una barra con CSS.
+$avance = static fn (int $meta): string => ' style="--avance: ' . m_avance((int) $carrito['subtotal'], $meta) . '"';
 ?>
 <section class="t-pagina t-carrito">
   <h1><?= m_e(m_texto('carrito_titulo')) ?></h1>
@@ -38,8 +41,8 @@ $faltaGratis = !empty($cfg['despacho']) ? m_falta_gratis($cfg, (int) $carrito['s
     <div class="t-resumen">
       <p class="t-resumen__fila"><span><?= m_e(m_texto('carrito_subtotal')) ?></span><strong><?= m_e(m_clp($carrito['subtotal'])) ?></strong></p>
       <p class="t-pequeno"><?= (int) ($cfg['despacho_gratis_desde'] ?? 0) > 0 ? m_e(m_texto('carrito_despacho_nota_gratis', null, ['gratis' => m_clp((int) $cfg['despacho_gratis_desde'])])) : m_e(m_texto('carrito_despacho_nota')) ?></p>
-      <?php if ($faltaGratis > 0): ?><p class="t-pequeno t-falta-gratis" data-falta-gratis><?= m_e(m_texto('carrito_falta_gratis', null, ['falta' => m_clp($faltaGratis)])) ?></p><?php endif; ?>
-      <?php if ($avisoMinimo !== ''): ?><p class="demo-mensaje demo-mensaje--info t-falta-minimo" id="falta-minimo" data-falta-minimo><?= m_e($avisoMinimo) ?></p><?php endif; ?>
+      <?php if ($faltaGratis > 0): ?><p class="t-pequeno t-falta-gratis"<?= $avance((int) $cfg['despacho_gratis_desde']) ?> data-falta-gratis><?= m_e(m_texto('carrito_falta_gratis', null, ['falta' => m_clp($faltaGratis)])) ?></p><?php endif; ?>
+      <?php if ($avisoMinimo !== ''): ?><p class="demo-mensaje demo-mensaje--info t-falta-minimo" id="falta-minimo"<?= $avance((int) $cfg['pedido_minimo']) ?> data-falta-minimo><?= m_e($avisoMinimo) ?></p><?php endif; ?>
       <?php if ($bloqueado): ?>
       <a class="t-btn t-btn--primario t-btn--bloque" role="link" aria-disabled="true" aria-describedby="falta-minimo"><?= m_e(m_texto('carrito_continuar')) ?></a>
       <?php else: ?>

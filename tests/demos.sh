@@ -163,6 +163,10 @@ printf '%s' "$CHK" | grep -qF '<option value="">Lo antes posible</option>' && pa
 printf '%s' "$CHK" | grep -qF '¿Para cuándo?' && pasa "checkout de la pizzería pregunta «¿Para cuándo?»" || falla "checkout de la pizzería sin «¿Para cuándo?»"
 printf '%s' "$CHK" | grep -qF 'name="fecha_entrega"' && falla "la pizzería pide fecha de entrega y no debería" || pasa "la pizzería no pide fecha de entrega"
 T=$(printf '%s' "$CHK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
+# Una hora que no se ofrece: 422 con el error junto al selector de hora (no solo «Revisa los campos marcados»).
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "cuando=25:00")
+case "$R" in 422*) grep -qF '<select id="cuando" name="cuando" aria-invalid="true" aria-describedby="err-cuando">' "$TMP/ultima.html" && grep -qF '<p class="t-error" id="err-cuando">Esa hora ya no está disponible. Elige otra.</p>' "$TMP/ultima.html" && pasa "hora rechazada: 422 con el error junto al selector de hora" || falla "hora rechazada: 422 sin el error junto al selector";; *) falla "hora que no se ofrece aceptada: $R";; esac
+[ "$(grep -o 'Esa hora ya no está disponible' "$TMP/ultima.html" | wc -l)" = "1" ] && pasa "hora rechazada: el error sale una sola vez" || falla "hora rechazada: el error se repite o no sale"
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data "comuna=Maip%C3%BA" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Sin cebolla")
 case "$R" in 303*r=pedido*) pasa "checkout crea el pedido ($R)";; *) falla "checkout: $R";; esac
 PEDIDO_URL="${R#* }"
@@ -366,6 +370,9 @@ printf '%s' "$CHK2" | grep -qF 'data-solo-entrega="despacho"' && pasa "campos ex
 printf '%s' "$CHK2" | grep -qF 'Para dejarte pasar al estacionamiento.' && pasa "campos extra: texto de ayuda" || falla "campos extra: sin texto de ayuda"
 curl -s -b "$K1" "$B2/?r=checkout&sabor=chocolate" | grep -qF '<option value="chocolate" selected>' && pasa "campos extra: ?sabor=chocolate precarga la opción" || falla "campos extra: ?sabor= no precarga"
 curl -s -b "$K1" "$B2/?r=checkout&sabor=frutilla" | grep -qF '<option value="vainilla" selected>' && falla "campos extra: precarga una opción que no existe" || pasa "campos extra: ?sabor=<otro> no precarga nada raro"
+# Precarga desde cualquier página de la tienda (m_checkout_precargar en m_ejecutar), no solo desde el checkout.
+curl -s -o /dev/null -b "$K1" -c "$K1" "$B2/?sabor=vainilla"
+curl -s -b "$K1" "$B2/?r=checkout" | grep -qF '<option value="vainilla" selected>' && pasa "campos extra: ?sabor=vainilla en la portada precarga el checkout" || falla "campos extra: la precarga desde la portada no llega al checkout"
 printf '%s' "$CHK2" | grep -qF '<select id="fecha_entrega" name="fecha_entrega" required>' && pasa "modo fecha: el checkout pide el día" || falla "modo fecha: el checkout no pide el día"
 printf '%s' "$CHK2" | grep -qF '>Retiro a las 10:00</option>' && pasa "modo fecha: horas con texto propio" || falla "modo fecha: horas sin texto propio"
 printf '%s' "$CHK2" | grep -qF 'Hoy a las' && falla "modo fecha: aparece «Hoy a las …»" || pasa "modo fecha: sin «Hoy a las …»"
@@ -426,8 +433,9 @@ printf '%s' "$PANEL2" | grep -qF '>Empresas (1)</a>' && pasa "textos propios: pe
 curl -s -b "$K2" "$B2/?r=panel" | grep -qF '1 empresa(s) esperan aprobación' && pasa "textos propios: aviso de empresas por aprobar" || falla "textos propios: aviso de mayoristas sin cambiar"
 curl -s -b "$K2" "$B2/?r=panel&ver=mayoristas" | grep -qF '<h2>Empresas aprobadas</h2>' && pasa "textos propios: «Empresas aprobadas»" || falla "textos propios: «Mayoristas aprobados» sin cambiar"
 
-# --- Motor: un rubro con su propio checkout.php que no imprime los campos extra (tienda /minima/ en el mismo servidor).
-# Los errores de los campos extra deben verse igual, en el resumen de arriba (_mensajes), sin error 500.
+# --- Motor: un rubro con su propio checkout.php (tienda /minima/ en el mismo servidor). La vista propia debe imprimir
+# el parcial _campos_extra (si no, el motor lanza LogicException: lo prueba test_demos.php); el flujo arma el POST
+# con los name que trae el HTML, como lo haría un navegador.
 M="$F/minima"
 mkdir -p "$M/vistas"
 printf "<?php\nrequire '%s/demos/_motor/motor.php';\nm_ejecutar(require __DIR__ . '/config.php');\n" "$RAIZ" > "$M/index.php"
@@ -437,34 +445,77 @@ $base = require dirname(__DIR__) . '/config.php';
 return ['url_base' => '/minima/', 'db' => __DIR__ . '/tienda.sqlite', 'sesion' => 'demo_prueba_minima', 'vistas' => __DIR__ . '/vistas', 'pedido_minimo_solo_despacho' => false] + $base;
 PHP
 cat > "$M/vistas/checkout.php" <<'PHP'
-<?php /** Checkout propio mínimo: no imprime _campos_extra ni el pedido mínimo. @var array $fechas */ ?>
+<?php /** Checkout propio mínimo: imprime los campos extra con el parcial del motor (no el pedido mínimo). @var array $fechas */ ?>
 <section class="t-pagina">
   <h1>Checkout propio</h1>
   <form method="post" action="<?= m_e(m_url('checkout')) ?>"><?= m_csrf_campo() ?>
     <input type="hidden" name="entrega" value="retiro"><input type="hidden" name="pago" value="al_recibir">
     <input type="hidden" name="fecha_entrega" value="<?= m_e((string) array_key_first($fechas)) ?>">
+    <?php m_parcial('_campos_extra', ['campos' => $campos_extra, 'valores' => $valores_extra, 'errores' => $errores]); ?>
     <button type="submit">Confirmar</button>
   </form>
 </section>
+PHP
+# Datos del formulario del checkout como los enviaría el navegador: campos ocultos, la primera opción con valor de cada
+# select, las casillas marcadas y, en los textos, el valor del 2.º argumento ('' = formulario vacío: solo los ocultos).
+cat > "$TMP/form_datos.php" <<'PHP'
+<?php
+$doc = new DOMDocument();
+libxml_use_internal_errors(true);
+$doc->loadHTML('<?xml encoding="utf-8"?>' . file_get_contents($argv[1]));
+$xp = new DOMXPath($doc);
+$texto = $argv[2] ?? '';
+$pares = [];
+foreach ($xp->query('//form[contains(@action, "r=checkout")]//input | //form[contains(@action, "r=checkout")]//select') as $el) {
+    $nombre = $el->getAttribute('name');
+    $tipo = strtolower($el->getAttribute('type') ?: 'text');
+    if ($nombre === '') {
+        continue;
+    }
+    if ($el->nodeName === 'select') {
+        if ($texto === '') {
+            continue;
+        }
+        foreach ($el->getElementsByTagName('option') as $op) {
+            if ($op->getAttribute('value') !== '') {
+                $pares[] = [$nombre, $op->getAttribute('value')];
+                break;
+            }
+        }
+    } elseif ($tipo === 'hidden') {
+        $pares[] = [$nombre, $el->getAttribute('value')];
+    } elseif ($texto !== '' && $tipo === 'checkbox') {
+        $pares[] = [$nombre, $el->getAttribute('value') ?: 'on'];
+    } elseif ($texto !== '' && in_array($tipo, ['text', 'search'], true)) {
+        $pares[] = [$nombre, $texto];
+    }
+}
+echo implode('&', array_map(static fn (array $p): string => rawurlencode($p[0]) . '=' . rawurlencode($p[1]), $pares));
 PHP
 K3="$TMP/m-cliente.txt"
 T=$(csrf2 "$K3" "/minima/?r=ingresar")
 post2 "$K3" "/minima/?r=ingresar" --data-urlencode "csrf=$T" --data-urlencode "email=cliente@demo.cl" --data-urlencode "clave=cliente123" > /dev/null
 T=$(csrf2 "$K3" "/minima/")
 post2 "$K3" "/minima/?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID2" > /dev/null
-T=$(csrf2 "$K3" "/minima/?r=checkout")
-RR=$(post2 "$K3" "/minima/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$DIA")
-case "$RR" in 422*) pasa "checkout propio sin campos extra: responde 422 (no 500)";; *) falla "checkout propio sin campos extra: $RR";; esac
-grep -qF 'Checkout propio' "$TMP/ultima2.html" && pasa "checkout propio: se usa la vista del rubro" || falla "checkout propio: no se usó la vista del rubro"
-for m in 'Elige una opción en «Sabor del bizcocho».' 'Completa «Patente del auto».' 'Debes marcar «Confirmo que soy mayor de 18».'; do
-  grep -qF "<p class=\"demo-mensaje demo-mensaje--error\" role=\"alert\">$m</p>" "$TMP/ultima2.html" && pasa "checkout propio: el resumen de errores muestra «$m»" || falla "checkout propio: falta el error «$m»"
-done
+curl -s -b "$K3" -c "$K3" "$B2/minima/?r=checkout" > "$TMP/minima.html"
+grep -qF 'Checkout propio' "$TMP/minima.html" && pasa "checkout propio: se usa la vista del rubro" || falla "checkout propio: no se usó la vista del rubro"
+NOMBRES=$(grep -oE 'name="extra\[[a-z_]+\]"' "$TMP/minima.html" | sed -E 's/name="extra\[([a-z_]+)\]"/\1/' | sort | tr '\n' ' ')
+[ "$NOMBRES" = "mayor obra patente sabor " ] && pasa "checkout propio: imprime los campos extra con el parcial ($NOMBRES)" || falla "checkout propio: campos extra «$NOMBRES»"
+RR=$(post2 "$K3" "/minima/?r=checkout" --data "$(tools/php.sh "$TMP/form_datos.php" "$TMP/minima.html" '')")
+case "$RR" in 422*) pasa "checkout propio sin llenar los campos extra: 422 (no 500)";; *) falla "checkout propio sin campos extra: $RR";; esac
+for n in sabor patente mayor; do grep -qF "id=\"err-extra_$n\"" "$TMP/ultima2.html" && pasa "checkout propio: error junto a extra[$n]" || falla "checkout propio: sin error junto a extra[$n]"; done
+grep -qF '<p class="demo-mensaje demo-mensaje--error" role="alert">Elige una opción' "$TMP/ultima2.html" && falla "checkout propio: el error del campo se repite arriba" || pasa "checkout propio: los errores mostrados junto al campo no se repiten arriba"
 CARRO3=$(curl -s -b "$K3" "$B2/minima/?r=carrito")
 printf '%s' "$CARRO3" | grep -qF 'Te faltan $10.000 para el pedido mínimo de $30.000.' && pasa "mínimo para todo: el carrito lo avisa" || falla "mínimo para todo: el carrito no lo avisa"
 printf '%s' "$CARRO3" | grep -qF 'aria-disabled="true"' && ! printf '%s' "$CARRO3" | grep -qF 'href="/minima/?r=checkout"' && pasa "mínimo para todo: el botón para continuar queda desactivado" || falla "mínimo para todo: se puede continuar bajo el mínimo"
-T=$(csrf2 "$K3" "/minima/?r=checkout")
-RR=$(post2 "$K3" "/minima/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$DIA" --data-urlencode "extra[sabor]=chocolate" --data-urlencode "extra[patente]=ab-12 34" --data-urlencode "extra[mayor]=1")
-case "$RR" in 303*r=carrito*) curl -s -b "$K3" "$B2/minima/?r=carrito" | grep -qF 'El pedido mínimo es $30.000.' && pasa "mínimo para todo: el servidor no crea un retiro bajo el mínimo y vuelve al carrito con el mensaje" || falla "mínimo para todo: sin mensaje en el carrito";; *) falla "mínimo para todo: retiro bajo el mínimo: $RR";; esac
+curl -s -b "$K3" -c "$K3" "$B2/minima/?r=checkout" > "$TMP/minima.html"
+RR=$(post2 "$K3" "/minima/?r=checkout" --data "$(tools/php.sh "$TMP/form_datos.php" "$TMP/minima.html" 'AB1234')")
+case "$RR" in 422*) grep -qF '<p class="demo-mensaje demo-mensaje--error" role="alert">Te faltan $10.000 para el pedido mínimo de $30.000.</p>' "$TMP/ultima2.html" && pasa "mínimo para todo: el checkout rechaza un retiro bajo el mínimo (422 con el mensaje del carrito)" || falla "mínimo para todo: 422 sin el mensaje del carrito";; *) falla "mínimo para todo: retiro bajo el mínimo: $RR";; esac
+T=$(csrf2 "$K3" "/minima/")
+post2 "$K3" "/minima/?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID2" > /dev/null
+curl -s -b "$K3" -c "$K3" "$B2/minima/?r=checkout" > "$TMP/minima.html"
+RR=$(post2 "$K3" "/minima/?r=checkout" --data "$(tools/php.sh "$TMP/form_datos.php" "$TMP/minima.html" 'AB1234')")
+case "$RR" in 303*r=pedido*) curl -s -b "$K3" "${RR#* }" | grep -qF '<dt>Patente del auto</dt><dd>AB1234</dd>' && pasa "checkout propio: con los campos del HTML crea el pedido con sus extras" || falla "checkout propio: pedido sin los extras";; *) falla "checkout propio: con los campos del HTML: $RR";; esac
 
 # --- carrito.js (Multi-page): campos [data-carrito-extra] en el mensaje de WhatsApp (sin navegador, con node)
 if command -v node > /dev/null 2>&1; then
@@ -515,6 +566,28 @@ config = { clave: 'k', negocio: 'Prueba', nota: '(Pedido de prueba)', numero: '5
 elementos = { entrega: { value: 'despacho' }, comuna: { value: 'Renca' }, direccion: { value: 'Calle 1' } };
 new Function('window', 'document', src)(ventana, documento);
 revisar(ventana.DemoCarrito.mensaje(sinExtras) === 'Hola, quiero hacer un pedido en Prueba:\n• 1 × Torta – $10000\nSubtotal: $10000\nDespacho a Renca: Gratis\nTotal: $10000\nReparto a Calle 1 (Renca)\n(Pedido de prueba)', 'carrito.js con gratis_desde y texto de despacho propio');
+// --avance (0 a 100) en [data-carrito-minimo] y [data-carrito-gratis], para que el rubro dibuje su barra.
+var estilos = {};
+function nodo(nombre) { return { hidden: true, textContent: '', style: { setProperty: function (k, v) { estilos[nombre + k] = v; } } }; }
+var nMin = nodo('min'), nGratis = nodo('gratis');
+var boton = { validez: '', setCustomValidity: function (m) { boton.validez = m; } };
+var formAv = {
+  hidden: false, addEventListener: function () {}, querySelectorAll: function () { return []; },
+  querySelector: function (s) {
+    if (s === '[name="entrega"]:checked') { return { value: 'despacho' }; }
+    if (s === '[name="comuna"]') { return { value: 'Renca', type: 'select-one' }; }
+    return s.indexOf('button') === 0 ? boton : null;
+  }
+};
+var raizAv = {
+  querySelector: function (s) { return s === '[data-carrito-form]' ? formAv : null; },
+  querySelectorAll: function (s) { return s === '[data-carrito-minimo]' ? [nMin] : (s === '[data-carrito-gratis]' ? [nGratis] : []); }
+};
+var docAv = { getElementById: documento.getElementById, querySelector: function (s) { return s === '[data-carrito]' ? raizAv : null; }, querySelectorAll: function () { return []; }, addEventListener: function () {} };
+config = { clave: 'k', negocio: 'Prueba', nota: '(x)', numero: '569', comunas: { Renca: 1990 }, minimo: 25000, gratis_desde: 40000, catalogo: config.catalogo };
+new Function('window', 'document', src)(ventana, docAv);
+revisar(estilos['min--avance'] === '40' && !nMin.hidden && boton.validez !== '', 'carrito.js: --avance 40 en [data-carrito-minimo] ($10.000 de $25.000) y envío bloqueado');
+revisar(estilos['gratis--avance'] === '25' && !nGratis.hidden, 'carrito.js: --avance 25 en [data-carrito-gratis] ($10.000 de $40.000)');
 JS
 )
   [ -n "$NODE_OUT" ] || falla "carrito.js: la prueba con node no imprimió nada"
@@ -523,6 +596,38 @@ JS
   done <<< "$NODE_OUT"
 else
   echo "  (sin node: se omite la prueba de carrito.js)"
+fi
+
+
+# --- buscador.js: mismo criterio que demo_coincide() (los mismos casos que DEMOS_BUSQUEDAS en test_demos.php), con node
+if command -v node > /dev/null 2>&1; then
+  NODE_OUT=$(node - demos/_comun/js/buscador.js 2>&1 <<'JS'
+var src = require('fs').readFileSync(process.argv[process.argv.length - 1], 'utf8');
+var casos = [
+  ['Agua 4 litros', 'a4', false], ['Agua 4 litros', '4l', true], ['Agua 4 litros', 'agua 4', true], ['Hoja A4', 'a4', true],
+  ['Cód. CD-1101', 'cd1101', true], ['Cód. CD1101', 'CD-1101', true], ['Cód. CD-1101', 'cd 1101', true], ['Cód. CD-1101', '1101', true],
+  ['Disco DF 220', 'df220', true], ['Disco DF 220', 'f220', false], ['Disco DF 220', 'df-221', false],
+  ['Vino Carménère', 'carmenere', true], ['Crème brûlée', 'CREME', true], ['Pastillas de freno delanteras', 'pastilla freno', true],
+  ['Pastillas de freno delanteras', 'pastilla trasera', false], ['Ñoquis de papa', 'noquis', true], ['Lo que sea', '', true]
+];
+var malos = [];
+casos.forEach(function (c) {
+  var item = { hidden: false, getAttribute: function () { return c[0]; } };
+  var raiz = {
+    querySelectorAll: function (s) { return s === '[data-buscable]' ? [item] : []; },
+    querySelector: function () { return null; }
+  };
+  var campo = { value: c[1], form: null, closest: function () { return raiz; }, addEventListener: function () {} };
+  var documento = { querySelectorAll: function (s) { return s === 'input[data-buscador]' ? [campo] : []; } };
+  new Function('document', src)(documento);
+  if (item.hidden === c[2]) { malos.push('«' + c[1] + '» en «' + c[0] + '»'); }
+});
+console.log(malos.length === 0 ? 'ok buscador.js coincide igual que demo_coincide() (' + casos.length + ' casos)' : 'FALLA buscador.js distinto de demo_coincide(): ' + malos.join(', '));
+JS
+)
+  case "$NODE_OUT" in "ok "*) pasa "${NODE_OUT#ok }";; *) falla "${NODE_OUT#FALLA }";; esac
+else
+  echo "  (sin node: se omite la prueba de buscador.js)"
 fi
 
 for log in "$TMP/server.log" "$TMP/server2.log"; do

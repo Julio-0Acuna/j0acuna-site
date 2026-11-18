@@ -1,15 +1,10 @@
 <?php
 /**
  * Portada de Filo Barbería (reemplaza la del motor): agenda por barbero, sucursales, planes y empresas.
- * "Reservar con…" enlaza ?barbero=<id>: como en la URL del checkout del motor, la opción (validada contra
- * 'checkout_campos') queda en la sesión y el checkout la trae preseleccionada.
+ * "Reservar con…" enlaza ?barbero=<id>: el motor guarda la opción (validada contra 'checkout_campos') en la sesión
+ * (m_checkout_precargar) y el checkout la trae preseleccionada; aquí se lee con m_checkout_precarga('barbero').
  * @var array $cfg @var ?array $usuario @var string $q @var string $cat @var array $categorias
  */
-$opcionesBarbero = m_checkout_campos($cfg)['barbero']['opciones'];
-$pedido = $_GET['barbero'] ?? null;
-if (is_string($pedido) && isset($opcionesBarbero[$pedido])) {
-    $_SESSION['checkout_precarga']['barbero'] = $pedido;
-}
 if ($q !== '' || $cat !== '') {
     return;
 }
@@ -18,7 +13,7 @@ $estado = demo_horario_estado($cfg['negocio']['horario']);
 $fechas = m_fechas_entrega($cfg);
 $horas = m_horas_entrega($cfg);
 $proxima = $fechas ? reset($fechas) : '';
-$elegido = $_SESSION['checkout_precarga']['barbero'] ?? '';
+$elegido = m_checkout_precarga('barbero');
 ?>
 <section class="fb-hero" aria-labelledby="fb-hero-titulo">
   <div class="fb-hero__texto">

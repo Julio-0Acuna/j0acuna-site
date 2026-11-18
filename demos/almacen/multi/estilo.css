@@ -303,6 +303,8 @@ a.tn-contacto__tarjeta:hover { transform: translateY(-3px); }
 /* Aviso del pedido mínimo del despacho (lo escribe carrito.js en [data-carrito-minimo]). */
 .tn-minimo { margin: 0 0 14px; padding: 10px 12px 10px 14px; border-left: 4px solid var(--tn-azul); border-radius: 4px 12px 12px 4px; background: var(--tn-lima-suave); font-size: .86rem; font-weight: 600; line-height: 1.45; }
 .tn-minimo[hidden] { display: none; }
+/* Barra de avance hacia el mínimo: carrito.js deja en --avance cuánto lleva (0 a 100). */
+.tn-minimo::before { content: ''; display: block; height: 10px; margin: 2px 0 8px; border-radius: 999px; background: linear-gradient(90deg, var(--tn-azul) calc(var(--avance, 0) * 1%), var(--tn-gris) 0); }
 .tn-pedido__enviado { margin-top: 14px; padding: 14px; border-radius: 14px; background: var(--tn-lima-suave); }
 .tn-pedido__enviado p { margin: 0 0 10px; }
 

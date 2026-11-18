@@ -260,14 +260,16 @@ function demo_horario_estado(array $horario, ?DateTimeImmutable $ahora = null): 
     $min = (int) $ahora->format('G') * 60 + (int) $ahora->format('i');
     $ayer = $dia === 1 ? 7 : $dia - 1;
 
+    // Hoy de 24 horas gana al turno de ayer que sigue pasada la medianoche (sábado 19:00–02:00, domingo 24 horas).
+    $h = $horario[$dia] ?? null;
+    if (demo_horario_24($h)) {
+        return ['abierto' => true, 'texto' => 'Abierto las 24 horas'];
+    }
     $h = $horario[$ayer] ?? null;
     if ($h && demo_minutos($h[1]) < demo_minutos($h[0]) && $min < demo_minutos($h[1])) {
         return ['abierto' => true, 'texto' => 'Abierto · cierra a las ' . $h[1]];
     }
     $h = $horario[$dia] ?? null;
-    if (demo_horario_24($h)) {
-        return ['abierto' => true, 'texto' => 'Abierto las 24 horas'];
-    }
     if ($h) {
         $abre = demo_minutos($h[0]);
         $cierra = demo_minutos($h[1]);
@@ -419,36 +421,74 @@ function demo_boton_3d(array $p, string $clase = '', string $texto = 'Ver en 3D'
         . '<span>' . demo_e($texto) . '</span></button>';
 }
 
-/** Texto en minúsculas y sin tildes, para buscar ("Ñoquis" → "noquis"). */
+/** Letras con marcas diacríticas → sin ellas (si no está la extensión intl con Normalizer). */
+const DEMO_SIN_TILDES = [
+    'á' => 'a', 'à' => 'a', 'â' => 'a', 'ä' => 'a', 'ã' => 'a', 'å' => 'a', 'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e',
+    'í' => 'i', 'ì' => 'i', 'î' => 'i', 'ï' => 'i', 'ó' => 'o', 'ò' => 'o', 'ô' => 'o', 'ö' => 'o', 'õ' => 'o',
+    'ú' => 'u', 'ù' => 'u', 'û' => 'u', 'ü' => 'u', 'ñ' => 'n', 'ç' => 'c', 'ý' => 'y', 'ÿ' => 'y',
+];
+
+/**
+ * Texto en minúsculas y sin tildes ni otras marcas, para buscar ("Ñoquis" → "noquis", "Carménère" → "carmenere").
+ * Mismo criterio que normalizar() de _comun/js/buscador.js (NFD sin las marcas U+0300–U+036F).
+ */
 function demo_normalizar(string $s): string
 {
     $s = mb_strtolower(trim($s), 'UTF-8');
-    return strtr($s, ['á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u', 'ü' => 'u', 'ñ' => 'n']);
+    if (class_exists('Normalizer')) {
+        $nfd = Normalizer::normalize($s, Normalizer::FORM_D);
+        if (is_string($nfd)) {
+            return (string) preg_replace('/[\x{0300}-\x{036f}]+/u', '', $nfd);
+        }
+    }
+    return strtr($s, DEMO_SIN_TILDES);
 }
 
 /**
  * ¿El texto coincide con la búsqueda? Cada palabra de $q (sin tildes ni mayúsculas) debe estar en $texto;
  * una palabra con números también vale sin espacios ni guiones ('cd1101' encuentra 'CD-1101' y al revés).
- * Mismo criterio que _comun/js/buscador.js. Búsqueda vacía: siempre coincide.
+ * La versión compacta se compara palabra por palabra del texto: dentro de una palabra en cualquier parte, o a lo
+ * largo de varias seguidas solo desde el comienzo de una ('df220' encuentra 'DF 220' y '4l' encuentra '4 litros',
+ * pero 'a4' no encuentra 'Agua 4 litros'). Mismo criterio que _comun/js/buscador.js. Búsqueda vacía: coincide.
  */
 function demo_coincide(string $texto, string $q): bool
 {
     $t = demo_normalizar($texto);
-    $compacto = null;
+    $palabras = null;
     foreach (preg_split('/\s+/u', demo_normalizar($q), -1, PREG_SPLIT_NO_EMPTY) ?: [] as $palabra) {
         if (str_contains($t, $palabra)) {
             continue;
         }
         if (preg_match('/\d/', $palabra)) {
-            $compacto ??= (string) preg_replace('/[^a-z0-9]+/', '', $t);
+            $palabras ??= array_values(array_filter(array_map(
+                static fn (string $w): string => (string) preg_replace('/[^a-z0-9]+/', '', $w),
+                preg_split('/\s+/u', $t, -1, PREG_SPLIT_NO_EMPTY) ?: []
+            ), 'strlen'));
             $p = (string) preg_replace('/[^a-z0-9]+/', '', $palabra);
-            if ($p !== '' && str_contains($compacto, $p)) {
+            if ($p !== '' && demo_coincide_compacto($palabras, $p)) {
                 continue;
             }
         }
         return false;
     }
     return true;
+}
+
+/** ¿$p está dentro de una palabra o empieza al comienzo de una y sigue por las siguientes? (ver demo_coincide) */
+function demo_coincide_compacto(array $palabras, string $p): bool
+{
+    foreach ($palabras as $i => $w) {
+        if (str_contains($w, $p)) {
+            return true;
+        }
+        for ($j = $i + 1; strlen($w) < strlen($p) && isset($palabras[$j]); $j++) {
+            $w .= $palabras[$j];
+        }
+        if (str_starts_with($w, $p)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /** Ícono de WhatsApp (SVG en línea). */
