@@ -78,7 +78,12 @@ function tn_config_carrito(): array
         'nota' => tn_nota(),
         'numero' => DEMO_WHATSAPP,
         'comunas' => $n['comunas_despacho'],
+        // Pedido mínimo solo para despacho: carrito.js muestra el aviso en [data-carrito-minimo] y bloquea el envío.
         'minimo' => $n['minimo_despacho'],
+        'minimo_solo_despacho' => true,
+        'textos' => [
+            'falta_minimo' => 'Te faltan {falta} para el despacho (mínimo {minimo}). Agrega algo más o elige retiro en el local.',
+        ],
         'catalogo' => $catalogo,
     ];
 }

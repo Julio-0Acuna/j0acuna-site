@@ -51,6 +51,8 @@ return [
         'Santiago' => 4990,
     ],
     'despacho_gratis_desde' => 60000,
+    // Mínimo para todo pedido (retiro o reparto, como dicen la cinta y la portada): el carrito del motor avisa
+    // cuánto falta y no deja continuar; el servidor tampoco crea el pedido.
     'pedido_minimo' => 15000,
     // Reparto o retiro desde mañana hasta 10 días, de lunes a sábado (sin feriados), con hora aproximada.
     'entrega' => [
@@ -97,6 +99,9 @@ return [
         'pedido_titulo' => '¡Pedido en bodega!',
         'pedido_exito_prueba' => '¡Pago de prueba aprobado! Tu pedido ya está en preparación en la bodega.',
         'pedido_exito_al_recibir' => '¡Pedido recibido! Pagas cuando llegue el reparto.',
+        // Carrito: pedido mínimo y reparto gratis (avisos del motor).
+        'carrito_despacho_nota_gratis' => 'El reparto se calcula según tu comuna en el siguiente paso (gratis desde {gratis}).',
+        'carrito_falta_gratis' => 'Con {falta} más, el reparto es gratis.',
     ],
 
     'cuentas_prueba' => [

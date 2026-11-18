@@ -1,30 +1,34 @@
 <?php
 /**
  * Tarjeta de producto de Kilo Justo: precio por kilo, usos y selector de gramos (o de unidades).
+ * Como la del motor: «Cód. X» si el producto tiene código y $prefijo en los id (destacados: 'd').
  * @var array $p (con precio_final) @var ?array $usuario @var array $cfg @var bool $con_id (ancla #p<id>) @var string $prefijo
  */
 require_once __DIR__ . '/_kilo.php';
 
+$prefijo ??= '';
 $agotado = (int) $p['stock'] <= 0;
+$codigo = trim((string) ($p['codigo'] ?? ''));
 $mayorista = m_es_mayorista($usuario) && $p['precio_mayorista'] !== null && (int) $p['precio_mayorista'] < (int) $p['precio'];
 $gramos = kj_gramos($p['nombre']);
 $nombre = kj_nombre($p['nombre']);
 $usos = kj_usos($cfg, $p['nombre']);
 $opciones = kj_opciones($p);
-$idCampo = 'cant-' . ($prefijo ?? 'c') . (int) $p['id'];
+$idCampo = 'cant-' . ($prefijo !== '' ? $prefijo : 'c') . (int) $p['id'];
 $precio = (int) $p['precio_final'];
 ?>
-<article class="t-producto kj-producto<?= $agotado ? ' is-agotado' : '' ?>"<?= !empty($con_id) ? ' id="p' . (int) $p['id'] . '"' : '' ?>>
-  <div class="t-producto__foto">
+<article class="t-producto kj-producto<?= $agotado ? ' is-agotado' : '' ?>"<?= !empty($con_id) ? ' id="' . m_e($prefijo) . 'p' . (int) $p['id'] . '"' : '' ?>>
+  <div class="t-producto__foto<?= $p['foto'] === '' ? ' t-producto__foto--vacia' : '' ?>">
     <?php if ($p['foto'] !== ''): ?>
       <?= demo_img($p['foto'], $nombre, ['ancho' => 480, 'alto' => 360, 'anchos' => [320, 480, 800], 'sizes' => '(max-width: 600px) 92vw, (max-width: 1100px) 45vw, 280px']) ?>
     <?php endif; ?>
-    <?php if ((int) $p['solo_mayorista'] === 1): ?><span class="t-sello t-sello--mayorista">Solo mayoristas</span>
+    <?php if ((int) $p['solo_mayorista'] === 1): ?><span class="t-sello t-sello--mayorista"><?= m_e(m_texto('solo_mayoristas')) ?></span>
     <?php elseif ((int) $p['destacado'] === 1): ?><span class="t-sello"><?= m_e(m_texto('sello_destacado', 'Oferta')) ?></span><?php endif; ?>
     <?php if ($gramos !== null): ?><span class="kj-sello-peso">Por kilo</span><?php endif; ?>
   </div>
   <div class="t-producto__cuerpo">
     <h3><?= m_e($nombre) ?></h3>
+    <?php if ($codigo !== ''): ?><p class="t-producto__codigo"><?= m_e(m_texto('producto_codigo', null, ['codigo' => $codigo])) ?></p><?php endif; ?>
     <?php if ($usos): ?>
     <ul class="kj-usos" aria-label="Sirve para">
       <?php foreach ($usos as $u): ?><li><?= m_e($u) ?></li><?php endforeach; ?>
@@ -35,17 +39,17 @@ $precio = (int) $p['precio_final'];
     <p class="t-producto__precio kj-precio">
       <strong><?= m_e(m_clp(kj_por_kilo($precio, $gramos))) ?></strong> <span class="kj-precio__unidad">el kg</span>
       <?php if ($mayorista): ?><s aria-label="Precio normal por kilo"><?= m_e(m_clp(kj_por_kilo((int) $p['precio'], $gramos))) ?></s><?php endif; ?>
-      <span class="kj-precio__base"><?= m_e(m_clp($precio)) ?> cada <?= m_e(kj_peso($gramos)) ?><?php if ($mayorista): ?> · <span class="t-etiqueta">Precio mayorista</span><?php endif; ?></span>
+      <span class="kj-precio__base"><?= m_e(m_clp($precio)) ?> cada <?= m_e(kj_peso($gramos)) ?><?php if ($mayorista): ?> · <span class="t-etiqueta"><?= m_e(m_texto('precio_mayorista')) ?></span><?php endif; ?></span>
     </p>
     <?php else: ?>
     <p class="t-producto__precio kj-precio">
       <strong><?= m_e(m_clp($precio)) ?></strong>
-      <?php if ($mayorista): ?><s aria-label="Precio normal"><?= m_e(m_clp((int) $p['precio'])) ?></s> <span class="t-etiqueta">Precio mayorista</span><?php endif; ?>
+      <?php if ($mayorista): ?><s aria-label="<?= m_e(m_texto('producto_precio_normal')) ?>"><?= m_e(m_clp((int) $p['precio'])) ?></s> <span class="t-etiqueta"><?= m_e(m_texto('precio_mayorista')) ?></span><?php endif; ?>
     </p>
     <?php endif; ?>
     <div class="t-producto__acciones">
       <?php if ($agotado): ?>
-        <span class="t-agotado">Agotado</span>
+        <span class="t-agotado"><?= m_e(m_texto('producto_agotado')) ?></span>
       <?php else: ?>
         <form class="kj-agregar" method="post" action="<?= m_e(m_url('carrito')) ?>" data-precio="<?= $precio ?>">
           <?= m_csrf_campo() ?>

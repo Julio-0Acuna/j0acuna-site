@@ -161,6 +161,14 @@ debe_contener    "$TIENDA" 'data-demo-qr="/demos/botilleria/plataforma/#menu"'
 debe_contener    "$TIENDA" 'El catálogo, pegado en tu bodega'
 debe_contener    "$TIENDA" 'Cerveza lager lata 470 ml · caja 24'
 debe_contener    "$TIENDA" 'PD-0001'
+# Código de bodega en el campo 'codigo' del motor (seed): «Cód. PD-0001» y búsqueda con o sin guion.
+debe_contener    "$TIENDA" '<span>Cód. PD-0001</span><span class="pd-stock">Stock 80</span>'
+for q in 'PD-0002' 'pd0002'; do
+  debe_contener    "${TIENDA}?q=$q" 'Cerveza lager lata 350 ml · pack 6</h3>'
+  no_debe_contener "${TIENDA}?q=$q" 'Cerveza lager lata 470 ml · caja 24</h3>'
+done
+DUPLICADOS=$(curl -s "$BASE$TIENDA" | grep -oE ' id="[^"]+"' | sort | uniq -d | wc -l)
+[ "$DUPLICADOS" = "0" ] && pasa "portada sin id repetidos (destacados con prefijo)" || falla "$DUPLICADOS id repetidos en la portada"
 debe_contener    "$TIENDA" 'Venta responsable'
 debe_contener    "$TIENDA" 'Crear cuenta de negocio'
 no_debe_contener "$TIENDA" 'Pisco 35° 1 L · caja 12'
@@ -217,10 +225,16 @@ for f in $(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9
 done
 [ -n "$FECHA" ] && [ "$DOMINGOS" = "0" ] && [ "$(date -d "$FECHA" +%Y%m%d)" -gt "$(TZ=America/Santiago date +%Y%m%d)" ] && pasa "reparto desde mañana y sin domingos (primero: $FECHA)" || falla "días de reparto: primero '$FECHA', domingos $DOMINGOS"
 printf '%s' "$CHECK" | grep -qF 'Reparto en camión' && pasa "checkout con textos propios del rubro" || falla "checkout sin textos propios"
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Quilicura" --data-urlencode "fecha_entrega=2020-01-06" --data-urlencode "pago=al_recibir")
+# Mayoría de edad: casilla requerida del motor ('checkout_campos'), validada en el servidor.
+printf '%s' "$CHECK" | grep -qF '<input type="checkbox" id="extra-mayor" name="extra[mayor]" value="1" aria-describedby="ayuda-extra-mayor" required> Confirmo que soy mayor de 18 años</label>' && pasa "checkout con la casilla requerida «Confirmo que soy mayor de 18 años»" || falla "checkout sin la casilla de edad"
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Quilicura" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir")
+case "$R" in 422*) grep -qF 'Debes marcar «Confirmo que soy mayor de 18 años».' "$TMP/ultima.html" && pasa "sin marcar la mayoría de edad el pedido se rechaza (422 con el aviso)" || falla "422 sin el aviso de edad";; *) falla "pedido sin confirmar la edad: $R";; esac
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Quilicura" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" --data-urlencode "extra[mayor]=0")
+case "$R" in 422*) pasa "la casilla con valor 0 no cuenta como marcada (422)";; *) falla "casilla con valor 0 aceptada: $R";; esac
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Quilicura" --data-urlencode "fecha_entrega=2020-01-06" --data-urlencode "pago=al_recibir" --data-urlencode "extra[mayor]=1")
 case "$R" in 422*) pasa "fecha de reparto fuera de la lista se rechaza";; *) falla "fecha inválida aceptada: $R";; esac
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Quilicura" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Recibe la conserjeria")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Quilicura" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Recibe la conserjeria" --data-urlencode "extra[mayor]=1")
 case "$R" in 303*r=pedido*) pasa "checkout crea el pedido ($R)";; *) falla "checkout: $R";; esac
 PEDIDO_URL="${R#* }"
 PAGINA=$(curl -s -b "$J1" "$PEDIDO_URL")
@@ -231,22 +245,28 @@ printf '%s' "$PAGINA" | grep -qF "${NOTA_ENC}Plataforma%20web%29" && pasa "resum
 # 2 × $23.990 + despacho Quilicura $4.990 (gratis recién sobre $60.000) = $52.970
 printf '%s' "$PAGINA" | grep -qF '$52.970' && pasa "total con despacho a Quilicura (\$52.970)" || falla "total del pedido inesperado"
 printf '%s' "$PAGINA" | grep -qF 'Recibe%20la%20conserjeria' && pasa "la nota del cliente va en el resumen de WhatsApp" || falla "resumen sin la nota del cliente"
+printf '%s' "$PAGINA" | grep -qF '<div><dt>Confirmo que soy mayor de 18 años</dt><dd>Sí</dd></div>' && pasa "el pedido muestra la confirmación de edad" || falla "pedido sin la confirmación de edad"
+printf '%s' "$PAGINA" | grep -qF 'Confirmo%20que%20soy%20mayor%20de%2018%20a%C3%B1os%3A%20S%C3%AD' && pasa "la confirmación de edad va en el resumen de WhatsApp" || falla "resumen sin la confirmación de edad"
 
 # Pedido mínimo $15.000: un pack de 6 latas ($5.490) no alcanza
 INICIO=$(curl -s -b "$J1" -c "$J1" "$BASE$TIENDA")
 printf '%s' "$INICIO" | grep -qF 'PD-0002' && pasa "el pack de 6 latas tiene código PD-0002" || falla "sin código PD-0002"
 T=$(printf '%s' "$INICIO" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=2" --data-urlencode "cantidad=1" > /dev/null
-curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'El pedido mínimo es $15.000. Te faltan $9.510.' && pasa "el carrito avisa el pedido mínimo y cuánto falta" || falla "sin aviso de pedido mínimo"
+CARRO=$(curl -s -b "$J1" "$BASE${TIENDA}?r=carrito")
+printf '%s' "$CARRO" | grep -qF 'data-falta-minimo>Te faltan $9.510 para el pedido mínimo de $15.000.</p>' && pasa "el carrito del motor avisa el pedido mínimo y cuánto falta" || falla "sin aviso de pedido mínimo"
+[ "$(printf '%s' "$CARRO" | grep -o 'Te faltan $9.510' | wc -l)" = "1" ] && pasa "el aviso del pedido mínimo sale una sola vez" || falla "aviso del pedido mínimo repetido"
+printf '%s' "$CARRO" | grep -qF 'aria-disabled="true" aria-describedby="falta-minimo">Continuar</a>' && pasa "bajo el mínimo el carrito no deja continuar" || falla "bajo el mínimo el carrito deja continuar"
+printf '%s' "$CARRO" | grep -qF 'Te faltan $54.510 para el reparto gratis.' && pasa "el carrito dice cuánto falta para el reparto gratis" || falla "carrito sin aviso de reparto gratis"
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir")
-case "$R" in 303*r=carrito*) pasa "bajo el mínimo no se crea el pedido";; *) falla "pedido bajo el mínimo: $R";; esac
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir" --data-urlencode "extra[mayor]=1")
+case "$R" in 303*r=carrito*) curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'El pedido mínimo es $15.000.' && pasa "bajo el mínimo el servidor no crea el pedido y vuelve al carrito con el aviso" || falla "bajo el mínimo: sin mensaje";; *) falla "pedido bajo el mínimo: $R";; esac
 
 # Pago de prueba: checkout → pantalla simulada → aprobar
 T=$(csrf "$J1" "$TIENDA")
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID" --data-urlencode "cantidad=1" > /dev/null
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=prueba")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=prueba" --data-urlencode "extra[mayor]=1")
 case "$R" in 303*r=pago*) pasa "pago de prueba lleva a la pantalla simulada";; *) falla "pago de prueba: $R";; esac
 curl -s -b "$J1" "$BASE${TIENDA}?r=pago" | grep -qF 'PAGO DE PRUEBA' && pasa "pantalla de pago marcada como prueba" || falla "pantalla de pago sin aviso"
 T=$(csrf "$J1" "${TIENDA}?r=pago")
@@ -267,6 +287,7 @@ case "$R" in 303*r=panel*) pasa "dueño entra a su panel";; *) falla "login due�
 PANEL=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel&ver=pedidos")
 printf '%s' "$PANEL" | grep -qF "$CODIGO" && pasa "el dueño ve $CODIGO en el panel" || falla "el dueño no ve el pedido"
 printf '%s' "$PANEL" | grep -qF 'Cliente Prueba' && pasa "el panel muestra al cliente" || falla "el panel no muestra al cliente"
+printf '%s' "$PANEL" | grep -qF 'Confirmo que soy mayor de 18 años: Sí' && pasa "el panel muestra la confirmación de edad del pedido" || falla "el panel no muestra la confirmación de edad"
 RESUMEN=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel")
 printf '%s' "$RESUMEN" | grep -qF 'Ventas de hoy' && pasa "panel con ventas del día" || falla "panel sin ventas del día"
 printf '%s' "$RESUMEN" | grep -qF 'Stock bajo: Limones malla 3 kg' && pasa "panel avisa stock bajo" || falla "panel sin aviso de stock bajo"

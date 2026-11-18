@@ -63,6 +63,11 @@ return [
         'cerrado' => [7, '2026-12-08', '2026-12-25', '2027-01-01'],
         'horas' => ['09:00', '18:00'],
     ],
+    // Venta de alcohol: el checkout pide confirmar la mayoría de edad (casilla requerida, validada en el servidor;
+    // sale en el pedido, el panel y el WhatsApp como «Confirmo que soy mayor de 18 años: Sí»).
+    'checkout_campos' => [
+        ['nombre' => 'mayor', 'etiqueta' => 'Confirmo que soy mayor de 18 años', 'tipo' => 'casilla', 'ayuda' => 'Quien recibe debe mostrar su carnet.'],
+    ],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Catálogo con QR para la bodega del almacén (sin modelos 3D: no es un rubro de comida).
     'menu_qr' => true,
@@ -107,6 +112,9 @@ return [
         'pedido_titulo' => '¡Pedido agendado!',
         'pedido_exito_prueba' => '¡Pago de prueba aprobado! Tu pedido quedó agendado para reparto.',
         'pedido_exito_al_recibir' => '¡Pedido recibido! Pagas al recibir con efectivo, débito o transferencia.',
+        // Carrito: reparto (no "despacho") y pedido mínimo con los avisos del motor.
+        'carrito_despacho_nota_gratis' => 'El reparto se calcula según tu comuna en el siguiente paso (gratis desde {gratis}).',
+        'carrito_falta_gratis' => 'Te faltan {falta} para el reparto gratis.',
     ],
 
     'cuentas_prueba' => [

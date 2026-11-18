@@ -4,7 +4,11 @@
  * categorías al costado en el computador, buscador, QR del catálogo y sección de Google.
  * @var array $cfg @var ?array $usuario @var array $categorias @var array $por_categoria
  * @var array $destacados @var string $q @var string $cat @var bool $hay_solo_mayorista
+ * @var ?array $categorias_visibles categorías con productos que este cliente puede ver (m_categorias_visibles():
+ *      «Para restaurantes» solo sale para mayoristas aprobados)
  */
+$categorias_visibles ??= null;
+$visible = static fn (array $c): bool => $categorias_visibles === null || in_array($c['slug'], $categorias_visibles, true);
 $filtrando = $q !== '' || $cat !== '';
 $total = array_sum(array_map('count', $por_categoria));
 ?>
@@ -28,17 +32,16 @@ $total = array_sum(array_map('count', $por_categoria));
   <aside class="kj-lateral" aria-label="Categorías y ayuda">
     <nav class="kj-lateral__cats" aria-label="Categorías del catálogo">
       <p class="kj-lateral__titulo">Categorías</p>
-      <a href="<?= m_e($cfg['url_base']) ?>#menu"<?= $cat === '' ? ' aria-current="true" class="is-activo"' : '' ?>>Todo</a>
+      <a href="<?= m_e($cfg['url_base']) ?>#menu"<?= $cat === '' ? ' aria-current="true" class="is-activo"' : '' ?>><?= m_e(m_texto('inicio_todo')) ?></a>
       <?php foreach ($categorias as $c): ?>
-        <?php if ($q === '' || !empty($por_categoria[$c['slug']])): ?>
-          <?php if ($c['slug'] === 'restaurantes' && !m_es_mayorista($usuario)) { continue; } ?>
+        <?php if (($q === '' || !empty($por_categoria[$c['slug']])) && $visible($c)): ?>
         <a href="<?= m_e(m_url('inicio', ['cat' => $c['slug']])) ?>#menu"<?= $cat === $c['slug'] ? ' aria-current="true" class="is-activo"' : '' ?>><?= m_e($c['nombre']) ?></a>
         <?php endif; ?>
       <?php endforeach; ?>
     </nav>
     <?php if (!empty($cfg['menu_qr'])): ?>
     <div class="kj-lateral__qr">
-      <?php demo_qr($cfg['url_base'] . '#menu', 'Código QR del catálogo', 'kj-qr'); ?>
+      <?php demo_qr($cfg['url_base'] . '#menu', m_texto('qr_pie'), 'kj-qr'); ?>
       <p class="kj-lateral__titulo"><?= m_e(m_texto('qr_titulo', 'Nuestro catálogo en tu celular')) ?></p>
       <p><?= m_e(m_texto('qr_texto', 'Escanea el código para abrir el catálogo.')) ?></p>
     </div>
@@ -49,16 +52,16 @@ $total = array_sum(array_map('count', $por_categoria));
     <div class="t-catalogo__cabeza kj-catalogo__cabeza">
       <h2 id="menu-titulo"><?= m_e(m_texto('titulo_catalogo', 'Catálogo')) ?></h2>
       <form class="t-buscar" role="search" method="get" action="<?= m_e($cfg['url_base']) ?>#menu">
-        <label class="demo-sr" for="t-q">Buscar productos</label>
+        <label class="demo-sr" for="t-q"><?= m_e(m_texto('inicio_buscar_etiqueta')) ?></label>
         <input type="search" id="t-q" name="q" value="<?= m_e($q) ?>" maxlength="40" placeholder="<?= m_e(m_texto('buscar_placeholder', 'Buscar…')) ?>">
         <?php if ($cat !== ''): ?><input type="hidden" name="cat" value="<?= m_e($cat) ?>"><?php endif; ?>
-        <button class="t-btn" type="submit">Buscar</button>
+        <button class="t-btn" type="submit"><?= m_e(m_texto('inicio_buscar')) ?></button>
       </form>
     </div>
-    <nav class="t-chips kj-chips" aria-label="Categorías">
-      <a href="<?= m_e($cfg['url_base']) ?>#menu"<?= $cat === '' ? ' aria-current="true" class="is-activo"' : '' ?>>Todo</a>
+    <nav class="t-chips kj-chips" aria-label="<?= m_e(m_texto('inicio_categorias')) ?>">
+      <a href="<?= m_e($cfg['url_base']) ?>#menu"<?= $cat === '' ? ' aria-current="true" class="is-activo"' : '' ?>><?= m_e(m_texto('inicio_todo')) ?></a>
       <?php foreach ($categorias as $c): ?>
-        <?php if (($q === '' || !empty($por_categoria[$c['slug']])) && ($c['slug'] !== 'restaurantes' || m_es_mayorista($usuario))): ?>
+        <?php if (($q === '' || !empty($por_categoria[$c['slug']])) && $visible($c)): ?>
         <a href="<?= m_e(m_url('inicio', ['cat' => $c['slug']])) ?>#menu"<?= $cat === $c['slug'] ? ' aria-current="true" class="is-activo"' : '' ?>><?= m_e($c['nombre']) ?></a>
         <?php endif; ?>
       <?php endforeach; ?>
@@ -91,9 +94,9 @@ $total = array_sum(array_map('count', $por_categoria));
         <h3><?= m_e(m_texto('mayorista_titulo', '¿Compras al por mayor?')) ?></h3>
         <p><?= m_e(m_texto('mayorista_texto', 'Crea una cuenta mayorista: cuando la aprobemos verás precios especiales y productos para negocios.')) ?></p>
         <?php if ($usuario === null): ?>
-          <a class="t-btn" href="<?= m_e(m_url('registro')) ?>">Crear cuenta mayorista</a>
+          <a class="t-btn" href="<?= m_e(m_url('registro')) ?>"><?= m_e(m_texto('crear_cuenta_mayorista')) ?></a>
         <?php elseif ($usuario['tipo'] === 'mayorista' && $usuario['estado'] === 'pendiente'): ?>
-          <p class="t-etiqueta">Tu solicitud está pendiente de aprobación.</p>
+          <p class="t-etiqueta"><?= m_e(m_texto('inicio_solicitud_pendiente')) ?></p>
         <?php endif; ?>
       </div>
     </aside>

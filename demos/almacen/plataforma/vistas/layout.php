@@ -2,7 +2,7 @@
 /**
  * Layout de Bodega Surtido: distribuidora y almacén online.
  * Cinta de embalaje con las condiciones, cabecera azul marino con buscador, pasillos en cartón kraft
- * y aviso del pedido mínimo en el carrito.
+ * y, al pagar, cuánto falta para el reparto gratis (el pedido mínimo lo avisa el carrito del motor).
  * @var string $contenido @var string $titulo @var string $vista @var array $cfg @var ?array $usuario
  */
 $cfg ??= m_config();
@@ -20,17 +20,14 @@ $cajasUrl = $esNegocio ? m_url('inicio', ['cat' => 'cajas']) . '#menu' : m_url('
 $minimo = (int) $cfg['pedido_minimo'];
 $gratis = (int) $cfg['despacho_gratis_desde'];
 
-// Aviso del pedido mínimo y del reparto gratis en el carrito y al pagar.
-$avisoMinimo = null;
-if (in_array($vista, ['carrito', 'checkout'], true) && $unidades > 0) {
+// Al pagar: barra de avance hacia el reparto gratis (el carrito del motor ya avisa el mínimo y el reparto gratis).
+$avisoGratis = null;
+if ($vista === 'checkout' && $unidades > 0 && $gratis > 0) {
     $subtotal = (int) m_carrito(m_db(), $usuario)['subtotal'];
-    if ($subtotal < $minimo) {
-        $avisoMinimo = ['falta', 'Te faltan ' . m_clp($minimo - $subtotal) . ' para el pedido mínimo de ' . m_clp($minimo) . '.', $subtotal * 100 / $minimo];
-    } elseif ($subtotal < $gratis) {
-        $avisoMinimo = ['gratis', 'Pedido mínimo cumplido. Con ' . m_clp($gratis - $subtotal) . ' más, el reparto es gratis.', $subtotal * 100 / $gratis];
-    } else {
-        $avisoMinimo = ['ok', 'Tu pedido tiene reparto gratis.', 100];
-    }
+    $faltaGratis = m_falta_gratis($cfg, $subtotal);
+    $avisoGratis = $faltaGratis > 0
+        ? ['gratis', (m_falta_minimo($cfg, $subtotal, 'despacho') === 0 ? 'Pedido mínimo cumplido. ' : '') . m_texto('carrito_falta_gratis', null, ['falta' => m_clp($faltaGratis)]), $subtotal * 100 / $gratis]
+        : ['ok', 'Tu pedido tiene reparto gratis.', 100];
 }
 $caja = '<svg viewBox="0 0 32 32" width="34" height="34" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 9.5 16 4l12 5.5v13L16 28 4 22.5z"/><path d="M4 9.5 16 15l12-5.5M16 15v13"/><path d="m10 6.8 12 5.6v4.2" stroke-width="1.6"/></svg>';
 
@@ -100,10 +97,10 @@ demo_aviso($cfg['rubro']);
     <p class="bs-modo-negocio"><span class="bs-modo-negocio__sello">Cuenta de negocio</span> <?= m_e($usuario['empresa']) ?> · ves precios por mayor y productos por caja, saco y fardo</p>
   <?php endif; ?>
   <?php m_parcial('_mensajes'); ?>
-  <?php if ($avisoMinimo !== null): ?>
-  <div class="bs-minimo bs-minimo--<?= m_e($avisoMinimo[0]) ?>" role="status">
-    <p><?= m_e($avisoMinimo[1]) ?></p>
-    <div class="bs-minimo__barra" aria-hidden="true"><span style="width: <?= (int) min(100, round($avisoMinimo[2])) ?>%"></span></div>
+  <?php if ($avisoGratis !== null): ?>
+  <div class="bs-minimo bs-minimo--<?= m_e($avisoGratis[0]) ?>" role="status">
+    <p><?= m_e($avisoGratis[1]) ?></p>
+    <div class="bs-minimo__barra" aria-hidden="true"><span style="width: <?= (int) min(100, round($avisoGratis[2])) ?>%"></span></div>
   </div>
   <?php endif; ?>
   <?= $contenido ?>

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 // Turno 24 (Santiago): negocio ficticio de la versión Multi-page. Minimarket abierto las 24 horas.
 // Productos genéricos, sin marcas. Fotos: IDs de Unsplash (ver demos/almacen/CREDITOS.md).
-$todoElDia = ['00:00', '23:59'];
+$todoElDia = ['00:00', '24:00'];
 
 return [
     'nombre' => 'Turno 24',
@@ -12,7 +12,7 @@ return [
     'barrio' => 'Santiago Centro',
     'eslogan' => 'Minimarket abierto las 24 horas, todos los días',
     'nota' => 4.6,
-    // Abierto todo el día (el componente de Google no tiene "24 horas": se muestra 00:00 – 23:59).
+    // Abierto las 24 horas: ['00:00', '24:00'] (Google dice «Abierto las 24 horas» y la tabla, «24 horas»).
     'horario' => array_fill(1, 7, $todoElDia),
     'despacho_horas' => ['08:00', '02:00'],
     'despacho_minutos' => 35,

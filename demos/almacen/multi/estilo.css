@@ -300,12 +300,9 @@ a.tn-contacto__tarjeta:hover { transform: translateY(-3px); }
 .tn-totales dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
 .tn-totales__total { padding-top: 10px; border-top: 2px solid var(--tn-noche); font: 700 1.35rem/1.2 var(--tn-grotesca); }
 .tn-totales__total dt { color: var(--tn-tinta); }
-.tn-minimo { margin: 0 0 14px; }
+/* Aviso del pedido mínimo del despacho (lo escribe carrito.js en [data-carrito-minimo]). */
+.tn-minimo { margin: 0 0 14px; padding: 10px 12px 10px 14px; border-left: 4px solid var(--tn-azul); border-radius: 4px 12px 12px 4px; background: var(--tn-lima-suave); font-size: .86rem; font-weight: 600; line-height: 1.45; }
 .tn-minimo[hidden] { display: none; }
-.tn-minimo__barra { height: 10px; border-radius: 999px; background: var(--tn-gris); overflow: hidden; }
-.tn-minimo__barra span { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--tn-azul); transition: width .3s; }
-.tn-minimo.is-ok .tn-minimo__barra span { background: #6fa800; }
-.tn-minimo p { margin: 6px 0 0; font-size: .86rem; font-weight: 600; }
 .tn-pedido__enviado { margin-top: 14px; padding: 14px; border-radius: 14px; background: var(--tn-lima-suave); }
 .tn-pedido__enviado p { margin: 0 0 10px; }
 

@@ -2,8 +2,8 @@
 /**
  * Layout de Palé Distribuidora: barra de bodega verde botella, aviso +18 en lima y pie con los
  * datos de reparto. Lleva la confirmación de mayoría de edad de las 3 versiones de botillería.
+ * El pedido mínimo lo avisa el carrito del motor; aquí solo va el recordatorio de la edad.
  * @var string $contenido @var string $titulo @var string $vista @var array $cfg @var ?array $usuario @var int $unidades_carrito
- * @var ?array $carrito (solo en la vista carrito)
  */
 $cfg ??= m_config();
 $usuario ??= m_usuario();
@@ -65,9 +65,6 @@ bot_edad(['clave' => $clave, 'negocio' => $cfg['negocio']['nombre'], 'clase' => 
   <?php if (in_array($vista, ['carrito', 'checkout'], true)): ?>
     <div class="pd-aviso-compra">
       <p class="pd-aviso-compra__edad"><?= bot_icono_18(20) ?><span><strong><?= m_e(BOT_AVISO_EDAD) ?>.</strong> Quien recibe debe mostrar su carnet.</span></p>
-      <?php if ($vista === 'carrito' && $minimo > 0 && isset($carrito['subtotal']) && $carrito['lineas'] && $carrito['subtotal'] < $minimo): ?>
-      <p class="pd-aviso-compra__minimo">El pedido mínimo es <?= m_e(m_clp($minimo)) ?>. Te faltan <?= m_e(m_clp($minimo - (int) $carrito['subtotal'])) ?>.</p>
-      <?php endif; ?>
     </div>
   <?php elseif ($vista === 'registro'): ?>
     <p class="pd-aviso-compra pd-aviso-compra__edad"><?= bot_icono_18(20) ?><span>Al crear una cuenta declaras ser mayor de 18 años. Los negocios necesitan RUT y patente de alcoholes vigente.</span></p>

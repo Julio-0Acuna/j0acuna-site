@@ -216,6 +216,22 @@ CHK=$(curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout")
 printf '%s' "$CHK" | grep -qE '>Hoy a las [0-9]{2}:[0-9]{2}</option>|<option value="">Lo antes posible</option>' && pasa "checkout ofrece «Hoy a las …» (modo hoy)" || falla "checkout sin «Hoy a las …»"
 printf '%s' "$CHK" | grep -qF '¿Para cuándo lo quieres?' && pasa "checkout con texto propio «¿Para cuándo lo quieres?»" || falla "checkout sin texto propio"
 printf '%s' "$CHK" | grep -qF 'name="fecha_entrega"' && falla "el delivery pide fecha de entrega y no debería" || pasa "el delivery no pide fecha de entrega"
+# Horas reales del motor que pasan la medianoche: el servicio de cada noche llega hasta su cierre
+# (lun a jue 00:30, vie y sáb 02:00, dom 00:00) y a las 00:40 del sábado sigue el del viernes.
+HORAS_CHINA='require "demos/_motor/motor.php"; $c = require "demos/china/plataforma/config.php"; $t = new DateTimeImmutable($argv[1], new DateTimeZone("America/Santiago")); $c["entrega"]["horas"] = wk_horas_servicio($c["negocio"]["horario"], $t); echo implode(",", m_horas_entrega($c, "", $t->getTimestamp()));'
+for caso in '2026-11-21 00:40|01:30,02:00' '2026-11-20 23:00|23:30,00:00,00:30,01:00,01:30,02:00' '2026-11-22 22:00|22:30,23:00,23:30,00:00' '2026-11-19 23:50|00:30' '2026-11-17 00:10|'; do
+  CUANDO="${caso%%|*}"; ESPERADO="${caso#*|}"
+  OBTENIDO=$(tools/php.sh -r "$HORAS_CHINA" "$CUANDO")
+  [ "$OBTENIDO" = "$ESPERADO" ] && pasa "horas de delivery a las $CUANDO: «$ESPERADO»" || falla "horas a las $CUANDO: «$OBTENIDO» (esperado «$ESPERADO»)"
+done
+OBTENIDO=$(tools/php.sh -r "$HORAS_CHINA" '2026-11-18 11:00')
+case "$OBTENIDO" in 12:30,13:00,*,23:30,00:00,00:30) pasa "un miércoles se ofrece de 12:30 a 00:30 (pasa la medianoche)";; *) falla "horas del miércoles: $OBTENIDO";; esac
+# El checkout de ahora ofrece justo las horas que quedan del servicio en curso (las mismas que valida).
+AHORA_HORAS=$(tools/php.sh -r 'require "demos/_motor/motor.php"; $c = m_config(require "demos/china/plataforma/config.php"); echo implode(",", m_horas_entrega($c));')
+EN_CHECKOUT=$(printf '%s' "$CHK" | grep -oE '<option value="[0-9]{2}:[0-9]{2}"' | grep -oE '[0-9]{2}:[0-9]{2}' | paste -sd, -)
+[ "$EN_CHECKOUT" = "$AHORA_HORAS" ] && pasa "el checkout ofrece las horas del servicio en curso (${EN_CHECKOUT:-solo «Lo antes posible»})" || falla "horas del checkout «$EN_CHECKOUT», esperado «$AHORA_HORAS»"
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "cuando=03:00" --data-urlencode "pago=al_recibir")
+case "$R" in 422*) pasa "una hora después del cierre (03:00) se rechaza (422)";; *) falla "hora 03:00 aceptada: $R";; esac
 T=$(printf '%s' "$CHK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data "comuna=Maip%C3%BA" --data-urlencode "pago=al_recibir")
 case "$R" in 422*) pasa "despacho a una comuna fuera de la lista se rechaza";; *) falla "comuna fuera de la lista: $R";; esac

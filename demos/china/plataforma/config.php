@@ -16,6 +16,30 @@ $horario = [
     7 => ['12:30', '00:00'],
 ];
 
+if (!function_exists('wk_horas_servicio')) {
+    /**
+     * Horas de entrega del servicio en curso: desde media hora después de abrir hasta el cierre de ese día
+     * (lun a jue 00:30, vie y sáb 02:00, dom 00:00). Pasada la medianoche sigue el servicio de la noche
+     * anterior mientras no cierre (sábado 00:40 → el del viernes, hasta las 02:00). El motor ofrece esas horas
+     * en el checkout (cruzan la medianoche) y rechaza las demás.
+     * @param array<int, ?array{0: string, 1: string}> $horario
+     * @return array{0: string, 1: string}
+     */
+    function wk_horas_servicio(array $horario, DateTimeImmutable $ahora): array
+    {
+        $dia = (int) $ahora->format('N');
+        $ayer = $dia === 1 ? 7 : $dia - 1;
+        $min = (int) $ahora->format('G') * 60 + (int) $ahora->format('i');
+        $h = $horario[$ayer] ?? null;
+        if ($h && demo_minutos($h[1]) < demo_minutos($h[0]) && $min < demo_minutos($h[1])) {
+            $dia = $ayer;
+        }
+        [$abre, $cierra] = $horario[$dia] ?? ['12:00', '23:30']; // Wokazo abre todos los días; por si alguno queda sin horario
+        $desde = demo_minutos($abre) + 30;
+        return [sprintf('%02d:%02d', intdiv($desde, 60), $desde % 60), $cierra];
+    }
+}
+
 return [
     'demo' => true,
     'rubro' => $rubro,
@@ -48,8 +72,8 @@ return [
     ],
     'despacho_gratis_desde' => 22000,
     'pedido_minimo' => 6000,
-    // El checkout ofrece horas de hoy hasta las 23:30; después, "Lo antes posible".
-    'horas_entrega' => ['12:30', '23:30'],
+    // Delivery hasta el cierre de cada noche (viernes y sábado hasta las 02:00): horas que pasan la medianoche.
+    'entrega' => ['horas' => wk_horas_servicio($horario, new DateTimeImmutable('now', new DateTimeZone(DEMO_ZONA_HORARIA)))],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     'menu_qr' => true,
     'modelos3d' => ['wantan'],

@@ -80,7 +80,7 @@
 .bs .bs-pasillos__cajas { color: var(--bs-marino); text-decoration: underline; text-decoration-color: var(--bs-rojo); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .bs-pasillos__cajas svg { color: var(--bs-rojo); }
 
-/* ---------- Avisos de la cuenta y del pedido mínimo */
+/* ---------- Avisos de la cuenta, del pedido mínimo y del reparto gratis */
 .bs-principal { padding-top: 24px; }
 .bs-modo-negocio { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 18px; padding: 10px 14px; border-radius: 8px; background: var(--bs-marino); color: #fff; font-size: .92rem; }
 .bs-modo-negocio__sello { padding: 3px 10px; border-radius: 4px; background: var(--bs-kraft); color: var(--bs-marino); font-weight: 700; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
@@ -91,6 +91,9 @@
 .bs-minimo--gratis, .bs-minimo--ok { border-color: var(--bs-marino); background: var(--bs-crema); }
 .bs-minimo--gratis .bs-minimo__barra, .bs-minimo--ok .bs-minimo__barra { background: var(--t-borde); }
 .bs-minimo--gratis .bs-minimo__barra span, .bs-minimo--ok .bs-minimo__barra span { background: var(--bs-marino); }
+/* Avisos del carrito del motor (cuánto falta para el pedido mínimo y para el reparto gratis), con la misma cinta. */
+.bs .t-falta-minimo { padding: 12px 16px; border-radius: 8px; border: 2px dashed var(--bs-rojo); background: #fff4ee; color: var(--bs-marino); font-size: .95rem; font-weight: 700; }
+.bs .t-falta-gratis { padding: 10px 14px; border-radius: 8px; border: 2px dashed var(--bs-marino); background: var(--bs-crema); color: var(--bs-marino); font-weight: 600; }
 
 /* ---------- Portada */
 .bs-hero { display: grid; gap: 26px; align-items: center; margin: 8px 0 30px; }

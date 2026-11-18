@@ -70,6 +70,7 @@ return [
         'retiro_texto' => 'Retira en nuestra bodega de Quilicura, sin costo.',
         'qr_titulo' => 'El catálogo en tu celular',
         'qr_texto' => 'Este QR va en la vitrina, en las bolsas y en cada caja que despachamos: abre el catálogo, muestra los cortes en 3D y deja repetir el pedido en un toque.',
+        'qr_pie' => 'Código QR del catálogo',
         'pedido_titulo' => '¡Pedido recibido! Ya lo estamos pesando.',
     ],
 

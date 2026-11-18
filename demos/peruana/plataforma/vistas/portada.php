@@ -4,14 +4,9 @@ if ($q !== '' || $cat !== '') {
     return;
 }
 $desde = min($cfg['comunas']);
+// Próxima entrega: el primer día que ofrece el checkout (el motor saca "Hoy" cuando ya no quedan horas).
 $fechas = m_fechas_entrega($cfg);
 $primera = (string) array_key_first($fechas);
-// Si la primera fecha es hoy y la cocina ya cerró, la próxima entrega real es el día siguiente de la lista.
-$ahora = new DateTimeImmutable('now', new DateTimeZone($cfg['zona_horaria']));
-$hoyHorario = $cfg['negocio']['horario'][(int) $ahora->format('N')] ?? null;
-if ($primera === $ahora->format('Y-m-d') && (!$hoyHorario || (int) $ahora->format('G') * 60 + (int) $ahora->format('i') >= demo_minutos($hoyHorario[1]) - 30) && count($fechas) > 1) {
-    $primera = (string) array_keys($fechas)[1];
-}
 $esEmpresa = m_es_mayorista($usuario);
 ?>
 <section class="cc-hero" aria-labelledby="cc-hero-titulo">

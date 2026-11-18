@@ -136,6 +136,13 @@ debe_contener    "$TIENDA" 'Pack asado para 12'
 no_debe_contener "$TIENDA" 'Lomo vetado al vacío'
 debe_contener    "${TIENDA}?q=pollo" 'Pechuga deshuesada'
 no_debe_contener "${TIENDA}?q=pollo" 'Lomo liso'
+# Chips y categorías del costado: solo las que el cliente puede ver (m_categorias_visibles del motor).
+no_debe_contener "$TIENDA" 'cat=restaurantes'
+debe_contener    "$TIENDA" 'data-demo-qr-titulo="Código QR del catálogo"'
+PORTADA=$(curl -s "$BASE$TIENDA")
+DUPLICADOS=$(printf '%s' "$PORTADA" | grep -oE ' id="[^"]+"' | sort | uniq -d | wc -l)
+[ "$DUPLICADOS" = "0" ] && pasa "portada sin id repetidos (ofertas con prefijo «d»)" || falla "$DUPLICADOS id repetidos en la portada"
+printf '%s' "$PORTADA" | grep -qF 'id="cant-d1"' && printf '%s' "$PORTADA" | grep -qF 'id="cant-c1"' && pasa "selector de gramos con id propio en ofertas y catálogo" || falla "ids del selector de gramos"
 debe_contener    "${TIENDA}?r=ingresar" 'cliente@demo.cl'
 debe_contener    "${TIENDA}?r=ingresar" 'mayorista@demo.cl'
 debe_contener    "${TIENDA}?r=ingresar" 'dueno@demo.cl'
@@ -189,10 +196,15 @@ printf '%s' "$PAGINA" | grep -qF '$19.970' && pasa "total con despacho a Quilicu
 # Pedido mínimo $10.000: 500 g de lomo vetado ($8.990) no alcanza
 T=$(csrf "$J1" "$TIENDA")
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID" --data-urlencode "cantidad=1" > /dev/null
-curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'El pedido mínimo es $10.000' && pasa "el carrito avisa el pedido mínimo" || falla "sin aviso de pedido mínimo"
+CARRO=$(curl -s -b "$J1" "$BASE${TIENDA}?r=carrito")
+printf '%s' "$CARRO" | grep -qF 'data-falta-minimo>Te faltan $1.010 para el pedido mínimo de $10.000.</p>' && pasa "el carrito avisa el pedido mínimo (texto del motor)" || falla "sin aviso de pedido mínimo"
+[ "$(printf '%s' "$CARRO" | grep -o 'Te faltan $1.010' | wc -l)" = "1" ] && pasa "el aviso del pedido mínimo sale una sola vez" || falla "aviso del pedido mínimo repetido"
+printf '%s' "$CARRO" | grep -qF 'aria-disabled="true" aria-describedby="falta-minimo">Continuar</a>' && pasa "bajo el mínimo el carrito no deja continuar" || falla "bajo el mínimo el carrito deja continuar"
+printf '%s' "$CARRO" | grep -qF 'Te faltan $26.010 para despacho gratis.' && pasa "el carrito dice cuánto falta para el despacho gratis" || falla "carrito sin aviso de despacho gratis"
+printf '%s' "$CARRO" | grep -qF '<span class="kj-cantidad" aria-label="500 g">500 g</span>' && pasa "el carrito sigue mostrando el peso (500 g)" || falla "el carrito no muestra el peso"
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir")
-case "$R" in 303*r=carrito*) pasa "bajo el mínimo no se crea el pedido";; *) falla "pedido bajo el mínimo: $R";; esac
+case "$R" in 303*r=carrito*) curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'El pedido mínimo es $10.000.' && pasa "bajo el mínimo el servidor no crea el pedido y vuelve al carrito con el aviso" || falla "bajo el mínimo: sin mensaje";; *) falla "pedido bajo el mínimo: $R";; esac
 
 # Pago de prueba: checkout → pantalla simulada → aprobar
 T=$(csrf "$J1" "$TIENDA")
@@ -234,6 +246,7 @@ T=$(csrf "$J3" "${TIENDA}?r=ingresar")
 post "$J3" "${TIENDA}?r=ingresar" --data-urlencode "csrf=$T" --data-urlencode "email=mayorista@demo.cl" --data-urlencode "clave=mayorista123" > /dev/null
 MAY=$(curl -s -b "$J3" "$BASE$TIENDA")
 printf '%s' "$MAY" | grep -qF 'Lomo vetado al vacío' && pasa "mayorista ve las cajas para restaurantes" || falla "mayorista no ve las cajas para restaurantes"
+[ "$(printf '%s' "$MAY" | grep -c 'cat=restaurantes#menu"')" -ge 2 ] && pasa "mayorista ve la categoría «Para restaurantes» en el costado y en los chips" || falla "mayorista sin la categoría de restaurantes"
 printf '%s' "$MAY" | grep -qF '$7.690 cada 500 g' && pasa "mayorista ve precio mayorista (\$7.690 cada 500 g)" || falla "mayorista sin precio mayorista"
 printf '%s' "$MAY" | grep -qF '$15.380</strong>' && pasa "mayorista ve el kilo a \$15.380" || falla "mayorista sin precio por kilo mayorista"
 J4="$TMP/nuevo-mayorista.txt"
@@ -247,10 +260,15 @@ curl -s -b "$J4" "$BASE$TIENDA" | grep -qF 'Lomo vetado al vacío' && pasa "el d
 
 # Panel: crear un corte por peso (el nombre con "(500 g)" activa el selector de gramos)
 T=$(csrf "$J2" "${TIENDA}?r=panel_producto")
-R=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=Lomo de Prueba (500 g)" --data-urlencode "descripcion=Creado por el test" --data-urlencode "categoria_id=1" --data-urlencode "precio=5000" --data-urlencode "precio_mayorista=4000" --data-urlencode "stock=5" --data-urlencode "foto=1690983322025-aab4f95a0269" --data-urlencode "visible=1")
+R=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=Lomo de Prueba (500 g)" --data-urlencode "descripcion=Creado por el test" --data-urlencode "categoria_id=1" --data-urlencode "precio=5000" --data-urlencode "precio_mayorista=4000" --data-urlencode "stock=5" --data-urlencode "codigo=KJ-0501" --data-urlencode "foto=1690983322025-aab4f95a0269" --data-urlencode "visible=1")
 case "$R" in 303*) pasa "el dueño crea un producto";; *) falla "crear producto: $R";; esac
 NUEVO=$(curl -s "$BASE$TIENDA")
 printf '%s' "$NUEVO" | grep -qF 'Lomo de Prueba</h3>' && pasa "el producto nuevo aparece en la tienda" || falla "el producto nuevo no aparece"
+printf '%s' "$NUEVO" | grep -qF '<p class="t-producto__codigo">Cód. KJ-0501</p>' && pasa "la tarjeta por kilo muestra el código del producto (Cód. KJ-0501)" || falla "la tarjeta no muestra el código"
+for q in 'KJ-0501' 'kj0501'; do
+  debe_contener    "${TIENDA}?q=$q" 'Lomo de Prueba</h3>'
+  no_debe_contener "${TIENDA}?q=$q" 'Lomo vetado</h3>'
+done
 printf '%s' "$NUEVO" | grep -qF '$10.000</strong> <span class="kj-precio__unidad">el kg' && pasa "el producto nuevo se vende por kilo (\$10.000 el kg)" || falla "el producto nuevo no muestra precio por kilo"
 R=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=$(printf 'x%.0s' $(seq 1 81))" --data-urlencode "categoria_id=1" --data-urlencode "precio=1" --data-urlencode "stock=1")
 case "$R" in 422*) pasa "nombre de más de 80 caracteres se rechaza";; *) falla "texto largo aceptado: $R";; esac

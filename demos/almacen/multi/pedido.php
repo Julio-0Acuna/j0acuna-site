@@ -130,10 +130,7 @@ tn_abrir('pedido', 'Tu pedido', 'Arma tu pedido de ' . $n['nombre'] . ' y envía
             <div><dt>Despacho</dt><dd data-carrito-despacho>—</dd></div>
             <div class="tn-totales__total"><dt>Total</dt><dd data-carrito-total>$0</dd></div>
           </dl>
-          <div class="tn-minimo" data-minimo hidden>
-            <div class="tn-minimo__barra" aria-hidden="true"><span data-minimo-barra></span></div>
-            <p data-minimo-texto></p>
-          </div>
+          <p class="tn-minimo" data-carrito-minimo aria-live="polite" hidden></p>
           <button class="tn-btn tn-btn--bloque tn-btn--lima" type="submit"><?= demo_icono_wa() ?> Enviar pedido por WhatsApp</button>
           <div class="tn-pedido__enviado" data-carrito-enviado hidden>
             <p>¡Listo! Se abrió WhatsApp con tu pedido. ¿Vaciamos el carrito?</p>

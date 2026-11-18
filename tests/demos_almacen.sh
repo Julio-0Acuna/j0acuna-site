@@ -139,6 +139,18 @@ debe_contener    "$MULTI" '(Pedido de prueba desde la demo de almacén – Multi
 debe_contener    "$MULTI" '"minimo":10000'
 debe_contener    "$MULTI" '"Bebida cola","variantes":{"1,5 L":1890,"3 L":2790}'
 debe_contener    "$MULTI" 'turno.js'
+# Pedido mínimo del despacho con el carrito común (carrito.js): aviso en [data-carrito-minimo], sin lógica propia.
+debe_contener    "$MULTI" '"minimo_solo_despacho":true'
+debe_contener    "$MULTI" '"falta_minimo":"Te faltan {falta} para el despacho (mínimo {minimo}). Agrega algo más o elige retiro en el local."'
+debe_contener    "${MULTI}pedido.php" '<p class="tn-minimo" data-carrito-minimo aria-live="polite" hidden></p>'
+no_debe_contener "${MULTI}pedido.php" 'data-minimo-barra'
+! grep -qE 'setCustomValidity|DemoCarrito|data-minimo' demos/almacen/multi/turno.js && pasa "turno.js ya no calcula el pedido mínimo (lo hace carrito.js)" || falla "turno.js sigue con lógica del pedido mínimo"
+# Abierto las 24 horas: ['00:00', '24:00'] en el horario (sección Google con «24 horas», no 00:00 – 23:59).
+for p in "$MULTI" "${MULTI}contacto.php"; do
+  debe_contener    "$p" '<p class="demo-google__estado is-abierto">Abierto las 24 horas</p>'
+  debe_contener    "$p" '<dt>Lun a Dom</dt><dd>24 horas</dd>'
+  no_debe_contener "$p" '23:59'
+done
 grep -q 'Require all denied' demos/almacen/plataforma/data/.htaccess && pasa 'data/.htaccess niega todo' || falla 'data/.htaccess no niega'
 grep -q 'Require all denied' demos/almacen/plataforma/vistas/.htaccess && pasa 'vistas/.htaccess niega todo' || falla 'vistas/.htaccess no niega'
 grep -q 'config|seed|reset' demos/almacen/plataforma/.htaccess && pasa 'plataforma/.htaccess niega config, seed y reset' || falla 'plataforma/.htaccess no protege config/seed/reset'
@@ -199,11 +211,15 @@ R=$(post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode
 case "$R" in 303*) pasa "agregar la canasta al carrito ($R)";; *) falla "agregar al carrito: $R";; esac
 CARRO=$(curl -s -b "$J1" "$BASE${TIENDA}?r=carrito")
 printf '%s' "$CARRO" | grep -qF '<strong>Canasta familiar de la semana</strong>' && pasa "el carrito tiene la canasta" || falla "carrito vacío"
-printf '%s' "$CARRO" | grep -qF 'Con $27.010 más, el reparto es gratis.' && pasa "el carrito avisa cuánto falta para el reparto gratis" || falla "carrito sin aviso de reparto gratis"
+printf '%s' "$CARRO" | grep -qF '<p class="t-pequeno t-falta-gratis" data-falta-gratis>Con $27.010 más, el reparto es gratis.</p>' && pasa "el carrito del motor avisa cuánto falta para el reparto gratis" || falla "carrito sin aviso de reparto gratis"
+[ "$(printf '%s' "$CARRO" | grep -o 'el reparto es gratis' | wc -l)" = "1" ] && pasa "el aviso del reparto gratis sale una sola vez en el carrito" || falla "aviso del reparto gratis repetido"
+printf '%s' "$CARRO" | grep -qF 'bs-minimo' && falla "el layout repite el aviso en el carrito" || pasa "el layout ya no repite el aviso del motor en el carrito"
+printf '%s' "$CARRO" | grep -qF 'El reparto se calcula según tu comuna en el siguiente paso (gratis desde $60.000).' && pasa "nota del reparto con el texto del rubro" || falla "nota del reparto sin el texto del rubro"
 
 # Checkout: día de reparto calculado en el servidor (sin domingos ni feriados)
 CHECK=$(curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout")
 printf '%s' "$CHECK" | grep -qF 'Día de reparto o retiro' && pasa "checkout pide el día de reparto" || falla "checkout sin selector de día"
+printf '%s' "$CHECK" | grep -qF 'Pedido mínimo cumplido. Con $27.010 más, el reparto es gratis.' && printf '%s' "$CHECK" | grep -qF 'style="width: 55%"' && pasa "al pagar, barra de avance hacia el reparto gratis (55 %)" || falla "checkout sin barra del reparto gratis"
 printf '%s' "$CHECK" | grep -qF 'Retiro en bodega' && printf '%s' "$CHECK" | grep -qF 'Reparto en camión' && pasa "checkout con «Retiro en bodega» y «Reparto en camión»" || falla "checkout sin textos de entrega del rubro"
 FECHA=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | head -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
 DOMINGOS=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | while read -r d; do date -d "$d" +%u; done | grep -c '^7$')
@@ -232,10 +248,16 @@ printf '%s' "$PAGINA" | grep -qF '$36.980' && pasa "total con reparto a Quilicur
 FIDEOS=$(curl -s -b "$J1" "$BASE${TIENDA}?q=spaghetti" | grep -oE 'name="producto_id" value="[0-9]+"' | head -1 | grep -oE '[0-9]+')
 T=$(csrf "$J1" "$TIENDA")
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$FIDEOS" --data-urlencode "cantidad=1" > /dev/null
-curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'Te faltan $14.110 para el pedido mínimo de $15.000.' && pasa "el carrito avisa cuánto falta para el pedido mínimo" || falla "carrito sin aviso de pedido mínimo"
+CARRO=$(curl -s -b "$J1" "$BASE${TIENDA}?r=carrito")
+printf '%s' "$CARRO" | grep -qF 'data-falta-minimo>Te faltan $14.110 para el pedido mínimo de $15.000.</p>' && pasa "el carrito del motor avisa cuánto falta para el pedido mínimo" || falla "carrito sin aviso de pedido mínimo"
+[ "$(printf '%s' "$CARRO" | grep -o 'para el pedido mínimo de' | wc -l)" = "1" ] && pasa "el aviso del pedido mínimo sale una sola vez" || falla "aviso del pedido mínimo repetido"
+printf '%s' "$CARRO" | grep -qF 'aria-disabled="true" aria-describedby="falta-minimo">Continuar</a>' && pasa "bajo el mínimo el carrito no deja continuar (retiro y reparto)" || falla "bajo el mínimo el carrito deja continuar"
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir")
-case "$R" in 303*r=carrito*) curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'El pedido mínimo es $15.000.' && pasa "un pedido bajo el mínimo no se crea y vuelve al carrito" || falla "pedido mínimo: sin mensaje";; *) falla "pedido bajo el mínimo: $R";; esac
+case "$R" in 303*r=carrito*) curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'El pedido mínimo es $15.000.' && pasa "un retiro bajo el mínimo no se crea y vuelve al carrito" || falla "pedido mínimo: sin mensaje";; *) falla "retiro bajo el mínimo: $R";; esac
+T=$(csrf "$J1" "${TIENDA}?r=checkout")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Renca" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir")
+case "$R" in 303*r=carrito*) pasa "un reparto bajo el mínimo tampoco se crea (el servidor lo rechaza)";; *) falla "reparto bajo el mínimo: $R";; esac
 T=$(csrf "$J1" "${TIENDA}?r=carrito")
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=vaciar" > /dev/null
 

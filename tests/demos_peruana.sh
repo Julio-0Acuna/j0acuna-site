@@ -154,6 +154,18 @@ debe_contener    "$TIENDA" 'Ceviche clásico'
 debe_contener    "$TIENDA" 'Colación ejecutiva'
 debe_contener    "$TIENDA" 'Crear cuenta para empresas'
 no_debe_contener "$TIENDA" 'Pack 10 colaciones ejecutivas'
+# «Próxima entrega» de la portada = primer día que ofrece el checkout (m_fechas_entrega del motor).
+PRIMERA=$(tools/php.sh -r 'require "demos/_motor/motor.php"; $f = m_fechas_entrega(require "demos/peruana/plataforma/config.php"); echo reset($f);')
+[ -n "$PRIMERA" ] && debe_contener "$TIENDA" "Próxima entrega: <strong>$PRIMERA</strong>" || falla "sin días de entrega"
+# Con la cocina cerrada para hoy (martes 20:45: la última hora es 21:00 y el margen, 30 min) la próxima es mañana.
+FECHAS_PERUANA='require "demos/_motor/motor.php"; $f = m_fechas_entrega(require "demos/peruana/plataforma/config.php", (new DateTimeImmutable($argv[1], new DateTimeZone("America/Santiago")))->getTimestamp()); echo key($f), "|", reset($f);'
+R=$(tools/php.sh -r "$FECHAS_PERUANA" '2026-11-17 11:00')
+[ "$R" = "2026-11-17|Hoy, mar 17/11" ] && pasa "a las 11:00 la próxima entrega es hoy ($R)" || falla "próxima entrega a las 11:00: $R"
+R=$(tools/php.sh -r "$FECHAS_PERUANA" '2026-11-17 20:45')
+[ "$R" = "2026-11-18|Mañana, mié 18/11" ] && pasa "a las 20:45 «Hoy» sale de la lista: la próxima es mañana ($R)" || falla "próxima entrega a las 20:45: $R"
+R=$(tools/php.sh -r "$FECHAS_PERUANA" '2026-11-21 21:00')
+[ "$R" = "2026-11-23|Lun 23/11" ] && pasa "sábado en la noche: el domingo está cerrado, la próxima es el lunes ($R)" || falla "próxima entrega el sábado en la noche: $R"
+! grep -q 'demo_minutos' demos/peruana/plataforma/vistas/portada.php && pasa "la portada ya no calcula a mano la próxima entrega" || falla "la portada sigue calculando la próxima entrega a mano"
 debe_contener    "${TIENDA}?q=chaufa" 'Arroz chaufa de pollo'
 no_debe_contener "${TIENDA}?q=chaufa" 'Lomo saltado'
 debe_contener    "${TIENDA}?r=ingresar" 'cliente@demo.cl'

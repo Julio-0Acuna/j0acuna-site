@@ -74,7 +74,8 @@
 .pd-aviso-compra p, p.pd-aviso-compra { margin: 0; }
 .pd-aviso-compra__edad { display: flex; gap: 10px; align-items: center; padding: 10px 14px; border-radius: var(--t-radio); background: var(--pd-kraft-claro); border: 1px dashed #b49a6c; font-size: .92rem; }
 .pd-aviso-compra__edad svg { flex: none; color: var(--pd-verde); }
-.pd-aviso-compra__minimo { padding: 10px 14px; border-radius: var(--t-radio); background: #fff3d6; color: #6b4300; font-weight: 600; font-size: .92rem; }
+/* Avisos del carrito del motor: pedido mínimo en ámbar (como el resto de los avisos de compra) y reparto gratis. */
+.pd .t-falta-minimo { padding: 10px 14px; border-radius: var(--t-radio); background: #fff3d6; color: #6b4300; font-weight: 600; font-size: .92rem; }
 
 /* ---------- Portada */
 .pd-hero { display: grid; gap: 24px; align-items: stretch; margin: 6px 0 22px; }
@@ -151,6 +152,7 @@
 .pd-producto .t-sello { background: var(--pd-lima); color: var(--pd-verde); border-radius: 4px; font-family: var(--pd-mono); text-transform: uppercase; letter-spacing: .04em; font-size: .68rem; }
 .pd-producto .t-sello--mayorista { background: var(--pd-verde); color: var(--pd-lima); }
 .pd-sku { margin: 0; display: flex; justify-content: space-between; gap: 8px; font-family: var(--pd-mono); font-size: .7rem; color: var(--t-suave); border-bottom: 1px dashed var(--t-borde); padding-bottom: 8px; }
+.pd-stock { margin-left: auto; }
 .pd-stock::before { content: "■ "; color: #2f8a55; }
 .pd-stock.is-bajo::before { color: #d9822b; }
 .pd-producto h3 { font-size: 1.04rem; line-height: 1.25; }
