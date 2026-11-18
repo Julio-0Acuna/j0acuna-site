@@ -133,3 +133,19 @@ t('catalogo: barberia, veterinaria y repuestos de auto como rubros propios', fun
     $pelu = array_values(array_filter(portfolio_rubros_catalogo(), static fn ($r) => $r['slug'] === 'peluqueria'))[0];
     ok(!in_array('barberia', $pelu['alias'], true), 'barberia no debe ser alias de peluqueria');
 });
+
+t('pie: logo JA, redes con ícono y nombre accesible, sin nombre gigante', function () {
+    ob_start();
+    render_partial('head', ['title' => 'T', 'description' => 'D']);
+    render_partial('footer', ['site' => portfolio_load_site()]);
+    $h = ob_get_clean();
+    contiene($h, '<symbol id="i-logo"');
+    contiene($h, 'class="brand__mark"');
+    foreach (['WhatsApp' => 'i-wa', 'Correo' => 'i-mail', 'LinkedIn' => 'i-li', 'GitHub' => 'i-gh'] as $nombre => $icono) {
+        contiene($h, 'aria-label="' . $nombre . '"');
+        contiene($h, '<use href="#' . $icono . '"/>');
+        contiene($h, '<symbol id="' . $icono . '"');
+    }
+    contiene($h, 'href="mailto:');
+    no_contiene($h, 'foot__big');
+});

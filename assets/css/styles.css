@@ -115,7 +115,8 @@ main { display: block; position: relative; z-index: 1; overflow-x: clip; }
 .top__bar { display: flex; align-items: center; gap: 1rem; height: 58px; padding: 0 .5rem 0 1.1rem; border-radius: 999px; transition: background .35s, box-shadow .35s; }
 .top.is-scrolled .top__bar { background: rgba(12, 15, 21, .72); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07), 0 20px 40px -20px rgba(0, 0, 0, .7); }
 .brand { display: flex; align-items: center; gap: .6rem; font-weight: 600; letter-spacing: -.02em; font-size: 1.06rem; margin-right: auto; position: relative; z-index: 61; white-space: nowrap; }
-.brand__dot { width: 22px; height: 22px; flex: none; border-radius: 7px; background: conic-gradient(from 210deg, #6EF0D6, #F7BC62, #6EF0D6); box-shadow: 0 0 18px rgba(94, 234, 208, .5); }
+.brand__mark { width: 30px; height: 30px; flex: none; border-radius: 9px; box-shadow: 0 0 22px -4px rgba(94, 234, 208, .55); transition: transform .35s var(--ease), box-shadow .35s var(--ease); }
+.brand:hover .brand__mark, .brand:focus-visible .brand__mark { transform: rotate(-6deg) scale(1.05); box-shadow: 0 0 26px -2px rgba(247, 188, 98, .55); }
 .nav ul { display: flex; gap: .15rem; }
 .nav ul a { display: block; padding: .45rem .85rem; border-radius: 999px; color: var(--text-2); font-size: .92rem; transition: color .2s, background .2s; }
 .nav ul a:hover { color: var(--text); background: var(--glass); }
@@ -357,13 +358,17 @@ main { display: block; position: relative; z-index: 1; overflow-x: clip; }
 .contact-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
 
 /* --- Pie ----------------------------------------------------------------- */
-.foot { position: relative; padding: 3rem 0 2rem; overflow: hidden; }
-.foot__row { display: flex; flex-wrap: wrap; gap: 1.4rem 2.4rem; justify-content: space-between; align-items: center; margin-top: 2.2rem; }
-.foot nav ul, .foot__soc { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; color: var(--text-2); font-size: .93rem; }
-.foot a:hover { color: var(--teal); }
+.foot { position: relative; padding: 1.4rem 0 1.4rem; }
+.foot__row { display: flex; flex-wrap: wrap; gap: 1rem 2.2rem; justify-content: space-between; align-items: center; margin-top: 1.4rem; }
+.foot nav ul { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; color: var(--text-2); font-size: .93rem; }
+.foot nav a:hover { color: var(--teal); }
 .foot .brand { margin-right: 0; }
-.foot__big { margin-top: 3rem; font-weight: 600; font-size: clamp(3.4rem, 15.5vw, 13.5rem); line-height: .8; letter-spacing: -.07em; text-align: center; white-space: nowrap; background: linear-gradient(180deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, 0) 85%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-user-select: none; user-select: none; }
-.foot__bot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; margin-top: 1.4rem; font-size: .8rem; color: var(--mute); font-family: var(--mono); }
+.foot__soc { display: flex; gap: .55rem; }
+.foot__soc a { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; color: var(--text-2); background: var(--glass); box-shadow: var(--ring); transition: color .25s, background .25s, box-shadow .25s, transform .25s var(--ease); }
+.foot__soc a:hover, .foot__soc a:focus-visible { color: var(--bg); background: linear-gradient(135deg, #6EF0D6, #F7BC62); box-shadow: 0 10px 24px -10px rgba(94, 234, 208, .7); transform: translateY(-2px); }
+.foot__soc a:focus-visible { border-radius: 50%; }
+.foot__soc svg { width: 18px; height: 18px; }
+.foot__bot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: .8rem; color: var(--mute); font-family: var(--mono); }
 @media (max-width: 959px) { .foot { padding-bottom: 6rem; } }
 
 /* --- Mosaicos con imagen ------------------------------------------------- */

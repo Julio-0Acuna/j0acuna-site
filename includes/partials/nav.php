@@ -15,7 +15,7 @@ $navWa = site_wa($site, $site['profile']['whatsapp_mensaje']);
 <header class="top" id="top">
   <div class="wrap">
     <div class="top__bar">
-      <a class="brand" href="/"><span class="brand__dot" aria-hidden="true"></span><?= e($site['profile']['name']) ?></a>
+      <?php render_partial('logo', ['site' => $site]); ?>
       <nav class="nav" id="menu" aria-label="Principal">
         <ul>
           <?php foreach ($items as $clave => [$ruta, $nombre]): ?>
