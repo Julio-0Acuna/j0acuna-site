@@ -1,0 +1,95 @@
+<?php
+declare(strict_types=1);
+
+// Río Perla (Lo Barnechea): negocio ficticio de la versión Multi-page. Casa cantonesa con dim sum.
+// Fotos: IDs de Unsplash (ver demos/china/CREDITOS.md). Modelo 3D: demos/_comun/3d/wantan.glb.
+return [
+    'nombre' => 'Río Perla',
+    'categoria' => 'Restaurante cantonés',
+    'comuna' => 'Lo Barnechea',
+    'eslogan' => 'Cocina cantonesa y dim sum hecho a mano',
+    'nota' => 4.8,
+    'horario' => [
+        1 => null,
+        2 => ['12:30', '23:00'],
+        3 => ['12:30', '23:00'],
+        4 => ['12:30', '23:00'],
+        5 => ['12:30', '23:30'],
+        6 => ['11:30', '23:30'],
+        7 => ['11:30', '17:00'],
+    ],
+    'resenas' => [
+        ['Catalina V.', 5, 'El har gow tiene la masa finísima y el camarón entero. Fuimos al yum cha del domingo y probamos medio carro de dim sum.', 'hace 5 días'],
+        ['Andrés M.', 5, 'Celebramos un cumpleaños en el salón privado con la mesa giratoria. El pato laqueado lo trinchan en la mesa: un espectáculo.', 'hace 2 semanas'],
+        ['Josefina R.', 4, 'Muy buen servicio y té en tetera de verdad. Los sábados se llena: reserven antes por la web.', 'hace 1 mes'],
+    ],
+    'comunas_despacho' => [
+        'Lo Barnechea' => 2490,
+        'Vitacura' => 2990,
+        'Las Condes' => 3490,
+    ],
+    // clave => [nombre, bajada, caracteres chinos decorativos (aria-hidden)]
+    'categorias' => [
+        'vapor' => ['Dim sum al vapor', 'Hechos a mano cada mañana y servidos en canasto de bambú.', '蒸'],
+        'frito' => ['Dim sum frito', 'Crujientes, para abrir la mesa.', '炸'],
+        'sopas' => ['Sopas y tallarines', 'Caldos claros de cocción lenta.', '湯'],
+        'cantonesa' => ['Cocina cantonesa', 'Asados de la casa y platos al wok.', '粵'],
+        'banquetes' => ['Banquetes para compartir', 'Para 2, 4 y 6 personas, servidos al centro de la mesa.', '宴'],
+        'postres' => ['Postres', 'Dulces de la tradición de Cantón.', '甜'],
+        'te' => ['Té', 'Hojas enteras en tetera. Rellenamos el agua sin costo.', '茶'],
+    ],
+    // id => datos. variantes: [nombre => precio]. modelo: nombre del .glb (vacío = sin 3D). firma: aparece en el inicio.
+    'platos' => [
+        'har-gow' => ['cat' => 'vapor', 'nombre' => 'Har gow de camarón', 'desc' => 'Masa translúcida, camarón entero y brotes de bambú.', 'foto' => '1678026582164-24a5460c447a', 'variantes' => ['4 piezas' => 6900, '8 piezas' => 12900], 'modelo' => '', 'firma' => true],
+        'siu-mai' => ['cat' => 'vapor', 'nombre' => 'Siu mai de cerdo y camarón', 'desc' => 'Abiertos, con hongos shiitake y huevas de pez volador.', 'foto' => '1563245370-63ffc97abdbd', 'variantes' => ['4 piezas' => 6500, '8 piezas' => 11900], 'modelo' => '', 'firma' => false],
+        'xiao-long-bao' => ['cat' => 'vapor', 'nombre' => 'Xiao long bao', 'desc' => 'Empanaditas rellenas de caldo y cerdo. Se muerden sobre la cuchara.', 'foto' => '1779333277496-a5106680169c', 'variantes' => ['6 piezas' => 7900], 'modelo' => '', 'firma' => true],
+        'char-siu-bao' => ['cat' => 'vapor', 'nombre' => 'Bao de cerdo char siu', 'desc' => 'Pan al vapor relleno de cerdo asado con miel.', 'foto' => '1782875976147-d4dcbe74d037', 'variantes' => ['3 piezas' => 5900], 'modelo' => '', 'firma' => false],
+        'wantan-chile' => ['cat' => 'vapor', 'nombre' => 'Wantán en aceite de chile', 'desc' => 'Wantanes de cerdo con aceite de chile de la casa, vinagre negro y cebollín.', 'foto' => '1588166524938-1ee110d7dcef', 'variantes' => ['8 piezas' => 7500], 'modelo' => 'wantan', 'firma' => false],
+        'wantan-frito' => ['cat' => 'frito', 'nombre' => 'Wantán frito', 'desc' => 'Relleno de cerdo y camarón, con salsa agridulce de ciruela.', 'foto' => '1781332147547-1f0edb2a78a4', 'variantes' => ['8 piezas' => 5900, '16 piezas' => 10900], 'modelo' => 'wantan', 'firma' => true],
+        'rollitos' => ['cat' => 'frito', 'nombre' => 'Rollitos de primavera', 'desc' => 'Verduras y fideo de arroz en masa crocante. Salsa de ciruela.', 'foto' => '', 'variantes' => ['4 piezas' => 5200], 'modelo' => '', 'firma' => false],
+        'sopa-wantan' => ['cat' => 'sopas', 'nombre' => 'Sopa wantán cantonesa', 'desc' => 'Caldo claro de pollo y camarón seco, wantanes y cebollín.', 'foto' => '1666278170490-2b2a71939340', 'variantes' => ['Única' => 6900], 'modelo' => 'wantan', 'firma' => false],
+        'wantan-mein' => ['cat' => 'sopas', 'nombre' => 'Tallarines con wantán', 'desc' => 'Fideo de huevo fino, wantanes de camarón y gai lan salteado.', 'foto' => '1746183055178-e4d5889140f0', 'variantes' => ['Única' => 8900], 'modelo' => '', 'firma' => false],
+        'pato' => ['cat' => 'cantonesa', 'nombre' => 'Pato laqueado cantonés', 'desc' => 'Piel crujiente y carne jugosa, con panqueques, pepino y salsa hoisin.', 'foto' => '1765441012353-10fb4701a276', 'variantes' => ['Medio pato' => 21900, 'Pato entero' => 38900], 'modelo' => '', 'firma' => true],
+        'char-siu' => ['cat' => 'cantonesa', 'nombre' => 'Arroz con char siu y pato asado', 'desc' => 'Cerdo asado con miel y pato de la casa, sobre arroz jazmín.', 'foto' => '1785899578127-f3883106c735', 'variantes' => ['Única' => 12900], 'modelo' => '', 'firma' => false],
+        'lomo-pimienta' => ['cat' => 'cantonesa', 'nombre' => 'Lomo a la pimienta negra', 'desc' => 'Salteado al wok con pimentón y cebolla, servido en plancha caliente.', 'foto' => '1743297907248-e91256e0039e', 'variantes' => ['Única' => 14900], 'modelo' => '', 'firma' => false],
+        'carne-mongoliana' => ['cat' => 'cantonesa', 'nombre' => 'Carne mongoliana', 'desc' => 'Lomo, cebollín y salsa de soya dulce, levemente picante.', 'foto' => '1767324672655-8e0f5e814897', 'variantes' => ['Única' => 13900], 'modelo' => '', 'firma' => false],
+        'pollo-jengibre' => ['cat' => 'cantonesa', 'nombre' => 'Pollo al jengibre y cebollín', 'desc' => 'Pollo de campo al vapor con aceite de jengibre fresco.', 'foto' => '', 'variantes' => ['Única' => 11900], 'modelo' => '', 'firma' => false],
+        'bok-choy' => ['cat' => 'cantonesa', 'nombre' => 'Bok choy con ajo', 'desc' => 'Salteado al wok con ajo y salsa de ostión.', 'foto' => '1769195045431-15f636e12b68', 'variantes' => ['Única' => 6500], 'modelo' => '', 'firma' => false],
+        'chaulafan' => ['cat' => 'cantonesa', 'nombre' => 'Chaulafán Yangzhou', 'desc' => 'Arroz frito con char siu, camarón, huevo y cebollín.', 'foto' => '1578160112054-954a67602b88', 'variantes' => ['Única' => 9900], 'modelo' => '', 'firma' => false],
+        'tallarines-mariscos' => ['cat' => 'cantonesa', 'nombre' => 'Tallarines salteados con mariscos', 'desc' => 'Fideo de huevo crocante, camarón, calamar y verduras.', 'foto' => '1783196736270-d08d63485303', 'variantes' => ['Única' => 13500], 'modelo' => '', 'firma' => false],
+        'banquete-2' => ['cat' => 'banquetes', 'nombre' => 'Banquete para 2', 'desc' => 'Seis dim sum a elección, medio pato laqueado, bok choy, chaulafán Yangzhou y tetera de jazmín.', 'foto' => '1563245372-f21724e3856d', 'variantes' => ['Única' => 49900], 'modelo' => '', 'firma' => false],
+        'banquete-4' => ['cat' => 'banquetes', 'nombre' => 'Banquete para 4', 'desc' => 'Doce dim sum, pato laqueado entero, lomo a la pimienta, bok choy, chaulafán, tallarines con mariscos y postre.', 'foto' => '1755742319537-449f661a3190', 'variantes' => ['Única' => 94900], 'modelo' => '', 'firma' => false],
+        'banquete-6' => ['cat' => 'banquetes', 'nombre' => 'Banquete para 6', 'desc' => 'Dieciocho dim sum, pato entero, tres platos de fondo, arroz, tallarines, postres y té para la mesa.', 'foto' => '1755742319539-f36b308b010c', 'variantes' => ['Única' => 136900], 'modelo' => '', 'firma' => false],
+        'dan-tat' => ['cat' => 'postres', 'nombre' => 'Tartaletas de huevo', 'desc' => 'Masa hojaldrada y crema de huevo, tibias. Las clásicas dan tat.', 'foto' => '1637273483570-10e72651892e', 'variantes' => ['3 piezas' => 4500], 'modelo' => '', 'firma' => false],
+        'lychee' => ['cat' => 'postres', 'nombre' => 'Lychees helados', 'desc' => 'Con jalea de té jazmín y menta.', 'foto' => '1688394007198-473e558e14e2', 'variantes' => ['Única' => 4900], 'modelo' => '', 'firma' => false],
+        'sesamo' => ['cat' => 'postres', 'nombre' => 'Bolitas de sésamo', 'desc' => 'Masa de arroz glutinoso rellena de poroto rojo dulce.', 'foto' => '', 'variantes' => ['4 piezas' => 4200], 'modelo' => '', 'firma' => false],
+        'te-jazmin' => ['cat' => 'te', 'nombre' => 'Té jazmín', 'desc' => 'Té verde perfumado con flores de jazmín.', 'foto' => '1531970227416-f0cddeb1f748', 'variantes' => ['Tetera' => 3900], 'modelo' => '', 'firma' => false],
+        'te-oolong' => ['cat' => 'te', 'nombre' => 'Oolong tostado', 'desc' => 'Notas de miel y nuez, ideal con los asados.', 'foto' => '', 'variantes' => ['Tetera' => 4500], 'modelo' => '', 'firma' => false],
+        'te-puerh' => ['cat' => 'te', 'nombre' => 'Pu-erh añejo', 'desc' => 'Oscuro y terroso. El que se toma con el dim sum en Cantón.', 'foto' => '', 'variantes' => ['Tetera' => 4900], 'modelo' => '', 'firma' => false],
+    ],
+    'fotos' => [
+        'hero' => '1523905330026-b8bd1f5f320e',
+        'yumcha' => '1793093398211-c4dd0113d097',
+        'chef' => '1793571008191-7b47526bf09a',
+        'salon' => '1775562454478-2f66d5ad10df',
+        'celosia' => '1725781747036-8071bd5497fb',
+        'te' => '1776287945683-2ba5d357816d',
+        'privado' => '1776305249767-55bc600a9dc5',
+    ],
+    // Reservas: zonas del salón y ocasiones (van al mensaje de WhatsApp).
+    'zonas' => [
+        'salon' => 'Salón principal',
+        'ventana' => 'Mesa junto a la celosía',
+        'privado' => 'Salón privado con mesa giratoria (8 a 12 personas)',
+    ],
+    'ocasiones' => ['Cumpleaños', 'Aniversario', 'Comida de trabajo', 'Celebración familiar', 'Año Nuevo chino'],
+    'preguntas' => [
+        ['¿Hay que reservar para el yum cha del fin de semana?', 'Te lo recomendamos. Sábado y domingo, de 11:30 a 16:00, el dim sum sale en carros por el salón y las mesas se llenan rápido. Reserva en la página de reservas y te confirmamos por WhatsApp.'],
+        ['¿Tienen salón privado?', 'Sí: un salón para 8 a 12 personas con mesa redonda giratoria, ideal para cumpleaños y comidas de trabajo. Pídelo al reservar.'],
+        ['¿Hay opciones vegetarianas?', 'Tenemos dim sum de verduras y hongos, bok choy, tallarines y arroz sin carne. Avísanos en la nota y la cocina ajusta el plato.'],
+        ['¿Hacen despacho?', 'Sí, en Lo Barnechea, Vitacura y Las Condes. Arma tu pedido en la carta, elige despacho y lo envías por WhatsApp. También puedes retirar en el local.'],
+        ['¿El pato laqueado hay que encargarlo?', 'El pato entero conviene pedirlo con un día de anticipación, porque se marina 24 horas. El medio pato suele estar disponible.'],
+        ['¿Qué es «Ver en 3D»?', 'En la carta puedes girar algunos platos en 3D y, desde el celular, ponerlos sobre tu mesa con la cámara antes de pedir.'],
+        ['¿Cómo pago?', 'Efectivo, débito y crédito en el local. En los despachos pagas al recibir o por transferencia.'],
+    ],
+];
