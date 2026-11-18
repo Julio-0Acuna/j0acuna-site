@@ -248,6 +248,154 @@ t('m_verificar_login usa password_hash', function () {
     ok(str_starts_with(m_usuario_por_email($db, 'c@demo.cl')['clave_hash'], '$2y$'));
 });
 
+/* ---------------------------------------------------------------- Textos, fecha de entrega y resumen */
+
+/** Martes 17 de noviembre de 2026, 10:00 en Santiago. */
+function demos_martes(): int
+{
+    return (new DateTimeImmutable('2026-11-17 10:00', new DateTimeZone('America/Santiago')))->getTimestamp();
+}
+
+t('m_texto: valores por defecto iguales a los textos de siempre', function () {
+    m_config(demos_cfg());
+    eq(m_texto('mayorista'), 'Mayorista');
+    eq(m_texto('mayoristas'), 'Mayoristas');
+    eq(m_texto('crear_cuenta_mayorista'), 'Crear cuenta mayorista');
+    eq(m_texto('solo_mayoristas'), 'Solo mayoristas');
+    eq(m_texto('mayoristas_esperan', null, ['n' => 2]), '2 mayorista(s) esperan aprobación');
+    eq(m_texto('hora_entrega', null, ['hora' => '13:30']), 'Hoy a las 13:30');
+    eq(m_texto('cuando_pronto'), 'Lo antes posible');
+    eq(m_texto('pedido_exito_prueba'), '¡Pago de prueba aprobado! Tu pedido ya está en la cocina.');
+    eq(m_texto('pedido_exito_al_recibir'), '¡Pedido recibido! Pagas al recibir.');
+    eq(m_texto('qr_pie'), 'Código QR del menú');
+    eq(m_texto('qr_titulo', 'Propio de la vista'), 'Propio de la vista', 'el valor por defecto de una vista del rubro gana a la tabla');
+    eq(m_texto('clave-que-no-existe'), '');
+});
+
+t('m_texto: el rubro cambia textos y el nombre del mayorista se propaga', function () {
+    m_config(['textos' => ['mayorista' => 'Empresa', 'mayoristas' => 'Empresas', 'qr_pie' => 'Código QR de la carta', 'hora_entrega' => 'Hoy, {hora} hrs']] + demos_cfg());
+    eq(m_texto('mayorista'), 'Empresa');
+    eq(m_texto('solo_mayoristas'), 'Solo empresas');
+    eq(m_texto('solo_para_mayoristas'), 'Solo para empresas');
+    eq(m_texto('mayoristas_esperan', null, ['n' => 1]), '1 empresa(s) esperan aprobación');
+    eq(m_texto('qr_pie'), 'Código QR de la carta');
+    eq(m_texto('qr_titulo', 'Propio de la vista'), 'Propio de la vista');
+    eq(m_texto('hora_entrega', null, ['hora' => '20:00']), 'Hoy, 20:00 hrs');
+    eq(m_minuscula('Precio Club'), 'precio Club');
+    eq(m_minuscula('Ñandú'), 'ñandú');
+    m_config(demos_cfg());
+});
+
+t('m_fecha_texto: fechas en español, larga y corta', function () {
+    eq(m_fecha_texto('2026-11-21'), 'sábado 21 de noviembre');
+    eq(m_fecha_texto('2026-11-21', false), 'sáb 21/11');
+    eq(m_fecha_texto('2027-01-04'), 'lunes 4 de enero');
+    eq(m_fecha_texto('2026-02-30'), '', 'fecha inexistente');
+    eq(m_fecha_texto('mañana'), '');
+    eq(m_fecha_texto(''), '');
+});
+
+t('m_fechas_entrega: desde hoy + dias_min, sin días cerrados ni feriados, hasta dias_max', function () {
+    $ahora = demos_martes();
+    eq(m_fechas_entrega(demos_cfg(), $ahora), [], 'modo hoy (por defecto): sin fechas');
+    $cfg = demos_cfg();
+    $cfg['entrega'] = ['modo' => 'fecha', 'dias_min' => 1, 'dias_max' => 7, 'cerrado' => [1, '2026-11-20']];
+    $f = m_fechas_entrega($cfg, $ahora);
+    eq(array_keys($f), ['2026-11-18', '2026-11-19', '2026-11-21', '2026-11-22', '2026-11-24']);
+    eq($f['2026-11-18'], 'Mañana, mié 18/11');
+    eq($f['2026-11-19'], 'Jue 19/11');
+    // Sin 'cerrado': se cierran los días sin horario del negocio. dias_min 0 incluye hoy.
+    $cfg = demos_cfg();
+    $cfg['negocio']['horario'] = [1 => null, 2 => ['10:00', '20:00'], 3 => ['10:00', '20:00'], 4 => ['10:00', '20:00'], 5 => ['10:00', '20:00'], 6 => ['10:00', '14:00'], 7 => null];
+    $cfg['entrega'] = ['modo' => 'fecha', 'dias_max' => 6];
+    $f = m_fechas_entrega($cfg, $ahora);
+    eq(array_keys($f), ['2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20', '2026-11-21']);
+    eq($f['2026-11-17'], 'Hoy, mar 17/11');
+    eq(m_entrega_cfg($cfg)['dias_min'], 0);
+    eq(m_entrega_cfg(['entrega' => ['modo' => 'otro']])['modo'], 'hoy', 'modo desconocido = hoy');
+});
+
+t('checkout con fecha: exige una fecha de la lista y la guarda en el pedido', function () {
+    $cfg = demos_cfg();
+    $cfg['entrega'] = ['modo' => 'fecha', 'dias_min' => 1, 'dias_max' => 5, 'cerrado' => []];
+    m_config($cfg);
+    m_db_asegurar($cfg, true);
+    $db = m_db_abrir($cfg['db']);
+    $cli = m_usuario_por_email($db, 'c@demo.cl');
+    $fechas = array_keys(m_fechas_entrega($cfg));
+    eq(count($fechas), 5);
+    $hoy = (new DateTimeImmutable('today', new DateTimeZone('America/Santiago')))->format('Y-m-d');
+    $base = ['entrega' => 'retiro', 'pago' => 'al_recibir', 'nota' => 'Sin nueces'];
+    foreach (['falta' => null, 'hoy (dias_min 1)' => $hoy, 'pasada' => '2020-01-01', 'arreglo' => ['x'], 'texto' => '<b>'] as $caso => $valor) {
+        $post = $valor === null ? $base : $base + ['fecha_entrega' => $valor];
+        [$d, $e] = m_checkout_validar($db, $cfg, $cli, $post, 5000);
+        eq($d, null, $caso);
+        ok(isset($e['fecha_entrega']), "fecha $caso rechazada");
+    }
+    [$d, $e] = m_checkout_validar($db, $cfg, $cli, $base + ['fecha_entrega' => $fechas[1], 'cuando' => '13:00'], 5000);
+    eq($e, []);
+    eq($d['fecha_entrega'], $fechas[1]);
+    $agua = (int) $db->query("SELECT id FROM productos WHERE nombre = 'Agua'")->fetchColumn();
+    $_SESSION = ['carrito' => [$agua => 2]];
+    [$id, $error] = m_pedido_crear($db, $cfg, $cli, $d, false);
+    eq($error, '');
+    $p = m_pedido($db, $id);
+    eq($p['fecha_entrega'], $fechas[1]);
+    eq($p['cuando'], '13:00');
+    // La fecha dejó de estar disponible (por ejemplo, pasó la medianoche en la pantalla de pago).
+    $_SESSION = ['carrito' => [$agua => 1]];
+    [$id2, $error2] = m_pedido_crear($db, $cfg, $cli, ['fecha_entrega' => '2020-01-01'] + $d, false);
+    eq($id2, null);
+    eq($error2, 'Ese día ya no está disponible. Elige otro.');
+    // Modo hoy: la fecha enviada se ignora y el pedido queda sin fecha.
+    [$d, $e] = m_checkout_validar($db, demos_cfg(), $cli, $base + ['fecha_entrega' => $fechas[0]], 5000);
+    eq($e, []);
+    eq($d['fecha_entrega'], '');
+    m_config(demos_cfg());
+});
+
+t('seed: fecha_entrega en días desde la creación o como fecha fija', function () {
+    $cfg = demos_cfg();
+    $seed = require $cfg['seed'];
+    $seed['pedidos'][] = ['usuario' => 'c@demo.cl', 'hace_min' => 1, 'estado' => 'nuevo', 'entrega' => 'retiro', 'pago' => 'al_recibir', 'fecha_entrega' => 2, 'items' => [['agua', 1]]];
+    $seed['pedidos'][] = ['usuario' => 'c@demo.cl', 'hace_min' => 1, 'estado' => 'nuevo', 'entrega' => 'retiro', 'pago' => 'al_recibir', 'fecha_entrega' => '2026-12-24', 'items' => [['agua', 1]]];
+    $ruta = $GLOBALS['demos_tmp'] . '/seed-fecha.sqlite';
+    m_db_crear($ruta, $seed, $cfg, demos_martes());
+    $db = m_db_abrir($ruta);
+    eq($db->query('SELECT fecha_entrega FROM pedidos ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), ['', '2026-11-19', '2026-12-24']);
+    $db = null;
+});
+
+t('m_db_migrar agrega fecha_entrega a una base con el esquema anterior', function () {
+    $ruta = $GLOBALS['demos_tmp'] . '/antigua.sqlite';
+    $db = m_db_abrir($ruta);
+    $db->exec("CREATE TABLE pedidos (id INTEGER PRIMARY KEY, cuando TEXT NOT NULL DEFAULT '')");
+    $db->exec("INSERT INTO pedidos (cuando) VALUES ('12:00')");
+    m_db_migrar($db);
+    m_db_migrar($db);
+    eq($db->query('SELECT fecha_entrega FROM pedidos')->fetchColumn(), '');
+    $db = null;
+});
+
+t('resumen de WhatsApp: fecha de entrega y nota del cliente', function () {
+    $cfg = demos_cfg();
+    m_config($cfg);
+    $p = ['codigo' => 'TP-1001', 'items' => [['cantidad' => 2, 'nombre' => 'Agua', 'precio_unitario' => 1000]], 'costo_despacho' => 0, 'total' => 2000,
+        'entrega' => 'retiro', 'comuna' => '', 'cuando' => '17:00', 'fecha_entrega' => '2026-11-21', 'pago' => 'al_recibir', 'nota' => 'Sin nueces, por favor'];
+    $t = m_pedido_resumen_texto($p);
+    contiene($t, "Entrega: retiro en el local\nPara el sábado 21 de noviembre a las 17:00\nPago: al recibir\nNota: Sin nueces, por favor");
+    $t = m_pedido_resumen_texto(['cuando' => ''] + $p);
+    contiene($t, "\nPara el sábado 21 de noviembre\n");
+    $t = m_pedido_resumen_texto(['fecha_entrega' => '', 'nota' => ''] + $p);
+    contiene($t, "\nPara las 17:00\n");
+    no_contiene($t, 'Nota:');
+    unset($p['fecha_entrega']);
+    contiene(m_pedido_resumen_texto($p), "\nPara las 17:00\n");
+    m_config(['resumen_con_nota' => false] + $cfg);
+    no_contiene(m_pedido_resumen_texto($p), 'Nota:');
+    m_config($cfg);
+});
+
 // Limpieza de archivos temporales.
 foreach (glob($GLOBALS['demos_tmp'] . '/*') as $f) {
     @unlink($f);

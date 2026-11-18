@@ -15,13 +15,47 @@ declare(strict_types=1);
  * Rubro nuevo (ej. sushi):
  *   1. Copiar demos/pizzeria/plataforma/ a demos/sushi/plataforma/ (con data/.htaccess y .htaccess).
  *   2. config.php: url_base, sesion y prefijo_pedido propios; negocio, comunas, mayoristas (true/false),
- *      textos, cuentas_prueba, fotos, modelos3d y google.
+ *      entrega, textos, cuentas_prueba, fotos, modelos3d y google (ver m_config_base()).
  *   3. seed.php: categorías, productos (slug, precio, precio_mayorista, stock, foto, modelo3d...),
- *      usuarios de prueba y pedidos de ejemplo.
+ *      usuarios de prueba y pedidos de ejemplo (con 'fecha_entrega' => 2 = en dos días, si usa fecha).
  *   4. vistas/layout.php y vistas/portada.php con el diseño del rubro, más estilo.css. Cualquier
- *      otra vista de _motor/vistas/ se puede reemplazar dejando un archivo con el mismo nombre.
- *   5. bash tests/demos.sh (agregar las rutas del rubro) y tools/php.sh .../reset.php para probar.
+ *      otra vista de _motor/vistas/ se puede reemplazar dejando un archivo con el mismo nombre;
+ *      antes de reemplazar una, revisa si basta con 'textos' o 'entrega'.
+ *   5. bash tests/demos_<rubro>.sh (copiar uno existente) y tools/php.sh .../reset.php para probar.
  * Cliente real: 'demo' => false, 'reinicio_segundos' => 0, su WhatsApp y una pasarela de pago real.
+ *
+ * Textos ('textos'): todas las claves y sus valores por defecto están en M_TEXTOS (más abajo); en las
+ * vistas se leen con m_texto('clave') o m_texto('clave', null, ['hora' => '13:00']) para los marcadores.
+ * 'mayorista' y 'mayoristas' cambian el nombre del cliente mayorista en todas las vistas (sello, panel,
+ * registro...). Si el nombre es femenino o no sirve como adjetivo, cambia también las claves propias:
+ * crear_cuenta_mayorista, precio_mayorista, cuenta_aprobada, registro_pendiente, mayorista_aprobado,
+ * mayoristas_aprobados. Otras: qr_pie, ver_catalogo, retiro_titulo, despacho_titulo, hora_entrega,
+ * pedido_exito_prueba y pedido_exito_al_recibir (mensajes de éxito), fecha_titulo, fecha_ayuda...
+ *
+ * Fecha de entrega o retiro ('entrega', ver m_entrega_cfg() en tienda.php):
+ *   'modo' => 'hoy'   (por defecto) el cliente elige solo la hora: "Hoy a las 13:00" o "Lo antes posible".
+ *   'modo' => 'fecha' el checkout ofrece días calculados en el servidor (desde hoy + dias_min hasta
+ *             hoy + dias_max, sin los días 'cerrado'), valida que el día enviado esté en la lista y lo
+ *             guarda en pedidos.fecha_entrega ('AAAA-MM-DD'). Se ve en el pedido, el panel, la cuenta
+ *             del cliente y el resumen de WhatsApp. 'cerrado' acepta días 1..7 (lunes..domingo) y
+ *             fechas 'AAAA-MM-DD'; si se omite, se cierran los días sin horario en negocio['horario'].
+ * El resumen de WhatsApp incluye la nota del cliente ('resumen_con_nota' => false lo evita).
+ *
+ * Ejemplo (pastelería por encargo, con nombre propio para los mayoristas):
+ *     'entrega' => ['modo' => 'fecha', 'dias_min' => 2, 'dias_max' => 21, 'cerrado' => [1, '2026-12-25'], 'horas' => ['10:00', '19:00']],
+ *     'textos' => [
+ *         'mayorista' => 'Empresa', 'mayoristas' => 'Empresas',
+ *         'crear_cuenta_mayorista' => 'Crear cuenta para empresas',
+ *         'precio_mayorista' => 'Precio empresa', 'cuenta_aprobada' => 'Aprobada: ves precios para empresas',
+ *         'mayorista_aprobado' => 'Empresa aprobada: ya ve sus precios.', 'mayoristas_aprobados' => 'Empresas aprobadas',
+ *         'registro_pendiente' => 'Cuenta creada. Tu cuenta de empresa queda pendiente hasta que la aprobemos; mientras, ves precios normales.',
+ *         'fecha_titulo' => '¿Para qué día?', 'fecha_ayuda' => 'Las tortas se preparan con 2 días de anticipación.',
+ *         'hora_entrega_fecha' => 'A las {hora}', 'qr_pie' => 'Código QR de la tienda',
+ *         'pedido_exito_prueba' => '¡Pago de prueba aprobado! Tu torta ya está agendada.',
+ *         'pedido_exito_al_recibir' => '¡Encargo recibido! Pagas al recibir.',
+ *     ],
+ * Multi-page (carrito en el navegador, _comun/js/carrito.js): un campo con
+ * data-carrito-extra="Mensaje en la torta" dentro del formulario del pedido va al WhatsApp con su etiqueta.
  */
 
 require_once dirname(__DIR__) . '/_comun/comun.php';
@@ -58,6 +92,9 @@ function m_config_base(): array
         'fotos' => [],
         'cuentas_prueba' => [],
         'textos' => [],
+        // Fecha de entrega o retiro: 'hoy' (solo hora) o 'fecha' (lista de días). Ver m_entrega_cfg().
+        'entrega' => M_ENTREGA_BASE,
+        'resumen_con_nota' => true,         // la nota del cliente va en el resumen de WhatsApp
         'whatsapp' => DEMO_WHATSAPP,
     ];
 }
@@ -69,6 +106,7 @@ function m_config(?array $cfg = null): array
         $base = m_config_base();
         $actual = array_replace($base, $cfg);
         $actual['limites'] = array_replace($base['limites'], $cfg['limites'] ?? []);
+        $actual['entrega'] = m_entrega_cfg($actual);
         if (!str_ends_with($actual['url_base'], '/')) {
             $actual['url_base'] .= '/';
         }
@@ -79,10 +117,91 @@ function m_config(?array $cfg = null): array
     return $actual;
 }
 
-/** Texto configurable del rubro con valor por defecto. */
-function m_texto(string $clave, string $porDefecto = ''): string
+/* ---------------------------------------------------------------- Textos */
+
+/**
+ * Textos de las vistas del motor que cada rubro puede cambiar en config['textos'].
+ * Los valores por defecto son los textos de siempre. Marcadores:
+ *   {mayorista} {mayoristas}: nombre del cliente mayorista con minúscula inicial ('mayorista' / 'mayoristas');
+ *   {Mayorista} {Mayoristas}: tal cual; más los que pasa cada vista ({hora}, {fecha}, {n}).
+ */
+const M_TEXTOS = [
+    // Catálogo
+    'titulo_inicio' => 'Tienda online',
+    'titulo_destacados' => 'Los más pedidos',
+    'titulo_catalogo' => 'Catálogo',
+    'buscar_placeholder' => 'Buscar…',
+    'sello_destacado' => 'Favorito',
+    'ver_catalogo' => 'Ver el menú',
+    'qr_titulo' => 'Nuestro menú en tu celular',
+    'qr_texto' => 'Escanea el código para abrir el menú, ver los platos en 3D y pedir desde tu mesa.',
+    'qr_pie' => 'Código QR del menú',
+    // Cliente mayorista: el nombre (singular y plural) se usa en todos los textos que lo nombran.
+    // Donde "mayorista" es adjetivo o el texto tiene género, hay clave propia (cámbiala si el nombre es femenino).
+    'mayorista' => 'Mayorista',
+    'mayoristas' => 'Mayoristas',
+    'mayorista_titulo' => '¿Compras al por mayor?',
+    'mayorista_texto' => 'Crea una cuenta mayorista: cuando la aprobemos verás precios especiales y productos para negocios.',
+    'mayorista_quien' => 'Negocios que compran al por mayor.',
+    'crear_cuenta_mayorista' => 'Crear cuenta mayorista',
+    'precio_mayorista' => 'Precio mayorista',
+    'solo_mayoristas' => 'Solo {mayoristas}',
+    'solo_para_mayoristas' => 'Solo para {mayoristas}',
+    'cuenta_aprobada' => 'Aprobada: ves precios mayoristas',
+    'registro_pendiente' => 'Cuenta creada. Tu cuenta mayorista queda pendiente hasta que el dueño la apruebe; mientras, ves precios normales.',
+    'mayorista_aprobado' => '{Mayorista} aprobado: ya ve sus precios.',
+    'mayoristas_aprobados' => '{Mayoristas} aprobados',
+    'mayoristas_esperan' => '{n} {mayorista}(s) esperan aprobación',
+    // Entrega (modo 'hoy')
+    'retiro_titulo' => 'Retiro en el local',
+    'retiro_texto' => 'Sin costo. Te avisamos cuando esté listo.',
+    'despacho_titulo' => 'Despacho a domicilio',
+    'cuando_titulo' => '¿Para cuándo?',
+    'cuando_pronto' => 'Lo antes posible',
+    'hora_entrega' => 'Hoy a las {hora}',
+    // Entrega (modo 'fecha')
+    'fecha_titulo' => '¿Qué día?',
+    'fecha_ayuda' => '',
+    'hora_titulo' => '¿A qué hora?',
+    'hora_cualquiera' => 'Durante el día',
+    'hora_entrega_fecha' => 'A las {hora}',
+    'fecha_hora' => '{fecha}, a las {hora}',
+    'fecha_sin_hora' => '{fecha}, durante el día',
+    // Pedido
+    'pedido_titulo' => '¡Gracias por tu pedido!',
+    'pedido_exito_prueba' => '¡Pago de prueba aprobado! Tu pedido ya está en la cocina.',
+    'pedido_exito_al_recibir' => '¡Pedido recibido! Pagas al recibir.',
+];
+
+/**
+ * Texto configurable: config['textos'][$clave], si no $porDefecto (el que trae una vista del rubro),
+ * si no M_TEXTOS[$clave]. $valores reemplaza marcadores: m_texto('hora_entrega', null, ['hora' => '13:00']).
+ */
+function m_texto(string $clave, ?string $porDefecto = null, array $valores = []): string
 {
-    return (string) (m_config()['textos'][$clave] ?? $porDefecto);
+    $textos = m_config()['textos'] ?? [];
+    $texto = (string) ($textos[$clave] ?? $porDefecto ?? M_TEXTOS[$clave] ?? '');
+    if (!str_contains($texto, '{')) {
+        return $texto;
+    }
+    $singular = (string) ($textos['mayorista'] ?? M_TEXTOS['mayorista']);
+    $plural = (string) ($textos['mayoristas'] ?? M_TEXTOS['mayoristas']);
+    $reemplazos = [
+        '{Mayorista}' => $singular,
+        '{Mayoristas}' => $plural,
+        '{mayorista}' => m_minuscula($singular),
+        '{mayoristas}' => m_minuscula($plural),
+    ];
+    foreach ($valores as $k => $v) {
+        $reemplazos['{' . $k . '}'] = (string) $v;
+    }
+    return strtr($texto, $reemplazos);
+}
+
+/** Primera letra en minúscula: "Precio Club" → "precio Club" (para usar un texto a mitad de frase). */
+function m_minuscula(string $s): string
+{
+    return mb_strtolower(mb_substr($s, 0, 1)) . mb_substr($s, 1);
 }
 
 /* ---------------------------------------------------------------- Base de datos */
@@ -92,6 +211,7 @@ function m_db(): PDO
     static $db = null;
     if ($db === null) {
         $db = m_db_abrir(m_config()['db']);
+        m_db_migrar($db);
     }
     return $db;
 }

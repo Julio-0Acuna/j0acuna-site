@@ -1,6 +1,12 @@
 <?php
-/** @var array $carrito @var array $direcciones @var array $errores @var array $previo @var array $horas @var array $cfg @var array $usuario */
+/**
+ * @var array $carrito @var array $direcciones @var array $errores @var array $previo @var array $horas @var array $cfg @var array $usuario
+ * @var bool $con_fecha (modo entrega 'fecha') @var array $fechas ['AAAA-MM-DD' => 'Mañana, mié 18/11']
+ */
+$con_fecha ??= false;
+$fechas ??= [];
 $val = static fn (string $k, string $def = ''): string => is_string($previo[$k] ?? null) ? $previo[$k] : $def;
+$fechaElegida = $val('fecha_entrega', (string) array_key_first($fechas));
 $entrega = $val('entrega', !empty($cfg['retiro']) ? 'retiro' : 'despacho');
 $pago = $val('pago', !empty($cfg['demo']) ? 'prueba' : 'al_recibir');
 $dirElegida = $val('direccion_id', $direcciones ? (string) $direcciones[0]['id'] : '0');
@@ -19,10 +25,10 @@ $err = static fn (string $k): string => isset($errores[$k]) ? '<p class="t-error
         <legend>¿Cómo lo recibes?</legend>
         <div class="t-opciones">
           <?php if (!empty($cfg['retiro'])): ?>
-          <label class="t-opcion"><input type="radio" name="entrega" value="retiro"<?= $entrega === 'retiro' ? ' checked' : '' ?>> <span><strong>Retiro en el local</strong><small><?= m_e(m_texto('retiro_texto', 'Sin costo. Te avisamos cuando esté listo.')) ?></small></span></label>
+          <label class="t-opcion"><input type="radio" name="entrega" value="retiro"<?= $entrega === 'retiro' ? ' checked' : '' ?>> <span><strong><?= m_e(m_texto('retiro_titulo')) ?></strong><small><?= m_e(m_texto('retiro_texto', 'Sin costo. Te avisamos cuando esté listo.')) ?></small></span></label>
           <?php endif; ?>
           <?php if (!empty($cfg['despacho'])): ?>
-          <label class="t-opcion"><input type="radio" name="entrega" value="despacho"<?= $entrega === 'despacho' ? ' checked' : '' ?>> <span><strong>Despacho a domicilio</strong><small>Costo según comuna.</small></span></label>
+          <label class="t-opcion"><input type="radio" name="entrega" value="despacho"<?= $entrega === 'despacho' ? ' checked' : '' ?>> <span><strong><?= m_e(m_texto('despacho_titulo')) ?></strong><small>Costo según comuna.</small></span></label>
           <?php endif; ?>
         </div>
         <?= $err('entrega') ?>
@@ -65,13 +71,33 @@ $err = static fn (string $k): string => isset($errores[$k]) ? '<p class="t-error
           </div>
         </div>
 
+        <?php if ($con_fecha): ?>
+        <div class="t-form-grid">
+          <div class="t-campo">
+            <label for="fecha_entrega"><?= m_e(m_texto('fecha_titulo')) ?></label>
+            <select id="fecha_entrega" name="fecha_entrega" required<?= isset($errores['fecha_entrega']) ? ' aria-invalid="true" aria-describedby="err-fecha_entrega"' : '' ?>>
+              <?php foreach ($fechas as $f => $etiqueta): ?><option value="<?= m_e($f) ?>"<?= $fechaElegida === $f ? ' selected' : '' ?>><?= m_e($etiqueta) ?></option><?php endforeach; ?>
+            </select>
+            <?= $err('fecha_entrega') ?>
+          </div>
+          <div class="t-campo">
+            <label for="cuando"><?= m_e(m_texto('hora_titulo')) ?></label>
+            <select id="cuando" name="cuando">
+              <option value=""><?= m_e(m_texto('hora_cualquiera')) ?></option>
+              <?php foreach ($horas as $h): ?><option value="<?= m_e($h) ?>"<?= $val('cuando') === $h ? ' selected' : '' ?>><?= m_e(m_texto('hora_entrega_fecha', null, ['hora' => $h])) ?></option><?php endforeach; ?>
+            </select>
+          </div>
+        </div>
+        <?php if (m_texto('fecha_ayuda') !== ''): ?><p class="t-pequeno"><?= m_e(m_texto('fecha_ayuda')) ?></p><?php endif; ?>
+        <?php else: ?>
         <div class="t-campo">
-          <label for="cuando">¿Para cuándo?</label>
+          <label for="cuando"><?= m_e(m_texto('cuando_titulo')) ?></label>
           <select id="cuando" name="cuando">
-            <option value="">Lo antes posible</option>
-            <?php foreach ($horas as $h): ?><option value="<?= m_e($h) ?>"<?= $val('cuando') === $h ? ' selected' : '' ?>>Hoy a las <?= m_e($h) ?></option><?php endforeach; ?>
+            <option value=""><?= m_e(m_texto('cuando_pronto')) ?></option>
+            <?php foreach ($horas as $h): ?><option value="<?= m_e($h) ?>"<?= $val('cuando') === $h ? ' selected' : '' ?>><?= m_e(m_texto('hora_entrega', null, ['hora' => $h])) ?></option><?php endforeach; ?>
           </select>
         </div>
+        <?php endif; ?>
         <div class="t-campo">
           <label for="nota">Nota <small>(opcional, máx. 300 caracteres)</small></label>
           <textarea id="nota" name="nota" maxlength="300" rows="2"><?= m_e($val('nota')) ?></textarea>
@@ -102,7 +128,7 @@ $err = static fn (string $k): string => isset($errores[$k]) ? '<p class="t-error
       <p class="t-resumen__fila"><span>Despacho</span><span data-costo-despacho>Según comuna</span></p>
       <p class="t-resumen__fila t-resumen__total"><span>Total</span><strong data-total><?= m_e(m_clp($carrito['subtotal'])) ?></strong></p>
       <button class="t-btn t-btn--primario t-btn--bloque" type="submit">Confirmar pedido</button>
-      <p class="t-pequeno">Comprando como <?= m_e($usuario['nombre']) ?><?= m_es_mayorista($usuario) ? ' (mayorista)' : '' ?>.</p>
+      <p class="t-pequeno">Comprando como <?= m_e($usuario['nombre']) ?><?= m_es_mayorista($usuario) ? ' (' . m_e(m_minuscula(m_texto('mayorista'))) . ')' : '' ?>.</p>
     </aside>
   </form>
 </section>

@@ -5,8 +5,16 @@
  */
 $pestanas = ['resumen' => 'Resumen', 'pedidos' => 'Pedidos', 'productos' => 'Productos'];
 if (!empty($cfg['mayoristas'])) {
-    $pestanas['mayoristas'] = 'Mayoristas' . ($pendientes ? ' (' . count($pendientes) . ')' : '');
+    $pestanas['mayoristas'] = m_texto('mayoristas') . ($pendientes ? ' (' . count($pendientes) . ')' : '');
 }
+/** "Retiro · para el sáb 22/11 a las 17:00" (con fecha) o "Retiro · para las 17:00" (modo hoy). */
+$paraCuando = static function (array $p): string {
+    $fecha = m_fecha_texto((string) ($p['fecha_entrega'] ?? ''), false);
+    if ($fecha !== '') {
+        return ' · para el ' . $fecha . ($p['cuando'] !== '' ? ' a las ' . $p['cuando'] : '');
+    }
+    return $p['cuando'] !== '' ? ' · para las ' . $p['cuando'] : '';
+};
 $siguienteTexto = ['nuevo' => 'Pasar a preparando', 'preparando' => 'Marcar listo', 'listo' => 'Marcar entregado'];
 $bajoStock = array_filter($productos, static fn (array $p): bool => (int) $p['visible'] === 1 && (int) $p['stock'] <= 5);
 ?>
@@ -40,7 +48,7 @@ $bajoStock = array_filter($productos, static fn (array $p): bool => (int) $p['vi
     <div class="t-caja">
       <h2>Avisos</h2>
       <ul class="t-avisos">
-        <?php if ($pendientes): ?><li><a href="<?= m_e(m_url('panel', ['ver' => 'mayoristas'])) ?>"><?= count($pendientes) ?> mayorista(s) esperan aprobación</a></li><?php endif; ?>
+        <?php if ($pendientes): ?><li><a href="<?= m_e(m_url('panel', ['ver' => 'mayoristas'])) ?>"><?= m_e(m_texto('mayoristas_esperan', null, ['n' => count($pendientes)])) ?></a></li><?php endif; ?>
         <?php foreach ($bajoStock as $p): ?><li>Stock bajo: <?= m_e($p['nombre']) ?> (<?= (int) $p['stock'] ?>)</li><?php endforeach; ?>
         <?php if (!$pendientes && !$bajoStock): ?><li>Todo en orden.</li><?php endif; ?>
       </ul>
@@ -66,8 +74,8 @@ $bajoStock = array_filter($productos, static fn (array $p): bool => (int) $p['vi
           <a href="<?= m_e(m_url('pedido', ['id' => $p['id']])) ?>"><strong><?= m_e($p['codigo']) ?></strong></a>
           <span class="t-estado t-estado--<?= m_e($p['estado']) ?>"><?= m_e(M_ESTADOS[$p['estado']]) ?></span>
         </div>
-        <p><?= m_e($p['cliente']) ?><?= $p['tipo_cliente'] === 'mayorista' ? ' · <span class="t-etiqueta">Mayorista</span>' . ($p['cliente_empresa'] !== '' ? ' ' . m_e($p['cliente_empresa']) : '') : '' ?></p>
-        <p class="t-pequeno"><?= m_e(date('d/m H:i', (int) $p['creado_en'])) ?> · <?= $p['entrega'] === 'despacho' ? 'Despacho a ' . m_e($p['comuna']) : 'Retiro' ?><?= $p['cuando'] !== '' ? ' · para las ' . m_e($p['cuando']) : '' ?> · <?= $p['pago'] === 'prueba' ? 'Pago de prueba' : 'Paga al recibir' ?></p>
+        <p><?= m_e($p['cliente']) ?><?= $p['tipo_cliente'] === 'mayorista' ? ' · <span class="t-etiqueta">' . m_e(m_texto('mayorista')) . '</span>' . ($p['cliente_empresa'] !== '' ? ' ' . m_e($p['cliente_empresa']) : '') : '' ?></p>
+        <p class="t-pequeno"><?= m_e(date('d/m H:i', (int) $p['creado_en'])) ?> · <?= $p['entrega'] === 'despacho' ? 'Despacho a ' . m_e($p['comuna']) : 'Retiro' ?><?= m_e($paraCuando($p)) ?> · <?= $p['pago'] === 'prueba' ? 'Pago de prueba' : 'Paga al recibir' ?></p>
         <p class="t-pedido-panel__total"><?= m_e(m_clp((int) $p['total'])) ?></p>
         <div class="t-pedido-panel__acciones">
           <?php if (isset($siguienteTexto[$p['estado']])): ?>
@@ -94,11 +102,11 @@ $bajoStock = array_filter($productos, static fn (array $p): bool => (int) $p['vi
   <div class="t-tabla-envoltura">
     <table class="t-tabla">
       <caption class="demo-sr">Productos de la tienda</caption>
-      <thead><tr><th scope="col">Producto</th><th scope="col">Precio</th><?php if (!empty($cfg['mayoristas'])): ?><th scope="col">Mayorista</th><?php endif; ?><th scope="col">Stock</th><th scope="col">Visible</th><th scope="col"><span class="demo-sr">Acciones</span></th></tr></thead>
+      <thead><tr><th scope="col">Producto</th><th scope="col">Precio</th><?php if (!empty($cfg['mayoristas'])): ?><th scope="col"><?= m_e(m_texto('mayorista')) ?></th><?php endif; ?><th scope="col">Stock</th><th scope="col">Visible</th><th scope="col"><span class="demo-sr">Acciones</span></th></tr></thead>
       <tbody>
         <?php foreach ($productos as $p): ?>
         <tr class="<?= (int) $p['visible'] ? '' : 'is-oculto' ?>">
-          <th scope="row"><?= m_e($p['nombre']) ?><small><?= m_e($p['categoria_nombre']) ?><?= (int) $p['solo_mayorista'] ? ' · solo mayoristas' : '' ?></small></th>
+          <th scope="row"><?= m_e($p['nombre']) ?><small><?= m_e($p['categoria_nombre']) ?><?= (int) $p['solo_mayorista'] ? ' · ' . m_e(m_minuscula(m_texto('solo_mayoristas'))) : '' ?></small></th>
           <td><?= m_e(m_clp((int) $p['precio'])) ?></td>
           <?php if (!empty($cfg['mayoristas'])): ?><td><?= $p['precio_mayorista'] !== null ? m_e(m_clp((int) $p['precio_mayorista'])) : '—' ?></td><?php endif; ?>
           <td class="<?= (int) $p['stock'] <= 5 ? 't-alerta' : '' ?>"><?= (int) $p['stock'] ?></td>
@@ -134,7 +142,7 @@ $bajoStock = array_filter($productos, static fn (array $p): bool => (int) $p['vi
     </ul>
   </div>
   <div class="t-caja">
-    <h2>Mayoristas aprobados</h2>
+    <h2><?= m_e(m_texto('mayoristas_aprobados')) ?></h2>
     <ul class="t-mayoristas">
       <?php foreach ($aprobados as $m): ?>
       <li><div><strong><?= m_e($m['empresa'] !== '' ? $m['empresa'] : $m['nombre']) ?></strong><span><?= m_e($m['nombre']) ?> · <?= m_e($m['email']) ?></span></div></li>

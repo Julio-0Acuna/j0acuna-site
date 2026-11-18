@@ -20,6 +20,49 @@ function m_db_abrir(string $ruta): PDO
     return $db;
 }
 
+/** Columnas agregadas al esquema después de la primera versión: tabla => [columna => definición]. */
+const M_COLUMNAS_NUEVAS = [
+    'pedidos' => ['fecha_entrega' => "TEXT NOT NULL DEFAULT ''"],
+];
+
+/**
+ * Agrega a una base existente las columnas nuevas del esquema (sin borrar datos). Así una base
+ * creada antes del cambio sigue funcionando hasta su reinicio, y la de un cliente real
+ * ('reinicio_segundos' => 0) se actualiza sola. Es idempotente.
+ */
+function m_db_migrar(PDO $db): void
+{
+    foreach (M_COLUMNAS_NUEVAS as $tabla => $columnas) {
+        $existentes = array_column($db->query('PRAGMA table_info(' . $tabla . ')')->fetchAll(), 'name');
+        if ($existentes === []) {
+            continue;
+        }
+        foreach ($columnas as $columna => $definicion) {
+            if (in_array($columna, $existentes, true)) {
+                continue;
+            }
+            try {
+                $db->exec('ALTER TABLE ' . $tabla . ' ADD COLUMN ' . $columna . ' ' . $definicion);
+            } catch (PDOException $e) {
+                // Otra visita la agregó al mismo tiempo.
+                if (!str_contains($e->getMessage(), 'duplicate column')) {
+                    throw $e;
+                }
+            }
+        }
+    }
+}
+
+/** Fecha de entrega de un pedido del seed: entero = días desde la creación de la base, o 'AAAA-MM-DD'. */
+function m_seed_fecha(mixed $valor, array $cfg, int $ahora): string
+{
+    if (is_int($valor)) {
+        $tz = new DateTimeZone($cfg['zona_horaria'] ?? DEMO_ZONA_HORARIA);
+        return (new DateTimeImmutable('@' . $ahora))->setTimezone($tz)->modify(($valor >= 0 ? '+' : '') . $valor . ' days')->format('Y-m-d');
+    }
+    return is_string($valor) && m_fecha_valida($valor) ? $valor : '';
+}
+
 /** Fecha de creación guardada en la tabla meta, o null si la base no existe o está dañada. */
 function m_db_creada_en(string $ruta): ?int
 {
@@ -176,6 +219,7 @@ function m_seed_cargar(PDO $db, array $seed, array $cfg, int $ahora): void
             'comuna' => $p['comuna'] ?? '',
             'direccion' => $p['direccion'] ?? '',
             'cuando' => $p['cuando'] ?? '',
+            'fecha_entrega' => m_seed_fecha($p['fecha_entrega'] ?? '', $cfg, $ahora),
             'nota' => $p['nota'] ?? '',
             'subtotal' => $subtotal,
             'costo_despacho' => $despacho,

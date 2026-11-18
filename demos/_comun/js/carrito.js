@@ -6,6 +6,11 @@
  *   form.demo-agregar[data-id]  (con <select name="variante"> opcional) → agrega
  *   [data-carrito-cantidad]     → cantidad total de productos
  *   [data-carrito]              → página del pedido (lista + formulario)
+ *   [data-carrito-extra="Etiqueta"] dentro del formulario del pedido → campo extra que va al mensaje
+ *       como "Etiqueta: valor" (ej. <input name="mensaje_torta" data-carrito-extra="Mensaje en la torta">).
+ *       En un <select> va el texto de la opción elegida (las opciones con value="" no se envían);
+ *       en checkbox/radio solo el marcado (data-carrito-extra-valor cambia el "Sí"). Los campos vacíos
+ *       o dentro de un bloque oculto ([hidden], ej. data-solo-despacho) no se envían.
  */
 (function () {
   'use strict';
@@ -196,6 +201,34 @@
     return String(texto || '').replace(/\s+/g, ' ').trim().slice(0, max);
   }
 
+  /** Valor de un campo extra para el mensaje ('' = no se envía). */
+  function valorExtra(el) {
+    if (el.closest && el.closest('[hidden]')) { return ''; }
+    var tipo = String(el.type || '').toLowerCase();
+    if (tipo === 'checkbox' || tipo === 'radio') {
+      if (!el.checked) { return ''; }
+      return limpiar(el.getAttribute('data-carrito-extra-valor') || (tipo === 'radio' && el.value ? el.value : 'Sí'), 120);
+    }
+    if (String(el.tagName).toUpperCase() === 'SELECT') {
+      var op = el.options[el.selectedIndex];
+      return op && op.value !== '' ? limpiar(op.text, 120) : '';
+    }
+    var max = parseInt(el.getAttribute('maxlength'), 10);
+    return limpiar(el.value, max > 0 && max < 300 ? max : 300);
+  }
+
+  /** Líneas "Etiqueta: valor" de los campos [data-carrito-extra] del formulario. */
+  function lineasExtra(form) {
+    var lineas = [];
+    if (!form.querySelectorAll) { return lineas; }
+    Array.prototype.forEach.call(form.querySelectorAll('[data-carrito-extra]'), function (el) {
+      var valor = valorExtra(el);
+      var etiqueta = limpiar(el.getAttribute('data-carrito-extra') || el.name, 60);
+      if (valor && etiqueta) { lineas.push(etiqueta + ': ' + valor); }
+    });
+    return lineas;
+  }
+
   function mensaje(form) {
     var items = leer();
     var sub = subtotal(items);
@@ -213,6 +246,7 @@
       lineas.push('Total: ' + clp(sub));
       lineas.push('Entrega: retiro en el local' + (form.elements.hora && form.elements.hora.value ? ' a las ' + form.elements.hora.value : ''));
     }
+    lineasExtra(form).forEach(function (l) { lineas.push(l); });
     var nombre = limpiar(form.elements.nombre.value, 60);
     if (nombre) { lineas.push('Nombre: ' + nombre); }
     var nota = limpiar(form.elements.nota.value, 200);

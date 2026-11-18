@@ -4,7 +4,7 @@
   <?php if (!$carrito['lineas']): ?>
     <div class="t-vacio">
       <p>Tu carrito está vacío.</p>
-      <a class="t-btn t-btn--primario" href="<?= m_e($cfg['url_base']) ?>#menu">Ver el menú</a>
+      <a class="t-btn t-btn--primario" href="<?= m_e($cfg['url_base']) ?>#menu"><?= m_e(m_texto('ver_catalogo')) ?></a>
     </div>
   <?php else: ?>
     <ul class="t-lineas">
@@ -15,7 +15,7 @@
         <?php endif; ?>
         <div class="t-linea__info">
           <strong><?= m_e($p['nombre']) ?></strong>
-          <span><?= m_e(m_clp($l['precio'])) ?> c/u<?= m_es_mayorista($usuario) && $p['precio_mayorista'] !== null ? ' · precio mayorista' : '' ?></span>
+          <span><?= m_e(m_clp($l['precio'])) ?> c/u<?= m_es_mayorista($usuario) && $p['precio_mayorista'] !== null ? ' · ' . m_e(m_minuscula(m_texto('precio_mayorista'))) : '' ?></span>
         </div>
         <form class="t-linea__cantidad" method="post" action="<?= m_e(m_url('carrito')) ?>">
           <?= m_csrf_campo() ?>

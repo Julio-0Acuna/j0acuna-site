@@ -62,6 +62,8 @@ CREATE TABLE pedidos (
   comuna TEXT NOT NULL DEFAULT '',
   direccion TEXT NOT NULL DEFAULT '',
   cuando TEXT NOT NULL DEFAULT '',
+  -- 'AAAA-MM-DD' en modo entrega 'fecha'; '' en modo 'hoy'. Al agregar columnas, súmalas también a M_COLUMNAS_NUEVAS (db.php).
+  fecha_entrega TEXT NOT NULL DEFAULT '',
   nota TEXT NOT NULL DEFAULT '',
   subtotal INTEGER NOT NULL,
   costo_despacho INTEGER NOT NULL DEFAULT 0,

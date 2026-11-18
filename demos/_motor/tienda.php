@@ -10,6 +10,8 @@ const M_ESTADOS = ['nuevo' => 'Nuevo', 'preparando' => 'Preparando', 'listo' => 
 const M_SIGUIENTE = ['nuevo' => 'preparando', 'preparando' => 'listo', 'listo' => 'entregado'];
 const M_MAX_CANTIDAD = 50;
 const M_MAX_DIRECCIONES = 5;
+/** Opciones de config['entrega'] (ver m_entrega_cfg). */
+const M_ENTREGA_BASE = ['modo' => 'hoy', 'dias_min' => 0, 'dias_max' => 14, 'cerrado' => null, 'horas' => null];
 
 /* ---------------------------------------------------------------- Precios */
 
@@ -375,11 +377,11 @@ function m_pedido_codigo(array $cfg, int $id): string
 function m_pedido_insertar(PDO $db, array $cfg, array $p, array $items): int
 {
     $ahora = $p['creado_en'] ?? time();
-    $db->prepare('INSERT INTO pedidos (codigo, usuario_id, tipo_cliente, entrega, comuna, direccion, cuando, nota, subtotal, costo_despacho, total, pago, pagado, estado, creado_en, actualizado_en)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+    $db->prepare('INSERT INTO pedidos (codigo, usuario_id, tipo_cliente, entrega, comuna, direccion, cuando, fecha_entrega, nota, subtotal, costo_despacho, total, pago, pagado, estado, creado_en, actualizado_en)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
         ->execute([
             'tmp-' . bin2hex(random_bytes(6)), $p['usuario_id'], $p['tipo_cliente'], $p['entrega'], $p['comuna'], $p['direccion'],
-            $p['cuando'], $p['nota'], $p['subtotal'], $p['costo_despacho'], $p['subtotal'] + $p['costo_despacho'],
+            $p['cuando'], $p['fecha_entrega'] ?? '', $p['nota'], $p['subtotal'], $p['costo_despacho'], $p['subtotal'] + $p['costo_despacho'],
             $p['pago'], $p['pagado'], $p['estado'] ?? 'nuevo', $ahora, $ahora,
         ]);
     $id = (int) $db->lastInsertId();
@@ -409,6 +411,10 @@ function m_checkout_validar(PDO $db, array $cfg, array $usuario, array $post, in
     // El pago de prueba solo existe en modo demo; un cliente real conecta su pasarela aquí.
     $pago = $v->opcion('pago', 'cómo pagar', !empty($cfg['demo']) ? ['prueba', 'al_recibir'] : ['al_recibir']);
     $cuando = $v->opcion('cuando', 'para cuándo', array_merge([''], m_horas_entrega($cfg)), false);
+    // Modo 'fecha': el día debe estar en la lista calculada aquí; en modo 'hoy' no se lee.
+    $fecha = m_entrega_con_fecha($cfg)
+        ? $v->opcion('fecha_entrega', $entrega === 'despacho' ? 'el día de entrega' : 'el día de retiro', array_map('strval', array_keys(m_fechas_entrega($cfg))))
+        : '';
     $nota = $v->texto('nota', 'la nota', 300, false);
     $comuna = '';
     $direccion = '';
@@ -443,6 +449,7 @@ function m_checkout_validar(PDO $db, array $cfg, array $usuario, array $post, in
         'entrega' => $entrega,
         'pago' => $pago,
         'cuando' => $cuando,
+        'fecha_entrega' => $fecha,
         'nota' => $nota,
         'comuna' => $comuna,
         'direccion' => $direccion,
@@ -450,10 +457,103 @@ function m_checkout_validar(PDO $db, array $cfg, array $usuario, array $post, in
     ], []];
 }
 
+/* ---------------------------------------------------------------- Fecha de entrega o retiro */
+
+/**
+ * config['entrega'] con sus valores por defecto:
+ *   modo      'hoy' (por defecto: solo se elige la hora, como siempre) o 'fecha' (el cliente elige el día);
+ *   dias_min  primer día que se ofrece, contado desde hoy (0 = hoy, 1 = mañana...);
+ *   dias_max  último día que se ofrece, contado desde hoy;
+ *   cerrado   días sin entrega: 1..7 (lunes..domingo) o fechas 'AAAA-MM-DD' (feriados).
+ *             Si no se indica, se cierran los días sin horario en negocio['horario'];
+ *   horas     ['desde', 'hasta'] para las horas ofrecidas (cada 30 min); si no, 'horas_entrega'.
+ */
+function m_entrega_cfg(array $cfg): array
+{
+    $e = array_replace(M_ENTREGA_BASE, is_array($cfg['entrega'] ?? null) ? $cfg['entrega'] : []);
+    $e['modo'] = $e['modo'] === 'fecha' ? 'fecha' : 'hoy';
+    $e['dias_min'] = max(0, (int) $e['dias_min']);
+    $e['dias_max'] = max($e['dias_min'], (int) $e['dias_max']);
+    if (is_array($e['cerrado'])) {
+        $cerrado = [];
+        foreach ($e['cerrado'] as $c) {
+            if ((is_int($c) || (is_string($c) && ctype_digit($c))) && (int) $c >= 1 && (int) $c <= 7) {
+                $cerrado[] = (int) $c;
+            } elseif (is_string($c) && m_fecha_valida($c)) {
+                $cerrado[] = $c;
+            }
+        }
+        $e['cerrado'] = $cerrado;
+    } else {
+        $e['cerrado'] = [];
+        $horario = $cfg['negocio']['horario'] ?? null;
+        if (is_array($horario)) {
+            for ($d = 1; $d <= 7; $d++) {
+                if (empty($horario[$d])) {
+                    $e['cerrado'][] = $d;
+                }
+            }
+        }
+    }
+    return $e;
+}
+
+/** ¿El cliente elige el día de entrega o retiro? */
+function m_entrega_con_fecha(array $cfg): bool
+{
+    return m_entrega_cfg($cfg)['modo'] === 'fecha';
+}
+
+/**
+ * Días que se ofrecen en el checkout (modo 'fecha'), calculados en el servidor.
+ * @return array<string, string> ['2026-11-18' => 'Mañana, mié 18/11', '2026-11-19' => 'Jue 19/11', ...]
+ */
+function m_fechas_entrega(array $cfg, ?int $ahora = null): array
+{
+    $e = m_entrega_cfg($cfg);
+    if ($e['modo'] !== 'fecha') {
+        return [];
+    }
+    $tz = new DateTimeZone($cfg['zona_horaria'] ?? DEMO_ZONA_HORARIA);
+    $hoy = (new DateTimeImmutable('@' . ($ahora ?? time())))->setTimezone($tz)->setTime(0, 0);
+    $fechas = [];
+    for ($i = $e['dias_min']; $i <= $e['dias_max']; $i++) {
+        $d = $hoy->modify('+' . $i . ' days');
+        $clave = $d->format('Y-m-d');
+        if (in_array((int) $d->format('N'), $e['cerrado'], true) || in_array($clave, $e['cerrado'], true)) {
+            continue;
+        }
+        $corta = demo_fecha_corta($d);
+        $fechas[$clave] = match ($i) {
+            0 => 'Hoy, ' . $corta,
+            1 => 'Mañana, ' . $corta,
+            default => mb_strtoupper(mb_substr($corta, 0, 1)) . mb_substr($corta, 1),
+        };
+    }
+    return $fechas;
+}
+
+/** ¿Es una fecha real con formato AAAA-MM-DD? */
+function m_fecha_valida(string $ymd): bool
+{
+    $d = DateTimeImmutable::createFromFormat('!Y-m-d', $ymd);
+    return $d !== false && $d->format('Y-m-d') === $ymd;
+}
+
+/** Fecha guardada en el pedido, para mostrar: "sábado 22 de noviembre" o, corta, "sáb 22/11". '' si no es válida. */
+function m_fecha_texto(string $ymd, bool $larga = true): string
+{
+    if (!m_fecha_valida($ymd)) {
+        return '';
+    }
+    $d = new DateTimeImmutable($ymd);
+    return $larga ? demo_fecha_larga($d) : demo_fecha_corta($d);
+}
+
 /** Horas ofrecidas para retiro o entrega (cada 30 min dentro del horario de cocina). */
 function m_horas_entrega(array $cfg): array
 {
-    [$desde, $hasta] = $cfg['horas_entrega'] ?? ['12:00', '23:00'];
+    [$desde, $hasta] = m_entrega_cfg($cfg)['horas'] ?? $cfg['horas_entrega'] ?? ['12:00', '23:00'];
     $horas = [];
     for ($m = demo_minutos($desde); $m <= demo_minutos($hasta); $m += 30) {
         $horas[] = sprintf('%02d:%02d', intdiv($m, 60), $m % 60);
@@ -483,6 +583,11 @@ function m_pedido_crear(PDO $db, array $cfg, array $usuario, array $datos, bool 
         }
         $despacho = $costo;
     }
+    $fecha = m_entrega_con_fecha($cfg) ? (string) ($datos['fecha_entrega'] ?? '') : '';
+    // Se vuelve a revisar: entre el checkout y el pago de prueba puede pasar la medianoche.
+    if (m_entrega_con_fecha($cfg) && !array_key_exists($fecha, m_fechas_entrega($cfg))) {
+        return [null, 'Ese día ya no está disponible. Elige otro.'];
+    }
     $db->beginTransaction();
     try {
         $baja = $db->prepare('UPDATE productos SET stock = stock - ? WHERE id = ? AND stock >= ?');
@@ -502,6 +607,7 @@ function m_pedido_crear(PDO $db, array $cfg, array $usuario, array $datos, bool 
             'comuna' => $datos['comuna'],
             'direccion' => $datos['direccion'],
             'cuando' => $datos['cuando'],
+            'fecha_entrega' => $fecha,
             'nota' => $datos['nota'],
             'subtotal' => $carrito['subtotal'],
             'costo_despacho' => $despacho,

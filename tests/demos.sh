@@ -5,16 +5,19 @@
 cd "$(dirname "$0")/.." || exit 1
 
 PORT=8098
+# Segundo servidor: tienda de prueba del motor con fecha de entrega y textos propios (fuera de demos/).
+PORT2=8089
 BASE="http://127.0.0.1:$PORT"
 TIENDA="/demos/pizzeria/plataforma/"
 # Ruta absoluta: el router hace chdir a la carpeta de cada página.
 export PORTFOLIO_SITE_FILE="$(pwd)/${SITE_JSON:-tests/fixtures/site.json}"
 export PORTFOLIO_SITE_URL="$BASE"
 TMP="$(mktemp -d)"
+SERVER2_PID=""
 
 tools/php.sh -S 127.0.0.1:$PORT tools/router.php > "$TMP/server.log" 2>&1 &
 SERVER_PID=$!
-trap 'kill $SERVER_PID 2>/dev/null; rm -rf "$TMP"; powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort '"$PORT"' -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id \$_.OwningProcess -Force }" >/dev/null 2>&1' EXIT
+trap 'kill $SERVER_PID $SERVER2_PID 2>/dev/null; rm -rf "$TMP"; powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort '"$PORT,$PORT2"' -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id \$_.OwningProcess -Force }" >/dev/null 2>&1' EXIT
 for _ in 1 2 3 4 5 6 7 8 9 10; do curl -s -o /dev/null "$BASE/" && break; sleep 0.3; done
 
 # Base de la tienda recién creada (mismo comando que el cron).
@@ -118,6 +121,11 @@ debe_contener    "${TIENDA}?r=ingresar" 'mayorista@demo.cl'
 debe_contener    "${TIENDA}?r=ingresar" 'dueno@demo.cl'
 debe_contener    "${TIENDA}?r=registro" 'No ingreses datos reales; esta demo se borra cada hora.'
 debe_responder   "${TIENDA}?r=no-existe" 404
+# Textos del motor sin configurar: los de siempre
+debe_contener    "$TIENDA" 'Crear cuenta mayorista'
+debe_contener    "$TIENDA" '<figcaption>Código QR del menú</figcaption>'
+debe_contener    "${TIENDA}?r=registro" '<strong>Mayorista</strong>'
+debe_contener    "${TIENDA}?r=registro" '(solo mayoristas)'
 
 # --- Flujo con cookies (textos ASCII o ya codificados: Git Bash en Windows no pasa bien UTF-8 a curl.exe)
 J1="$TMP/cliente.txt"; J2="$TMP/dueno.txt"; J3="$TMP/mayorista.txt"
@@ -147,7 +155,11 @@ R=$(post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode
 case "$R" in 303*) pasa "agregar al carrito ($R)";; *) falla "agregar al carrito: $R";; esac
 curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'Pepperoni Cohete' && pasa "el carrito tiene el producto" || falla "carrito vacío"
 
-T=$(csrf "$J1" "${TIENDA}?r=checkout")
+CHK=$(curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout")
+printf '%s' "$CHK" | grep -qF '>Hoy a las 12:30</option>' && pasa "checkout de la pizzería ofrece «Hoy a las …» (modo hoy)" || falla "checkout de la pizzería sin «Hoy a las …»"
+printf '%s' "$CHK" | grep -qF '¿Para cuándo?' && pasa "checkout de la pizzería pregunta «¿Para cuándo?»" || falla "checkout de la pizzería sin «¿Para cuándo?»"
+printf '%s' "$CHK" | grep -qF 'name="fecha_entrega"' && falla "la pizzería pide fecha de entrega y no debería" || pasa "la pizzería no pide fecha de entrega"
+T=$(printf '%s' "$CHK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data "comuna=Maip%C3%BA" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Sin cebolla")
 case "$R" in 303*r=pedido*) pasa "checkout crea el pedido ($R)";; *) falla "checkout: $R";; esac
 PEDIDO_URL="${R#* }"
@@ -158,6 +170,9 @@ printf '%s' "$PAGINA" | grep -qF 'Enviar resumen por WhatsApp' && pasa "pedido o
 printf '%s' "$PAGINA" | grep -qF '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20pizzer%C3%ADa%20%E2%80%93%20Plataforma%20web%29' && pasa "resumen con la nota de prueba" || falla "resumen sin la nota de prueba"
 # $10.990 × 2 + despacho Maipú $0 (gratis sobre $20.000) = $21.980
 printf '%s' "$PAGINA" | grep -qF '$21.980' && pasa "total con despacho gratis sobre \$20.000" || falla "total del pedido inesperado"
+printf '%s' "$PAGINA" | grep -qF 'Pago%3A%20al%20recibir%0ANota%3A%20Sin%20cebolla' && pasa "resumen de WhatsApp con la nota del cliente" || falla "resumen de WhatsApp sin la nota del cliente"
+printf '%s' "$PAGINA" | grep -qF '¡Pedido recibido! Pagas al recibir.' && pasa "mensaje de éxito de siempre (pago al recibir)" || falla "sin mensaje de éxito del pedido"
+printf '%s' "$PAGINA" | grep -qF '<dt>Para</dt><dd>Lo antes posible</dd>' && pasa "pedido sin hora: «Lo antes posible»" || falla "pedido sin «Lo antes posible»"
 
 # Pago de prueba: checkout → pantalla simulada → aprobar
 T=$(csrf "$J1" "$TIENDA")
@@ -169,6 +184,7 @@ curl -s -b "$J1" "$BASE${TIENDA}?r=pago" | grep -qF 'PAGO DE PRUEBA' && pasa "pa
 T=$(csrf "$J1" "${TIENDA}?r=pago")
 R=$(post "$J1" "${TIENDA}?r=pago" --data-urlencode "csrf=$T" --data-urlencode "accion=aprobar")
 case "$R" in 303*r=pedido*) pasa "aprobar pago de prueba crea el pedido";; *) falla "aprobar pago: $R";; esac
+curl -s -b "$J1" "${R#* }" | grep -qF 'Tu pedido ya está en la cocina.' && pasa "mensaje de éxito de siempre (pago de prueba)" || falla "sin mensaje de éxito del pago de prueba"
 
 # Repetir pedido desde el historial
 T=$(csrf "$J1" "${TIENDA}?r=cuenta")
@@ -236,11 +252,176 @@ case "$R" in 422*) grep -qF 'límite de registros' "$TMP/ultima.html" && pasa "6
 # Deja la base limpia para quien la mire después.
 tools/php.sh demos/pizzeria/plataforma/reset.php > /dev/null
 
-if grep -qiE 'fatal|warning|deprecated|notice' "$TMP/server.log"; then
-  falla "el servidor registró errores de PHP:"; grep -iE 'fatal|warning|deprecated|notice' "$TMP/server.log" | head -5
+# --- Motor: fecha de entrega y textos propios, en una tienda de prueba (config en $TMP, otro puerto).
+# No cambia ningún rubro: así probaría su config un rubro con 'entrega' => ['modo' => 'fecha', ...].
+F="$TMP/fecha"; B2="http://127.0.0.1:$PORT2"
+mkdir -p "$F"
+RAIZ="$(pwd -W 2>/dev/null || pwd)"
+printf "<?php\nrequire '%s/demos/_motor/motor.php';\nm_ejecutar(require __DIR__ . '/config.php');\n" "$RAIZ" > "$F/index.php"
+cat > "$F/config.php" <<'PHP'
+<?php
+return [
+    'demo' => true,
+    'rubro' => ['rubro_nombre' => 'prueba', 'url_rubro' => '/demos/'],
+    'url_base' => '/',
+    'db' => __DIR__ . '/tienda.sqlite',
+    'seed' => __DIR__ . '/seed.php',
+    'reinicio_segundos' => 0,
+    'sesion' => 'demo_prueba_fecha',
+    'prefijo_pedido' => 'PF',
+    'negocio' => ['nombre' => 'Tienda Fecha'],
+    'mayoristas' => true,
+    'comunas' => ['Macul' => 2000],
+    'horas_entrega' => ['10:00', '18:00'],
+    'menu_qr' => true,
+    'entrega' => ['modo' => 'fecha', 'dias_min' => 1, 'dias_max' => 10, 'cerrado' => [1]],
+    'textos' => [
+        'mayorista' => 'Empresa',
+        'mayoristas' => 'Empresas',
+        'crear_cuenta_mayorista' => 'Crear cuenta para empresas',
+        'mayoristas_aprobados' => 'Empresas aprobadas',
+        'qr_pie' => 'QR de la tienda de prueba',
+        'hora_entrega_fecha' => 'Retiro a las {hora}',
+        'pedido_exito_al_recibir' => 'Encargo recibido: te esperamos.',
+        'pedido_exito_prueba' => 'Pago de prueba aprobado: encargo agendado.',
+    ],
+];
+PHP
+cat > "$F/seed.php" <<'PHP'
+<?php
+return [
+    'categorias' => [['slug' => 'tortas', 'nombre' => 'Tortas'], ['slug' => 'empresas', 'nombre' => 'Para empresas']],
+    'productos' => [
+        ['slug' => 'torta', 'categoria' => 'tortas', 'nombre' => 'Torta de prueba', 'precio' => 20000, 'stock' => 50],
+        ['slug' => 'bandeja', 'categoria' => 'empresas', 'nombre' => 'Bandeja de prueba', 'precio' => 50000, 'precio_mayorista' => 40000, 'stock' => 10, 'solo_mayorista' => true],
+    ],
+    'usuarios' => [
+        ['email' => 'cliente@demo.cl', 'clave' => 'cliente123', 'nombre' => 'Cliente Fecha'],
+        ['email' => 'dueno@demo.cl', 'clave' => 'dueno123', 'nombre' => 'Duena', 'rol' => 'dueno'],
+        ['email' => 'pendiente@demo.cl', 'clave' => 'pendiente123', 'nombre' => 'Pendiente', 'tipo' => 'mayorista', 'estado' => 'pendiente', 'empresa' => 'Oficina X'],
+    ],
+    'pedidos' => [
+        ['usuario' => 'cliente@demo.cl', 'hace_min' => 30, 'estado' => 'nuevo', 'entrega' => 'retiro', 'pago' => 'al_recibir', 'fecha_entrega' => 3, 'cuando' => '11:00', 'items' => [['torta', 1]]],
+    ],
+];
+PHP
+tools/php.sh -S 127.0.0.1:$PORT2 -t "$F" > "$TMP/server2.log" 2>&1 &
+SERVER2_PID=$!
+for _ in 1 2 3 4 5 6 7 8 9 10; do curl -s -o /dev/null "$B2/" && break; sleep 0.3; done
+
+csrf2() { curl -s -b "$1" -c "$1" "$B2$2" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/'; }
+post2() { local jar=$1 url=$2; shift 2; curl -s -o "$TMP/ultima2.html" -b "$jar" -c "$jar" -w "%{http_code} %{redirect_url}" "$@" "$B2$url"; }
+
+INI2=$(curl -s "$B2/")
+printf '%s' "$INI2" | grep -qF 'Crear cuenta para empresas' && pasa "textos propios: botón «Crear cuenta para empresas»" || falla "textos propios: falta el botón de cuenta para empresas"
+printf '%s' "$INI2" | grep -qF 'Crear cuenta mayorista' && falla "textos propios: sigue el botón «Crear cuenta mayorista»" || pasa "textos propios: reemplazan «Crear cuenta mayorista»"
+printf '%s' "$INI2" | grep -qF '<figcaption>QR de la tienda de prueba</figcaption>' && pasa "textos propios: pie del QR" || falla "textos propios: pie del QR sin cambiar"
+curl -s "$B2/?r=registro" | grep -qF '<strong>Empresa</strong>' && pasa "textos propios: registro ofrece cuenta «Empresa»" || falla "textos propios: registro sin «Empresa»"
+
+K1="$TMP/f-cliente.txt"; K2="$TMP/f-dueno.txt"
+T=$(csrf2 "$K1" "/?r=ingresar")
+post2 "$K1" "/?r=ingresar" --data-urlencode "csrf=$T" --data-urlencode "email=cliente@demo.cl" --data-urlencode "clave=cliente123" > /dev/null
+INI2=$(curl -s -b "$K1" -c "$K1" "$B2/")
+PID2=$(printf '%s' "$INI2" | grep -oE 'name="producto_id" value="[0-9]+"' | head -1 | grep -oE '[0-9]+')
+T=$(printf '%s' "$INI2" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
+post2 "$K1" "/?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID2" > /dev/null
+
+CHK2=$(curl -s -b "$K1" -c "$K1" "$B2/?r=checkout")
+printf '%s' "$CHK2" | grep -qF '<select id="fecha_entrega" name="fecha_entrega" required>' && pasa "modo fecha: el checkout pide el día" || falla "modo fecha: el checkout no pide el día"
+printf '%s' "$CHK2" | grep -qF '>Retiro a las 10:00</option>' && pasa "modo fecha: horas con texto propio" || falla "modo fecha: horas sin texto propio"
+printf '%s' "$CHK2" | grep -qF 'Hoy a las' && falla "modo fecha: aparece «Hoy a las …»" || pasa "modo fecha: sin «Hoy a las …»"
+DIAS=$(printf '%s' "$CHK2" | grep -oE '<option value="20[0-9]{2}-[0-9]{2}-[0-9]{2}"' | grep -oE '20[0-9-]+')
+[ "$(printf '%s\n' "$DIAS" | grep -c .)" -ge 8 ] && pasa "modo fecha: ofrece los días de mañana a 10 días ($(printf '%s\n' "$DIAS" | grep -c .))" || falla "modo fecha: pocos días ofrecidos"
+printf '%s\n' "$DIAS" | grep -qx "$(date +%F)" && falla "modo fecha: ofrece hoy con dias_min 1" || pasa "modo fecha: dias_min 1 no ofrece hoy"
+LUNES_OFRECIDO=0; for d in $DIAS; do [ "$(date -d "$d" +%u)" = 1 ] && LUNES_OFRECIDO=1; done
+[ "$LUNES_OFRECIDO" = 0 ] && pasa "modo fecha: no ofrece los lunes (cerrado)" || falla "modo fecha: ofrece un lunes cerrado"
+DIA=$(printf '%s\n' "$DIAS" | sed -n 2p)
+DIA_NUM=$(date -d "$DIA" +%-d); DIA_CORTO=$(date -d "$DIA" +%-d/%-m)
+LUNES=$(date -d "+1 day" +%F); while [ "$(date -d "$LUNES" +%u)" != 1 ]; do LUNES=$(date -d "$LUNES +1 day" +%F); done
+T=$(printf '%s' "$CHK2" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
+for MALA in "" "1999-01-01" "$LUNES" "$(date +%F)" "<b>x</b>"; do
+  RR=$(post2 "$K1" "/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$MALA")
+  case "$RR" in 422*) grep -qF 'id="err-fecha_entrega"' "$TMP/ultima2.html" && pasa "modo fecha: rechaza la fecha «$MALA»" || falla "modo fecha: «$MALA» sin error en el campo";; *) falla "modo fecha: acepta la fecha «$MALA» ($RR)";; esac
+done
+RR=$(post2 "$K1" "/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$DIA" --data-urlencode "cuando=13:00" --data-urlencode "nota=Sin nueces")
+case "$RR" in 303*r=pedido*) pasa "modo fecha: checkout crea el pedido para el $DIA";; *) falla "modo fecha: checkout: $RR";; esac
+PED2_URL="${RR#* }"
+PED2=$(curl -s -b "$K1" "$PED2_URL")
+printf '%s' "$PED2" | grep -qF 'Encargo recibido: te esperamos.' && pasa "textos propios: mensaje de éxito del pedido" || falla "textos propios: mensaje de éxito sin cambiar"
+printf '%s' "$PED2" | grep -qE "<dt>Para</dt><dd>[^<]+ $DIA_NUM de [a-z]+, a las 13:00</dd>" && pasa "modo fecha: la página del pedido muestra el día y la hora" || falla "modo fecha: la página del pedido no muestra el día"
+printf '%s' "$PED2" | grep -qE "Para%20el%20[^\"]*%20${DIA_NUM}%20de%20[a-z]+%20a%20las%2013%3A00%0APago%3A%20al%20recibir%0ANota%3A%20Sin%20nueces" && pasa "modo fecha: el resumen de WhatsApp lleva el día y la nota" || falla "modo fecha: el resumen de WhatsApp sin el día o la nota"
+T=$(csrf2 "$K1" "/")
+post2 "$K1" "/?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID2" > /dev/null
+T=$(csrf2 "$K1" "/?r=checkout")
+RR=$(post2 "$K1" "/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=prueba" --data-urlencode "fecha_entrega=$DIA")
+case "$RR" in 303*r=pago*) pasa "modo fecha: pago de prueba lleva a la pantalla simulada";; *) falla "modo fecha: pago de prueba: $RR";; esac
+T=$(csrf2 "$K1" "/?r=pago")
+RR=$(post2 "$K1" "/?r=pago" --data-urlencode "csrf=$T" --data-urlencode "accion=aprobar")
+PED3=$(curl -s -b "$K1" "${RR#* }")
+printf '%s' "$PED3" | grep -qE "<dt>Para</dt><dd>[^<]+ $DIA_NUM de [a-z]+, durante el d" && pasa "modo fecha: el pago de prueba conserva el día" || falla "modo fecha: el pago de prueba perdió el día ($RR)"
+printf '%s' "$PED3" | grep -qF 'Pago de prueba aprobado: encargo agendado.' && pasa "textos propios: mensaje del pago de prueba" || falla "textos propios: mensaje del pago de prueba sin cambiar"
+
+T=$(csrf2 "$K2" "/?r=ingresar")
+post2 "$K2" "/?r=ingresar" --data-urlencode "csrf=$T" --data-urlencode "email=dueno@demo.cl" --data-urlencode "clave=dueno123" > /dev/null
+PANEL2=$(curl -s -b "$K2" "$B2/?r=panel&ver=pedidos")
+printf '%s' "$PANEL2" | grep -qE "· para el [^ <]+ $DIA_CORTO a las 13:00 ·" && pasa "modo fecha: el panel del dueño muestra el día ($DIA_CORTO)" || falla "modo fecha: el panel del dueño no muestra el día"
+printf '%s' "$PANEL2" | grep -qE "· para el [^ <]+ $(date -d '+3 days' +%-d/%-m) a las 11:00 ·" && pasa "seed: pedido de ejemplo con fecha_entrega en 3 días" || falla "seed: pedido de ejemplo sin fecha"
+printf '%s' "$PANEL2" | grep -qF '>Empresas (1)</a>' && pasa "textos propios: pestaña «Empresas» del panel" || falla "textos propios: pestaña del panel sin cambiar"
+curl -s -b "$K2" "$B2/?r=panel" | grep -qF '1 empresa(s) esperan aprobación' && pasa "textos propios: aviso de empresas por aprobar" || falla "textos propios: aviso de mayoristas sin cambiar"
+curl -s -b "$K2" "$B2/?r=panel&ver=mayoristas" | grep -qF '<h2>Empresas aprobadas</h2>' && pasa "textos propios: «Empresas aprobadas»" || falla "textos propios: «Mayoristas aprobados» sin cambiar"
+
+# --- carrito.js (Multi-page): campos [data-carrito-extra] en el mensaje de WhatsApp (sin navegador, con node)
+if command -v node > /dev/null 2>&1; then
+  NODE_OUT=$(node - demos/_comun/js/carrito.js 2>&1 <<'JS'
+var fs = require('fs');
+var src = fs.readFileSync(process.argv[process.argv.length - 1], 'utf8');
+function campo(attrs, props) {
+  return Object.assign({
+    getAttribute: function (n) { return Object.prototype.hasOwnProperty.call(attrs, n) ? attrs[n] : null; },
+    closest: function () { return props.oculto ? {} : null; }
+  }, props);
+}
+var extras = [
+  campo({ 'data-carrito-extra': 'Mensaje en la torta', maxlength: '40' }, { tagName: 'INPUT', type: 'text', name: 'mensaje_torta', value: '  Feliz   cumple, Ana  ' }),
+  campo({ 'data-carrito-extra': 'Día' }, { tagName: 'SELECT', type: 'select-one', selectedIndex: 1, options: [{ value: '', text: 'Elige' }, { value: '2026-11-21', text: 'sáb 21/11' }] }),
+  campo({ 'data-carrito-extra': 'Velas' }, { tagName: 'INPUT', type: 'checkbox', checked: true, value: 'on' }),
+  campo({ 'data-carrito-extra': 'Tarjeta' }, { tagName: 'INPUT', type: 'checkbox', checked: false, value: 'on' }),
+  campo({ 'data-carrito-extra': 'Vacío' }, { tagName: 'INPUT', type: 'text', value: '   ' }),
+  campo({ 'data-carrito-extra': 'Solo despacho' }, { tagName: 'INPUT', type: 'text', value: 'x', oculto: true }),
+  campo({ 'data-carrito-extra': 'Sin elegir' }, { tagName: 'SELECT', selectedIndex: 0, options: [{ value: '', text: 'Elige' }] })
+];
+var elementos = { entrega: { value: 'retiro' }, nombre: { value: 'Ana' }, nota: { value: 'Sin flores' }, hora: { value: '17:00' } };
+var conExtras = { elements: elementos, querySelectorAll: function (s) { return s === '[data-carrito-extra]' ? extras : []; } };
+var sinExtras = { elements: elementos, querySelectorAll: function () { return []; } };
+var config = { clave: 'k', negocio: 'Prueba', nota: '(Pedido de prueba)', numero: '569', comunas: {}, catalogo: { t1: { nombre: 'Torta', variantes: { 'Única': 10000 } } } };
+var documento = {
+  getElementById: function (id) { return id === 'demo-carrito-config' ? { textContent: JSON.stringify(config) } : null; },
+  querySelector: function () { return null; }, querySelectorAll: function () { return []; }, addEventListener: function () {}
+};
+var ventana = { Demo: { clp: function (n) { return '$' + n; }, almacen: { leer: function () { return [{ id: 't1', variante: 'Única', cantidad: 1 }]; }, guardar: function () {} }, waUrl: function (n, t) { return t; } }, addEventListener: function () {} };
+new Function('window', 'document', src)(ventana, documento);
+function revisar(cond, nombre) { console.log((cond ? 'ok ' : 'FALLA ') + nombre); }
+var m = ventana.DemoCarrito.mensaje(conExtras);
+revisar(m.indexOf('Entrega: retiro en el local a las 17:00\nMensaje en la torta: Feliz cumple, Ana\nDía: sáb 21/11\nVelas: Sí\nNombre: Ana\nNota: Sin flores\n(Pedido de prueba)') !== -1, 'carrito.js agrega los campos extra con su etiqueta');
+revisar(!/Tarjeta|Vacío|Solo despacho|Sin elegir/.test(m), 'carrito.js omite extras vacíos, sin marcar u ocultos');
+revisar(ventana.DemoCarrito.mensaje(sinExtras) === 'Hola, quiero hacer un pedido en Prueba:\n• 1 × Torta – $10000\nSubtotal: $10000\nTotal: $10000\nEntrega: retiro en el local a las 17:00\nNombre: Ana\nNota: Sin flores\n(Pedido de prueba)', 'carrito.js sin extras arma el mismo mensaje de antes');
+JS
+)
+  [ -n "$NODE_OUT" ] || falla "carrito.js: la prueba con node no imprimió nada"
+  while IFS= read -r l; do
+    case "$l" in "ok "*) pasa "${l#ok }";; "") ;; *) falla "${l#FALLA }";; esac
+  done <<< "$NODE_OUT"
 else
-  pasa "sin errores de PHP en el registro del servidor"
+  echo "  (sin node: se omite la prueba de carrito.js)"
 fi
+
+for log in "$TMP/server.log" "$TMP/server2.log"; do
+  if grep -qiE 'fatal|warning|deprecated|notice' "$log"; then
+    falla "el servidor registró errores de PHP ($(basename "$log")):"; grep -iE 'fatal|warning|deprecated|notice' "$log" | head -5
+  else
+    pasa "sin errores de PHP en el registro del servidor ($(basename "$log"))"
+  fi
+done
 
 echo
 echo "$OK ok / $FAIL fallas"

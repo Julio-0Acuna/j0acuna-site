@@ -19,7 +19,7 @@ $tipo = $val('tipo', 'particular');
       <fieldset class="t-opciones t-opciones--fila">
         <legend>Tipo de cuenta</legend>
         <label class="t-opcion"><input type="radio" name="tipo" value="particular"<?= $tipo !== 'mayorista' ? ' checked' : '' ?>> <span><strong>Particular</strong><small>Para pedir en casa.</small></span></label>
-        <label class="t-opcion"><input type="radio" name="tipo" value="mayorista"<?= $tipo === 'mayorista' ? ' checked' : '' ?>> <span><strong>Mayorista</strong><small><?= m_e(m_texto('mayorista_quien', 'Negocios que compran al por mayor.')) ?></small></span></label>
+        <label class="t-opcion"><input type="radio" name="tipo" value="mayorista"<?= $tipo === 'mayorista' ? ' checked' : '' ?>> <span><strong><?= m_e(m_texto('mayorista')) ?></strong><small><?= m_e(m_texto('mayorista_quien', 'Negocios que compran al por mayor.')) ?></small></span></label>
       </fieldset>
       <?= $err('tipo') ?>
       <?php else: ?>
@@ -32,7 +32,7 @@ $tipo = $val('tipo', 'particular');
       </div>
       <?php if (!empty($cfg['mayoristas'])): ?>
       <div class="t-campo" data-solo-mayorista>
-        <label for="empresa">Nombre del negocio <small>(solo mayoristas)</small></label>
+        <label for="empresa">Nombre del negocio <small>(<?= m_e(m_minuscula(m_texto('solo_mayoristas'))) ?>)</small></label>
         <input id="empresa" name="empresa" maxlength="80" value="<?= m_e($val('empresa')) ?>" autocomplete="off"<?= $inv('empresa') ?>>
         <?= $err('empresa') ?>
       </div>

@@ -127,10 +127,10 @@ function m_accion_checkout(bool $post): void
                 m_flash('error', $error);
                 m_redirigir('carrito');
             }
-            m_flash('ok', '¡Pedido recibido! Pagas al recibir.');
+            m_flash('ok', m_texto('pedido_exito_al_recibir'));
             m_redirigir('pedido', ['id' => $id]);
         }
-        $previo = array_intersect_key($_POST, array_flip(['entrega', 'pago', 'cuando', 'nota', 'calle', 'comuna', 'referencia', 'direccion_id']));
+        $previo = array_intersect_key($_POST, array_flip(['entrega', 'pago', 'cuando', 'fecha_entrega', 'nota', 'calle', 'comuna', 'referencia', 'direccion_id']));
     }
     m_vista('checkout', m_contexto() + [
         'titulo' => 'Finalizar compra',
@@ -139,6 +139,9 @@ function m_accion_checkout(bool $post): void
         'errores' => $errores,
         'previo' => $previo,
         'horas' => m_horas_entrega($cfg),
+        // Modo entrega 'fecha': días para elegir (vacío en modo 'hoy').
+        'con_fecha' => m_entrega_con_fecha($cfg),
+        'fechas' => m_fechas_entrega($cfg),
     ], $errores ? 422 : 200);
 }
 
@@ -165,7 +168,7 @@ function m_accion_pago(bool $post): void
             m_flash('error', $error);
             m_redirigir('carrito');
         }
-        m_flash('ok', '¡Pago de prueba aprobado! Tu pedido ya está en la cocina.');
+        m_flash('ok', m_texto('pedido_exito_prueba'));
         m_redirigir('pedido', ['id' => $id]);
     }
     $despacho = $datos['entrega'] === 'despacho' ? (m_costo_despacho($cfg, $datos['comuna'], $carrito['subtotal']) ?? 0) : 0;
@@ -202,11 +205,17 @@ function m_pedido_resumen_texto(array $p): string
         $lineas[] = 'Despacho: ' . m_clp((int) $p['costo_despacho']);
     }
     $lineas[] = 'Total: ' . m_clp((int) $p['total']);
-    $lineas[] = $p['entrega'] === 'despacho' ? 'Entrega: despacho en ' . $p['comuna'] : 'Entrega: retiro en el local';
-    if ($p['cuando'] !== '') {
+    $lineas[] = $p['entrega'] === 'despacho' ? 'Entrega: despacho en ' . $p['comuna'] : 'Entrega: ' . m_minuscula(m_texto('retiro_titulo'));
+    $fecha = m_fecha_texto((string) ($p['fecha_entrega'] ?? ''));
+    if ($fecha !== '') {
+        $lineas[] = 'Para el ' . $fecha . ($p['cuando'] !== '' ? ' a las ' . $p['cuando'] : '');
+    } elseif ($p['cuando'] !== '') {
         $lineas[] = 'Para las ' . $p['cuando'];
     }
     $lineas[] = 'Pago: ' . ($p['pago'] === 'prueba' ? 'pago de prueba (simulado)' : 'al recibir');
+    if (($cfg['resumen_con_nota'] ?? true) && trim((string) ($p['nota'] ?? '')) !== '') {
+        $lineas[] = 'Nota: ' . $p['nota'];
+    }
     return implode("\n", $lineas);
 }
 
@@ -261,9 +270,7 @@ function m_accion_registro(bool $post): void
                 m_limite_registrar($db, 'registro');
                 $u = m_usuario_por_id($db, $id);
                 m_iniciar_sesion_como($u);
-                m_flash('ok', $u['estado'] === 'pendiente'
-                    ? 'Cuenta creada. Tu cuenta mayorista queda pendiente hasta que el dueño la apruebe; mientras, ves precios normales.'
-                    : 'Cuenta creada. ¡Bienvenido!');
+                m_flash('ok', $u['estado'] === 'pendiente' ? m_texto('registro_pendiente') : 'Cuenta creada. ¡Bienvenido!');
                 $destino = m_volver($_POST['volver'] ?? '');
                 m_redirigir($destino === 'inicio' ? 'cuenta' : $destino);
             }
@@ -339,7 +346,7 @@ function m_accion_panel(bool $post): void
             'avanzar' => m_pedido_avanzar($db, $id) ? m_flash('ok', 'Pedido actualizado.') : m_flash('error', 'No se pudo cambiar el estado.'),
             'cancelar' => m_pedido_cancelar($db, $id) ? m_flash('ok', 'Pedido cancelado; el stock volvió a la tienda.') : m_flash('error', 'Ese pedido no se puede cancelar.'),
             'visible' => (function () use ($db, $id): void { m_producto_alternar_visible($db, $id); m_flash('ok', 'Producto actualizado.'); })(),
-            'aprobar' => m_mayorista_decidir($db, $id, true) ? m_flash('ok', 'Mayorista aprobado: ya ve sus precios.') : m_flash('error', 'No se pudo aprobar.'),
+            'aprobar' => m_mayorista_decidir($db, $id, true) ? m_flash('ok', m_texto('mayorista_aprobado')) : m_flash('error', 'No se pudo aprobar.'),
             'rechazar' => m_mayorista_decidir($db, $id, false) ? m_flash('ok', 'Solicitud rechazada.') : m_flash('error', 'No se pudo rechazar.'),
             default => m_flash('error', 'Acción desconocida.'),
         };

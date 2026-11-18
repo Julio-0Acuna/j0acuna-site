@@ -26,6 +26,7 @@ const DEMO_JS_MODEL_VIEWER = '<script type="module" src="https://cdn.jsdelivr.ne
 
 const DEMO_DIAS = [1 => 'Lunes', 2 => 'Martes', 3 => 'Miércoles', 4 => 'Jueves', 5 => 'Viernes', 6 => 'Sábado', 7 => 'Domingo'];
 const DEMO_DIAS_CORTOS = [1 => 'Lun', 2 => 'Mar', 3 => 'Mié', 4 => 'Jue', 5 => 'Vie', 6 => 'Sáb', 7 => 'Dom'];
+const DEMO_MESES = [1 => 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
 function demo_e(null|string|int|float $s): string
 {
@@ -217,6 +218,18 @@ function demo_horario_filas(array $horario): array
         $inicio = $d + 1;
     }
     return $filas;
+}
+
+/** "sábado 22 de noviembre" */
+function demo_fecha_larga(DateTimeInterface $d): string
+{
+    return mb_strtolower(DEMO_DIAS[(int) $d->format('N')]) . ' ' . $d->format('j') . ' de ' . DEMO_MESES[(int) $d->format('n')];
+}
+
+/** "sáb 22/11" */
+function demo_fecha_corta(DateTimeInterface $d): string
+{
+    return mb_strtolower(DEMO_DIAS_CORTOS[(int) $d->format('N')]) . ' ' . $d->format('j/n');
 }
 
 function demo_minutos(string $hhmm): int

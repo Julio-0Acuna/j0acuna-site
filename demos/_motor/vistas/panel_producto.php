@@ -36,7 +36,7 @@ $enviado = isset($p['csrf']);
     </div>
     <?php if (!empty($cfg['mayoristas'])): ?>
     <div class="t-campo">
-      <label for="precio_mayorista">Precio mayorista (CLP) <small>(vacío = mismo precio)</small></label>
+      <label for="precio_mayorista"><?= m_e(m_texto('precio_mayorista')) ?> (CLP) <small>(vacío = mismo precio)</small></label>
       <input id="precio_mayorista" name="precio_mayorista" inputmode="numeric" maxlength="9" value="<?= m_e($val('precio_mayorista')) ?>">
       <?= $err('precio_mayorista') ?>
     </div>
@@ -69,7 +69,7 @@ $enviado = isset($p['csrf']);
       <label class="t-check"><input type="checkbox" name="visible" value="1"<?= ($enviado ? $marcado('visible', false) : $marcado('visible', true)) ? ' checked' : '' ?>> Visible en la tienda</label>
       <label class="t-check"><input type="checkbox" name="destacado" value="1"<?= $marcado('destacado', false) ? ' checked' : '' ?>> Destacado en la portada</label>
       <?php if (!empty($cfg['mayoristas'])): ?>
-      <label class="t-check"><input type="checkbox" name="solo_mayorista" value="1"<?= $marcado('solo_mayorista', false) ? ' checked' : '' ?>> Solo para mayoristas</label>
+      <label class="t-check"><input type="checkbox" name="solo_mayorista" value="1"<?= $marcado('solo_mayorista', false) ? ' checked' : '' ?>> <?= m_e(m_texto('solo_para_mayoristas')) ?></label>
       <?php endif; ?>
     </fieldset>
     <div class="t-campo--ancho t-acciones">

@@ -10,10 +10,10 @@ $err = static fn (string $k): string => isset($errores[$k]) ? '<p class="t-error
       <div><dt>Correo</dt><dd><?= m_e($usuario['email']) ?></dd></div>
       <div><dt>Tipo de cuenta</dt><dd>
         <?php if ($usuario['rol'] === 'dueno'): ?>Dueño · <a href="<?= m_e(m_url('panel')) ?>">ir al panel</a>
-        <?php elseif ($usuario['tipo'] === 'mayorista'): ?>Mayorista<?= $usuario['empresa'] !== '' ? ' · ' . m_e($usuario['empresa']) : '' ?>
+        <?php elseif ($usuario['tipo'] === 'mayorista'): ?><?= m_e(m_texto('mayorista')) ?><?= $usuario['empresa'] !== '' ? ' · ' . m_e($usuario['empresa']) : '' ?>
           <?php if ($usuario['estado'] === 'pendiente'): ?><span class="t-etiqueta t-etiqueta--alerta">Pendiente de aprobación</span>
           <?php elseif ($usuario['estado'] === 'rechazado'): ?><span class="t-etiqueta t-etiqueta--alerta">Solicitud rechazada: compras como particular</span>
-          <?php else: ?><span class="t-etiqueta">Aprobada: ves precios mayoristas</span><?php endif; ?>
+          <?php else: ?><span class="t-etiqueta"><?= m_e(m_texto('cuenta_aprobada')) ?></span><?php endif; ?>
         <?php else: ?>Particular<?php endif; ?>
       </dd></div>
     </dl>
@@ -26,14 +26,14 @@ $err = static fn (string $k): string => isset($errores[$k]) ? '<p class="t-error
   <section class="t-caja" aria-labelledby="historial">
     <h2 id="historial">Mis pedidos</h2>
     <?php if (!$pedidos): ?>
-      <p>Aún no tienes pedidos. <a href="<?= m_e($cfg['url_base']) ?>#menu">Ver el menú</a></p>
+      <p>Aún no tienes pedidos. <a href="<?= m_e($cfg['url_base']) ?>#menu"><?= m_e(m_texto('ver_catalogo')) ?></a></p>
     <?php else: ?>
     <ul class="t-historial">
       <?php foreach ($pedidos as $p): ?>
       <li>
         <div>
           <a href="<?= m_e(m_url('pedido', ['id' => $p['id']])) ?>"><strong><?= m_e($p['codigo']) ?></strong></a>
-          <span><?= m_e(date('d/m H:i', (int) $p['creado_en'])) ?> · <?= m_e(m_clp((int) $p['total'])) ?></span>
+          <span><?= m_e(date('d/m H:i', (int) $p['creado_en'])) ?> · <?= m_e(m_clp((int) $p['total'])) ?><?= ($p['fecha_entrega'] ?? '') !== '' ? ' · para el ' . m_e(m_fecha_texto($p['fecha_entrega'], false)) : '' ?></span>
         </div>
         <span class="t-estado t-estado--<?= m_e($p['estado']) ?>"><?= m_e(M_ESTADOS[$p['estado']]) ?></span>
         <form method="post" action="<?= m_e(m_url('cuenta')) ?>">

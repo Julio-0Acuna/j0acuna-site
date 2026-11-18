@@ -62,7 +62,7 @@ $filtrando = $q !== '' || $cat !== '';
     <h3><?= m_e(m_texto('mayorista_titulo', '¿Compras al por mayor?')) ?></h3>
     <p><?= m_e(m_texto('mayorista_texto', 'Crea una cuenta mayorista: cuando la aprobemos verás precios especiales y productos para negocios.')) ?></p>
     <?php if ($usuario === null): ?>
-      <a class="t-btn" href="<?= m_e(m_url('registro')) ?>">Crear cuenta mayorista</a>
+      <a class="t-btn" href="<?= m_e(m_url('registro')) ?>"><?= m_e(m_texto('crear_cuenta_mayorista')) ?></a>
     <?php elseif ($usuario['tipo'] === 'mayorista' && $usuario['estado'] === 'pendiente'): ?>
       <p class="t-etiqueta">Tu solicitud está pendiente de aprobación.</p>
     <?php endif; ?>
@@ -76,7 +76,7 @@ $filtrando = $q !== '' || $cat !== '';
     <h2 id="qr-titulo"><?= m_e(m_texto('qr_titulo', 'Nuestro menú en tu celular')) ?></h2>
     <p><?= m_e(m_texto('qr_texto', 'Escanea el código para abrir el menú, ver los platos en 3D y pedir desde tu mesa.')) ?></p>
   </div>
-  <?php demo_qr($cfg['url_base'] . '#menu', 'Código QR del menú', 't-qr__codigo'); ?>
+  <?php demo_qr($cfg['url_base'] . '#menu', m_texto('qr_pie'), 't-qr__codigo'); ?>
 </section>
 <?php endif; ?>
 

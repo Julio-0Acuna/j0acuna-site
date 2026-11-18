@@ -8,7 +8,7 @@ $mayorista = m_es_mayorista($usuario) && $p['precio_mayorista'] !== null && (int
     <?php if ($p['foto'] !== ''): ?>
       <?= demo_img($p['foto'], $p['nombre'], ['ancho' => 480, 'alto' => 360, 'anchos' => [320, 480, 800], 'sizes' => '(max-width: 600px) 92vw, (max-width: 1000px) 45vw, 300px']) ?>
     <?php endif; ?>
-    <?php if ((int) $p['solo_mayorista'] === 1): ?><span class="t-sello t-sello--mayorista">Solo mayoristas</span>
+    <?php if ((int) $p['solo_mayorista'] === 1): ?><span class="t-sello t-sello--mayorista"><?= m_e(m_texto('solo_mayoristas')) ?></span>
     <?php elseif ((int) $p['destacado'] === 1): ?><span class="t-sello"><?= m_e(m_texto('sello_destacado', 'Favorito')) ?></span><?php endif; ?>
   </div>
   <div class="t-producto__cuerpo">
@@ -16,7 +16,7 @@ $mayorista = m_es_mayorista($usuario) && $p['precio_mayorista'] !== null && (int
     <p class="t-producto__desc"><?= m_e($p['descripcion']) ?></p>
     <p class="t-producto__precio">
       <strong><?= m_e(m_clp((int) $p['precio_final'])) ?></strong>
-      <?php if ($mayorista): ?><s aria-label="Precio normal"><?= m_e(m_clp((int) $p['precio'])) ?></s> <span class="t-etiqueta">Precio mayorista</span><?php endif; ?>
+      <?php if ($mayorista): ?><s aria-label="Precio normal"><?= m_e(m_clp((int) $p['precio'])) ?></s> <span class="t-etiqueta"><?= m_e(m_texto('precio_mayorista')) ?></span><?php endif; ?>
     </p>
     <div class="t-producto__acciones">
       <?php if ($agotado): ?>
