@@ -92,8 +92,11 @@ debe_contener   /restaurantes  'href="/proyectos"'
 debe_contener   /restaurantes  'Página web para restaurantes'
 no_debe_contener /restaurantes 'integración directa'
 debe_contener   /restaurantes  'og-restaurantes.jpg'
-# Rediseño 17/11: servicios en carrusel con tecnologías, mosaicos en proyectos, escalera en restaurantes
-debe_contener   /servicios  'data-carrusel'
+# Rediseño 17/11: mosaicos en proyectos, escalera en restaurantes. 18/11: servicios en vitrina "Escaparate" (propuesta B).
+debe_contener   /servicios  'data-vitrina'
+debe_contener   /servicios  'src="/assets/js/servicios.js"'
+no_debe_contener /servicios 'noindex'
+no_debe_contener /servicios 'propuestas/'
 no_debe_contener /servicios 'bootstrap'
 debe_contener   /servicios  'aria-roledescription="carrusel"'
 debe_contener   /servicios  'data-pausa'
@@ -140,8 +143,8 @@ no_debe_contener /restaurantes 'Apps de delivery'
 debe_contener   /restaurantes  'href="/proyecto/restaurante-a"'
 no_debe_contener /restaurantes 'Servicio empresas'
 no_debe_contener /restaurantes 'href="/demos/'
-debe_contar_exacto /servicios 'class="srv__slide' 3
-debe_contar_exacto /servicios 'data-srv-tab' 3
+debe_contar_exacto /servicios '<article class="esc-p' 3
+debe_contar_exacto /servicios ' data-it ' 3
 debe_responder  /proyectos/ejemplos 404
 no_debe_contener /proyectos 'href="/proyectos/ejemplos"'
 else
@@ -180,10 +183,16 @@ debe_contener   /  'href="/proyecto/suitechile-cl"'
 debe_contener   /  'href="/proyecto/obrascivilesmys-cl"'
 debe_contener   /  'data-carrusel'
 # Servicios: 9 diapositivas, una imagen de referencia por servicio, tecnologías y ejemplo de cada uno
-debe_contar_exacto /servicios 'class="srv__slide' 9
-debe_contar_exacto /servicios 'data-srv-tab' 9
+debe_contar_exacto /servicios '<article class="esc-p' 9
+debe_contar_exacto /servicios ' data-it ' 9
 debe_contar_exacto /servicios 'alt="Ejemplo de referencia:' 9
-debe_contar     /servicios  'class="tech-chips"' 14
+debe_contar     /servicios  'class="tech-chips"' 9
+# Galería de ejemplos con miniaturas de 640 px y enlaces a los 48 sitios por rubro.
+debe_contener   /servicios  'src="/assets/img/mini/demos/sushi/img/simple.webp"'
+debe_contener   /servicios  'href="/demos/'
+debe_contener   /servicios  'id="tienda-online"'
+debe_responder  /assets/img/mini/demos/repuestos/img/plataforma.webp 200
+debe_responder  /assets/js/servicios.js 200
 debe_contener   /servicios  'src="/assets/img/servicios/menu-qr-3d.webp"'
 debe_contener   /servicios  'src="/assets/img/servicios/google-perfil.webp"'
 debe_contener   /servicios  'href="/demos/pizzeria/plataforma/"'

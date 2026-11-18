@@ -1,0 +1,145 @@
+/* ==========================================================================
+   Propuesta B de /servicios: "Escaparate".
+   Se apoya en assets/css/styles.css (tokens, botones, marco de navegador, checks, chips,
+   preguntas y cierre). Lo propio: índice de servicios, vitrina con luz, galería con vista
+   previa al pasar el mouse, ficha del servicio y tecnologías en columnas abiertas.
+   ========================================================================== */
+
+/* --- Encabezado ---------------------------------------------------------- */
+.esc-hd { position: relative; z-index: 1; padding: clamp(.8rem, 2.4vw, 1.4rem) 0 clamp(1.8rem, 3.6vw, 2.4rem); }
+.esc-crumbs { justify-content: flex-start; width: max-content; }
+.esc-hd__row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; margin-top: 1.3rem; }
+.esc-hd h1 { font-size: clamp(2.2rem, 4.4vw, 3.1rem); line-height: 1.03; letter-spacing: -.05em; max-width: 15ch; }
+.esc-hd__lead { color: var(--text-2); font-size: clamp(1.02rem, 1.3vw, 1.1rem); max-width: 48ch; }
+@media (min-width: 960px) {
+  .esc-hd__row { grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); align-items: end; gap: 3rem; }
+  .esc-hd h1 { max-width: 19ch; }
+  .esc-hd__lead { padding-bottom: .3rem; }
+}
+
+/* --- Vitrina: índice + escenario ----------------------------------------- */
+.esc-vit { position: relative; z-index: 1; padding-bottom: clamp(2rem, 5vw, 4rem); }
+.esc-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.2rem; }
+
+/* Índice: en el celular, una fila que se desliza; en el computador, una columna fija. */
+.esc-idx { min-width: 0; }
+.esc-idx__hd { display: none; }
+.esc-list { display: flex; gap: .4rem; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; margin-inline: calc((100vw - 100%) / -2); padding: 3px calc((100vw - 100%) / 2) 6px; scroll-padding-inline: calc((100vw - 100%) / 2); }
+.esc-list::-webkit-scrollbar { display: none; }
+.esc-it { position: relative; flex: none; display: flex; align-items: center; gap: .6rem; min-height: 48px; padding: .35rem 1rem .35rem .4rem; border-radius: 999px; background: var(--glass); color: var(--text-2); scroll-snap-align: start; transition: background .25s, color .25s, box-shadow .25s; }
+.esc-it .ico { width: 36px; height: 36px; border-radius: 50%; }
+.esc-it .ico svg { width: 18px; height: 18px; }
+.esc-it__n { font-size: .93rem; font-weight: 500; white-space: nowrap; }
+.esc-it__bar { position: absolute; left: 52px; right: 18px; bottom: 5px; height: 2px; border-radius: 2px; background: var(--grad); transform: scaleX(0); transform-origin: left; opacity: 0; }
+.esc-it:hover { color: var(--text); background: var(--glass-2); }
+.esc-it.is-on { color: var(--text); background: var(--glass-2); box-shadow: inset 0 0 0 1px rgba(94, 234, 208, .4); }
+.js .esc-it.is-on .esc-it__bar { opacity: 1; animation: esc-fill var(--dur, 7.5s) linear forwards; }
+.is-paused .esc-it.is-on .esc-it__bar { animation-play-state: paused; }
+.no-auto .esc-it.is-on .esc-it__bar { animation: none; transform: scaleX(1); opacity: .6; }
+@keyframes esc-fill { to { transform: scaleX(1); } }
+
+.esc-ctrl { display: none; align-items: center; gap: .45rem; margin-top: .7rem; }
+.js .esc-ctrl { display: flex; }
+.esc-pausa { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; padding: 0 1rem 0 .85rem; border: 0; border-radius: 999px; background: var(--glass-2); color: var(--text); font-size: .9rem; transition: background .2s, color .2s; }
+.esc-pausa:hover { background: rgba(255, 255, 255, .13); }
+.esc-pausa svg { width: 16px; height: 16px; }
+.esc-pausa[aria-pressed="true"] { background: rgba(94, 234, 208, .16); color: var(--mint); }
+.esc-ctrl__n { margin-left: auto; font-family: var(--mono); font-size: .78rem; color: var(--mute); white-space: nowrap; }
+
+@media (min-width: 960px) {
+  .esc-grid { grid-template-columns: 272px minmax(0, 1fr); gap: 3rem; align-items: start; }
+  .esc-idx { position: sticky; top: 100px; }
+  .esc-idx__hd { display: flex; justify-content: space-between; padding: 0 .6rem .7rem .3rem; margin-bottom: .45rem; border-bottom: 1px solid var(--line); font-size: .9rem; color: var(--mute); }
+  .esc-list { flex-direction: column; gap: 2px; overflow: visible; margin: 0; padding: 0; }
+  .esc-it { min-height: 0; padding: .34rem .8rem .34rem .34rem; border-radius: 14px; background: none; }
+  .esc-it .ico { width: 36px; height: 36px; border-radius: 11px; }
+  .esc-it__n { font-size: .98rem; white-space: normal; line-height: 1.25; }
+  .esc-it:hover { background: var(--glass); }
+  .esc-it__bar { left: 54px; bottom: 5px; }
+  .esc-ctrl { margin-top: 1rem; padding-top: .9rem; border-top: 1px solid var(--line); }
+}
+
+/* Escenario: marco grande con luz de vitrina y "repisa" iluminada. */
+.esc-stage { position: relative; min-width: 0; }
+.esc-stage::before { content: ""; position: absolute; z-index: -1; left: 4%; right: 4%; top: -200px; height: 560px; background: radial-gradient(closest-side, rgba(255, 255, 255, .06), transparent); pointer-events: none; }
+.esc-frame::after { content: ""; position: absolute; left: 8%; right: 8%; bottom: -22px; height: 22px; background: radial-gradient(closest-side, rgba(94, 234, 208, .3), rgba(247, 188, 98, .08) 60%, transparent); filter: blur(4px); pointer-events: none; }
+.esc-frame .frame__img > img, .esc-frame .frame__img > .frame__ph { grid-area: 1 / 1; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; opacity: 0; transform: scale(1.035); transition: opacity .7s var(--ease), transform 9s linear; }
+.esc-frame .frame__img > .is-on { opacity: 1; transform: none; }
+.esc-frame .esc-prev { z-index: 2; opacity: 1; transform: none; transition: none; }
+.esc-frame .esc-prev[hidden] { display: none; }
+@media (min-width: 960px) { .esc-frame .frame__img > img, .esc-frame .frame__img > .frame__ph { aspect-ratio: 16 / 9; } }
+
+/* Paneles: uno por servicio. Sin JavaScript se ven todos, uno debajo de otro. */
+.esc-panels { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4.5rem; margin-top: 1.6rem; }
+/* Con JavaScript solo se muestra el activo: lo que cambia de alto queda bajo el marco, que no se mueve. */
+.js .esc-panels { gap: 0; }
+.js .esc-p { display: none; }
+.js .esc-p.is-on { display: block; animation: esc-in .55s var(--ease); }
+@keyframes esc-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.esc-p { min-width: 0; scroll-margin-top: 110px; }
+
+/* Galería de ejemplos bajo el marco. */
+.esc-ej__t { font-size: .9rem; color: var(--mute); margin-bottom: .7rem; }
+.esc-ej ul { display: flex; gap: .8rem; overflow-x: auto; scrollbar-width: none; margin-inline: calc((100vw - 100%) / -2); padding: 2px calc((100vw - 100%) / 2) 6px; }
+.esc-ej ul::-webkit-scrollbar { display: none; }
+.esc-ej li { flex: none; width: 150px; }
+.esc-ej a { display: grid; gap: .15rem; color: var(--text); }
+.esc-ej__img { position: relative; display: grid; margin-bottom: .45rem; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; background: var(--bg-3); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); transition: transform .4s var(--ease), box-shadow .4s var(--ease); }
+.esc-ej__img img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.esc-ej__n { font-size: .86rem; font-weight: 500; line-height: 1.25; letter-spacing: -.01em; }
+.esc-ej__d { font-size: .76rem; line-height: 1.3; color: var(--mute); }
+.esc-ej a:hover .esc-ej__img, .esc-ej a:focus-visible .esc-ej__img { transform: translateY(-3px); box-shadow: inset 0 0 0 1px rgba(94, 234, 208, .55), 0 16px 30px -18px rgba(0, 0, 0, .9), 0 0 30px -12px var(--teal); }
+.esc-ej a:hover .esc-ej__n { color: var(--mint); }
+.esc-ej a:focus-visible { outline: 0; }
+.esc-ej a:focus-visible .esc-ej__img { outline: 2px solid var(--teal); outline-offset: 3px; }
+.esc-ej__mas .esc-ej__img { place-content: center; justify-items: center; background: radial-gradient(90% 90% at 30% 20%, rgba(94, 234, 208, .14), transparent), radial-gradient(70% 70% at 90% 100%, rgba(247, 188, 98, .1), transparent), var(--bg-3); }
+.esc-ej__mas b { font-size: 1.7rem; font-weight: 600; letter-spacing: -.04em; line-height: 1; }
+.esc-ej__mas small { font-size: .78rem; color: var(--text-2); }
+@media (min-width: 760px) {
+  .esc-ej ul { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); overflow: visible; margin: 0; padding: 0; }
+  .esc-ej li { width: auto; }
+}
+
+/* Ficha del servicio */
+.esc-p h3 { margin-top: clamp(1.8rem, 3.4vw, 2.4rem); font-size: clamp(1.75rem, 3vw, 2.45rem); line-height: 1.05; letter-spacing: -.045em; max-width: 24ch; }
+.esc-p__sum { margin-top: .9rem; color: var(--text-2); font-size: clamp(1.02rem, 1.3vw, 1.1rem); max-width: 62ch; }
+.esc-ficha { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.6rem; margin-top: 1.7rem; padding-top: 1.6rem; border-top: 1px solid var(--line); }
+.esc-ficha__col { display: grid; align-content: start; gap: .65rem; }
+.esc-ficha__col h4 { font-size: .92rem; font-weight: 500; color: var(--text); }
+.esc-ficha__col h4:not(:first-child) { margin-top: .9rem; }
+.esc-ficha__col p { color: var(--text-2); font-size: .97rem; }
+.esc-ficha .checks li { font-size: .97rem; }
+@media (min-width: 760px) { .esc-ficha { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 2.6rem; } }
+.esc-p__act { display: flex; flex-wrap: wrap; align-items: center; gap: .9rem 1.6rem; margin-top: 1.8rem; }
+
+/* --- Lenguajes y tecnologías: columnas abiertas -------------------------- */
+.esc-tec { position: relative; padding: clamp(4rem, 8vw, 6.5rem) 0 clamp(1rem, 2vw, 2rem); }
+.esc-tec::before { content: ""; position: absolute; top: 0; left: 50%; width: var(--wrap); height: 1px; transform: translateX(-50%); background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .12), transparent); }
+.esc-tec__hd { display: grid; gap: 1rem; margin-bottom: clamp(2.2rem, 4vw, 3.2rem); }
+@media (min-width: 960px) { .esc-tec__hd { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: 4rem; } .esc-tec__hd .sub { padding-bottom: .4rem; } }
+.esc-tec__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.6rem 1.3rem; }
+@media (min-width: 760px) { .esc-tec__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3rem 2rem; } }
+@media (min-width: 1100px) { .esc-tec__grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2rem; } }
+.esc-tec__col { position: relative; display: grid; align-content: start; justify-items: start; gap: .7rem; padding-top: 1.3rem; border-top: 1px solid var(--line); }
+.esc-tec__col::before { content: ""; position: absolute; top: -1px; left: 0; width: 56px; height: 1px; background: var(--grad); }
+.esc-tec__col h3 { margin-top: .3rem; font-size: 1.12rem; letter-spacing: -.025em; line-height: 1.2; }
+.esc-tec__col p { color: var(--mute); font-size: .9rem; }
+.esc-tec__col ul { display: grid; gap: .5rem; margin-top: .3rem; }
+.esc-tec__col li { color: var(--text); font-size: .98rem; line-height: 1.35; }
+
+/* --- Preguntas en dos columnas ------------------------------------------- */
+.esc-faq { position: relative; padding: clamp(4.5rem, 9vw, 7.5rem) 0 0; }
+.esc-faq__hd { display: grid; gap: .9rem; margin-bottom: clamp(1.8rem, 3.4vw, 2.6rem); }
+.esc-faq__grid { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; column-gap: 3rem; border-bottom: 1px solid var(--line); }
+.esc-faq .faq-item { border-bottom: 0; border-top: 1px solid var(--line); }
+.esc-faq .faq-item p { padding-right: 1.5rem; }
+@media (min-width: 860px) { .esc-faq__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); border-bottom: 0; } .esc-faq .faq-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--line); } }
+
+@media (max-width: 420px) {
+  .esc-ctrl .esc-pausa { padding: 0 .9rem 0 .75rem; }
+}
+.esc-grid { scroll-margin-top: 100px; }
+@media (max-width: 759px) {
+  .esc-tec__col:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .esc-tec__col:last-child:nth-child(odd) ul { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.3rem; }
+}

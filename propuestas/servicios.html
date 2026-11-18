@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propuestas de servicios · Julio Acuña</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg">
+<style>
+:root{--bg:#EDEDEA;--card:#FFFFFF;--ink:#1A1A18;--mute:#6B6B66;--line:rgba(0,0,0,.08)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{width:min(1240px,100% - 2rem);margin:0 auto;padding:clamp(2rem,6vw,4.5rem) 0 4rem}
+header{display:grid;gap:.6rem;margin-bottom:clamp(2rem,5vw,3.2rem)}
+header p{margin:0;color:var(--mute);max-width:64ch}
+h1{margin:0;font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;letter-spacing:-.03em}
+.grid{display:grid;gap:1.6rem}
+@media (min-width:1000px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.p{display:flex;flex-direction:column;background:var(--card);border-radius:20px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.05),0 20px 40px -24px rgba(0,0,0,.25)}
+.p--actual{background:#F6F6F3;box-shadow:inset 0 0 0 1px var(--line)}
+.shots{position:relative;display:block;background:#05070B;padding:0 0 0 0}
+.shots .pc{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top}
+.shots .cel{position:absolute;right:14px;bottom:-30px;width:17%;height:auto;aspect-ratio:375/812;object-fit:cover;object-position:top;border-radius:11px;border:3px solid #1d2230;box-shadow:0 18px 30px -10px rgba(0,0,0,.6)}
+.p__body{display:grid;gap:.7rem;padding:2.2rem 1.4rem 1.5rem;flex:1;align-content:start}
+.p__tag{font-size:.85rem;color:var(--mute);font-weight:600}
+.p h2{margin:0;font-size:1.5rem;letter-spacing:-.02em;line-height:1.1}
+.p p{margin:0;color:#3d3d39;font-size:.95rem}
+.p ul{margin:.1rem 0 0;padding-left:1.1rem;color:#3d3d39;font-size:.93rem;display:grid;gap:.25rem}
+.links{display:flex;flex-wrap:wrap;gap:.5rem 1.2rem;margin-top:.5rem}
+.links a{font-weight:600;text-underline-offset:4px}
+.links a:hover{text-decoration-thickness:2px}
+.links a:focus-visible,.shots:focus-visible{outline:3px solid #2563EB;outline-offset:3px;border-radius:6px}
+footer{margin-top:2.5rem;color:var(--mute);font-size:.9rem;display:grid;gap:.4rem}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <h1>Página de servicios: dos propuestas</h1>
+    <p>Las dos usan los mismos datos que la página actual: los 9 servicios con lo que incluyen y sus tecnologías, ejemplos reales, preguntas frecuentes y contacto, sin precios. Ábrelas en el computador y en el celular y compáralas con la actual.</p>
+  </header>
+  <div class="grid">
+    <article class="p">
+      <a class="shots" href="servicios-a.php" tabindex="-1" aria-hidden="true">
+        <img class="pc" src="img/servicios-a.webp" width="1200" height="750" alt="">
+        <img class="cel" src="img/servicios-a-movil.webp" width="375" height="812" alt="">
+      </a>
+      <div class="p__body">
+        <span class="p__tag">Propuesta A</span>
+        <h2>Según lo que necesita tu negocio</h2>
+        <p>La página se lee como una frase: «Quiero que me encuentren», «recibir pedidos», «vender más por internet», «ordenar mi empresa». Cada objetivo es un capítulo.</p>
+        <ul>
+          <li>Una cinta de ejemplos reales que avanza sola en cada capítulo (con pausa)</li>
+          <li>Los servicios completos a la vista, en columnas, sin pestañas</li>
+          <li>Un color por objetivo y una barra fija para saltar entre ellos</li>
+        </ul>
+        <div class="links"><a href="servicios-a.php">Abrir la propuesta A</a></div>
+      </div>
+    </article>
+    <article class="p">
+      <a class="shots" href="servicios-b.php" tabindex="-1" aria-hidden="true">
+        <img class="pc" src="img/servicios-b.webp" width="1200" height="750" alt="">
+        <img class="cel" src="img/servicios-b-movil.webp" width="375" height="812" alt="">
+      </a>
+      <div class="p__body">
+        <span class="p__tag">Propuesta B</span>
+        <h2>Escaparate</h2>
+        <p>Los 9 servicios en un índice al lado y una vitrina grande que cambia sola: la captura del servicio, la galería de trabajos y la ficha completa.</p>
+        <ul>
+          <li>Todos los servicios visibles de una vez, con avance automático y pausa</li>
+          <li>Galería de trabajo real y ejemplos: al pasar el mouse se ven en grande</li>
+          <li>Página corta: un servicio a la vez, todo en una pantalla</li>
+        </ul>
+        <div class="links"><a href="servicios-b.php">Abrir la propuesta B</a></div>
+      </div>
+    </article>
+    <article class="p p--actual">
+      <a class="shots" href="/servicios" tabindex="-1" aria-hidden="true">
+        <img class="pc" src="img/servicios-actual.webp" width="1200" height="750" alt="">
+        <img class="cel" src="img/servicios-actual-movil.webp" width="375" height="812" alt="">
+      </a>
+      <div class="p__body">
+        <span class="p__tag">Actual, para comparar</span>
+        <h2>Pestañas y carrusel</h2>
+        <p>Un servicio a la vez, elegido con pestañas en fila; captura a la izquierda y detalle a la derecha.</p>
+        <div class="links"><a href="/servicios">Abrir la página actual</a></div>
+      </div>
+    </article>
+  </div>
+  <footer>
+    <span>Capturas: primera pantalla en el computador (1280 px) y en el celular (375 px).</span>
+    <span>Las propuestas no aparecen en Google (noindex). Los negocios de los ejemplos por rubro son ficticios; los marcados «Proyecto real» son trabajos hechos.</span>
+    <span><a href="index.html">Ver las propuestas de portada</a></span>
+  </footer>
+</main>
+</body>
+</html>
