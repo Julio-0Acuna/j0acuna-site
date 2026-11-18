@@ -53,6 +53,8 @@ return [
     'horas_entrega' => ['10:00', '19:30'],
     // Fecha de entrega en el checkout: cuántos días hacia adelante se pueden elegir (desde mañana).
     'dias_encargo' => 21,
+    // vistas/pedido.php ya agrega al WhatsApp la nota separada en día, mensaje y resto (ver _encargo.php).
+    'resumen_con_nota' => false,
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     'menu_qr' => true,
     'modelos3d' => ['torta'],
