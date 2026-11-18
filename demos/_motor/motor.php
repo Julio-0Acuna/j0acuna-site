@@ -56,6 +56,56 @@ declare(strict_types=1);
  *     ],
  * Multi-page (carrito en el navegador, _comun/js/carrito.js): un campo con
  * data-carrito-extra="Mensaje en la torta" dentro del formulario del pedido va al WhatsApp con su etiqueta.
+ * Textos, entrega, mínimo y despacho gratis del carrito: ver el encabezado de _comun/js/carrito.js.
+ *
+ * ---- Novedades (18/11). Todas son opcionales: sin ellas, la tienda se ve y funciona como antes.
+ *
+ * Textos de todas las vistas: cada texto visible del motor tiene clave en M_TEXTOS (<vista>_<qué>):
+ *   checkout_titulo, checkout_como_recibes, checkout_confirmar, carrito_titulo, carrito_continuar, panel_titulo,
+ *   pedido_paso_nuevo, registro_empresa, pago_al_recibir, layout_carrito, producto_agregar... Los estados se leen
+ *   con m_estado_texto($estado, $entrega = ''): claves estado_nuevo, estado_preparando, estado_listo,
+ *   estado_listo_retiro ('Listo para retiro'), estado_listo_despacho ('En camino'), estado_entregado, estado_cancelado.
+ *   La página del pedido usa estado_listo_<entrega>; el panel y Mi cuenta, estado_listo ('Listo').
+ *     'textos' => ['checkout_titulo' => 'Reservar hora', 'checkout_confirmar' => 'Confirmar reserva',
+ *                  'pedido_paso_nuevo' => 'Hora reservada', 'estado_listo_retiro' => 'En el salón'],
+ *
+ * Campos extra del checkout ('checkout_campos', ver m_checkout_campos() en tienda.php): se validan en el servidor,
+ * se guardan en pedidos.extras (JSON) y se ven en el pedido, el panel (lista y detalle), Mi cuenta y el WhatsApp
+ * como "Etiqueta: valor". Tipos: texto (max, patron, normalizar => 'patente'), numero (min, max), opcion
+ * (opciones), casilla. requerido (true por defecto), ayuda, defecto, error (mensaje propio) y solo ('retiro' o
+ * 'despacho': el campo solo se pide con esa entrega). ?<nombre>=valor en la URL del checkout precarga una opción.
+ *     'checkout_campos' => [
+ *         ['nombre' => 'patente', 'etiqueta' => 'Patente', 'patron' => '/^[A-Z]{2,4}\d{2,4}$/', 'normalizar' => 'patente', 'max' => 6, 'ayuda' => 'Ej.: KXPL47'],
+ *         ['nombre' => 'anio', 'etiqueta' => 'Año', 'tipo' => 'numero', 'min' => 1980, 'max' => 2027],
+ *         ['nombre' => 'barbero', 'etiqueta' => 'Barbero', 'tipo' => 'opcion', 'opciones' => ['benjamin' => 'Benjamín', 'nico' => 'Nico']],
+ *         ['nombre' => 'mayor', 'etiqueta' => 'Confirmo que soy mayor de 18 años', 'tipo' => 'casilla'],
+ *         ['nombre' => 'obra', 'etiqueta' => 'Obra o empresa', 'requerido' => false, 'solo' => 'despacho'],
+ *     ],
+ *   Un checkout.php propio imprime los campos con m_parcial('_campos_extra', ['campos' => $campos_extra,
+ *   'valores' => $valores_extra, 'errores' => $errores]); si no los imprime, sus errores salen arriba (_mensajes).
+ *   Textos: checkout_campos_titulo (vacío = sin título), checkout_extra_* (mensajes de error con {campo}).
+ *
+ * Pedido mínimo y despacho gratis visibles: el carrito dice cuánto falta ('carrito_falta_minimo',
+ * 'carrito_falta_gratis') y, bajo el mínimo, no deja continuar. 'pedido_minimo_solo_despacho' => true: el retiro
+ * no tiene mínimo (aviso 'carrito_falta_minimo_despacho') y un despacho bajo el mínimo se rechaza en el checkout
+ * (422 con el mensaje). Sin esa opción, como siempre: el pedido no se crea y vuelve al carrito.
+ *     'pedido_minimo' => 15000, 'pedido_minimo_solo_despacho' => true, 'despacho_gratis_desde' => 60000,
+ *
+ * Fechas y horas reales (ver m_horas_entrega()): hoy no se ofrecen horas antes de ahora + 'margen_minutos'
+ * (30 por defecto) y, en modo 'fecha', hoy sale de la lista cuando ya no quedan horas; el checkout rechaza lo que
+ * no ofrece. Horas que pasan la medianoche: 'horas' => ['12:30', '02:00'] (a las 00:40 el servicio es el de ayer).
+ * 'margen_minutos' => false ofrece todas las horas siempre (si el rubro reemplaza checkout.php en modo 'hoy' y no
+ * lo indica, vale false). En el seed, 'fecha_entrega' => 2 salta los días cerrados.
+ *     'entrega' => ['modo' => 'fecha', 'dias_min' => 0, 'horas' => ['12:30', '02:00'], 'margen_minutos' => 45],
+ *
+ * Catálogo: 'codigo' en el seed (o "Código" en el panel) se muestra como "Cód. X" ('producto_codigo'); la búsqueda
+ * es por palabras sueltas en nombre, descripción, categoría y código, y el código vale con o sin guion
+ * (demo_coincide(), igual que _comun/js/buscador.js). Los chips muestran solo categorías con productos que el
+ * cliente puede ver ($categorias_visibles en inicio.php). _producto recibe $prefijo para sus id (destacados: 'd');
+ * sin foto, el recuadro lleva la clase t-producto__foto--vacia.
+ *     ['slug' => 'pastillas', 'categoria' => 'frenos', 'nombre' => 'Pastillas de freno', 'codigo' => 'CD-1101', ...],
+ *
+ * Panel: la lista de pedidos muestra la nota (recortada a 80 caracteres) y los campos extra.
  */
 
 require_once dirname(__DIR__) . '/_comun/comun.php';
@@ -86,6 +136,7 @@ function m_config_base(): array
         'comunas' => [],
         'despacho_gratis_desde' => 0,
         'pedido_minimo' => 0,
+        'pedido_minimo_solo_despacho' => false, // true: el retiro no tiene mínimo
         'horas_entrega' => ['12:00', '23:00'],
         'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
         'modelos3d' => [],
@@ -95,6 +146,7 @@ function m_config_base(): array
         // Fecha de entrega o retiro: 'hoy' (solo hora) o 'fecha' (lista de días). Ver m_entrega_cfg().
         'entrega' => M_ENTREGA_BASE,
         'resumen_con_nota' => true,         // la nota del cliente va en el resumen de WhatsApp
+        'checkout_campos' => [],            // campos extra del checkout (ver m_checkout_campos() en tienda.php)
         'whatsapp' => DEMO_WHATSAPP,
     ];
 }
@@ -104,12 +156,14 @@ function m_config(?array $cfg = null): array
     static $actual = null;
     if ($cfg !== null) {
         $base = m_config_base();
-        $actual = array_replace($base, $cfg);
-        $actual['limites'] = array_replace($base['limites'], $cfg['limites'] ?? []);
-        $actual['entrega'] = m_entrega_cfg($actual);
-        if (!str_ends_with($actual['url_base'], '/')) {
-            $actual['url_base'] .= '/';
+        $nueva = array_replace($base, $cfg);
+        $nueva['limites'] = array_replace($base['limites'], $cfg['limites'] ?? []);
+        $nueva['entrega'] = m_entrega_cfg($nueva);
+        m_checkout_campos($nueva); // valida 'checkout_campos': un campo mal escrito lanza LogicException aquí
+        if (!str_ends_with($nueva['url_base'], '/')) {
+            $nueva['url_base'] .= '/';
         }
+        $actual = $nueva;
     }
     if ($actual === null) {
         throw new LogicException('Motor sin configurar: llama a m_ejecutar() o m_config($cfg).');
@@ -171,15 +225,262 @@ const M_TEXTOS = [
     'pedido_titulo' => '¡Gracias por tu pedido!',
     'pedido_exito_prueba' => '¡Pago de prueba aprobado! Tu pedido ya está en la cocina.',
     'pedido_exito_al_recibir' => '¡Pedido recibido! Pagas al recibir.',
+    // Generales (varias vistas)
+    'opcional' => '(opcional)',
+    'revisa_campos' => 'Revisa los campos marcados.',
+    'particular' => 'Particular',
+    'correo' => 'Correo',
+    'clave' => 'Contraseña',
+    'direccion_calle' => 'Calle y número',
+    'direccion_comuna' => 'Comuna',
+    // Estados del pedido (m_estado_texto): 'listo' cambia según la entrega en la página del pedido.
+    'estado_nuevo' => 'Nuevo',
+    'estado_preparando' => 'Preparando',
+    'estado_listo' => 'Listo',
+    'estado_listo_retiro' => 'Listo para retiro',
+    'estado_listo_despacho' => 'En camino',
+    'estado_entregado' => 'Entregado',
+    'estado_cancelado' => 'Cancelado',
+    // Tarjeta de producto (_producto)
+    'producto_agregar' => 'Agregar',
+    'producto_agregar_aria' => 'Agregar {producto} al carrito',
+    'producto_agotado' => 'Agotado',
+    'producto_quedan' => 'Quedan {n}',
+    'producto_precio_normal' => 'Precio normal',
+    'producto_ver_3d' => 'Ver en 3D',
+    'producto_codigo' => 'Cód. {codigo}',
+    // Catálogo (inicio, portada)
+    'inicio_buscar_etiqueta' => 'Buscar productos',
+    'inicio_buscar' => 'Buscar',
+    'inicio_categorias' => 'Categorías',
+    'inicio_todo' => 'Todo',
+    'inicio_resultados' => 'Resultados para «{q}»',
+    'inicio_ver_todo' => 'ver todo',
+    'inicio_sin_resultados' => 'No encontramos productos con esa búsqueda.',
+    'inicio_solicitud_pendiente' => 'Tu solicitud está pendiente de aprobación.',
+    'portada_boton' => 'Ver catálogo',
+    // Carrito
+    'carrito_titulo' => 'Tu carrito',
+    'carrito_vacio' => 'Tu carrito está vacío.',
+    'carrito_agregado' => 'Agregaste «{producto}» al carrito.',
+    'carrito_precio_unidad' => '{precio} c/u',
+    'carrito_quitar_uno' => 'Quitar uno de {producto}',
+    'carrito_agregar_uno' => 'Agregar uno de {producto}',
+    'carrito_unidades' => '{n} unidades',
+    'carrito_subtotal' => 'Subtotal',
+    'carrito_despacho_nota' => 'El despacho se calcula según tu comuna en el siguiente paso.',
+    'carrito_despacho_nota_gratis' => 'El despacho se calcula según tu comuna en el siguiente paso (gratis desde {gratis}).',
+    'carrito_continuar' => 'Continuar',
+    'carrito_vaciar' => 'Vaciar carrito',
+    'carrito_gratis_retiro' => 'Gratis (retiro)',
+    'carrito_falta_minimo' => 'Te faltan {falta} para el pedido mínimo de {minimo}.',
+    'carrito_falta_minimo_despacho' => 'Para despacho, el pedido mínimo es {minimo}: te faltan {falta}. El retiro no tiene mínimo.',
+    'carrito_falta_gratis' => 'Te faltan {falta} para despacho gratis.',
+    // Checkout
+    'checkout_titulo' => 'Finalizar compra',
+    'checkout_como_recibes' => '¿Cómo lo recibes?',
+    'checkout_costo_comuna' => 'Costo según comuna.',
+    'checkout_tus_direcciones' => 'Tus direcciones',
+    'checkout_otra_direccion' => 'Otra dirección',
+    'checkout_elige_tu_comuna' => 'Elige tu comuna',
+    'checkout_referencia' => 'Depto., block o referencia',
+    'checkout_guardar_direccion' => 'Guardar esta dirección en mi cuenta',
+    'checkout_nota' => 'Nota',
+    'checkout_nota_ayuda' => '(opcional, máx. 300 caracteres)',
+    'checkout_pago' => 'Pago',
+    'checkout_resumen' => 'Resumen del pedido',
+    'checkout_tu_pedido' => 'Tu pedido',
+    'checkout_subtotal' => 'Subtotal',
+    'checkout_despacho' => 'Despacho',
+    'checkout_segun_comuna' => 'Según comuna',
+    'checkout_gratis' => 'Gratis',
+    'checkout_elige_comuna' => 'Elige comuna',
+    'checkout_total' => 'Total',
+    'checkout_confirmar' => 'Confirmar pedido',
+    'checkout_comprando_como' => 'Comprando como {nombre}',
+    'pago_en_linea' => 'Pago en línea',
+    'pago_en_linea_etiqueta' => 'de prueba',
+    'pago_en_linea_texto' => 'Pantalla de pago simulada: no se cobra nada.',
+    'pago_al_recibir' => 'Pagar al recibir',
+    'pago_al_recibir_texto' => 'Efectivo, débito o crédito.',
+    // Campos extra del checkout ('checkout_campos'): título opcional sobre ellos y mensajes de error ({campo} = etiqueta).
+    'checkout_campos_titulo' => '',
+    'checkout_extra_opcion' => 'Elige una opción',
+    'checkout_extra_si' => 'Sí',
+    'checkout_extra_falta' => 'Completa «{campo}».',
+    'checkout_extra_elige' => 'Elige una opción en «{campo}».',
+    'checkout_extra_marca' => 'Debes marcar «{campo}».',
+    'checkout_extra_largo' => '«{campo}» puede tener hasta {max} caracteres.',
+    'checkout_extra_numero' => '«{campo}» debe ser un número entre {min} y {max}.',
+    'checkout_extra_formato' => '«{campo}» no tiene el formato correcto.',
+    // Pago de prueba (pago)
+    'pago_titulo' => 'Pago de prueba',
+    'pago_aviso_titulo' => 'PAGO DE PRUEBA',
+    'pago_aviso_texto' => 'Esta pantalla simula una pasarela de pago. No se cobra nada y no debes ingresar datos de tarjeta.',
+    'pago_total' => 'Total a pagar',
+    'pago_despacho_a' => 'Despacho a {comuna}',
+    'pago_tarjeta' => 'Tarjeta ficticia de demostración',
+    'pago_aprobar' => 'Aprobar pago de prueba',
+    'pago_rechazar' => 'Simular pago rechazado',
+    'pago_pie' => 'En un sitio real aquí se conecta Webpay, Mercado Pago u otra pasarela.',
+    // Página del pedido (pedido)
+    'pedido_codigo' => 'Pedido {codigo}',
+    'pedido_cancelado' => 'Pedido cancelado',
+    'pedido_estado' => 'Estado del pedido',
+    'pedido_paso_nuevo' => 'Recibido',
+    'pedido_detalle' => 'Detalle',
+    'pedido_subtotal' => 'Subtotal',
+    'pedido_despacho' => 'Despacho',
+    'pedido_gratis' => 'Gratis',
+    'pedido_total' => 'Total',
+    'pedido_entrega_pago' => 'Entrega y pago',
+    'pedido_entrega' => 'Entrega',
+    'pedido_despacho_a' => 'Despacho a {direccion}, {comuna}',
+    'pedido_para' => 'Para',
+    'pedido_pago' => 'Pago',
+    'pedido_pago_prueba' => 'Pago de prueba',
+    'pedido_pago_prueba_aprobado' => 'Pago de prueba (aprobado)',
+    'pedido_pago_al_recibir' => 'Al recibir',
+    'pedido_pago_al_recibir_pagado' => 'Al recibir (pagado)',
+    'pedido_nota' => 'Nota',
+    'pedido_cliente' => 'Cliente',
+    'pedido_wa' => 'Enviar resumen por WhatsApp',
+    'pedido_wa_ayuda' => 'Opcional: te llega la confirmación por WhatsApp.',
+    'pedido_volver_panel' => 'Volver al panel',
+    'pedido_mis_pedidos' => 'Ver mis pedidos',
+    'pedido_seguir' => 'Seguir comprando',
+    // Mi cuenta (cuenta)
+    'cuenta_titulo' => 'Mi cuenta',
+    'cuenta_hola' => 'Hola, {nombre}',
+    'cuenta_tipo' => 'Tipo de cuenta',
+    'cuenta_dueno' => 'Dueño',
+    'cuenta_ir_panel' => 'ir al panel',
+    'cuenta_pendiente' => 'Pendiente de aprobación',
+    'cuenta_rechazada' => 'Solicitud rechazada: compras como particular',
+    'cuenta_salir' => 'Cerrar sesión',
+    'cuenta_pedidos' => 'Mis pedidos',
+    'cuenta_sin_pedidos' => 'Aún no tienes pedidos.',
+    'cuenta_para_fecha' => 'para el {fecha}',
+    'cuenta_repetir' => 'Repetir pedido',
+    'cuenta_direcciones' => 'Mis direcciones',
+    'cuenta_eliminar' => 'Eliminar',
+    'cuenta_eliminar_aria' => 'Eliminar dirección {etiqueta}',
+    'cuenta_agregar_direccion' => 'Agregar dirección',
+    'cuenta_dir_nombre' => 'Nombre (ej. Casa, Trabajo)',
+    'cuenta_elige' => 'Elige',
+    'cuenta_referencia' => 'Referencia',
+    'cuenta_guardar_direccion' => 'Guardar dirección',
+    // Ingresar, registro y error
+    'ingresar_titulo' => 'Iniciar sesión',
+    'ingresar_entrar' => 'Entrar',
+    'ingresar_sin_cuenta' => '¿No tienes cuenta?',
+    'ingresar_crear' => 'Créala aquí',
+    'ingresar_prueba_titulo' => 'Cuentas de prueba',
+    'ingresar_prueba_texto' => 'Entra sin registrarte. Estas contraseñas son públicas y solo sirven en esta demo.',
+    'ingresar_entrar_como' => 'Entrar como {cuenta}',
+    'registro_titulo' => 'Crear cuenta',
+    'registro_aviso_demo' => 'No ingreses datos reales; esta demo se borra cada hora.',
+    'registro_tipo' => 'Tipo de cuenta',
+    'registro_particular_texto' => 'Para pedir en casa.',
+    'registro_nombre' => 'Nombre',
+    'registro_empresa' => 'Nombre del negocio',
+    'registro_telefono' => 'Teléfono',
+    'registro_clave_ayuda' => '(mínimo 8 caracteres)',
+    'registro_crear' => 'Crear cuenta',
+    'registro_ya_tienes' => '¿Ya tienes cuenta?',
+    'registro_inicia_sesion' => 'Inicia sesión',
+    'registro_o_prueba' => 'o usa una cuenta de prueba.',
+    'error_volver' => 'Volver a la tienda',
+    // Layout por defecto (los rubros traen el suyo)
+    'layout_carrito' => 'Carrito ({n})',
+    'layout_panel' => 'Panel',
+    'layout_cuenta' => 'Mi cuenta',
+    'layout_ingresar' => 'Ingresar',
+    // Panel del dueño (panel)
+    'panel_titulo' => 'Panel del dueño',
+    'panel_nuevo_producto' => '+ Nuevo producto',
+    'panel_secciones' => 'Secciones del panel',
+    'panel_resumen' => 'Resumen',
+    'panel_pedidos' => 'Pedidos',
+    'panel_productos' => 'Productos',
+    'panel_ventas_dia' => 'Ventas del día',
+    'panel_ventas_hoy' => 'Ventas de hoy',
+    'panel_pedidos_hoy' => 'Pedidos de hoy',
+    'panel_ticket' => 'Ticket promedio',
+    'panel_por_atender' => 'Por atender',
+    'panel_mas_vendidos' => 'Más vendidos hoy',
+    'panel_sin_ventas' => 'Aún no hay ventas hoy.',
+    'panel_unidades' => '{n} u.',
+    'panel_avisos' => 'Avisos',
+    'panel_stock_bajo' => 'Stock bajo: {producto} ({n})',
+    'panel_todo_en_orden' => 'Todo en orden.',
+    'panel_pedidos_nuevos' => 'Pedidos nuevos',
+    'panel_filtrar' => 'Filtrar por estado',
+    'panel_todos' => 'Todos',
+    'panel_sin_pedidos' => 'No hay pedidos aquí.',
+    'panel_despacho_a' => 'Despacho a {comuna}',
+    'panel_retiro' => 'Retiro',
+    'panel_para_fecha_hora' => 'para el {fecha} a las {hora}',
+    'panel_para_fecha' => 'para el {fecha}',
+    'panel_para_hora' => 'para las {hora}',
+    'panel_pago_prueba' => 'Pago de prueba',
+    'panel_pago_al_recibir' => 'Paga al recibir',
+    'panel_nota' => 'Nota: {nota}',
+    'panel_avanzar_nuevo' => 'Pasar a preparando',
+    'panel_avanzar_preparando' => 'Marcar listo',
+    'panel_avanzar_listo' => 'Marcar entregado',
+    'panel_cancelar' => 'Cancelar',
+    'panel_tabla' => 'Productos de la tienda',
+    'panel_producto' => 'Producto',
+    'panel_precio' => 'Precio',
+    'panel_stock' => 'Stock',
+    'panel_visible' => 'Visible',
+    'panel_acciones' => 'Acciones',
+    'panel_ocultar' => 'Ocultar {producto}',
+    'panel_mostrar' => 'Mostrar {producto}',
+    'panel_si' => 'Sí',
+    'panel_no' => 'No',
+    'panel_editar' => 'Editar',
+    'panel_solicitudes' => 'Solicitudes pendientes',
+    'panel_sin_solicitudes' => 'No hay solicitudes pendientes.',
+    'panel_aprobar' => 'Aprobar',
+    'panel_rechazar' => 'Rechazar',
+    // Panel: crear o editar producto (panel_producto)
+    'panel_producto_volver' => '← Volver a productos',
+    'panel_producto_nuevo' => 'Nuevo producto',
+    'panel_producto_editar' => 'Editar «{producto}»',
+    'panel_producto_editar_titulo' => 'Editar producto',
+    'panel_producto_nombre' => 'Nombre',
+    'panel_producto_descripcion' => 'Descripción',
+    'panel_producto_descripcion_ayuda' => '(máx. 300 caracteres)',
+    'panel_producto_categoria' => 'Categoría',
+    'panel_producto_precio' => 'Precio particular (CLP)',
+    'panel_producto_precio_mayorista' => '{precio_mayorista} (CLP)',
+    'panel_producto_precio_mayorista_ayuda' => '(vacío = mismo precio)',
+    'panel_producto_stock' => 'Stock',
+    'panel_producto_codigo' => 'Código',
+    'panel_producto_codigo_ayuda' => '(opcional, máx. 30 caracteres)',
+    'panel_producto_foto' => 'Foto',
+    'panel_producto_sin_foto' => 'Sin foto',
+    'panel_producto_foto_ayuda' => 'En la demo no se suben imágenes: elige una de la galería.',
+    'panel_producto_modelo' => 'Modelo 3D',
+    'panel_producto_sin_modelo' => 'Sin 3D',
+    'panel_producto_opciones' => 'Opciones',
+    'panel_producto_visible' => 'Visible en la tienda',
+    'panel_producto_destacado' => 'Destacado en la portada',
+    'panel_producto_crear' => 'Crear producto',
+    'panel_producto_guardar' => 'Guardar cambios',
+    'panel_producto_cancelar' => 'Cancelar',
 ];
 
 /**
  * Texto configurable: config['textos'][$clave], si no $porDefecto (el que trae una vista del rubro),
  * si no M_TEXTOS[$clave]. $valores reemplaza marcadores: m_texto('hora_entrega', null, ['hora' => '13:00']).
+ * $cfg: config a usar en vez de m_config() (para funciones que reciben la config como parámetro).
  */
-function m_texto(string $clave, ?string $porDefecto = null, array $valores = []): string
+function m_texto(string $clave, ?string $porDefecto = null, array $valores = [], ?array $cfg = null): string
 {
-    $textos = m_config()['textos'] ?? [];
+    $textos = ($cfg ?? m_config())['textos'] ?? [];
     $texto = (string) ($textos[$clave] ?? $porDefecto ?? M_TEXTOS[$clave] ?? '');
     if (!str_contains($texto, '{')) {
         return $texto;
@@ -332,6 +633,23 @@ function m_redirigir(string $ruta = 'inicio', array $params = [], string $ancla 
 function m_flash(string $tipo, string $texto): void
 {
     $_SESSION['flash'][] = [$tipo, $texto];
+}
+
+/**
+ * Errores del formulario que deben verse aunque la vista no los muestre junto a su campo (campos extra
+ * del checkout, pedido mínimo). m_accion_checkout los anota ($poner), el parcial _campos_extra marca los
+ * que mostró ($mostrado) y _mensajes lista el resto arriba de la página. Sin argumentos: los que faltan.
+ */
+function m_errores_pendientes(?array $poner = null, ?string $mostrado = null): array
+{
+    static $pendientes = [];
+    if ($poner !== null) {
+        $pendientes = $poner;
+    }
+    if ($mostrado !== null) {
+        unset($pendientes[$mostrado]);
+    }
+    return $pendientes;
 }
 
 function m_flashes(): array

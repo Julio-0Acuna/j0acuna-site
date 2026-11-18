@@ -235,3 +235,11 @@ fieldset.t-caja { margin: 0 0 16px; }
 .t-interruptor.is-on { background: #dcfce7; border-color: #16a34a; color: #14532d; }
 .t-mayoristas__acciones { display: flex; gap: 12px; align-items: center; }
 .t-error-pagina { text-align: center; padding: 40px 0; }
+/* Pedido mínimo: botón para continuar desactivado y avisos del carrito. */
+.t-btn[aria-disabled="true"] { opacity: .5; cursor: not-allowed; pointer-events: none; }
+.t-falta-minimo, .t-falta-gratis { margin: 0; }
+/* Catálogo: la tarjeta contiene sus sellos, el buscador no desborda en celulares y el código del producto. */
+.t-producto { position: relative; }
+.t-buscar { min-width: 0; }
+.t-buscar input { width: 100%; }
+.t-producto__codigo { margin: 0; font-size: .8rem; color: var(--t-suave); letter-spacing: .02em; }

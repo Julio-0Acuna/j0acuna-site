@@ -2,5 +2,5 @@
 <section class="t-portada">
   <h1><?= m_e($cfg['negocio']['nombre']) ?></h1>
   <p><?= m_e($cfg['negocio']['eslogan'] ?? '') ?></p>
-  <a class="t-btn t-btn--primario" href="#menu">Ver catálogo</a>
+  <a class="t-btn t-btn--primario" href="#menu"><?= m_e(m_texto('portada_boton')) ?></a>
 </section>

@@ -22,7 +22,8 @@ function m_db_abrir(string $ruta): PDO
 
 /** Columnas agregadas al esquema después de la primera versión: tabla => [columna => definición]. */
 const M_COLUMNAS_NUEVAS = [
-    'pedidos' => ['fecha_entrega' => "TEXT NOT NULL DEFAULT ''"],
+    'productos' => ['codigo' => "TEXT NOT NULL DEFAULT ''"],
+    'pedidos' => ['fecha_entrega' => "TEXT NOT NULL DEFAULT ''", 'extras' => "TEXT NOT NULL DEFAULT ''"],
 ];
 
 /**
@@ -53,12 +54,20 @@ function m_db_migrar(PDO $db): void
     }
 }
 
-/** Fecha de entrega de un pedido del seed: entero = días desde la creación de la base, o 'AAAA-MM-DD'. */
+/**
+ * Fecha de entrega de un pedido del seed: entero = días desde la creación de la base (si cae en un día
+ * cerrado de 'entrega', pasa al siguiente abierto; si es negativo, al anterior), o 'AAAA-MM-DD' (tal cual).
+ */
 function m_seed_fecha(mixed $valor, array $cfg, int $ahora): string
 {
     if (is_int($valor)) {
         $tz = new DateTimeZone($cfg['zona_horaria'] ?? DEMO_ZONA_HORARIA);
-        return (new DateTimeImmutable('@' . $ahora))->setTimezone($tz)->modify(($valor >= 0 ? '+' : '') . $valor . ' days')->format('Y-m-d');
+        $d = (new DateTimeImmutable('@' . $ahora))->setTimezone($tz)->modify(($valor >= 0 ? '+' : '') . $valor . ' days');
+        $entrega = m_entrega_cfg($cfg);
+        for ($i = 0; $i < 31 && m_dia_cerrado($entrega, $d); $i++) {
+            $d = $d->modify($valor < 0 ? '-1 day' : '+1 day');
+        }
+        return $d->format('Y-m-d');
     }
     return is_string($valor) && m_fecha_valida($valor) ? $valor : '';
 }
@@ -157,8 +166,8 @@ function m_seed_cargar(PDO $db, array $seed, array $cfg, int $ahora): void
         $catIds[$c['slug']] = (int) $db->lastInsertId();
     }
 
-    $prod = $db->prepare('INSERT INTO productos (categoria_id, nombre, descripcion, precio, precio_mayorista, stock, foto, modelo3d, visible, destacado, solo_mayorista, orden)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $prod = $db->prepare('INSERT INTO productos (categoria_id, nombre, descripcion, precio, precio_mayorista, stock, foto, modelo3d, visible, destacado, solo_mayorista, orden, codigo)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     $prodIds = [];
     $prodDatos = [];
     foreach ($seed['productos'] as $i => $p) {
@@ -175,6 +184,7 @@ function m_seed_cargar(PDO $db, array $seed, array $cfg, int $ahora): void
             (int) ($p['destacado'] ?? false),
             (int) ($p['solo_mayorista'] ?? false),
             $i,
+            mb_substr(trim((string) ($p['codigo'] ?? '')), 0, 30),
         ]);
         $prodIds[$p['slug']] = (int) $db->lastInsertId();
         $prodDatos[$p['slug']] = $p;
@@ -221,6 +231,7 @@ function m_seed_cargar(PDO $db, array $seed, array $cfg, int $ahora): void
             'cuando' => $p['cuando'] ?? '',
             'fecha_entrega' => m_seed_fecha($p['fecha_entrega'] ?? '', $cfg, $ahora),
             'nota' => $p['nota'] ?? '',
+            'extras' => $p['extras'] ?? [],
             'subtotal' => $subtotal,
             'costo_despacho' => $despacho,
             'pago' => $p['pago'],

@@ -3,8 +3,10 @@
  * Catálogo: portada (parcial del rubro), destacados, buscador, categorías, menú QR y Google.
  * @var array $cfg @var ?array $usuario @var array $categorias @var array $por_categoria
  * @var array $destacados @var string $q @var string $cat @var bool $hay_solo_mayorista
+ * @var ?array $categorias_visibles slugs con productos que el cliente puede ver (sin ella, chips de todas)
  */
 $filtrando = $q !== '' || $cat !== '';
+$categorias_visibles ??= null;
 ?>
 <?php m_parcial('portada', get_defined_vars()); ?>
 
@@ -13,7 +15,7 @@ $filtrando = $q !== '' || $cat !== '';
   <h2 id="destacados-titulo"><?= m_e(m_texto('titulo_destacados', 'Los más pedidos')) ?></h2>
   <div class="t-carrusel">
     <?php foreach ($destacados as $p): ?>
-      <?php m_parcial('_producto', ['p' => $p, 'usuario' => $usuario, 'cfg' => $cfg]); ?>
+      <?php m_parcial('_producto', ['p' => $p, 'usuario' => $usuario, 'cfg' => $cfg, 'prefijo' => 'd']); ?>
     <?php endforeach; ?>
   </div>
 </section>
@@ -23,26 +25,26 @@ $filtrando = $q !== '' || $cat !== '';
   <div class="t-catalogo__cabeza">
     <h2 id="menu-titulo"><?= m_e(m_texto('titulo_catalogo', 'Catálogo')) ?></h2>
     <form class="t-buscar" role="search" method="get" action="<?= m_e($cfg['url_base']) ?>#menu">
-      <label class="demo-sr" for="t-q">Buscar productos</label>
+      <label class="demo-sr" for="t-q"><?= m_e(m_texto('inicio_buscar_etiqueta')) ?></label>
       <input type="search" id="t-q" name="q" value="<?= m_e($q) ?>" maxlength="40" placeholder="<?= m_e(m_texto('buscar_placeholder', 'Buscar…')) ?>">
       <?php if ($cat !== ''): ?><input type="hidden" name="cat" value="<?= m_e($cat) ?>"><?php endif; ?>
-      <button class="t-btn" type="submit">Buscar</button>
+      <button class="t-btn" type="submit"><?= m_e(m_texto('inicio_buscar')) ?></button>
     </form>
   </div>
-  <nav class="t-chips" aria-label="Categorías">
-    <a href="<?= m_e($cfg['url_base']) ?>#menu"<?= $cat === '' ? ' aria-current="true" class="is-activo"' : '' ?>>Todo</a>
+  <nav class="t-chips" aria-label="<?= m_e(m_texto('inicio_categorias')) ?>">
+    <a href="<?= m_e($cfg['url_base']) ?>#menu"<?= $cat === '' ? ' aria-current="true" class="is-activo"' : '' ?>><?= m_e(m_texto('inicio_todo')) ?></a>
     <?php foreach ($categorias as $c): ?>
-      <?php if ($q === '' || !empty($por_categoria[$c['slug']])): ?>
+      <?php if (($q === '' || !empty($por_categoria[$c['slug']])) && ($categorias_visibles === null || in_array($c['slug'], $categorias_visibles, true))): ?>
       <a href="<?= m_e(m_url('inicio', ['cat' => $c['slug']])) ?>#menu"<?= $cat === $c['slug'] ? ' aria-current="true" class="is-activo"' : '' ?>><?= m_e($c['nombre']) ?></a>
       <?php endif; ?>
     <?php endforeach; ?>
   </nav>
 
   <?php if ($q !== ''): ?>
-    <p class="t-resultado">Resultados para «<?= m_e($q) ?>» · <a href="<?= m_e($cfg['url_base']) ?>#menu">ver todo</a></p>
+    <p class="t-resultado"><?= m_e(m_texto('inicio_resultados', null, ['q' => $q])) ?> · <a href="<?= m_e($cfg['url_base']) ?>#menu"><?= m_e(m_texto('inicio_ver_todo')) ?></a></p>
   <?php endif; ?>
   <?php if (!$por_categoria): ?>
-    <p class="t-vacio">No encontramos productos con esa búsqueda.</p>
+    <p class="t-vacio"><?= m_e(m_texto('inicio_sin_resultados')) ?></p>
   <?php endif; ?>
 
   <?php foreach ($categorias as $c): ?>
@@ -64,7 +66,7 @@ $filtrando = $q !== '' || $cat !== '';
     <?php if ($usuario === null): ?>
       <a class="t-btn" href="<?= m_e(m_url('registro')) ?>"><?= m_e(m_texto('crear_cuenta_mayorista')) ?></a>
     <?php elseif ($usuario['tipo'] === 'mayorista' && $usuario['estado'] === 'pendiente'): ?>
-      <p class="t-etiqueta">Tu solicitud está pendiente de aprobación.</p>
+      <p class="t-etiqueta"><?= m_e(m_texto('inicio_solicitud_pendiente')) ?></p>
     <?php endif; ?>
   </aside>
   <?php endif; ?>

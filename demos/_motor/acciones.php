@@ -63,6 +63,8 @@ function m_accion_inicio(bool $post): void
         'q' => $q,
         'cat' => $cat,
         'hay_solo_mayorista' => (int) $db->query('SELECT COUNT(*) FROM productos WHERE solo_mayorista = 1 AND visible = 1')->fetchColumn() > 0,
+        // Chips: solo las categorías con algún producto que este cliente puede ver.
+        'categorias_visibles' => m_categorias_visibles($db, $u),
     ]);
 }
 
@@ -78,7 +80,7 @@ function m_accion_carrito(bool $post): void
             $error = m_carrito_poner($db, $u, $id, max(1, min(M_MAX_CANTIDAD, m_entero_post('cantidad') ?: 1)));
             if ($error === '') {
                 $p = m_producto($db, $id);
-                m_flash('ok', 'Agregaste «' . ($p['nombre'] ?? 'producto') . '» al carrito.');
+                m_flash('ok', m_texto('carrito_agregado', null, ['producto' => $p['nombre'] ?? 'producto']));
             }
         } elseif ($accion === 'cambiar') {
             $error = m_carrito_poner($db, $u, $id, m_entero_post('cantidad'), true);
@@ -100,21 +102,30 @@ function m_accion_carrito(bool $post): void
     foreach (array_unique($carrito['avisos']) as $a) {
         m_flash('info', $a);
     }
-    m_vista('carrito', m_contexto() + ['titulo' => 'Tu carrito', 'carrito' => $carrito]);
+    m_vista('carrito', m_contexto() + ['titulo' => m_texto('carrito_titulo'), 'carrito' => $carrito]);
 }
 
 function m_accion_checkout(bool $post): void
 {
     $db = m_db();
     $cfg = m_config();
+    $campos = m_checkout_campos($cfg);
+    // ?<nombre>=valor precarga una opción de 'checkout_campos' (ej. "Reservar con Benjamín": ?barbero=benjamin).
+    // Se guarda en la sesión antes de pedir inicio de sesión para que no se pierda en el camino.
+    foreach ($campos as $nombre => $c) {
+        $valor = $_GET[$nombre] ?? null;
+        if (!$post && $c['tipo'] === 'opcion' && is_string($valor) && array_key_exists($valor, $c['opciones'])) {
+            $_SESSION['checkout_precarga'][$nombre] = $valor;
+        }
+    }
     $u = m_exigir_sesion('checkout');
     $carrito = m_carrito($db, $u);
     if ($carrito['lineas'] === []) {
-        m_flash('info', 'Tu carrito está vacío.');
+        m_flash('info', m_texto('carrito_vacio'));
         m_redirigir('inicio');
     }
     $errores = [];
-    $previo = $_SESSION['checkout_form'] ?? [];
+    $previo = [];
     if ($post) {
         [$datos, $errores] = m_checkout_validar($db, $cfg, $u, $_POST, $carrito['subtotal']);
         if ($datos !== null) {
@@ -127,21 +138,46 @@ function m_accion_checkout(bool $post): void
                 m_flash('error', $error);
                 m_redirigir('carrito');
             }
+            unset($_SESSION['checkout_precarga']);
             m_flash('ok', m_texto('pedido_exito_al_recibir'));
             m_redirigir('pedido', ['id' => $id]);
         }
         $previo = array_intersect_key($_POST, array_flip(['entrega', 'pago', 'cuando', 'fecha_entrega', 'nota', 'calle', 'comuna', 'referencia', 'direccion_id']));
     }
+    // Valores de los campos extra: lo enviado o, al abrir el checkout, la precarga por URL y el 'defecto'.
+    $valoresExtra = [];
+    $precarga = is_array($_SESSION['checkout_precarga'] ?? null) ? $_SESSION['checkout_precarga'] : [];
+    foreach ($campos as $nombre => $c) {
+        $valoresExtra[$nombre] = $post ? ($_POST['extra'][$nombre] ?? '') : ($precarga[$nombre] ?? $c['defecto']);
+    }
+    // Errores sin campo propio en la vista (campos extra, pedido mínimo): si la vista del rubro no los muestra,
+    // _mensajes los lista arriba (el parcial _campos_extra marca los que sí mostró).
+    m_errores_pendientes(array_filter($errores, static fn (string $k): bool => str_starts_with($k, 'extra_') || $k === 'minimo', ARRAY_FILTER_USE_KEY));
+    // Modo 'fecha': el selector de hora lista todas; para hoy (y cualquier día con menos horas) la vista
+    // marca en data-horas cuáles quedan, y tienda.js oculta las demás. El servidor valida con las mismas listas.
+    $horas = m_horas_entrega($cfg);
+    $fechas = m_fechas_entrega($cfg);
+    $horasPorFecha = [];
+    foreach (array_keys($fechas) as $f) {
+        $h = m_horas_entrega($cfg, (string) $f);
+        if ($h !== $horas) {
+            $horasPorFecha[$f] = $h;
+        }
+    }
     m_vista('checkout', m_contexto() + [
-        'titulo' => 'Finalizar compra',
+        'titulo' => m_texto('checkout_titulo'),
         'carrito' => $carrito,
         'direcciones' => m_direcciones($db, (int) $u['id']),
         'errores' => $errores,
         'previo' => $previo,
-        'horas' => m_horas_entrega($cfg),
-        // Modo entrega 'fecha': días para elegir (vacío en modo 'hoy').
+        'horas' => $horas,
+        // Modo entrega 'fecha': días para elegir (vacío en modo 'hoy') y las horas de los días que no las tienen todas.
         'con_fecha' => m_entrega_con_fecha($cfg),
-        'fechas' => m_fechas_entrega($cfg),
+        'fechas' => $fechas,
+        'horas_por_fecha' => $horasPorFecha,
+        // Campos extra ('checkout_campos'): la vista los imprime con m_parcial('_campos_extra', ...).
+        'campos_extra' => $campos,
+        'valores_extra' => $valoresExtra,
     ], $errores ? 422 : 200);
 }
 
@@ -168,12 +204,13 @@ function m_accion_pago(bool $post): void
             m_flash('error', $error);
             m_redirigir('carrito');
         }
+        unset($_SESSION['checkout_precarga']);
         m_flash('ok', m_texto('pedido_exito_prueba'));
         m_redirigir('pedido', ['id' => $id]);
     }
     $despacho = $datos['entrega'] === 'despacho' ? (m_costo_despacho($cfg, $datos['comuna'], $carrito['subtotal']) ?? 0) : 0;
     m_vista('pago', m_contexto() + [
-        'titulo' => 'Pago de prueba',
+        'titulo' => m_texto('pago_titulo'),
         'carrito' => $carrito,
         'datos' => $datos,
         'despacho' => $despacho,
@@ -190,7 +227,7 @@ function m_accion_pedido(bool $post): void
         m_vista('error', m_contexto() + ['titulo' => 'Pedido no encontrado', 'mensaje' => 'No encontramos ese pedido en tu cuenta.'], 404);
         return;
     }
-    m_vista('pedido', m_contexto() + ['titulo' => 'Pedido ' . $p['codigo'], 'pedido' => $p, 'wa' => m_wa(m_pedido_resumen_texto($p))]);
+    m_vista('pedido', m_contexto() + ['titulo' => m_texto('pedido_codigo', null, ['codigo' => $p['codigo']]), 'pedido' => $p, 'wa' => m_wa(m_pedido_resumen_texto($p))]);
 }
 
 /** Resumen del pedido para enviarlo por WhatsApp. */
@@ -211,6 +248,9 @@ function m_pedido_resumen_texto(array $p): string
         $lineas[] = 'Para el ' . $fecha . ($p['cuando'] !== '' ? ' a las ' . $p['cuando'] : '');
     } elseif ($p['cuando'] !== '') {
         $lineas[] = 'Para las ' . $p['cuando'];
+    }
+    foreach (m_pedido_extras($p) as [$etiqueta, $valor]) {
+        $lineas[] = $etiqueta . ': ' . $valor;
     }
     $lineas[] = 'Pago: ' . ($p['pago'] === 'prueba' ? 'pago de prueba (simulado)' : 'al recibir');
     if (($cfg['resumen_con_nota'] ?? true) && trim((string) ($p['nota'] ?? '')) !== '') {
@@ -247,7 +287,7 @@ function m_accion_ingresar(bool $post): void
         }
     }
     m_vista('ingresar', m_contexto() + [
-        'titulo' => 'Iniciar sesión',
+        'titulo' => m_texto('ingresar_titulo'),
         'error' => $error,
         'email' => $email,
         'volver' => $volver,
@@ -277,7 +317,7 @@ function m_accion_registro(bool $post): void
         }
     }
     m_vista('registro', m_contexto() + [
-        'titulo' => 'Crear cuenta',
+        'titulo' => m_texto('registro_titulo'),
         'errores' => $errores,
         'previo' => $previo,
         'volver' => m_volver($_GET['volver'] ?? $_POST['volver'] ?? ''),
@@ -322,7 +362,7 @@ function m_accion_cuenta(bool $post): void
         }
     }
     m_vista('cuenta', m_contexto() + [
-        'titulo' => 'Mi cuenta',
+        'titulo' => m_texto('cuenta_titulo'),
         'direcciones' => m_direcciones($db, (int) $u['id']),
         'pedidos' => m_pedidos_de($db, (int) $u['id']),
         'errores' => $errores,
@@ -358,7 +398,7 @@ function m_accion_panel(bool $post): void
     }
     $estado = is_string($_GET['estado'] ?? null) && isset(M_ESTADOS[$_GET['estado']]) ? $_GET['estado'] : '';
     m_vista('panel', m_contexto() + [
-        'titulo' => 'Panel del dueño',
+        'titulo' => m_texto('panel_titulo'),
         'ver' => $ver,
         'estado' => $estado,
         'ventas' => m_ventas_del_dia($db, $cfg),
@@ -392,7 +432,7 @@ function m_accion_panel_producto(bool $post): void
         $producto = array_merge($producto ?? [], $_POST);
     }
     m_vista('panel_producto', m_contexto() + [
-        'titulo' => $id === null ? 'Nuevo producto' : 'Editar producto',
+        'titulo' => m_texto($id === null ? 'panel_producto_nuevo' : 'panel_producto_editar_titulo'),
         'producto' => $producto,
         'id' => $id,
         'categorias' => m_categorias($db),

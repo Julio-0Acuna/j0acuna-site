@@ -156,7 +156,10 @@ case "$R" in 303*) pasa "agregar al carrito ($R)";; *) falla "agregar al carrito
 curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'Pepperoni Cohete' && pasa "el carrito tiene el producto" || falla "carrito vacío"
 
 CHK=$(curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout")
-printf '%s' "$CHK" | grep -qF '>Hoy a las 12:30</option>' && pasa "checkout de la pizzería ofrece «Hoy a las …» (modo hoy)" || falla "checkout de la pizzería sin «Hoy a las …»"
+AHORA=$(tools/php.sh -r 'date_default_timezone_set("America/Santiago"); echo date("H:i");')
+PASADAS=$(printf '%s' "$CHK" | grep -oE '>Hoy a las [0-9]{2}:[0-9]{2}</option>' | grep -oE '[0-9]{2}:[0-9]{2}' | awk -v a="$AHORA" '$0 <= a' | wc -l)
+printf '%s' "$CHK" | grep -qF '<option value="">Lo antes posible</option>' && pasa "checkout de la pizzería en modo hoy («Lo antes posible» y «Hoy a las …»)" || falla "checkout de la pizzería sin «Lo antes posible»"
+[ "$PASADAS" -eq 0 ] && pasa "checkout de la pizzería no ofrece horas pasadas (son las $AHORA)" || falla "checkout de la pizzería ofrece $PASADAS horas pasadas (son las $AHORA)"
 printf '%s' "$CHK" | grep -qF '¿Para cuándo?' && pasa "checkout de la pizzería pregunta «¿Para cuándo?»" || falla "checkout de la pizzería sin «¿Para cuándo?»"
 printf '%s' "$CHK" | grep -qF 'name="fecha_entrega"' && falla "la pizzería pide fecha de entrega y no debería" || pasa "la pizzería no pide fecha de entrega"
 T=$(printf '%s' "$CHK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
@@ -272,9 +275,18 @@ return [
     'negocio' => ['nombre' => 'Tienda Fecha'],
     'mayoristas' => true,
     'comunas' => ['Macul' => 2000],
+    'pedido_minimo' => 30000,
+    'pedido_minimo_solo_despacho' => true,
+    'despacho_gratis_desde' => 50000,
     'horas_entrega' => ['10:00', '18:00'],
     'menu_qr' => true,
     'entrega' => ['modo' => 'fecha', 'dias_min' => 1, 'dias_max' => 10, 'cerrado' => [1]],
+    'checkout_campos' => [
+        ['nombre' => 'sabor', 'etiqueta' => 'Sabor del bizcocho', 'tipo' => 'opcion', 'opciones' => ['vainilla' => 'Vainilla', 'chocolate' => 'Chocolate']],
+        ['nombre' => 'patente', 'etiqueta' => 'Patente del auto', 'patron' => '/^[A-Z]{2,4}[0-9]{2,4}$/', 'normalizar' => 'patente', 'max' => 8, 'ayuda' => 'Para dejarte pasar al estacionamiento.'],
+        ['nombre' => 'mayor', 'etiqueta' => 'Confirmo que soy mayor de 18', 'tipo' => 'casilla'],
+        ['nombre' => 'obra', 'etiqueta' => 'Nombre de la obra', 'solo' => 'despacho'],
+    ],
     'textos' => [
         'mayorista' => 'Empresa',
         'mayoristas' => 'Empresas',
@@ -284,6 +296,10 @@ return [
         'hora_entrega_fecha' => 'Retiro a las {hora}',
         'pedido_exito_al_recibir' => 'Encargo recibido: te esperamos.',
         'pedido_exito_prueba' => 'Pago de prueba aprobado: encargo agendado.',
+        'checkout_titulo' => 'Confirmar encargo',
+        'checkout_confirmar' => 'Agendar encargo',
+        'carrito_titulo' => 'Tu encargo',
+        'panel_titulo' => 'Panel de la pasteleria',
     ],
 ];
 PHP
@@ -292,7 +308,7 @@ cat > "$F/seed.php" <<'PHP'
 return [
     'categorias' => [['slug' => 'tortas', 'nombre' => 'Tortas'], ['slug' => 'empresas', 'nombre' => 'Para empresas']],
     'productos' => [
-        ['slug' => 'torta', 'categoria' => 'tortas', 'nombre' => 'Torta de prueba', 'precio' => 20000, 'stock' => 50],
+        ['slug' => 'torta', 'categoria' => 'tortas', 'nombre' => 'Torta de prueba', 'codigo' => 'TP-01', 'destacado' => true, 'precio' => 20000, 'stock' => 50],
         ['slug' => 'bandeja', 'categoria' => 'empresas', 'nombre' => 'Bandeja de prueba', 'precio' => 50000, 'precio_mayorista' => 40000, 'stock' => 10, 'solo_mayorista' => true],
     ],
     'usuarios' => [
@@ -316,6 +332,15 @@ INI2=$(curl -s "$B2/")
 printf '%s' "$INI2" | grep -qF 'Crear cuenta para empresas' && pasa "textos propios: botón «Crear cuenta para empresas»" || falla "textos propios: falta el botón de cuenta para empresas"
 printf '%s' "$INI2" | grep -qF 'Crear cuenta mayorista' && falla "textos propios: sigue el botón «Crear cuenta mayorista»" || pasa "textos propios: reemplazan «Crear cuenta mayorista»"
 printf '%s' "$INI2" | grep -qF '<figcaption>QR de la tienda de prueba</figcaption>' && pasa "textos propios: pie del QR" || falla "textos propios: pie del QR sin cambiar"
+# Catálogo: código del producto, búsqueda por palabras y por código, chips e ids sin repetir.
+printf '%s' "$INI2" | grep -qF '<p class="t-producto__codigo">Cód. TP-01</p>' && pasa "catálogo: el producto muestra «Cód. TP-01»" || falla "catálogo: sin el código del producto"
+REPETIDOS=$(printf '%s' "$INI2" | grep -oE ' id="[^"]+"' | sort | uniq -d | wc -l)
+[ "$REPETIDOS" -eq 0 ] && pasa "catálogo: sin id repetidos en la portada (con destacados)" || falla "catálogo: $REPETIDOS id repetidos en la portada"
+printf '%s' "$INI2" | grep -qF 'cat=empresas' && falla "catálogo: chip de una categoría sin productos visibles para el cliente" || pasa "catálogo: sin chip de la categoría solo para empresas"
+for q in tp01 TP-01 'torta prueba'; do
+  curl -s -G "$B2/" --data-urlencode "q=$q" | grep -qF '<h3>Torta de prueba</h3>' && pasa "catálogo: «$q» encuentra la torta" || falla "catálogo: «$q» no encuentra la torta"
+done
+curl -s -G "$B2/" --data-urlencode "q=torta chocolate" | grep -qF '<h3>Torta de prueba</h3>' && falla "catálogo: «torta chocolate» no debería encontrar nada" || pasa "catálogo: cada palabra debe estar"
 curl -s "$B2/?r=registro" | grep -qF '<strong>Empresa</strong>' && pasa "textos propios: registro ofrece cuenta «Empresa»" || falla "textos propios: registro sin «Empresa»"
 
 K1="$TMP/f-cliente.txt"; K2="$TMP/f-dueno.txt"
@@ -326,7 +351,21 @@ PID2=$(printf '%s' "$INI2" | grep -oE 'name="producto_id" value="[0-9]+"' | head
 T=$(printf '%s' "$INI2" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
 post2 "$K1" "/?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID2" > /dev/null
 
+CARRO2=$(curl -s -b "$K1" "$B2/?r=carrito")
+printf '%s' "$CARRO2" | grep -qF '<h1>Tu encargo</h1>' && pasa "textos propios: título del carrito" || falla "textos propios: título del carrito sin cambiar"
+printf '%s' "$CARRO2" | grep -qF 'Para despacho, el pedido mínimo es $30.000: te faltan $10.000. El retiro no tiene mínimo.' && pasa "mínimo solo despacho: el carrito lo avisa" || falla "mínimo solo despacho: el carrito no lo avisa"
+printf '%s' "$CARRO2" | grep -qF 'href="/?r=checkout"' && pasa "mínimo solo despacho: se puede continuar (el retiro no tiene mínimo)" || falla "mínimo solo despacho: el carrito no deja continuar"
+printf '%s' "$CARRO2" | grep -qF 'Te faltan $30.000 para despacho gratis.' && pasa "despacho gratis: el carrito dice cuánto falta" || falla "despacho gratis: el carrito no dice cuánto falta"
 CHK2=$(curl -s -b "$K1" -c "$K1" "$B2/?r=checkout")
+printf '%s' "$CHK2" | grep -qF '<h1>Confirmar encargo</h1>' && pasa "textos propios: título del checkout" || falla "textos propios: título del checkout sin cambiar"
+printf '%s' "$CHK2" | grep -qF '<title>Confirmar encargo</title>' && pasa "textos propios: <title> del checkout" || falla "textos propios: <title> del checkout sin cambiar"
+printf '%s' "$CHK2" | grep -qF 'type="submit">Agendar encargo</button>' && pasa "textos propios: botón del checkout" || falla "textos propios: botón del checkout sin cambiar"
+printf '%s' "$CHK2" | grep -qF 'Finalizar compra' && falla "textos propios: sigue «Finalizar compra»" || pasa "textos propios: sin «Finalizar compra»"
+for n in sabor patente mayor; do printf '%s' "$CHK2" | grep -qF "name=\"extra[$n]\"" && pasa "campos extra: el checkout pide extra[$n]" || falla "campos extra: el checkout no pide extra[$n]"; done
+printf '%s' "$CHK2" | grep -qF 'data-solo-entrega="despacho"' && pasa "campos extra: el campo solo de despacho va marcado" || falla "campos extra: falta data-solo-entrega"
+printf '%s' "$CHK2" | grep -qF 'Para dejarte pasar al estacionamiento.' && pasa "campos extra: texto de ayuda" || falla "campos extra: sin texto de ayuda"
+curl -s -b "$K1" "$B2/?r=checkout&sabor=chocolate" | grep -qF '<option value="chocolate" selected>' && pasa "campos extra: ?sabor=chocolate precarga la opción" || falla "campos extra: ?sabor= no precarga"
+curl -s -b "$K1" "$B2/?r=checkout&sabor=frutilla" | grep -qF '<option value="vainilla" selected>' && falla "campos extra: precarga una opción que no existe" || pasa "campos extra: ?sabor=<otro> no precarga nada raro"
 printf '%s' "$CHK2" | grep -qF '<select id="fecha_entrega" name="fecha_entrega" required>' && pasa "modo fecha: el checkout pide el día" || falla "modo fecha: el checkout no pide el día"
 printf '%s' "$CHK2" | grep -qF '>Retiro a las 10:00</option>' && pasa "modo fecha: horas con texto propio" || falla "modo fecha: horas sin texto propio"
 printf '%s' "$CHK2" | grep -qF 'Hoy a las' && falla "modo fecha: aparece «Hoy a las …»" || pasa "modo fecha: sin «Hoy a las …»"
@@ -343,32 +382,89 @@ for MALA in "" "1999-01-01" "$LUNES" "$(date +%F)" "<b>x</b>"; do
   RR=$(post2 "$K1" "/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$MALA")
   case "$RR" in 422*) grep -qF 'id="err-fecha_entrega"' "$TMP/ultima2.html" && pasa "modo fecha: rechaza la fecha «$MALA»" || falla "modo fecha: «$MALA» sin error en el campo";; *) falla "modo fecha: acepta la fecha «$MALA» ($RR)";; esac
 done
-RR=$(post2 "$K1" "/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$DIA" --data-urlencode "cuando=13:00" --data-urlencode "nota=Sin nueces")
+RR=$(post2 "$K1" "/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle 1" --data-urlencode "comuna=Macul" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$DIA" --data-urlencode "extra[obra]=Casa" --data-urlencode "extra[sabor]=chocolate" --data-urlencode "extra[patente]=ab-12 34" --data-urlencode "extra[mayor]=1")
+case "$RR" in 422*) grep -qF '<p class="demo-mensaje demo-mensaje--error" role="alert">Para despacho, el pedido mínimo es $30.000: te faltan $10.000. El retiro no tiene mínimo.</p>' "$TMP/ultima2.html" && pasa "mínimo solo despacho: el servidor rechaza un despacho bajo el mínimo (422 con mensaje)" || falla "mínimo solo despacho: 422 sin el mensaje";; *) falla "mínimo solo despacho: acepta un despacho bajo el mínimo ($RR)";; esac
+RR=$(post2 "$K1" "/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$DIA" --data-urlencode "extra[patente]=12-ab")
+case "$RR" in 422*) pasa "campos extra: sin ellos el checkout responde 422";; *) falla "campos extra: sin ellos: $RR";; esac
+for n in sabor patente mayor; do grep -qF "id=\"err-extra_$n\"" "$TMP/ultima2.html" && pasa "campos extra: error en extra[$n]" || falla "campos extra: sin error en extra[$n]"; done
+grep -qF 'id="err-extra_obra"' "$TMP/ultima2.html" && falla "campos extra: exige el campo de despacho en un retiro" || pasa "campos extra: el campo de despacho no se exige en retiro"
+grep -qF 'value="12-ab"' "$TMP/ultima2.html" && pasa "campos extra: el valor enviado se conserva al volver con errores" || falla "campos extra: se perdió el valor enviado"
+RR=$(post2 "$K1" "/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$DIA" --data-urlencode "cuando=13:00" --data-urlencode "nota=Sin nueces" --data-urlencode "extra[sabor]=chocolate" --data-urlencode "extra[patente]=ab-12 34" --data-urlencode "extra[mayor]=1")
 case "$RR" in 303*r=pedido*) pasa "modo fecha: checkout crea el pedido para el $DIA";; *) falla "modo fecha: checkout: $RR";; esac
 PED2_URL="${RR#* }"
 PED2=$(curl -s -b "$K1" "$PED2_URL")
+printf '%s' "$PED2" | grep -qF '<dt>Patente del auto</dt><dd>AB1234</dd>' && pasa "campos extra: la página del pedido muestra «Patente del auto: AB1234»" || falla "campos extra: la página del pedido sin la patente"
+printf '%s' "$PED2" | grep -qF '<dt>Sabor del bizcocho</dt><dd>Chocolate</dd>' && pasa "campos extra: la página del pedido muestra el texto de la opción" || falla "campos extra: la página del pedido sin el sabor"
+printf '%s' "$PED2" | grep -qF 'Sabor%20del%20bizcocho%3A%20Chocolate%0APatente%20del%20auto%3A%20AB1234%0AConfirmo%20que%20soy%20mayor%20de%2018%3A%20S%C3%AD%0APago%3A' && pasa "campos extra: van al resumen de WhatsApp" || falla "campos extra: no van al resumen de WhatsApp"
+curl -s -b "$K1" "$B2/?r=cuenta" | grep -qF 'Sabor del bizcocho: Chocolate · Patente del auto: AB1234' && pasa "campos extra: «Mi cuenta» los muestra" || falla "campos extra: «Mi cuenta» no los muestra"
 printf '%s' "$PED2" | grep -qF 'Encargo recibido: te esperamos.' && pasa "textos propios: mensaje de éxito del pedido" || falla "textos propios: mensaje de éxito sin cambiar"
 printf '%s' "$PED2" | grep -qE "<dt>Para</dt><dd>[^<]+ $DIA_NUM de [a-z]+, a las 13:00</dd>" && pasa "modo fecha: la página del pedido muestra el día y la hora" || falla "modo fecha: la página del pedido no muestra el día"
-printf '%s' "$PED2" | grep -qE "Para%20el%20[^\"]*%20${DIA_NUM}%20de%20[a-z]+%20a%20las%2013%3A00%0APago%3A%20al%20recibir%0ANota%3A%20Sin%20nueces" && pasa "modo fecha: el resumen de WhatsApp lleva el día y la nota" || falla "modo fecha: el resumen de WhatsApp sin el día o la nota"
+printf '%s' "$PED2" | grep -qE "Para%20el%20[^\"]*%20${DIA_NUM}%20de%20[a-z]+%20a%20las%2013%3A00%0A([^\"]*%0A)?Pago%3A%20al%20recibir%0ANota%3A%20Sin%20nueces" && pasa "modo fecha: el resumen de WhatsApp lleva el día y la nota" || falla "modo fecha: el resumen de WhatsApp sin el día o la nota"
 T=$(csrf2 "$K1" "/")
 post2 "$K1" "/?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID2" > /dev/null
 T=$(csrf2 "$K1" "/?r=checkout")
-RR=$(post2 "$K1" "/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=prueba" --data-urlencode "fecha_entrega=$DIA")
+RR=$(post2 "$K1" "/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=prueba" --data-urlencode "fecha_entrega=$DIA" --data-urlencode "extra[sabor]=vainilla" --data-urlencode "extra[patente]=XY 99" --data-urlencode "extra[mayor]=on")
 case "$RR" in 303*r=pago*) pasa "modo fecha: pago de prueba lleva a la pantalla simulada";; *) falla "modo fecha: pago de prueba: $RR";; esac
 T=$(csrf2 "$K1" "/?r=pago")
 RR=$(post2 "$K1" "/?r=pago" --data-urlencode "csrf=$T" --data-urlencode "accion=aprobar")
 PED3=$(curl -s -b "$K1" "${RR#* }")
 printf '%s' "$PED3" | grep -qE "<dt>Para</dt><dd>[^<]+ $DIA_NUM de [a-z]+, durante el d" && pasa "modo fecha: el pago de prueba conserva el día" || falla "modo fecha: el pago de prueba perdió el día ($RR)"
+printf '%s' "$PED3" | grep -qF '<dt>Patente del auto</dt><dd>XY99</dd>' && pasa "campos extra: el pago de prueba conserva los extras" || falla "campos extra: el pago de prueba perdió los extras"
 printf '%s' "$PED3" | grep -qF 'Pago de prueba aprobado: encargo agendado.' && pasa "textos propios: mensaje del pago de prueba" || falla "textos propios: mensaje del pago de prueba sin cambiar"
 
 T=$(csrf2 "$K2" "/?r=ingresar")
 post2 "$K2" "/?r=ingresar" --data-urlencode "csrf=$T" --data-urlencode "email=dueno@demo.cl" --data-urlencode "clave=dueno123" > /dev/null
 PANEL2=$(curl -s -b "$K2" "$B2/?r=panel&ver=pedidos")
 printf '%s' "$PANEL2" | grep -qE "· para el [^ <]+ $DIA_CORTO a las 13:00 ·" && pasa "modo fecha: el panel del dueño muestra el día ($DIA_CORTO)" || falla "modo fecha: el panel del dueño no muestra el día"
-printf '%s' "$PANEL2" | grep -qE "· para el [^ <]+ $(date -d '+3 days' +%-d/%-m) a las 11:00 ·" && pasa "seed: pedido de ejemplo con fecha_entrega en 3 días" || falla "seed: pedido de ejemplo sin fecha"
+SEED_DIA=$(date -d '+3 days' +%F); while [ "$(date -d "$SEED_DIA" +%u)" = 1 ]; do SEED_DIA=$(date -d "$SEED_DIA +1 day" +%F); done
+printf '%s' "$PANEL2" | grep -qE "· para el [^ <]+ $(date -d "$SEED_DIA" +%-d/%-m) a las 11:00 ·" && pasa "seed: pedido de ejemplo con fecha_entrega en 3 días (sin caer en lunes, cerrado)" || falla "seed: pedido de ejemplo sin fecha"
+printf '%s' "$PANEL2" | grep -qF 'Sabor del bizcocho: Chocolate · Patente del auto: AB1234 · Confirmo que soy mayor de 18: Sí' && pasa "campos extra: la lista del panel los muestra" || falla "campos extra: la lista del panel no los muestra"
+curl -s -b "$K2" "$PED2_URL" | grep -qF '<dt>Patente del auto</dt><dd>AB1234</dd>' && pasa "campos extra: el detalle del pedido en el panel los muestra" || falla "campos extra: el detalle del pedido para el dueño sin extras"
+printf '%s' "$PANEL2" | grep -qF '<p class="t-pequeno t-pedido-panel__nota">Nota: Sin nueces</p>' && pasa "panel: la lista de pedidos muestra la nota del cliente" || falla "panel: la lista de pedidos sin la nota"
+printf '%s' "$PANEL2" | grep -qF '<h1>Panel de la pasteleria</h1>' && pasa "textos propios: título del panel" || falla "textos propios: título del panel sin cambiar"
 printf '%s' "$PANEL2" | grep -qF '>Empresas (1)</a>' && pasa "textos propios: pestaña «Empresas» del panel" || falla "textos propios: pestaña del panel sin cambiar"
 curl -s -b "$K2" "$B2/?r=panel" | grep -qF '1 empresa(s) esperan aprobación' && pasa "textos propios: aviso de empresas por aprobar" || falla "textos propios: aviso de mayoristas sin cambiar"
 curl -s -b "$K2" "$B2/?r=panel&ver=mayoristas" | grep -qF '<h2>Empresas aprobadas</h2>' && pasa "textos propios: «Empresas aprobadas»" || falla "textos propios: «Mayoristas aprobados» sin cambiar"
+
+# --- Motor: un rubro con su propio checkout.php que no imprime los campos extra (tienda /minima/ en el mismo servidor).
+# Los errores de los campos extra deben verse igual, en el resumen de arriba (_mensajes), sin error 500.
+M="$F/minima"
+mkdir -p "$M/vistas"
+printf "<?php\nrequire '%s/demos/_motor/motor.php';\nm_ejecutar(require __DIR__ . '/config.php');\n" "$RAIZ" > "$M/index.php"
+cat > "$M/config.php" <<'PHP'
+<?php
+$base = require dirname(__DIR__) . '/config.php';
+return ['url_base' => '/minima/', 'db' => __DIR__ . '/tienda.sqlite', 'sesion' => 'demo_prueba_minima', 'vistas' => __DIR__ . '/vistas', 'pedido_minimo_solo_despacho' => false] + $base;
+PHP
+cat > "$M/vistas/checkout.php" <<'PHP'
+<?php /** Checkout propio mínimo: no imprime _campos_extra ni el pedido mínimo. @var array $fechas */ ?>
+<section class="t-pagina">
+  <h1>Checkout propio</h1>
+  <form method="post" action="<?= m_e(m_url('checkout')) ?>"><?= m_csrf_campo() ?>
+    <input type="hidden" name="entrega" value="retiro"><input type="hidden" name="pago" value="al_recibir">
+    <input type="hidden" name="fecha_entrega" value="<?= m_e((string) array_key_first($fechas)) ?>">
+    <button type="submit">Confirmar</button>
+  </form>
+</section>
+PHP
+K3="$TMP/m-cliente.txt"
+T=$(csrf2 "$K3" "/minima/?r=ingresar")
+post2 "$K3" "/minima/?r=ingresar" --data-urlencode "csrf=$T" --data-urlencode "email=cliente@demo.cl" --data-urlencode "clave=cliente123" > /dev/null
+T=$(csrf2 "$K3" "/minima/")
+post2 "$K3" "/minima/?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID2" > /dev/null
+T=$(csrf2 "$K3" "/minima/?r=checkout")
+RR=$(post2 "$K3" "/minima/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$DIA")
+case "$RR" in 422*) pasa "checkout propio sin campos extra: responde 422 (no 500)";; *) falla "checkout propio sin campos extra: $RR";; esac
+grep -qF 'Checkout propio' "$TMP/ultima2.html" && pasa "checkout propio: se usa la vista del rubro" || falla "checkout propio: no se usó la vista del rubro"
+for m in 'Elige una opción en «Sabor del bizcocho».' 'Completa «Patente del auto».' 'Debes marcar «Confirmo que soy mayor de 18».'; do
+  grep -qF "<p class=\"demo-mensaje demo-mensaje--error\" role=\"alert\">$m</p>" "$TMP/ultima2.html" && pasa "checkout propio: el resumen de errores muestra «$m»" || falla "checkout propio: falta el error «$m»"
+done
+CARRO3=$(curl -s -b "$K3" "$B2/minima/?r=carrito")
+printf '%s' "$CARRO3" | grep -qF 'Te faltan $10.000 para el pedido mínimo de $30.000.' && pasa "mínimo para todo: el carrito lo avisa" || falla "mínimo para todo: el carrito no lo avisa"
+printf '%s' "$CARRO3" | grep -qF 'aria-disabled="true"' && ! printf '%s' "$CARRO3" | grep -qF 'href="/minima/?r=checkout"' && pasa "mínimo para todo: el botón para continuar queda desactivado" || falla "mínimo para todo: se puede continuar bajo el mínimo"
+T=$(csrf2 "$K3" "/minima/?r=checkout")
+RR=$(post2 "$K3" "/minima/?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "pago=al_recibir" --data-urlencode "fecha_entrega=$DIA" --data-urlencode "extra[sabor]=chocolate" --data-urlencode "extra[patente]=ab-12 34" --data-urlencode "extra[mayor]=1")
+case "$RR" in 303*r=carrito*) curl -s -b "$K3" "$B2/minima/?r=carrito" | grep -qF 'El pedido mínimo es $30.000.' && pasa "mínimo para todo: el servidor no crea un retiro bajo el mínimo y vuelve al carrito con el mensaje" || falla "mínimo para todo: sin mensaje en el carrito";; *) falla "mínimo para todo: retiro bajo el mínimo: $RR";; esac
 
 # --- carrito.js (Multi-page): campos [data-carrito-extra] en el mensaje de WhatsApp (sin navegador, con node)
 if command -v node > /dev/null 2>&1; then
@@ -391,8 +487,10 @@ var extras = [
   campo({ 'data-carrito-extra': 'Sin elegir' }, { tagName: 'SELECT', selectedIndex: 0, options: [{ value: '', text: 'Elige' }] })
 ];
 var elementos = { entrega: { value: 'retiro' }, nombre: { value: 'Ana' }, nota: { value: 'Sin flores' }, hora: { value: '17:00' } };
-var conExtras = { elements: elementos, querySelectorAll: function (s) { return s === '[data-carrito-extra]' ? extras : []; } };
-var sinExtras = { elements: elementos, querySelectorAll: function () { return []; } };
+// carrito.js busca los campos por name: form.querySelector('[name="hora"]') (y '[name="entrega"]:checked' para radios).
+function porNombre(s) { var m = /^\[name="([^"]+)"\](:checked)?$/.exec(s); return m && !m[2] ? (elementos[m[1]] || null) : null; }
+var conExtras = { querySelector: porNombre, querySelectorAll: function (s) { return s === '[data-carrito-extra]' ? extras : []; } };
+var sinExtras = { querySelector: porNombre, querySelectorAll: function () { return []; } };
 var config = { clave: 'k', negocio: 'Prueba', nota: '(Pedido de prueba)', numero: '569', comunas: {}, catalogo: { t1: { nombre: 'Torta', variantes: { 'Única': 10000 } } } };
 var documento = {
   getElementById: function (id) { return id === 'demo-carrito-config' ? { textContent: JSON.stringify(config) } : null; },
@@ -405,6 +503,18 @@ var m = ventana.DemoCarrito.mensaje(conExtras);
 revisar(m.indexOf('Entrega: retiro en el local a las 17:00\nMensaje en la torta: Feliz cumple, Ana\nDía: sáb 21/11\nVelas: Sí\nNombre: Ana\nNota: Sin flores\n(Pedido de prueba)') !== -1, 'carrito.js agrega los campos extra con su etiqueta');
 revisar(!/Tarjeta|Vacío|Solo despacho|Sin elegir/.test(m), 'carrito.js omite extras vacíos, sin marcar u ocultos');
 revisar(ventana.DemoCarrito.mensaje(sinExtras) === 'Hola, quiero hacer un pedido en Prueba:\n• 1 × Torta – $10000\nSubtotal: $10000\nTotal: $10000\nEntrega: retiro en el local a las 17:00\nNombre: Ana\nNota: Sin flores\n(Pedido de prueba)', 'carrito.js sin extras arma el mismo mensaje de antes');
+// Reserva: entrega false, textos propios y un formulario sin entrega/comuna/direccion/hora (no debe romperse).
+config.entrega = false;
+config.textos = { saludo: 'Hola, quiero reservar hora en {negocio}:', total: 'Total a pagar en el salón: {total}' };
+elementos = { nombre: { value: 'Ana' } };
+new Function('window', 'document', src)(ventana, documento);
+revisar(ventana.DemoCarrito.mensaje(sinExtras) === 'Hola, quiero reservar hora en Prueba:\n• 1 × Torta – $10000\nSubtotal: $10000\nTotal a pagar en el salón: $10000\nNombre: Ana\n(Pedido de prueba)', 'carrito.js con entrega false y textos propios: sin línea de entrega');
+// Despacho: textos de entrega propios y despacho gratis desde un monto.
+config = { clave: 'k', negocio: 'Prueba', nota: '(Pedido de prueba)', numero: '569', comunas: { Renca: 1990 }, gratis_desde: 10000, catalogo: config.catalogo,
+  textos: { despacho: 'Reparto a {direccion} ({comuna})' } };
+elementos = { entrega: { value: 'despacho' }, comuna: { value: 'Renca' }, direccion: { value: 'Calle 1' } };
+new Function('window', 'document', src)(ventana, documento);
+revisar(ventana.DemoCarrito.mensaje(sinExtras) === 'Hola, quiero hacer un pedido en Prueba:\n• 1 × Torta – $10000\nSubtotal: $10000\nDespacho a Renca: Gratis\nTotal: $10000\nReparto a Calle 1 (Renca)\n(Pedido de prueba)', 'carrito.js con gratis_desde y texto de despacho propio');
 JS
 )
   [ -n "$NODE_OUT" ] || falla "carrito.js: la prueba con node no imprimió nada"

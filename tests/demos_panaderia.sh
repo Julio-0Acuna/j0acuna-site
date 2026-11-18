@@ -173,8 +173,10 @@ R=$(post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode
 case "$R" in 303*) pasa "agregar al carrito ($R)";; *) falla "agregar al carrito: $R";; esac
 curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'Marraqueta (1 kg)' && pasa "el carrito tiene la marraqueta" || falla "carrito vacío"
 
-T=$(csrf "$J1" "${TIENDA}?r=checkout")
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Quilicura" --data-urlencode "pago=al_recibir" --data-urlencode "cuando=06:30" --data-urlencode "nota=Tocar el timbre")
+CHK=$(curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout")
+T=$(printf '%s' "$CHK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
+HORA=$(printf '%s' "$CHK" | grep -oE '<option value="[0-9]{2}:[0-9]{2}"' | head -1 | grep -oE '[0-9]{2}:[0-9]{2}')
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Quilicura" --data-urlencode "pago=al_recibir" --data-urlencode "cuando=$HORA" --data-urlencode "nota=Tocar el timbre")
 case "$R" in 303*r=pedido*) pasa "checkout crea el pedido ($R)";; *) falla "checkout: $R";; esac
 PEDIDO_URL="${R#* }"
 PAGINA=$(curl -s -b "$J1" "$PEDIDO_URL")

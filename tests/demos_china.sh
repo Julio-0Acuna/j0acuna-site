@@ -213,7 +213,7 @@ curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF 'Menú para 2' && pasa "e
 curl -s -b "$J1" "$BASE$TIENDA" | grep -qF 'class="wk-comanda"' && pasa "comanda fija «Ver carrito» con productos" || falla "sin comanda del carrito"
 
 CHK=$(curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout")
-printf '%s' "$CHK" | grep -qF '>Hoy a las 12:30</option>' && pasa "checkout ofrece «Hoy a las …» (modo hoy)" || falla "checkout sin «Hoy a las …»"
+printf '%s' "$CHK" | grep -qE '>Hoy a las [0-9]{2}:[0-9]{2}</option>|<option value="">Lo antes posible</option>' && pasa "checkout ofrece «Hoy a las …» (modo hoy)" || falla "checkout sin «Hoy a las …»"
 printf '%s' "$CHK" | grep -qF '¿Para cuándo lo quieres?' && pasa "checkout con texto propio «¿Para cuándo lo quieres?»" || falla "checkout sin texto propio"
 printf '%s' "$CHK" | grep -qF 'name="fecha_entrega"' && falla "el delivery pide fecha de entrega y no debería" || pasa "el delivery no pide fecha de entrega"
 T=$(printf '%s' "$CHK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')

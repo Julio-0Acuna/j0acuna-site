@@ -8,10 +8,23 @@ declare(strict_types=1);
 
 const M_ESTADOS = ['nuevo' => 'Nuevo', 'preparando' => 'Preparando', 'listo' => 'Listo', 'entregado' => 'Entregado', 'cancelado' => 'Cancelado'];
 const M_SIGUIENTE = ['nuevo' => 'preparando', 'preparando' => 'listo', 'listo' => 'entregado'];
+
+/**
+ * Nombre visible de un estado (textos 'estado_<estado>', configurables). Con $entrega ('retiro' o
+ * 'despacho'), 'listo' dice 'Listo para retiro' o 'En camino' (estado_listo_retiro / estado_listo_despacho);
+ * sin ella, 'Listo' (como en el panel y en Mi cuenta). Un estado desconocido se devuelve tal cual.
+ */
+function m_estado_texto(string $estado, string $entrega = ''): string
+{
+    if ($estado === 'listo' && in_array($entrega, ['retiro', 'despacho'], true)) {
+        return m_texto('estado_listo_' . $entrega);
+    }
+    return isset(M_ESTADOS[$estado]) ? m_texto('estado_' . $estado) : $estado;
+}
 const M_MAX_CANTIDAD = 50;
 const M_MAX_DIRECCIONES = 5;
 /** Opciones de config['entrega'] (ver m_entrega_cfg). */
-const M_ENTREGA_BASE = ['modo' => 'hoy', 'dias_min' => 0, 'dias_max' => 14, 'cerrado' => null, 'horas' => null];
+const M_ENTREGA_BASE = ['modo' => 'hoy', 'dias_min' => 0, 'dias_max' => 14, 'cerrado' => null, 'horas' => null, 'margen_minutos' => null];
 
 /* ---------------------------------------------------------------- Precios */
 
@@ -53,6 +66,37 @@ function m_costo_despacho(array $cfg, string $comuna, int $subtotal): ?int
         return 0;
     }
     return (int) $cfg['comunas'][$comuna];
+}
+
+/**
+ * Pesos que faltan para el pedido mínimo con esa entrega (0 si cumple o no hay mínimo).
+ * Con 'pedido_minimo_solo_despacho' => true el retiro no tiene mínimo.
+ */
+function m_falta_minimo(array $cfg, int $subtotal, string $entrega): int
+{
+    $minimo = (int) ($cfg['pedido_minimo'] ?? 0);
+    if ($minimo <= 0 || (!empty($cfg['pedido_minimo_solo_despacho']) && $entrega !== 'despacho')) {
+        return 0;
+    }
+    return max(0, $minimo - $subtotal);
+}
+
+/** Pesos que faltan para el despacho gratis (0 si ya es gratis o no hay 'despacho_gratis_desde'). */
+function m_falta_gratis(array $cfg, int $subtotal): int
+{
+    $gratis = (int) ($cfg['despacho_gratis_desde'] ?? 0);
+    return $gratis > 0 ? max(0, $gratis - $subtotal) : 0;
+}
+
+/** Aviso del pedido mínimo para esa entrega ('' si cumple): el mismo texto en el carrito y en el checkout. */
+function m_aviso_minimo(array $cfg, int $subtotal, string $entrega): string
+{
+    $falta = m_falta_minimo($cfg, $subtotal, $entrega);
+    if ($falta === 0) {
+        return '';
+    }
+    $clave = !empty($cfg['pedido_minimo_solo_despacho']) ? 'carrito_falta_minimo_despacho' : 'carrito_falta_minimo';
+    return m_texto($clave, null, ['falta' => demo_clp($falta), 'minimo' => demo_clp((int) $cfg['pedido_minimo'])], $cfg);
 }
 
 /* ---------------------------------------------------------------- Límites por IP */
@@ -163,6 +207,173 @@ final class MValidador
     }
 }
 
+/* ---------------------------------------------------------------- Campos extra del checkout */
+
+const M_CAMPO_TIPOS = ['texto', 'numero', 'opcion', 'casilla'];
+
+/**
+ * config['checkout_campos'] normalizado: [nombre => campo], en el orden de la config.
+ * Cada campo: nombre (/^[a-z][a-z0-9_]{0,30}$/, no 'r'), etiqueta, tipo ('texto', 'numero', 'opcion', 'casilla'),
+ * requerido (true), ayuda, defecto, solo ('' | 'retiro' | 'despacho'), error (mensaje propio, opcional) y según el tipo:
+ * texto: max (80, hasta 300), patron (regex PHP), normalizar ('' | 'patente'); numero: min (0), max (9999999);
+ * opcion: opciones ['valor' => 'Texto'].
+ * $entrega: null = todos; 'retiro' o 'despacho' = los que aplican a esa entrega; '' = solo los que no tienen 'solo'.
+ * Una config mal escrita lanza LogicException (se nota al primer uso, no con un cliente).
+ */
+function m_checkout_campos(array $cfg, ?string $entrega = null): array
+{
+    $out = [];
+    foreach ($cfg['checkout_campos'] ?? [] as $i => $c) {
+        $nombre = is_array($c) ? ($c['nombre'] ?? null) : null;
+        if (!is_string($nombre) || !preg_match('/^[a-z][a-z0-9_]{0,30}$/', $nombre) || $nombre === 'r') {
+            throw new LogicException("checkout_campos[$i]: 'nombre' debe ser minúsculas, números o _ (máx. 31, empieza con letra; no 'r').");
+        }
+        if (isset($out[$nombre])) {
+            throw new LogicException("checkout_campos: el nombre '$nombre' está repetido.");
+        }
+        $tipo = $c['tipo'] ?? 'texto';
+        if (!in_array($tipo, M_CAMPO_TIPOS, true)) {
+            throw new LogicException("checkout_campos '$nombre': tipo desconocido.");
+        }
+        $solo = $c['solo'] ?? '';
+        if (!in_array($solo, ['', 'retiro', 'despacho'], true)) {
+            throw new LogicException("checkout_campos '$nombre': 'solo' debe ser 'retiro' o 'despacho'.");
+        }
+        $campo = [
+            'nombre' => $nombre,
+            'etiqueta' => (string) ($c['etiqueta'] ?? $nombre),
+            'tipo' => $tipo,
+            'requerido' => (bool) ($c['requerido'] ?? true),
+            'ayuda' => (string) ($c['ayuda'] ?? ''),
+            'defecto' => (string) ($c['defecto'] ?? ''),
+            'solo' => $solo,
+            'error' => (string) ($c['error'] ?? ''),
+        ];
+        if ($tipo === 'texto') {
+            $campo['max'] = max(1, min(300, (int) ($c['max'] ?? 80)));
+            $campo['patron'] = (string) ($c['patron'] ?? '');
+            $campo['normalizar'] = (string) ($c['normalizar'] ?? '');
+            if (!in_array($campo['normalizar'], ['', 'patente'], true)) {
+                throw new LogicException("checkout_campos '$nombre': 'normalizar' solo acepta 'patente'.");
+            }
+            if ($campo['patron'] !== '' && @preg_match($campo['patron'], '') === false) {
+                throw new LogicException("checkout_campos '$nombre': 'patron' no es una expresión regular válida.");
+            }
+        } elseif ($tipo === 'numero') {
+            $campo['min'] = (int) ($c['min'] ?? 0);
+            $campo['max'] = (int) ($c['max'] ?? 9999999);
+            if ($campo['max'] < $campo['min']) {
+                throw new LogicException("checkout_campos '$nombre': 'max' es menor que 'min'.");
+            }
+        } elseif ($tipo === 'opcion') {
+            if (!is_array($c['opciones'] ?? null) || $c['opciones'] === []) {
+                throw new LogicException("checkout_campos '$nombre': una opción necesita 'opciones' => ['valor' => 'Texto'].");
+            }
+            $campo['opciones'] = [];
+            foreach ($c['opciones'] as $valor => $texto) {
+                $campo['opciones'][(string) $valor] = (string) $texto;
+            }
+        }
+        if ($entrega === null || $solo === '' || $solo === $entrega) {
+            $out[$nombre] = $campo;
+        }
+    }
+    return $out;
+}
+
+/**
+ * Valida los campos extra enviados en $post['extra'][nombre] para esa entrega.
+ * @return array{0: list<array{0: string, 1: string}>, 1: array<string, string>} [extras, errores]
+ * extras: [['Etiqueta', 'valor'], ...] tal como se muestran (texto de la opción, 'Sí' en una casilla);
+ * errores con clave 'extra_<nombre>'.
+ */
+function m_checkout_campos_validar(array $cfg, array $post, string $entrega): array
+{
+    $datos = is_array($post['extra'] ?? null) ? $post['extra'] : [];
+    $extras = [];
+    $errores = [];
+    foreach (m_checkout_campos($cfg, $entrega) as $nombre => $c) {
+        $v = $datos[$nombre] ?? '';
+        $valor = null;
+        $error = '';
+        $marcadores = ['campo' => $c['etiqueta']];
+        if ($c['tipo'] === 'casilla') {
+            if (is_string($v) && $v !== '' && $v !== '0') {
+                $valor = m_texto('checkout_extra_si', null, [], $cfg);
+            } elseif ($c['requerido']) {
+                $error = 'checkout_extra_marca';
+            }
+        } elseif ($c['tipo'] === 'opcion') {
+            $v = is_string($v) ? $v : '-';
+            if ($v === '') {
+                $error = $c['requerido'] ? 'checkout_extra_elige' : '';
+            } elseif (!array_key_exists($v, $c['opciones'])) {
+                $error = 'checkout_extra_elige';
+            } else {
+                $valor = $c['opciones'][$v];
+            }
+        } elseif ($c['tipo'] === 'numero') {
+            $v = is_string($v) ? str_replace(['.', ' ', '$'], '', trim($v)) : '-';
+            if ($v === '') {
+                $error = $c['requerido'] ? 'checkout_extra_falta' : '';
+            } elseif (!preg_match('/^-?\d{1,12}$/', $v) || (int) $v < $c['min'] || (int) $v > $c['max']) {
+                $error = 'checkout_extra_numero';
+                $marcadores += ['min' => $c['min'], 'max' => $c['max']];
+            } else {
+                $valor = (string) (int) $v;
+            }
+        } else {
+            $v = is_string($v) ? trim((string) preg_replace('/\s+/u', ' ', $v)) : '';
+            if ($c['normalizar'] === 'patente') {
+                $v = mb_strtoupper((string) preg_replace('/[\s.\-]+/u', '', $v));
+            }
+            if ($v === '') {
+                $error = $c['requerido'] ? 'checkout_extra_falta' : '';
+            } elseif (mb_strlen($v) > $c['max']) {
+                $error = 'checkout_extra_largo';
+                $marcadores['max'] = $c['max'];
+            } elseif ($c['patron'] !== '' && !preg_match($c['patron'], $v)) {
+                $error = 'checkout_extra_formato';
+            } else {
+                $valor = $v;
+            }
+        }
+        if ($error !== '') {
+            $errores['extra_' . $nombre] = $c['error'] !== '' ? $c['error'] : m_texto($error, null, $marcadores, $cfg);
+        } elseif ($valor !== null) {
+            $extras[] = [$c['etiqueta'], $valor];
+        }
+    }
+    return [$extras, $errores];
+}
+
+/** Extras para guardar en pedidos.extras: JSON [["Etiqueta","valor"], ...] o '' si no hay. */
+function m_extras_json(array $extras): string
+{
+    $limpios = m_pedido_extras(['extras' => $extras]);
+    return $limpios === [] ? '' : (string) json_encode($limpios, JSON_UNESCAPED_UNICODE);
+}
+
+/**
+ * Campos extra de un pedido: [['Etiqueta', 'valor'], ...] en el orden en que se pidieron.
+ * Ignora datos dañados y recorta etiqueta (60) y valor (300). Sirve para pedidos sin extras (devuelve []).
+ */
+function m_pedido_extras(array $pedido): array
+{
+    $crudo = $pedido['extras'] ?? '';
+    $lista = is_array($crudo) ? $crudo : (is_string($crudo) && $crudo !== '' ? json_decode($crudo, true) : null);
+    if (!is_array($lista) || !array_is_list($lista)) {
+        return [];
+    }
+    $out = [];
+    foreach ($lista as $par) {
+        if (is_array($par) && array_is_list($par) && count($par) === 2 && is_scalar($par[0]) && is_scalar($par[1])) {
+            $out[] = [mb_substr((string) $par[0], 0, 60), mb_substr((string) $par[1], 0, 300)];
+        }
+    }
+    return $out;
+}
+
 /* ---------------------------------------------------------------- Cuentas */
 
 function m_usuario_por_id(PDO $db, int $id): ?array
@@ -269,11 +480,13 @@ function m_producto(PDO $db, int $id): ?array
     return $st->fetch() ?: null;
 }
 
-/** Productos que este usuario puede ver, con su precio. $q filtra por nombre/descripción. */
+/**
+ * Productos que este usuario puede ver, con su precio. $q busca por palabras sueltas en nombre, descripción,
+ * categoría y código (cada palabra debe estar; los códigos, con o sin guion: ver demo_coincide()).
+ */
 function m_catalogo(PDO $db, ?array $usuario, string $q = '', string $categoria = ''): array
 {
     $rows = $db->query('SELECT p.*, c.slug AS categoria_slug, c.nombre AS categoria_nombre FROM productos p JOIN categorias c ON c.id = p.categoria_id ORDER BY c.orden, p.orden, p.id')->fetchAll();
-    $qn = demo_normalizar($q);
     $out = [];
     foreach ($rows as $p) {
         if (!m_puede_ver($p, $usuario)) {
@@ -282,14 +495,20 @@ function m_catalogo(PDO $db, ?array $usuario, string $q = '', string $categoria 
         if ($categoria !== '' && $p['categoria_slug'] !== $categoria) {
             continue;
         }
-        $texto = $p['nombre'] . ' ' . $p['descripcion'] . ' ' . $p['categoria_nombre'];
-        if ($qn !== '' && !str_contains(demo_normalizar($texto), $qn)) {
+        $texto = $p['nombre'] . ' ' . $p['descripcion'] . ' ' . $p['categoria_nombre'] . ' ' . ($p['codigo'] ?? '');
+        if ($q !== '' && !demo_coincide($texto, $q)) {
             continue;
         }
         $p['precio_final'] = m_precio($p, $usuario);
         $out[] = $p;
     }
     return $out;
+}
+
+/** Slugs de las categorías con al menos un producto que este usuario puede ver (para los chips del catálogo). */
+function m_categorias_visibles(PDO $db, ?array $usuario): array
+{
+    return array_values(array_unique(array_column(m_catalogo($db, $usuario), 'categoria_slug')));
 }
 
 /* ---------------------------------------------------------------- Carrito (en la sesión) */
@@ -373,15 +592,15 @@ function m_pedido_codigo(array $cfg, int $id): string
     return ($cfg['prefijo_pedido'] ?? 'PD') . '-' . (1000 + $id);
 }
 
-/** Inserta pedido e ítems (sin tocar stock). $items: [[producto_id, nombre, precio, cantidad]]. */
+/** Inserta pedido e ítems (sin tocar stock). $items: [[producto_id, nombre, precio, cantidad]]. $p['extras']: [['Etiqueta', 'valor'], ...]. */
 function m_pedido_insertar(PDO $db, array $cfg, array $p, array $items): int
 {
     $ahora = $p['creado_en'] ?? time();
-    $db->prepare('INSERT INTO pedidos (codigo, usuario_id, tipo_cliente, entrega, comuna, direccion, cuando, fecha_entrega, nota, subtotal, costo_despacho, total, pago, pagado, estado, creado_en, actualizado_en)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+    $db->prepare('INSERT INTO pedidos (codigo, usuario_id, tipo_cliente, entrega, comuna, direccion, cuando, fecha_entrega, nota, extras, subtotal, costo_despacho, total, pago, pagado, estado, creado_en, actualizado_en)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
         ->execute([
             'tmp-' . bin2hex(random_bytes(6)), $p['usuario_id'], $p['tipo_cliente'], $p['entrega'], $p['comuna'], $p['direccion'],
-            $p['cuando'], $p['fecha_entrega'] ?? '', $p['nota'], $p['subtotal'], $p['costo_despacho'], $p['subtotal'] + $p['costo_despacho'],
+            $p['cuando'], $p['fecha_entrega'] ?? '', $p['nota'], m_extras_json($p['extras'] ?? []), $p['subtotal'], $p['costo_despacho'], $p['subtotal'] + $p['costo_despacho'],
             $p['pago'], $p['pagado'], $p['estado'] ?? 'nuevo', $ahora, $ahora,
         ]);
     $id = (int) $db->lastInsertId();
@@ -397,8 +616,9 @@ function m_pedido_insertar(PDO $db, array $cfg, array $p, array $items): int
  * Valida los datos de entrega del checkout.
  * @return array{0: ?array, 1: array<string,string>} [datos, errores]
  */
-function m_checkout_validar(PDO $db, array $cfg, array $usuario, array $post, int $subtotal): array
+function m_checkout_validar(PDO $db, array $cfg, array $usuario, array $post, int $subtotal, ?int $ahora = null): array
 {
+    $ahora ??= time();
     $v = new MValidador($post);
     $entregas = [];
     if (!empty($cfg['retiro'])) {
@@ -410,12 +630,16 @@ function m_checkout_validar(PDO $db, array $cfg, array $usuario, array $post, in
     $entrega = $v->opcion('entrega', 'retiro o despacho', $entregas);
     // El pago de prueba solo existe en modo demo; un cliente real conecta su pasarela aquí.
     $pago = $v->opcion('pago', 'cómo pagar', !empty($cfg['demo']) ? ['prueba', 'al_recibir'] : ['al_recibir']);
-    $cuando = $v->opcion('cuando', 'para cuándo', array_merge([''], m_horas_entrega($cfg)), false);
     // Modo 'fecha': el día debe estar en la lista calculada aquí; en modo 'hoy' no se lee.
     $fecha = m_entrega_con_fecha($cfg)
-        ? $v->opcion('fecha_entrega', $entrega === 'despacho' ? 'el día de entrega' : 'el día de retiro', array_map('strval', array_keys(m_fechas_entrega($cfg))))
+        ? $v->opcion('fecha_entrega', $entrega === 'despacho' ? 'el día de entrega' : 'el día de retiro', array_map('strval', array_keys(m_fechas_entrega($cfg, $ahora))))
         : '';
+    // La hora, contra las que se ofrecen para ese día (o para hoy): una hora pasada se rechaza.
+    $cuando = $v->opcion('cuando', 'para cuándo', array_merge([''], m_horas_entrega($cfg, $fecha, $ahora)), false);
     $nota = $v->texto('nota', 'la nota', 300, false);
+    // Campos extra ('checkout_campos'): solo los de esta entrega; con una entrega no válida, solo los comunes.
+    [$extras, $erroresExtra] = m_checkout_campos_validar($cfg, $post, $entrega);
+    $v->errores += $erroresExtra;
     $comuna = '';
     $direccion = '';
     $guardar = null;
@@ -442,6 +666,12 @@ function m_checkout_validar(PDO $db, array $cfg, array $usuario, array $post, in
             $v->errores['comuna'] = 'No despachamos a esa comuna.';
         }
     }
+    // Pedido mínimo solo para despacho ('pedido_minimo_solo_despacho'): un despacho bajo el mínimo se rechaza aquí
+    // (422 con el mensaje), aunque el navegador lo haya dejado pasar. Sin esa opción se mantiene lo de siempre:
+    // m_pedido_crear no crea el pedido y la acción vuelve al carrito con «El pedido mínimo es $X.».
+    if ($entrega === 'despacho' && !empty($cfg['pedido_minimo_solo_despacho']) && ($aviso = m_aviso_minimo($cfg, $subtotal, $entrega)) !== '') {
+        $v->errores['minimo'] = $aviso;
+    }
     if (!$v->ok()) {
         return [null, $v->errores];
     }
@@ -451,6 +681,7 @@ function m_checkout_validar(PDO $db, array $cfg, array $usuario, array $post, in
         'cuando' => $cuando,
         'fecha_entrega' => $fecha,
         'nota' => $nota,
+        'extras' => $extras,
         'comuna' => $comuna,
         'direccion' => $direccion,
         'guardar_direccion' => $guardar,
@@ -467,11 +698,21 @@ function m_checkout_validar(PDO $db, array $cfg, array $usuario, array $post, in
  *   cerrado   días sin entrega: 1..7 (lunes..domingo) o fechas 'AAAA-MM-DD' (feriados).
  *             Si no se indica, se cierran los días sin horario en negocio['horario'];
  *   horas     ['desde', 'hasta'] para las horas ofrecidas (cada 30 min); si no, 'horas_entrega'.
+ *             'hasta' menor que 'desde' = el servicio pasa la medianoche (['12:30', '02:00']).
+ *   margen_minutos  para hoy no se ofrecen horas antes de ahora + este margen (por defecto 30);
+ *             false = ofrecer siempre todas las horas (como antes). Si se omite y el rubro reemplaza
+ *             vistas/checkout.php en modo 'hoy' (su vista puede ofrecer otros días), vale false.
  */
 function m_entrega_cfg(array $cfg): array
 {
     $e = array_replace(M_ENTREGA_BASE, is_array($cfg['entrega'] ?? null) ? $cfg['entrega'] : []);
     $e['modo'] = $e['modo'] === 'fecha' ? 'fecha' : 'hoy';
+    if ($e['margen_minutos'] === null) {
+        $propio = !empty($cfg['vistas']) && is_file($cfg['vistas'] . '/checkout.php');
+        $e['margen_minutos'] = $e['modo'] === 'hoy' && $propio ? false : 30;
+    } elseif ($e['margen_minutos'] !== false) {
+        $e['margen_minutos'] = max(0, (int) $e['margen_minutos']);
+    }
     $e['dias_min'] = max(0, (int) $e['dias_min']);
     $e['dias_max'] = max($e['dias_min'], (int) $e['dias_max']);
     if (is_array($e['cerrado'])) {
@@ -514,13 +755,18 @@ function m_fechas_entrega(array $cfg, ?int $ahora = null): array
     if ($e['modo'] !== 'fecha') {
         return [];
     }
+    $ahora ??= time();
     $tz = new DateTimeZone($cfg['zona_horaria'] ?? DEMO_ZONA_HORARIA);
-    $hoy = (new DateTimeImmutable('@' . ($ahora ?? time())))->setTimezone($tz)->setTime(0, 0);
+    $hoy = (new DateTimeImmutable('@' . $ahora))->setTimezone($tz)->setTime(0, 0);
     $fechas = [];
     for ($i = $e['dias_min']; $i <= $e['dias_max']; $i++) {
         $d = $hoy->modify('+' . $i . ' days');
         $clave = $d->format('Y-m-d');
-        if (in_array((int) $d->format('N'), $e['cerrado'], true) || in_array($clave, $e['cerrado'], true)) {
+        if (m_dia_cerrado($e, $d)) {
+            continue;
+        }
+        // Hoy sale de la lista cuando ya no quedan horas (la cocina cerró o cierra antes del margen).
+        if ($i === 0 && m_horas_entrega($cfg, $clave, $ahora) === []) {
             continue;
         }
         $corta = demo_fecha_corta($d);
@@ -550,15 +796,59 @@ function m_fecha_texto(string $ymd, bool $larga = true): string
     return $larga ? demo_fecha_larga($d) : demo_fecha_corta($d);
 }
 
-/** Horas ofrecidas para retiro o entrega (cada 30 min dentro del horario de cocina). */
-function m_horas_entrega(array $cfg): array
+/** ¿El día está cerrado según m_entrega_cfg()['cerrado'] (día de la semana 1..7 o fecha 'AAAA-MM-DD')? */
+function m_dia_cerrado(array $entrega, DateTimeInterface $d): bool
 {
-    [$desde, $hasta] = m_entrega_cfg($cfg)['horas'] ?? $cfg['horas_entrega'] ?? ['12:00', '23:00'];
-    $horas = [];
-    for ($m = demo_minutos($desde); $m <= demo_minutos($hasta); $m += 30) {
-        $horas[] = sprintf('%02d:%02d', intdiv($m, 60), $m % 60);
+    return in_array((int) $d->format('N'), $entrega['cerrado'], true) || in_array($d->format('Y-m-d'), $entrega['cerrado'], true);
+}
+
+/**
+ * Horas ofrecidas para retiro o entrega: cada 30 min entre 'desde' y 'hasta' (entrega['horas'] o 'horas_entrega').
+ * Si 'hasta' es menor que 'desde', el servicio pasa la medianoche: ['12:30', '02:00'] termina en 00:00 … 02:00.
+ * $fecha ('AAAA-MM-DD', día en que empieza el servicio): si es hoy (o el servicio de ayer que sigue abierto),
+ * solo las que quedan después de ahora + entrega['margen_minutos']; un día pasado o no válido no tiene horas.
+ * $fecha '' en modo 'hoy': las que quedan en el servicio actual (a las 00:40 con cierre 02:00 es el de ayer);
+ * en modo 'fecha': todas (el checkout marca en el día de hoy cuáles quedan).
+ * La validación del checkout usa estas mismas listas: lo que no se ofrece se rechaza.
+ */
+function m_horas_entrega(array $cfg, string $fecha = '', ?int $ahora = null): array
+{
+    $e = m_entrega_cfg($cfg);
+    [$desde, $hasta] = $e['horas'] ?? $cfg['horas_entrega'] ?? ['12:00', '23:00'];
+    $ini = demo_minutos((string) $desde);
+    $fin = demo_minutos((string) $hasta);
+    $cruza = $fin < $ini;
+    if ($cruza) {
+        $fin += 1440;
     }
-    return $horas;
+    $todas = [];
+    for ($m = $ini; $m <= $fin && $m < $ini + 1440; $m += 30) {
+        $todas[$m] = sprintf('%02d:%02d', intdiv($m % 1440, 60), $m % 60);
+    }
+    $margen = $e['margen_minutos'];
+    if ($fecha === '' && ($e['modo'] === 'fecha' || $margen === false)) {
+        return array_values($todas);
+    }
+    $tz = new DateTimeZone($cfg['zona_horaria'] ?? DEMO_ZONA_HORARIA);
+    $ya = (new DateTimeImmutable('@' . ($ahora ?? time())))->setTimezone($tz);
+    $hoy = $ya->setTime(0, 0);
+    $minAhora = (int) $ya->format('G') * 60 + (int) $ya->format('i');
+    if ($fecha === '') {
+        // Modo 'hoy': el servicio de ayer sigue abierto pasada la medianoche, hasta su cierre.
+        $dia = $cruza && $minAhora < $fin - 1440 ? $hoy->modify('-1 day') : $hoy;
+    } else {
+        if (!m_fecha_valida($fecha)) {
+            return [];
+        }
+        $dia = new DateTimeImmutable($fecha, $tz);
+        if ($margen === false) {
+            return $dia < $hoy->modify('-1 day') ? [] : array_values($todas);
+        }
+    }
+    // Minutos desde el comienzo del día de servicio hasta ahora (más de 1440 si el servicio empezó ayer).
+    $dias = (int) round(($hoy->getTimestamp() - $dia->getTimestamp()) / 86400);
+    $desdeAhora = $minAhora + 1440 * $dias + (int) $margen;
+    return array_values(array_filter($todas, static fn (int $m): bool => $m >= $desdeAhora, ARRAY_FILTER_USE_KEY));
 }
 
 /**
@@ -571,9 +861,8 @@ function m_pedido_crear(PDO $db, array $cfg, array $usuario, array $datos, bool 
     if ($carrito['lineas'] === []) {
         return [null, 'Tu carrito está vacío.'];
     }
-    $minimo = (int) ($cfg['pedido_minimo'] ?? 0);
-    if ($carrito['subtotal'] < $minimo) {
-        return [null, 'El pedido mínimo es ' . demo_clp($minimo) . '.'];
+    if (m_falta_minimo($cfg, $carrito['subtotal'], (string) $datos['entrega']) > 0) {
+        return [null, 'El pedido mínimo es ' . demo_clp((int) $cfg['pedido_minimo']) . '.'];
     }
     $despacho = 0;
     if ($datos['entrega'] === 'despacho') {
@@ -609,6 +898,7 @@ function m_pedido_crear(PDO $db, array $cfg, array $usuario, array $datos, bool 
             'cuando' => $datos['cuando'],
             'fecha_entrega' => $fecha,
             'nota' => $datos['nota'],
+            'extras' => $datos['extras'] ?? [],
             'subtotal' => $carrito['subtotal'],
             'costo_despacho' => $despacho,
             'pago' => $datos['pago'],
@@ -733,6 +1023,14 @@ function m_ventas_del_dia(PDO $db, array $cfg, ?int $ahora = null): array
     ];
 }
 
+/** Texto recortado a $max caracteres con «…» al final si era más largo (para listas: nota del pedido en el panel). */
+function m_recortar(string $texto, int $max): string
+{
+    $texto = trim($texto);
+    return mb_strlen($texto) > $max ? rtrim(mb_substr($texto, 0, $max)) . '…' : $texto;
+}
+
+/** Pedidos para el panel (con nota y extras: la lista los muestra), más nuevos primero. */
 function m_panel_pedidos(PDO $db, string $estado = '', int $limite = 60): array
 {
     $sql = 'SELECT p.*, u.nombre AS cliente, u.empresa AS cliente_empresa FROM pedidos p JOIN usuarios u ON u.id = p.usuario_id';
@@ -801,20 +1099,21 @@ function m_producto_guardar(PDO $db, array $cfg, ?int $id, array $post): array
     $stock = $v->entero('stock', 'El stock', 0, 99999);
     $foto = $v->opcion('foto', 'una foto de la lista', array_map('strval', array_keys(m_fotos_permitidas($db, $cfg))), false);
     $modelo = $v->opcion('modelo3d', 'un modelo 3D de la lista', array_merge([''], $cfg['modelos3d'] ?? []), false);
+    $codigo = $v->texto('codigo', 'el código', 30, false);
     if (!$v->ok()) {
         return [null, $v->errores];
     }
     $valores = [
         (int) $categoria, $nombre, $descripcion, $precio, $mayorista, $stock, $foto, $modelo,
-        (int) $v->marcado('visible'), (int) $v->marcado('destacado'), (int) (!empty($cfg['mayoristas']) && $v->marcado('solo_mayorista')),
+        (int) $v->marcado('visible'), (int) $v->marcado('destacado'), (int) (!empty($cfg['mayoristas']) && $v->marcado('solo_mayorista')), $codigo,
     ];
     if ($id === null) {
         $orden = (int) $db->query('SELECT COALESCE(MAX(orden), 0) + 1 FROM productos')->fetchColumn();
-        $db->prepare('INSERT INTO productos (categoria_id, nombre, descripcion, precio, precio_mayorista, stock, foto, modelo3d, visible, destacado, solo_mayorista, orden) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+        $db->prepare('INSERT INTO productos (categoria_id, nombre, descripcion, precio, precio_mayorista, stock, foto, modelo3d, visible, destacado, solo_mayorista, codigo, orden) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
             ->execute([...$valores, $orden]);
         return [(int) $db->lastInsertId(), []];
     }
-    $db->prepare('UPDATE productos SET categoria_id = ?, nombre = ?, descripcion = ?, precio = ?, precio_mayorista = ?, stock = ?, foto = ?, modelo3d = ?, visible = ?, destacado = ?, solo_mayorista = ? WHERE id = ?')
+    $db->prepare('UPDATE productos SET categoria_id = ?, nombre = ?, descripcion = ?, precio = ?, precio_mayorista = ?, stock = ?, foto = ?, modelo3d = ?, visible = ?, destacado = ?, solo_mayorista = ?, codigo = ? WHERE id = ?')
         ->execute([...$valores, $id]);
     return [$id, []];
 }

@@ -46,6 +46,8 @@ CREATE TABLE productos (
   stock INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0),
   foto TEXT NOT NULL DEFAULT '',
   modelo3d TEXT NOT NULL DEFAULT '',
+  -- Código o SKU opcional (ej. 'CD-1101'): se muestra como "Cód. X" y se puede buscar con o sin guion.
+  codigo TEXT NOT NULL DEFAULT '',
   visible INTEGER NOT NULL DEFAULT 1,
   destacado INTEGER NOT NULL DEFAULT 0,
   solo_mayorista INTEGER NOT NULL DEFAULT 0,
@@ -65,6 +67,8 @@ CREATE TABLE pedidos (
   -- 'AAAA-MM-DD' en modo entrega 'fecha'; '' en modo 'hoy'. Al agregar columnas, súmalas también a M_COLUMNAS_NUEVAS (db.php).
   fecha_entrega TEXT NOT NULL DEFAULT '',
   nota TEXT NOT NULL DEFAULT '',
+  -- Campos extra del checkout (config 'checkout_campos'): JSON [["Etiqueta","valor"], ...] o ''.
+  extras TEXT NOT NULL DEFAULT '',
   subtotal INTEGER NOT NULL,
   costo_despacho INTEGER NOT NULL DEFAULT 0,
   total INTEGER NOT NULL,

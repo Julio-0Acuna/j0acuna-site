@@ -204,10 +204,12 @@ NDIAS=$(printf '%s' "$CHECK" | grep -oE '<option value="[0-9]{4}-[0-9]{2}-[0-9]{
 for d in $(printf '%s' "$CHECK" | grep -oE '<option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}'); do
   [ "$(fecha_cl "$d" N)" = "7" ] && falla "checkout ofrece un domingo ($d)"
 done
+HORA=$(printf '%s' "$CHECK" | grep -oE "<option value=\"$DIA\" data-horas=\"[0-9]{2}:[0-9]{2}" | grep -oE '[0-9]{2}:[0-9]{2}$')
+[ -n "$HORA" ] || HORA=13:00
 T=$(printf '%s' "$CHECK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Quinta Normal" --data-urlencode "fecha_entrega=1999-01-01" --data-urlencode "cuando=13:00" --data-urlencode "pago=al_recibir")
 case "$R" in 422*) grep -qF 'id="err-fecha_entrega"' "$TMP/ultima.html" && pasa "un día fuera de la lista se rechaza (422)" || falla "día inválido sin error visible";; *) falla "día inválido aceptado: $R";; esac
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Quinta Normal" --data-urlencode "fecha_entrega=$DIA" --data-urlencode "cuando=13:00" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Tocar el timbre")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Quinta Normal" --data-urlencode "fecha_entrega=$DIA" --data-urlencode "cuando=$HORA" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Tocar el timbre")
 case "$R" in 303*r=pedido*) pasa "checkout crea el pedido para el $DIA ($R)";; *) falla "checkout: $R";; esac
 PEDIDO_URL="${R#* }"
 PAGINA=$(curl -s -b "$J1" "$PEDIDO_URL")
@@ -216,7 +218,7 @@ CODIGO=$(printf '%s' "$PAGINA" | grep -oE 'CC-[0-9]+' | head -1)
 printf '%s' "$PAGINA" | grep -qF 'Ya prendimos el wok' && pasa "título de pedido propio del rubro" || falla "pedido sin el título del rubro"
 printf '%s' "$PAGINA" | grep -qF 'Enviar resumen por WhatsApp' && pasa "pedido ofrece enviar resumen por WhatsApp" || falla "pedido sin botón de WhatsApp"
 printf '%s' "$PAGINA" | grep -qF '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20comida%20peruana%20%E2%80%93%20Plataforma%20web%29' && pasa "resumen con la nota de prueba" || falla "resumen sin la nota de prueba"
-printf '%s' "$PAGINA" | grep -qF 'Para%20el%20' && printf '%s' "$PAGINA" | grep -qF 'a%20las%2013%3A00' && pasa "resumen de WhatsApp con día y hora de entrega" || falla "resumen sin día y hora"
+printf '%s' "$PAGINA" | grep -qF 'Para%20el%20' && printf '%s' "$PAGINA" | grep -qF "a%20las%20${HORA/:/%3A}" && pasa "resumen de WhatsApp con día y hora de entrega" || falla "resumen sin día y hora"
 printf '%s' "$PAGINA" | grep -qF 'Nota%3A%20Tocar%20el%20timbre' && pasa "resumen con la nota del cliente" || falla "resumen sin la nota del cliente"
 # $8.990 × 2 + despacho Quinta Normal $1.990 (gratis recién sobre $25.000) = $19.970
 printf '%s' "$PAGINA" | grep -qF '$19.970' && pasa "total con despacho a Quinta Normal (\$19.970)" || falla "total del pedido inesperado"

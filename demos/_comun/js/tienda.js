@@ -17,34 +17,66 @@
     var subtotal = parseInt(form.getAttribute('data-subtotal'), 10) || 0;
     var gratis = parseInt(form.getAttribute('data-gratis'), 10) || 0;
     var bloqueDespacho = form.querySelector('[data-solo-despacho]');
+    // Campos extra de una sola entrega ('solo' en checkout_campos): ocultos y desactivados en la otra.
+    var soloEntrega = form.querySelectorAll('[data-solo-entrega]');
     var nueva = form.querySelector('[data-nueva-direccion]');
     var costoEl = form.querySelector('[data-costo-despacho]');
     var totalEl = form.querySelector('[data-total]');
+    // Textos configurables (config 'textos' del rubro), impresos por la vista del checkout.
+    var texto = function (nombre, porDefecto) { return form.getAttribute('data-texto-' + nombre) || porDefecto; };
 
     var actualizar = function () {
       var entrega = form.querySelector('input[name="entrega"]:checked');
       var esDespacho = !entrega || entrega.value === 'despacho';
       if (form.querySelectorAll('input[name="entrega"]').length === 0) { esDespacho = true; }
       if (bloqueDespacho) { bloqueDespacho.hidden = !esDespacho; }
+      Array.prototype.forEach.call(soloEntrega, function (bloque) {
+        var visible = bloque.getAttribute('data-solo-entrega') === (esDespacho ? 'despacho' : 'retiro');
+        bloque.hidden = !visible;
+        Array.prototype.forEach.call(bloque.querySelectorAll('input, select, textarea'), function (campo) {
+          campo.disabled = !visible;
+          if (campo.hasAttribute('data-requerido')) { campo.required = visible; }
+        });
+      });
       var dir = form.querySelector('input[name="direccion_id"]:checked') || form.querySelector('input[name="direccion_id"]');
       var usaNueva = !dir || dir.value === '0';
       if (nueva) { nueva.hidden = !usaNueva; }
-      var comuna = usaNueva ? (form.elements.comuna ? form.elements.comuna.value : '') : (dir.getAttribute('data-comuna') || '');
+      var selComuna = form.querySelector('[name="comuna"]');
+      var comuna = usaNueva ? (selComuna ? selComuna.value : '') : (dir.getAttribute('data-comuna') || '');
       var costo = 0;
-      var texto = 'Gratis (retiro)';
+      var etiqueta = texto('gratis-retiro', 'Gratis (retiro)');
       if (esDespacho) {
         if (comuna && comunas[comuna] !== undefined) {
           costo = gratis > 0 && subtotal >= gratis ? 0 : comunas[comuna];
-          texto = costo === 0 ? 'Gratis' : clp(costo);
+          etiqueta = costo === 0 ? texto('gratis', 'Gratis') : clp(costo);
         } else {
-          texto = 'Elige comuna';
+          etiqueta = texto('elige-comuna', 'Elige comuna');
         }
       }
-      if (costoEl) { costoEl.textContent = texto; }
+      if (costoEl) { costoEl.textContent = etiqueta; }
       if (totalEl) { totalEl.textContent = clp(subtotal + costo); }
     };
     form.addEventListener('change', actualizar);
     actualizar();
+
+    // Modo fecha: el día de hoy trae en data-horas las horas que quedan; las demás se ocultan.
+    var selFecha = form.querySelector('select[name="fecha_entrega"]');
+    var selHora = form.querySelector('select[name="cuando"]');
+    if (selFecha && selHora) {
+      var filtrarHoras = function () {
+        var op = selFecha.options[selFecha.selectedIndex];
+        var lista = op && op.hasAttribute('data-horas') ? op.getAttribute('data-horas').split(' ') : null;
+        Array.prototype.forEach.call(selHora.options, function (h) {
+          if (h.value === '') { return; }
+          var fuera = lista !== null && lista.indexOf(h.value) === -1;
+          h.hidden = fuera;
+          h.disabled = fuera;
+        });
+        if (selHora.selectedIndex > 0 && selHora.options[selHora.selectedIndex].disabled) { selHora.selectedIndex = 0; }
+      };
+      selFecha.addEventListener('change', filtrarHoras);
+      filtrarHoras();
+    }
   }
 
   // Registro: el nombre del negocio solo se pide a mayoristas.

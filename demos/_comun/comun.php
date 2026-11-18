@@ -39,10 +39,13 @@ function demo_clp(int $monto): string
     return ($monto < 0 ? '-$' : '$') . number_format(abs($monto), 0, ',', '.');
 }
 
-/** Nota que acompaña todo pedido o consulta hecho desde una demo. */
-function demo_nota(string $rubroNombre, string $version): string
+/**
+ * Nota que acompaña todo pedido o consulta hecho desde una demo. $tipo cambia la primera palabra:
+ * demo_nota('barbería', 'Multi-page', 'Reserva') → '(Reserva de prueba desde la demo de barbería – Multi-page)'.
+ */
+function demo_nota(string $rubroNombre, string $version, string $tipo = 'Pedido'): string
 {
-    return '(Pedido de prueba desde la demo de ' . $rubroNombre . ' – ' . $version . ')';
+    return '(' . $tipo . ' de prueba desde la demo de ' . $rubroNombre . ' – ' . $version . ')';
 }
 
 /** Enlace a WhatsApp de Julio con el texto codificado (equivale a encodeURIComponent). */
@@ -199,9 +202,16 @@ function demo_aviso_pie(array $demo): void
 
 /* ---------------------------------------------------------------- Horario */
 
+/** ¿Ese día abre las 24 horas? Se escribe ['00:00', '24:00']. */
+function demo_horario_24(?array $h): bool
+{
+    return $h !== null && ($h[0] ?? '') === '00:00' && ($h[1] ?? '') === '24:00';
+}
+
 /**
  * Agrupa días seguidos con el mismo horario.
- * $horario: [1..7 => ['12:30', '23:00'] | null]. Devuelve [['Lun a Jue', '12:30 – 23:00'], ...].
+ * $horario: [1..7 => ['12:30', '23:00'] | ['00:00', '24:00'] (24 horas) | null].
+ * Devuelve [['Lun a Jue', '12:30 – 23:00'], ['Vie y Sáb', '24 horas'], ['Dom', 'Cerrado']].
  */
 function demo_horario_filas(array $horario): array
 {
@@ -214,7 +224,7 @@ function demo_horario_filas(array $horario): array
             continue;
         }
         $dias = $inicio === $d ? DEMO_DIAS_CORTOS[$d] : DEMO_DIAS_CORTOS[$inicio] . ($d - $inicio === 1 ? ' y ' : ' a ') . DEMO_DIAS_CORTOS[$d];
-        $filas[] = [$dias, $actual ? $actual[0] . ' – ' . $actual[1] : 'Cerrado'];
+        $filas[] = [$dias, $actual ? (demo_horario_24($actual) ? '24 horas' : $actual[0] . ' – ' . $actual[1]) : 'Cerrado'];
         $inicio = $d + 1;
     }
     return $filas;
@@ -240,7 +250,8 @@ function demo_minutos(string $hhmm): int
 
 /**
  * ¿Está abierto? Devuelve ['abierto' => bool, 'texto' => 'Abierto · cierra a las 23:00'].
- * Soporta cierres después de medianoche (ej. 19:00 – 01:00).
+ * Soporta cierres después de medianoche (ej. 19:00 – 01:00) y días de 24 horas (['00:00', '24:00']:
+ * 'Abierto las 24 horas').
  */
 function demo_horario_estado(array $horario, ?DateTimeImmutable $ahora = null): array
 {
@@ -254,6 +265,9 @@ function demo_horario_estado(array $horario, ?DateTimeImmutable $ahora = null): 
         return ['abierto' => true, 'texto' => 'Abierto · cierra a las ' . $h[1]];
     }
     $h = $horario[$dia] ?? null;
+    if (demo_horario_24($h)) {
+        return ['abierto' => true, 'texto' => 'Abierto las 24 horas'];
+    }
     if ($h) {
         $abre = demo_minutos($h[0]);
         $cierra = demo_minutos($h[1]);
@@ -410,6 +424,31 @@ function demo_normalizar(string $s): string
 {
     $s = mb_strtolower(trim($s), 'UTF-8');
     return strtr($s, ['á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u', 'ü' => 'u', 'ñ' => 'n']);
+}
+
+/**
+ * ¿El texto coincide con la búsqueda? Cada palabra de $q (sin tildes ni mayúsculas) debe estar en $texto;
+ * una palabra con números también vale sin espacios ni guiones ('cd1101' encuentra 'CD-1101' y al revés).
+ * Mismo criterio que _comun/js/buscador.js. Búsqueda vacía: siempre coincide.
+ */
+function demo_coincide(string $texto, string $q): bool
+{
+    $t = demo_normalizar($texto);
+    $compacto = null;
+    foreach (preg_split('/\s+/u', demo_normalizar($q), -1, PREG_SPLIT_NO_EMPTY) ?: [] as $palabra) {
+        if (str_contains($t, $palabra)) {
+            continue;
+        }
+        if (preg_match('/\d/', $palabra)) {
+            $compacto ??= (string) preg_replace('/[^a-z0-9]+/', '', $t);
+            $p = (string) preg_replace('/[^a-z0-9]+/', '', $palabra);
+            if ($p !== '' && str_contains($compacto, $p)) {
+                continue;
+            }
+        }
+        return false;
+    }
+    return true;
 }
 
 /** Ícono de WhatsApp (SVG en línea). */

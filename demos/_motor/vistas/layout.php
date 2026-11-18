@@ -21,9 +21,9 @@ $usuario ??= m_usuario();
 <header class="t-cabecera">
   <a href="<?= m_e($cfg['url_base']) ?>"><?= m_e($cfg['negocio']['nombre']) ?></a>
   <nav>
-    <a href="<?= m_e(m_url('carrito')) ?>">Carrito (<?= (int) ($unidades_carrito ?? 0) ?>)</a>
-    <?php if ($usuario): ?><a href="<?= m_e(m_url(m_es_dueno($usuario) ? 'panel' : 'cuenta')) ?>"><?= m_es_dueno($usuario) ? 'Panel' : 'Mi cuenta' ?></a>
-    <?php else: ?><a href="<?= m_e(m_url('ingresar')) ?>">Ingresar</a><?php endif; ?>
+    <a href="<?= m_e(m_url('carrito')) ?>"><?= m_e(m_texto('layout_carrito', null, ['n' => (int) ($unidades_carrito ?? 0)])) ?></a>
+    <?php if ($usuario): ?><a href="<?= m_e(m_url(m_es_dueno($usuario) ? 'panel' : 'cuenta')) ?>"><?= m_e(m_texto(m_es_dueno($usuario) ? 'layout_panel' : 'layout_cuenta')) ?></a>
+    <?php else: ?><a href="<?= m_e(m_url('ingresar')) ?>"><?= m_e(m_texto('layout_ingresar')) ?></a><?php endif; ?>
   </nav>
 </header>
 <main id="contenido" class="t-principal">
