@@ -1,0 +1,249 @@
+/*
+ * Cardán Distribuidora (Plataforma web): distribuidora de repuestos con tienda online.
+ * Negro neumático y verde refrigerante, banda de rodado, letras técnicas (Chakra Petch) y texto
+ * muy legible (Atkinson Hyperlegible). Variables --t-* para las vistas del motor.
+ */
+.cd {
+  --neumatico: #0f1513;
+  --neumatico-2: #1b2421;
+  --refrigerante: #2fe0a2;
+  --verde: #0b7a5c;
+  --verde-oscuro: #075c45;
+  --verde-suave: #dcf5ea;
+  --ambar: #a14a06;
+  --t-fondo: #eef1ef;
+  --t-superficie: #ffffff;
+  --t-tinta: #0f1513;
+  --t-suave: #4f5a55;
+  --t-borde: #d5dbd8;
+  --t-acento: #0b7a5c;
+  --t-acento-tinta: #ffffff;
+  --t-acento-suave: #dcf5ea;
+  --t-radio: 12px;
+  --t-radio-chico: 8px;
+  --t-sombra: 0 1px 0 rgba(15, 21, 19, .04), 0 8px 24px rgba(15, 21, 19, .06);
+  --t-fuente: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --t-fuente-titulos: "Chakra Petch", "Atkinson Hyperlegible", sans-serif;
+  --t-ancho: 1280px;
+  --tecnica: "Chakra Petch", ui-monospace, monospace;
+  --rodado: linear-gradient(135deg, #26302c 25%, transparent 25%) -12px 0 / 24px 24px, linear-gradient(225deg, #26302c 25%, transparent 25%) -12px 0 / 24px 24px, linear-gradient(315deg, #26302c 25%, transparent 25%) 0 0 / 24px 24px, linear-gradient(45deg, #26302c 25%, transparent 25%) 0 0 / 24px 24px, var(--neumatico);
+  font-size: 16.5px;
+}
+.cd h1, .cd h2, .cd h3 { letter-spacing: -.01em; }
+.cd h2 { font-weight: 700; }
+.cd [hidden] { display: none !important; }
+.cd-ancho { width: min(var(--t-ancho), 100% - 32px); margin: 0 auto; }
+.cd-principal { width: min(var(--t-ancho), 100% - 32px); }
+.cd-enlace { color: var(--verde); font-weight: 700; text-underline-offset: 3px; }
+
+/* Botones */
+.cd .t-btn { border-radius: 8px; font-family: var(--tecnica); font-weight: 700; letter-spacing: .02em; }
+.cd .t-btn--primario, .cd-btn-verde { background: var(--verde); border-color: var(--verde); color: #fff; }
+.cd .t-btn--primario:hover, .cd-btn-verde:hover { background: var(--verde-oscuro); border-color: var(--verde-oscuro); filter: none; color: #fff; }
+.cd :where(a, button):focus-visible { outline: 3px solid var(--refrigerante); outline-offset: 2px; }
+
+/* Banda de rodado y cabecera */
+.cd-rodado { height: 12px; background: var(--rodado); border-bottom: 1px solid #000; }
+.cd-cabecera { position: sticky; top: 0; z-index: 40; background: var(--neumatico); color: #fff; border-bottom: 3px solid var(--refrigerante); }
+.cd-cabecera__fila { display: flex; align-items: center; gap: 18px; min-height: 68px; }
+.cd-logo { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; margin-right: auto; }
+.cd-logo__texto { display: grid; font: 700 1.45rem/1 var(--tecnica); text-transform: uppercase; letter-spacing: .04em; }
+.cd-logo__texto small { font: 600 .66rem/1.5 var(--tecnica); letter-spacing: .16em; color: #9fb0a9; margin-top: 3px; white-space: nowrap; }
+.cd-nav { display: none; gap: 4px; }
+.cd-nav a { color: #d6dfdb; text-decoration: none; font-weight: 700; font-size: .95rem; padding: 10px 12px; border-radius: 8px; }
+.cd-nav a:hover, .cd-nav a.is-activo { color: #fff; background: rgba(47, 224, 162, .12); }
+@media (min-width: 1060px) { .cd-nav { display: flex; } }
+.cd-acciones { display: flex; align-items: center; gap: 8px; }
+.cd-chip-auto { display: none; align-items: center; gap: 6px; max-width: 220px; padding: 6px 12px; border: 1.5px solid var(--refrigerante); border-radius: 999px; color: var(--refrigerante); text-decoration: none; font: 600 .8rem/1.2 var(--tecnica); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cd-chip-auto span { font-size: .6rem; }
+@media (min-width: 760px) { .cd-chip-auto { display: inline-flex; } }
+.cd-accion, .cd-carro { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 8px 12px; border-radius: 8px; color: #fff; text-decoration: none; font-weight: 700; font-size: .92rem; }
+.cd-accion:hover, .cd-accion.is-activo { background: rgba(255, 255, 255, .08); }
+.cd-carro { background: var(--refrigerante); color: var(--neumatico); }
+.cd-carro:hover { background: #5cebb9; }
+.cd-carro__num { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--neumatico); color: var(--refrigerante); font: 700 .78rem/1 var(--tecnica); }
+.cd-salir button { min-height: 44px; padding: 8px 10px; background: transparent; border: 0; color: #9fb0a9; font: inherit; font-size: .88rem; cursor: pointer; text-decoration: underline; }
+@media (max-width: 560px) {
+  .cd-accion span, .cd-carro__texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .cd-logo__texto small { display: none; }
+  .cd-cabecera__fila { gap: 6px; }
+  .cd-salir button { padding: 8px 4px; }
+}
+.cd-modo-taller { margin: 0 0 16px; padding: 10px 14px; border-radius: 8px; background: var(--neumatico); color: #d6dfdb; font-size: .92rem; }
+.cd-modo-taller strong { color: var(--refrigerante); font-family: var(--tecnica); }
+
+/* Portada: consola de búsqueda */
+.cd-hero { display: grid; gap: 18px; margin: 4px 0 18px; }
+@media (min-width: 980px) { .cd-hero { grid-template-columns: 1.15fr .85fr; align-items: stretch; } }
+.cd-hero__consola { position: relative; border-radius: 16px; padding: clamp(22px, 4vw, 40px); color: #fff; overflow: hidden;
+  background: radial-gradient(120% 90% at 100% 0%, rgba(47, 224, 162, .16), transparent 55%), var(--neumatico); }
+.cd-hero__consola::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 14px; background: var(--rodado); opacity: .9; }
+.cd-estado { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 18px; font: 600 .8rem/1.3 var(--tecnica); letter-spacing: .06em; text-transform: uppercase; color: #b9c7c1; }
+.cd-estado span { width: 9px; height: 9px; border-radius: 50%; background: #f59e0b; }
+.cd-estado.is-abierto span { background: var(--refrigerante); box-shadow: 0 0 0 4px rgba(47, 224, 162, .2); }
+.cd-hero h1 { font-size: clamp(2rem, 5.2vw, 3.5rem); line-height: 1.02; margin: 0 0 14px; max-width: 16ch; text-transform: uppercase; }
+.cd-hero h1 span { color: var(--refrigerante); }
+.cd-hero__bajada { color: #c9d4cf; max-width: 54ch; margin: 0 0 24px; }
+.cd-hero__lado { display: grid; gap: 12px; grid-template-rows: 1fr auto; }
+.cd-hero__foto { margin: 0; border-radius: 16px; overflow: hidden; min-height: 220px; background: var(--neumatico); }
+.cd-hero__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cd-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0; }
+.cd-kpis div { background: var(--t-superficie); border: 1px solid var(--t-borde); border-radius: 12px; padding: 12px 14px; min-width: 0; }
+.cd-kpis dt { font: 600 .68rem/1.3 var(--tecnica); letter-spacing: .08em; text-transform: uppercase; color: var(--t-suave); }
+.cd-kpis dd { margin: 4px 0 0; font: 700 1.05rem/1.2 var(--tecnica); color: var(--t-tinta); }
+@media (max-width: 520px) { .cd-kpis { grid-template-columns: 1fr 1fr; } .cd-kpis div:last-child { grid-column: 1 / -1; } }
+
+/* Buscador por patente o por vehículo */
+.cd-buscador { display: grid; gap: 18px; position: relative; z-index: 1; }
+.cd-buscador--portada { padding-bottom: 14px; }
+@media (min-width: 720px) {
+  .cd-buscador--portada .cd-placa { max-width: 460px; }
+  .cd-buscador--portada .cd-buscador__campos { grid-template-columns: 1.3fr .8fr .8fr auto; align-items: end; }
+  .cd-buscador--portada .cd-buscador__campos > * { grid-column: auto !important; }
+}
+.cd-buscador__etiqueta { display: block; margin: 0 0 8px; font: 700 .76rem/1.2 var(--tecnica); letter-spacing: .12em; text-transform: uppercase; color: var(--refrigerante); }
+.cd-placa { position: relative; display: flex; align-items: stretch; background: #fff; border: 3px solid #0b0d0c; border-radius: 10px; padding: 16px 6px 6px 12px; box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 4px #c7cdca; }
+.cd-placa__pais { position: absolute; top: 4px; left: 0; right: 80px; text-align: center; font: 700 .58rem/1 var(--tecnica); letter-spacing: .5em; color: #0b0d0c; }
+.cd-placa input { flex: 1; min-width: 0; border: 0; background: transparent; color: #0b0d0c; font: 700 clamp(1.6rem, 6vw, 2.1rem)/1.1 var(--tecnica); letter-spacing: .1em; text-transform: uppercase; text-align: center; padding: 2px 0 0; }
+.cd-placa input::placeholder { color: #c3c9c6; }
+.cd-placa input:focus { outline: none; }
+.cd-placa:focus-within { box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 4px #c7cdca, 0 0 0 4px var(--refrigerante); }
+.cd-placa__btn { margin-left: 6px; min-width: 74px; border: 0; border-radius: 6px; background: var(--verde); color: #fff; font: 700 .9rem/1 var(--tecnica); cursor: pointer; }
+.cd-placa__btn:hover { background: var(--verde-oscuro); }
+.cd-buscador__ejemplos { margin: 10px 0 0; font-size: .85rem; color: #aebcb6; }
+.cd-buscador__ejemplos a { color: #fff; font-family: var(--tecnica); font-weight: 600; text-underline-offset: 3px; }
+.cd-buscador__campos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cd-buscador__campos .t-campo { margin: 0; }
+.cd-buscador__campos .t-campo:first-child, .cd-buscador__campos .t-btn { grid-column: 1 / -1; }
+.cd-buscador--portada .t-campo label { color: #c9d4cf; font-size: .82rem; }
+.cd-buscador--portada .t-campo :is(input, select) { background: var(--neumatico-2); color: #fff; border-color: #34413c; }
+.cd-buscador--portada .t-campo :is(input, select):focus { outline: 2px solid var(--refrigerante); outline-offset: 1px; }
+.cd-buscador--portada .cd-btn-verde { background: var(--refrigerante); border-color: var(--refrigerante); color: var(--neumatico); }
+.cd-buscador--portada .cd-btn-verde:hover { background: #5cebb9; color: var(--neumatico); }
+.cd-buscador--lado .cd-buscador__etiqueta { color: var(--verde); }
+.cd-buscador--lado .cd-buscador__ejemplos { color: var(--t-suave); }
+.cd-buscador--lado .cd-buscador__ejemplos a { color: var(--verde-oscuro); }
+.cd-buscador--lado .cd-placa input { font-size: 1.5rem; }
+
+/* Ventajas */
+.cd-ventajas { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+.cd-ventajas li { display: grid; gap: 2px; padding: 14px 16px 14px 18px; background: var(--t-superficie); border: 1px solid var(--t-borde); border-left: 4px solid var(--verde); border-radius: 10px; }
+.cd-ventajas strong { font-family: var(--tecnica); font-size: 1.02rem; }
+.cd-ventajas span { color: var(--t-suave); font-size: .9rem; }
+
+/* Avisos de patente */
+.cd-aviso { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 16px; padding: 14px 16px; border-radius: 10px; border: 1.5px solid; }
+.cd-aviso p { margin: 0; flex: 1 1 320px; }
+.cd-aviso--error { background: #fdecec; border-color: #b42318; color: #7a1610; }
+.cd-aviso--info { background: #fff7e6; border-color: #d08a17; color: #5c3b06; }
+
+/* Destacados */
+.cd-titulo-fila { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 20px; margin-bottom: 10px; }
+.cd-titulo-fila h2 { margin: 0; }
+@media (min-width: 720px) { .cd-carrusel { grid-auto-columns: minmax(230px, 1fr); } }
+
+/* Catálogo con columna lateral */
+.cd-catalogo { display: grid; gap: 22px; align-items: start; }
+@media (min-width: 980px) { .cd-catalogo { grid-template-columns: 290px 1fr; gap: 28px; } .cd-lado { position: sticky; top: 92px; } }
+.cd-lado { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
+.cd-lado > *, .cd-buscador, .cd-buscador form, .cd-buscador .t-campo { min-width: 0; }
+.cd-buscador select, .cd-buscador input { min-width: 0; max-width: 100%; }
+.cd-lado__vehiculo { background: var(--t-superficie); border: 1px solid var(--t-borde); border-radius: 12px; padding: 18px; }
+.cd-lado__vehiculo.is-activo { background: var(--neumatico); color: #fff; border-color: var(--neumatico); }
+.cd-lado__sobre { margin: 0 0 8px; font: 700 .74rem/1 var(--tecnica); letter-spacing: .12em; text-transform: uppercase; color: var(--verde); }
+.cd-lado__vehiculo.is-activo .cd-lado__sobre { color: var(--refrigerante); }
+.cd-lado__auto { margin: 0 0 6px; font: 700 1.3rem/1.2 var(--tecnica); }
+.cd-lado__patente { display: inline-block; margin: 0 0 10px; padding: 6px 12px 4px; background: #fff; color: #0b0d0c; border: 2px solid #0b0d0c; border-radius: 6px; font: 700 1.1rem/1 var(--tecnica); letter-spacing: .1em; }
+.cd-lado__acciones { margin: 0 0 8px; font-size: .9rem; }
+.cd-lado__acciones a { color: #c9d4cf; }
+.cd-lado__cambiar summary { cursor: pointer; font-weight: 700; color: var(--refrigerante); padding: 6px 0; }
+.cd-lado__cambiar .cd-buscador { margin-top: 10px; background: #fff; color: var(--t-tinta); border-radius: 10px; padding: 14px; }
+.cd-lado__cats { display: flex; flex-wrap: wrap; gap: 6px; }
+@media (min-width: 980px) { .cd-lado__cats { display: grid; gap: 2px; background: var(--t-superficie); border: 1px solid var(--t-borde); border-radius: 12px; padding: 8px; } }
+.cd-lado__cats a { padding: 9px 12px; border-radius: 8px; text-decoration: none; color: var(--t-tinta); font-weight: 700; font-size: .92rem; border: 1px solid var(--t-borde); background: var(--t-superficie); }
+@media (min-width: 980px) { .cd-lado__cats a { border: 0; } }
+.cd-lado__cats a:hover { background: var(--t-fondo); }
+.cd-lado__cats a.is-activo { background: var(--neumatico); color: #fff; }
+.cd-resultados { min-width: 0; }
+.cd-resultados__cabeza { align-items: flex-end; }
+.cd-resultados__cuenta { margin: 4px 0 0; color: var(--t-suave); }
+.cd-resultados__cuenta strong { font-family: var(--tecnica); color: var(--t-tinta); font-size: 1.1rem; }
+.cd-resultados__cuenta a { color: var(--verde); }
+.cd .t-buscar input { border-radius: 8px; }
+.cd .t-buscar .t-btn { border-radius: 8px; background: var(--neumatico); color: #fff; border-color: var(--neumatico); }
+.cd .t-categoria__titulo { display: flex; align-items: center; gap: 10px; font-size: 1.15rem; text-transform: uppercase; letter-spacing: .04em; padding-bottom: 8px; border-bottom: 2px solid var(--neumatico); }
+.cd .t-categoria__titulo span { font: 700 .8rem/1 var(--tecnica); padding: 4px 8px; border-radius: 999px; background: var(--verde-suave); color: var(--verde-oscuro); }
+.cd-grilla { grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+.cd-vacio { display: grid; gap: 6px; justify-items: center; }
+.cd-vacio p { margin: 0; }
+
+/* Tarjeta de producto */
+.cd-producto { border-radius: 12px; transition: transform .18s ease, box-shadow .18s ease; }
+.cd-producto:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(15, 21, 19, .12); }
+.cd-producto__foto { background: #e3e8e5; }
+.cd-producto__sin-foto { position: absolute; inset: 0; display: grid; place-items: center; background: var(--rodado); }
+.cd-producto__sin-foto span { padding: 8px 14px; border-radius: 8px; background: var(--neumatico); border: 1.5px solid var(--refrigerante); color: var(--refrigerante); font: 700 1.3rem/1 var(--tecnica); letter-spacing: .08em; }
+.cd .t-sello { border-radius: 6px; font-family: var(--tecnica); background: var(--neumatico); color: var(--refrigerante); }
+.cd .t-sello--mayorista { background: var(--refrigerante); color: var(--neumatico); }
+.cd-producto__fila { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; margin: 0 0 2px; }
+.cd-sku { font: 700 .78rem/1 var(--tecnica); letter-spacing: .06em; padding: 5px 8px; border-radius: 6px; background: var(--t-fondo); border: 1px solid var(--t-borde); }
+.cd-stock { display: inline-flex; align-items: center; gap: 6px; font: 600 .76rem/1 var(--tecnica); padding: 5px 8px; border-radius: 6px; }
+.cd-stock::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.cd-stock.is-hay { color: var(--verde-oscuro); background: var(--verde-suave); }
+.cd-stock.is-pocos { color: var(--ambar); background: #fdf1df; }
+.cd-stock.is-sin { color: #5a615e; background: #eceeed; }
+.cd-producto h3 { font-size: 1.04rem; line-height: 1.25; }
+.cd-calza { display: flex; gap: 6px; align-items: flex-start; margin: 0; font-size: .86rem; color: var(--t-tinta); }
+.cd-calza svg { flex: none; margin-top: 2px; color: var(--verde); }
+.cd-calza-ok { margin: 0; font: 700 .8rem/1.3 var(--tecnica); color: var(--verde-oscuro); }
+.cd-calza-ok::before { content: "✓ "; }
+.cd .t-producto__precio strong { font: 700 1.35rem/1 var(--tecnica); }
+.cd .t-producto__stock { display: none; }
+.cd .t-agotado { font-size: .9rem; }
+
+/* Aviso para talleres */
+.cd-aviso-taller { background: var(--rodado); border-radius: 14px; padding: 26px; }
+.cd-aviso-taller h3 { color: var(--refrigerante); font-size: 1.4rem; text-transform: uppercase; }
+.cd-aviso-taller p { color: #d6dfdb; max-width: 60ch; }
+
+/* Google */
+.cd .t-google { padding-top: 10px; }
+.cd .demo-google h2 { font-family: var(--tecnica); text-transform: uppercase; }
+.cd .demo-google__btn--principal { background: var(--verde); border-color: var(--verde); }
+
+/* Vistas del motor: cuenta, carrito, panel */
+.cd .t-pasos li.is-hecho::before { background: var(--verde); }
+.cd .t-pago__tarjeta { background: linear-gradient(135deg, #1b2421, #0f1513); }
+.cd .t-kpi strong, .cd .t-pedido-panel__total { font-family: var(--tecnica); }
+.cd .t-pestanas a.is-activo { border-color: var(--verde); }
+.cd .t-chips a.is-activo { background: var(--neumatico); border-color: var(--neumatico); }
+.cd .t-caja legend, .cd .t-pagina h1 { text-transform: uppercase; }
+
+/* Pie */
+.cd-pie { background: var(--neumatico); color: #b9c7c1; padding: 44px 0 30px; margin-top: 40px; border-top: 3px solid var(--refrigerante); font-size: .92rem; }
+.cd-pie__grid { display: grid; gap: 24px; margin-bottom: 14px; }
+@media (min-width: 820px) { .cd-pie__grid { grid-template-columns: 1.4fr 1fr 1fr; } }
+.cd-logo__texto--pie { color: #fff; margin-bottom: 10px; }
+.cd-pie__titulo { font: 700 .74rem/1 var(--tecnica); letter-spacing: .14em; text-transform: uppercase; color: var(--refrigerante); }
+.cd-pie a { color: #fff; }
+
+/* Celular: catálogo en dos columnas y sin repetir el buscador de la portada */
+@media (max-width: 979px) {
+  .cd-lado__vehiculo--repetido { display: none; }
+  .cd-lado__cats { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; }
+  .cd-lado__cats a { flex: none; white-space: nowrap; }
+}
+@media (max-width: 559px) {
+  .cd-grilla { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cd-grilla .t-producto__cuerpo { padding: 10px 10px 12px; gap: 5px; }
+  .cd-grilla .t-producto__desc { display: none; }
+  .cd-grilla h3 { font-size: .9rem; }
+  .cd-grilla .cd-producto__fila { flex-direction: column; align-items: flex-start; }
+  .cd-grilla .cd-calza { font-size: .76rem; }
+  .cd-grilla .cd-calza svg { display: none; }
+  .cd-grilla .t-producto__precio strong { font-size: 1.1rem; }
+  .cd-grilla .t-btn { min-height: 40px; padding: 8px 6px; font-size: .78rem; }
+  .cd-grilla .t-sello { font-size: .66rem; padding: 3px 7px; }
+}
+
+@media (prefers-reduced-motion: reduce) { .cd-producto { transition: none; } }
