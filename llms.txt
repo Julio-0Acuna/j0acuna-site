@@ -38,7 +38,11 @@ Español y portugués.
   - Inteligencia artificial: https://j0acuna.site/proyectos/ia
   - Formación y estudio: https://j0acuna.site/proyectos/formacion
 - Ejemplos por rubro (sitios de demostración de negocios ficticios): https://j0acuna.site/demos/
+  - Carniceria: https://j0acuna.site/demos/carniceria/
+  - Panaderia: https://j0acuna.site/demos/panaderia/
+  - Pasteleria: https://j0acuna.site/demos/pasteleria/
   - Pizzeria: https://j0acuna.site/demos/pizzeria/
+  - Sushi: https://j0acuna.site/demos/sushi/
 - Blog con guías para negocios: https://j0acuna.site/blog
   - Cómo aparecer en Google Maps con tu negocio, paso a paso: https://j0acuna.site/blog/aparecer-en-google-maps-perfil-de-empresa
   - Cómo vender en PedidosYa y Uber Eats sin perder tu margen: https://j0acuna.site/blog/como-vender-en-pedidosya-y-uber-eats
