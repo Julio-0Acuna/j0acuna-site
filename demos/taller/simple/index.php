@@ -6,9 +6,9 @@ require_once dirname(__DIR__, 2) . '/_comun/comun.php';
 $rubro = require dirname(__DIR__) . '/_rubro.php';
 $n = require __DIR__ . '/_datos.php';
 $version = $rubro['versiones']['simple']['plan'];
-$nota = demo_nota($rubro['rubro_nombre'], $version);
+$nota = demo_nota($rubro['rubro_nombre'], $version, 'Cotización');
 
-/** Enlace de WhatsApp con la nota de pedido de prueba. */
+/** Enlace de WhatsApp con la nota de cotización de prueba. */
 $wa = static fn (string $texto): string => demo_wa($texto . "\n" . $nota);
 $waGeneral = $wa('Hola, quiero pedir un presupuesto en ' . $n['nombre'] . '. Mi auto es (patente y modelo): ');
 $estado = demo_horario_estado($n['horario']);

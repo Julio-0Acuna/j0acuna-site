@@ -64,6 +64,13 @@ return [
         'cerrado' => [7, '2026-12-08', '2026-12-25', '2027-01-01'],
         'horas' => ['08:00', '17:00'],
     ],
+    // Datos del despacho a obra (solo se piden si el pedido va en camión): salen en el pedido, el panel y el WhatsApp.
+    'checkout_campos' => [
+        ['nombre' => 'obra', 'etiqueta' => 'Obra o empresa', 'requerido' => false, 'solo' => 'despacho', 'max' => 60,
+            'ayuda' => 'Ej.: Ampliación casa Los Aromos o Constructora Ejemplo'],
+        ['nombre' => 'recibe', 'etiqueta' => 'Quién recibe', 'solo' => 'despacho', 'max' => 60,
+            'ayuda' => 'Nombre y teléfono de quien recibe el camión en la obra'],
+    ],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Ferretería: sin menú QR ni modelos 3D.
     'menu_qr' => false,
@@ -96,7 +103,7 @@ return [
         'retiro_texto' => 'Sin costo. Te avisamos cuando esté cargado; trae tu vehículo.',
         'despacho_titulo' => 'Despacho a obra',
         'fecha_titulo' => 'Día de despacho o retiro',
-        'fecha_ayuda' => 'Despachamos de lunes a sábado en camión con pluma. En la nota indica el acceso a la obra, quién recibe y un teléfono.',
+        'fecha_ayuda' => 'Despachamos de lunes a sábado en camión con pluma.',
         'hora_titulo' => 'Desde qué hora',
         'hora_cualquiera' => 'Cualquier hora (08:00 a 17:00)',
         'hora_entrega_fecha' => 'Desde las {hora}',
@@ -104,6 +111,9 @@ return [
         'pedido_titulo' => '¡Pedido ingresado!',
         'pedido_exito_prueba' => '¡Pago de prueba aprobado! Tu pedido ya está en el patio de carga.',
         'pedido_exito_al_recibir' => '¡Pedido recibido! Pagas contra entrega en la obra o en el patio.',
+        // Tarjeta de producto propia (vistas/_producto.php) y checkout.
+        'producto_agregar_aria' => 'Agregar {producto} al pedido',
+        'checkout_nota_ayuda' => '(opcional: acceso a la obra, dónde descargar; máx. 300 caracteres)',
     ],
 
     'cuentas_prueba' => [

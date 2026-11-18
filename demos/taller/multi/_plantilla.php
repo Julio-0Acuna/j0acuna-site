@@ -22,10 +22,10 @@ function vg_rubro(): array
 function vg_nota(): string
 {
     $r = vg_rubro();
-    return demo_nota($r['rubro_nombre'], $r['versiones']['multi']['plan']);
+    return demo_nota($r['rubro_nombre'], $r['versiones']['multi']['plan'], 'Reserva');
 }
 
-/** WhatsApp con la nota de pedido de prueba. */
+/** WhatsApp con la nota de reserva de prueba. */
 function vg_wa(string $texto): string
 {
     return demo_wa($texto . "\n" . vg_nota());
@@ -49,7 +49,7 @@ function vg_desde(array $s): int
     return min($s['variantes']);
 }
 
-/** Configuración del carrito en el navegador (_comun/js/carrito.js). */
+/** Configuración del carrito en el navegador (_comun/js/carrito.js): textos de reserva, con retiro del auto a domicilio. */
 function vg_config_carrito(): array
 {
     $n = vg();
@@ -64,6 +64,18 @@ function vg_config_carrito(): array
         'numero' => DEMO_WHATSAPP,
         'comunas' => $n['comunas_despacho'],
         'catalogo' => $catalogo,
+        'textos' => [
+            'saludo' => 'Hola, quiero reservar hora en {negocio}:',
+            'subtotal' => 'Servicios: {subtotal}',
+            'total' => 'Total desde: {total}',
+            'retiro' => 'Entrega: llevo el auto al taller',
+            'despacho' => 'Entrega: retiro del auto en {direccion}, {comuna}',
+            'costo_despacho' => 'Traslado ida y vuelta ({comuna}): {costo}',
+            'gratis_retiro' => 'Sin costo',
+            'agregado' => 'Agregado a tu reserva: {producto}',
+            'ver_pedido' => 'Ver tu reserva ({n} servicios)',
+            'ver_pedido_uno' => 'Ver tu reserva (1 servicio)',
+        ],
     ];
 }
 

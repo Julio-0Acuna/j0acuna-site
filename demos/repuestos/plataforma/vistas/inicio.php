@@ -2,18 +2,16 @@
 /**
  * Catálogo de Cardán (reemplaza el del motor): portada, destacados y un catálogo con columna lateral
  * (vehículo elegido y categorías). Filtra por vehículo (patente de ejemplo o tipo, año y motor) además
- * de la búsqueda y la categoría del motor, y acepta el código sin guion ("cd1101" → "CD-1101").
+ * de la búsqueda y la categoría del motor (que ya busca el código con o sin guion: "cd1101" → "CD-1101").
  * @var array $cfg @var ?array $usuario @var array $categorias @var array $por_categoria
  * @var array $destacados @var string $q @var string $cat @var bool $hay_solo_mayorista
+ * @var ?array $categorias_visibles slugs con productos que el cliente puede ver (la columna lateral solo muestra esas)
  */
 require_once __DIR__ . '/_vehiculo.php';
 $veh = cd_vehiculo($cfg);
+$categorias_visibles ??= null;
 
-$qBusqueda = $q;
-if ($q !== '' && preg_match('/^\s*([a-z]{2})\s*-?\s*(\d{4})\s*$/i', $q, $m)) {
-    $qBusqueda = strtoupper($m[1]) . '-' . $m[2];
-}
-$productos = m_catalogo(m_db(), $usuario, $qBusqueda, $cat);
+$productos = m_catalogo(m_db(), $usuario, $q, $cat);
 if ($veh['activo']) {
     $productos = array_values(array_filter($productos, static fn (array $p): bool => rp_compat_calza(rp_compat_leer((string) $p['descripcion'])['compat'], $veh)));
 }
@@ -51,7 +49,7 @@ $enlaceCat = static fn (string $slug): string => ($slug === '' ? $cfg['url_base'
   </div>
   <div class="t-carrusel cd-carrusel">
     <?php foreach (array_slice($destacados, 0, 6) as $p): ?>
-      <?php m_parcial('_producto', ['p' => $p, 'usuario' => $usuario, 'cfg' => $cfg]); ?>
+      <?php m_parcial('_producto', ['p' => $p, 'usuario' => $usuario, 'cfg' => $cfg, 'prefijo' => 'd']); ?>
     <?php endforeach; ?>
   </div>
 </section>
@@ -77,6 +75,7 @@ $enlaceCat = static fn (string $slug): string => ($slug === '' ? $cfg['url_base'
     <nav class="cd-lado__cats" aria-label="Categorías">
       <a href="<?= m_e($enlaceCat('')) ?>"<?= $cat === '' ? ' aria-current="true" class="is-activo"' : '' ?>>Todo</a>
       <?php foreach ($categorias as $c): ?>
+      <?php if ($categorias_visibles !== null && !in_array($c['slug'], $categorias_visibles, true)) { continue; } ?>
       <a href="<?= m_e($enlaceCat($c['slug'])) ?>"<?= $cat === $c['slug'] ? ' aria-current="true" class="is-activo"' : '' ?>><?= m_e($c['nombre']) ?></a>
       <?php endforeach; ?>
     </nav>

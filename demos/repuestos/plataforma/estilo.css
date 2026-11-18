@@ -218,6 +218,10 @@
 .cd .t-pestanas a.is-activo { border-color: var(--verde); }
 .cd .t-chips a.is-activo { background: var(--neumatico); border-color: var(--neumatico); }
 .cd .t-caja legend, .cd .t-pagina h1 { text-transform: uppercase; }
+/* Datos del vehículo (checkout_campos del motor): título como las etiquetas del buscador y dos columnas desde 720 px. */
+.cd .t-campos-extra { display: grid; gap: 0 16px; align-items: start; margin: 6px 0 0; padding-top: 16px; border-top: 1px dashed var(--t-borde); }
+.cd .t-campos-extra > .t-subtitulo { margin: 0 0 12px; font: 700 .76rem/1.2 var(--tecnica); letter-spacing: .12em; text-transform: uppercase; color: var(--verde); }
+@media (min-width: 720px) { .cd .t-campos-extra { grid-template-columns: 1fr 1fr; } .cd .t-campos-extra > .t-subtitulo { grid-column: 1 / -1; } }
 
 /* Pie */
 .cd-pie { background: var(--neumatico); color: #b9c7c1; padding: 44px 0 30px; margin-top: 40px; border-top: 3px solid var(--refrigerante); font-size: .92rem; }

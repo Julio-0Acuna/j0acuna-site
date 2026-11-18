@@ -211,6 +211,9 @@
 .an .t-caja { border: 2px solid var(--an-negro); }
 .an .t-caja h2 { font-size: clamp(1.5rem, 3.4vw, 1.9rem); }
 .an .t-caja legend { font: 900 1.5rem/1.1 var(--t-fuente-titulos); text-transform: uppercase; }
+/* Datos del despacho a obra (checkout_campos del motor, solo con despacho): en dos columnas desde 720 px. */
+.an .t-campos-extra { display: grid; gap: 0 16px; align-items: start; }
+@media (min-width: 720px) { .an .t-campos-extra { grid-template-columns: 1fr 1fr; } }
 .an .t-panel__sub { font-size: clamp(1.7rem, 4vw, 2.2rem); }
 .an .t-opcion { border-width: 2px; }
 .an .t-opcion:has(input:checked) { border-color: var(--an-negro); background: var(--t-acento-suave); }

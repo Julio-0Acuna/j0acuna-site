@@ -89,7 +89,7 @@ debe_contener    "$SIMPLE" 'Taladro percutor 650 W'
 debe_contener    "$SIMPLE" '$34.990'
 debe_contener    "$SIMPLE" 'Rotomartillo 800 W'
 debe_contener    "$SIMPLE" '<option value="Macul">Macul · $2.500</option>'
-debe_contener    "$SIMPLE" '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20ferreter%C3%ADa%20%E2%80%93%20Simple-page%29'
+debe_contener    "$SIMPLE" '%28Cotizaci%C3%B3n%20de%20prueba%20desde%20la%20demo%20de%20ferreter%C3%ADa%20%E2%80%93%20Simple-page%29'
 debe_contener    "$SIMPLE" 'href="tel:+56973537642"'
 R=$(curl -s -o /dev/null -w "%{http_code} %{redirect_url}" --data-urlencode $'lista=2 sacos de cemento\n- 10 tarugos 8 mm\n\n1 llave de paso' --data-urlencode "entrega=despacho" --data-urlencode "comuna=Macul" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "nombre=Ana" "$BASE$SIMPLE")
 case "$R" in "303 https://wa.me/56973537642?text="*%E2%80%A2%202%20sacos%20de%20cemento%0A%E2%80%A2%2010%20tarugos%208%20mm%0A%E2%80%A2%201%20llave%20de%20paso*Despacho%3A%20Calle%20de%20Prueba%20123%2C%20Macul%20%28%242.500%29*Simple-page%29) pasa "la lista arma el WhatsApp con un ítem por línea, despacho con costo y la nota";; *) falla "cotiza tu lista: $R";; esac
@@ -127,7 +127,10 @@ no_debe_contener "${MULTI}cotizacion.php?color=XX-999" ' selected>PG-'
 debe_contener    "${MULTI}cotizacion.php" 'name="entrega" value="despacho"'
 debe_contener    "${MULTI}cotizacion.php" '<option value="La Reina">La Reina · $2.990</option>'
 debe_contener    "$MULTI" 'id="demo-carrito-config"'
-debe_contener    "$MULTI" '(Pedido de prueba desde la demo de ferretería – Multi-page)'
+debe_contener    "$MULTI" '(Cotización de prueba desde la demo de ferretería – Multi-page)'
+# Carrito común con textos de cotización (el mensaje lo arma carrito.js con estos textos)
+debe_contener    "$MULTI" '"saludo":"Hola, quiero cotizar en {negocio}:"'
+debe_contener    "${MULTI}cotizacion.php" '"retiro":"Entrega: retiro en la tienda"'
 debe_contener    "$MULTI" '"Látex interior mate","variantes":{"1 galón":13990,"Tineta 4 galones":47990}'
 grep -q 'Require all denied' demos/ferreteria/plataforma/data/.htaccess && pasa 'data/.htaccess niega todo' || falla 'data/.htaccess no niega'
 grep -q 'Require all denied' demos/ferreteria/plataforma/vistas/.htaccess && pasa 'vistas/.htaccess niega todo' || falla 'vistas/.htaccess no niega'
@@ -146,7 +149,8 @@ debe_responder   "${TIENDA}data/tienda.sqlite" 403
 debe_responder   "${TIENDA}reset.php" 404
 no_debe_contener "${TIENDA}config.php" 'dueno123'
 debe_contener    "$TIENDA" 'Cemento corriente saco 25 kg'
-debe_contener    "$TIENDA" 'Cód. 10101'
+debe_contener    "$TIENDA" '<p class="an-sku">Cód. 10101</p>'
+no_debe_contener "$TIENDA" 'Cód. 10101 · '
 debe_contener    "$TIENDA" 'Próximo despacho disponible'
 debe_contener    "$TIENDA" '¿Eres maestro o constructora?'
 debe_contener    "$TIENDA" 'Betonera 150 L · arriendo por día'
@@ -154,6 +158,10 @@ no_debe_contener "$TIENDA" 'Pallet de cemento (60 sacos de 25 kg)'
 debe_contener    "${TIENDA}?q=10105" 'Fierro estriado 8 mm × 6 m'
 no_debe_contener "${TIENDA}?q=10105" 'Cemento corriente saco 25 kg'
 debe_contener    "${TIENDA}?q=yeso" 'Plancha yeso-cartón 10 mm 1,2 × 2,4 m'
+debe_contener    "${TIENDA}?q=saco+cemento" 'Cemento corriente saco 25 kg</h3>'
+no_debe_contener "${TIENDA}?q=saco+cemento" 'Fierro estriado 8 mm × 6 m</h3>'
+REPETIDOS=$(curl -s "$BASE$TIENDA" | grep -oE ' id="[^"]+"' | sort | uniq -d | wc -l)
+[ "$REPETIDOS" = "0" ] && pasa "portada sin ids repetidos" || falla "portada con $REPETIDOS ids repetidos"
 debe_contener    "${TIENDA}?cat=arriendo" 'por día'
 debe_contener    "${TIENDA}?r=ingresar" 'cliente@demo.cl'
 debe_contener    "${TIENDA}?r=ingresar" 'mayorista@demo.cl'
@@ -197,6 +205,11 @@ CHECK=$(curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout")
 printf '%s' "$CHECK" | grep -qF 'Día de despacho o retiro' && pasa "checkout pide el día de despacho" || falla "checkout sin selector de día"
 printf '%s' "$CHECK" | grep -qF 'Despacho a obra' && printf '%s' "$CHECK" | grep -qF 'Retiro en el patio de carga' && pasa "checkout con «Despacho a obra» y «Retiro en el patio de carga»" || falla "checkout sin textos del rubro"
 printf '%s' "$CHECK" | grep -qF 'Desde las 08:00' && pasa "horas «Desde las …»" || falla "horas sin el texto del rubro"
+for c in obra recibe; do
+  printf '%s' "$CHECK" | grep -qF "name=\"extra[$c]\"" && pasa "checkout pide extra[$c] (checkout_campos)" || falla "checkout sin el campo extra[$c]"
+done
+[ "$(printf '%s' "$CHECK" | grep -cF 'data-solo-entrega="despacho"')" = "2" ] && pasa "obra y quién recibe solo se piden con despacho" || falla "los campos de obra no son solo de despacho"
+printf '%s' "$CHECK" | grep -qF 'En la nota indica' && falla "la ayuda aún pide los datos de la obra en la nota" || pasa "los datos de la obra ya no se piden en la nota"
 FECHA=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | head -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
 DOMINGOS=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | while read -r d; do date -d "$d" +%u; done | grep -c '^7$')
 [ -n "$FECHA" ] && [ "$DOMINGOS" = "0" ] && pasa "días ofrecidos sin domingos (primero: $FECHA)" || falla "días ofrecidos: primero '$FECHA', domingos $DOMINGOS"
@@ -207,8 +220,12 @@ R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencod
 case "$R" in 422*) pasa "una hora fuera del horario se rechaza (422)";; *) falla "hora inválida aceptada: $R";; esac
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Narnia" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir")
 case "$R" in 422*) pasa "despacho a una comuna sin cobertura se rechaza (422)";; *) falla "comuna inválida aceptada: $R";; esac
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Renca" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Obra en el patio, recibe Juan")
-case "$R" in 303*r=pedido*) pasa "checkout crea el pedido ($R)";; *) falla "checkout: $R";; esac
+# Despacho sin quién recibe: 422 con su error (la obra es opcional)
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Renca" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir")
+case "$R" in 422*) grep -qF 'Completa «Quién recibe».' "$TMP/ultima.html" && pasa "despacho sin «Quién recibe»: 422 con su error" || falla "despacho sin quién recibe: falta el error";; *) falla "despacho sin quién recibe aceptado: $R";; esac
+grep -qF 'id="err-extra_obra"' "$TMP/ultima.html" && falla "la obra (opcional) dio error vacía" || pasa "la obra es opcional"
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Renca" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Descargar en el patio" --data-urlencode "extra[obra]=<b>Casa Los Aromos</b>" --data-urlencode "extra[recibe]=Juan Perez 912345678")
+case "$R" in 303*r=pedido*) pasa "checkout crea el pedido con los datos de la obra ($R)";; *) falla "checkout: $R";; esac
 PEDIDO_URL="${R#* }"
 PAGINA=$(curl -s -b "$J1" "$PEDIDO_URL")
 CODIGO=$(printf '%s' "$PAGINA" | grep -oE 'AN-[0-9]+' | head -1)
@@ -218,7 +235,11 @@ printf '%s' "$PAGINA" | grep -qF ', desde las 10:00' && pasa "el pedido muestra 
 printf '%s' "$PAGINA" | grep -qF 'Enviar resumen por WhatsApp' && pasa "pedido ofrece enviar resumen por WhatsApp" || falla "pedido sin botón de WhatsApp"
 printf '%s' "$PAGINA" | grep -qF '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20ferreter%C3%ADa%20%E2%80%93%20Plataforma%20web%29' && pasa "resumen con la nota de prueba" || falla "resumen sin la nota de prueba"
 printf '%s' "$PAGINA" | grep -qF 'a%20las%2010%3A00' && pasa "resumen con el día y la hora" || falla "resumen sin la hora"
-printf '%s' "$PAGINA" | grep -qF 'Nota%3A%20Obra%20en%20el%20patio' && pasa "resumen con la nota del cliente" || falla "resumen sin la nota del cliente"
+printf '%s' "$PAGINA" | grep -qF 'Nota%3A%20Descargar%20en%20el%20patio' && pasa "resumen con la nota del cliente" || falla "resumen sin la nota del cliente"
+for x in 'Obra%20o%20empresa%3A%20%3Cb%3ECasa%20Los%20Aromos%3C%2Fb%3E' 'Qui%C3%A9n%20recibe%3A%20Juan%20Perez%20912345678'; do
+  printf '%s' "$PAGINA" | grep -qF "$x" && pasa "WhatsApp con $x" || falla "WhatsApp sin $x"
+done
+printf '%s' "$PAGINA" | grep -qF '<dd>&lt;b&gt;Casa Los Aromos&lt;/b&gt;</dd>' && pasa "la página del pedido muestra la obra escapada" || falla "la página del pedido sin la obra escapada"
 # 10 × $4.890 = $48.900 + despacho a Renca $12.990 = $61.890
 printf '%s' "$PAGINA" | grep -qF '$61.890' && pasa "total con despacho a obra en Renca (\$61.890)" || falla "total del pedido inesperado"
 
@@ -248,6 +269,10 @@ PANEL=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel&ver=pedidos")
 printf '%s' "$PANEL" | grep -qF "$CODIGO" && pasa "el dueño ve $CODIGO en el panel" || falla "el dueño no ve el pedido"
 printf '%s' "$PANEL" | grep -qF 'Cliente Prueba' && pasa "el panel muestra al cliente" || falla "el panel no muestra al cliente"
 printf '%s' "$PANEL" | grep -qF ' · para el ' && pasa "el panel muestra el día de cada despacho" || falla "el panel sin el día del despacho"
+printf '%s' "$PANEL" | grep -qF 'Obra o empresa: &lt;b&gt;Casa Los Aromos&lt;/b&gt; · Quién recibe: Juan Perez 912345678' && pasa "el panel muestra los datos de la obra (Etiqueta: valor, escapados)" || falla "el panel sin los datos de la obra"
+printf '%s' "$PANEL" | grep -qF '<b>Casa Los Aromos</b>' && falla "el panel imprime HTML del cliente" || pasa "el panel no imprime HTML del cliente"
+printf '%s' "$PANEL" | grep -qF 'Quién recibe: Jefe de obra' && pasa "el panel muestra los datos de obra de los pedidos de ejemplo (seed)" || falla "pedidos de ejemplo sin datos de obra"
+curl -s -b "$J1" "$BASE${TIENDA}?r=cuenta" | grep -qF 'Quién recibe: Juan Perez 912345678' && pasa "Mi cuenta muestra los datos de la obra" || falla "Mi cuenta sin los datos de la obra"
 RESUMEN=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel")
 printf '%s' "$RESUMEN" | grep -qF 'Ventas de hoy' && pasa "panel con ventas del día" || falla "panel sin ventas del día"
 printf '%s' "$RESUMEN" | grep -qF 'Stock bajo: Fieltro asfáltico 15 lb rollo 40 m² (3)' && pasa "panel avisa stock bajo" || falla "panel sin aviso de stock bajo"
@@ -280,9 +305,11 @@ curl -s -b "$J4" "$BASE$TIENDA" | grep -qF 'Pallet de cemento (60 sacos de 25 kg
 
 # Panel: crear un producto con una foto de la galería
 T=$(csrf "$J2" "${TIENDA}?r=panel_producto")
-R=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=Producto de Prueba" --data-urlencode "descripcion=Cod. 99999 creado por el test" --data-urlencode "categoria_id=1" --data-urlencode "precio=12345" --data-urlencode "precio_mayorista=10000" --data-urlencode "stock=5" --data-urlencode "foto=1710141530542-f792450e736e" --data-urlencode "visible=1")
+R=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=Producto de Prueba" --data-urlencode "codigo=99999" --data-urlencode "descripcion=Creado por el test" --data-urlencode "categoria_id=1" --data-urlencode "precio=12345" --data-urlencode "precio_mayorista=10000" --data-urlencode "stock=5" --data-urlencode "foto=1710141530542-f792450e736e" --data-urlencode "visible=1")
 case "$R" in 303*) pasa "el dueño crea un producto";; *) falla "crear producto: $R";; esac
 curl -s "$BASE$TIENDA" | grep -qF 'Producto de Prueba</h3>' && pasa "el producto nuevo aparece en la tienda" || falla "el producto nuevo no aparece"
+curl -s "$BASE${TIENDA}?q=99999" | grep -qF 'Producto de Prueba</h3>' && pasa "el código puesto en el panel se busca (99999)" || falla "el código del panel no se encuentra"
+curl -s "$BASE${TIENDA}?q=99999" | grep -qF '<p class="an-sku">Cód. 99999</p>' && pasa "el código puesto en el panel se ve como «Cód. 99999»" || falla "el código del panel no se ve"
 R=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=Foto ajena" --data-urlencode "categoria_id=1" --data-urlencode "precio=1" --data-urlencode "stock=1" --data-urlencode "foto=https://ejemplo.invalid/foto.jpg")
 case "$R" in 422*) pasa "foto fuera de la galería se rechaza";; *) falla "foto ajena aceptada: $R";; esac
 R=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=$(printf 'x%.0s' $(seq 1 81))" --data-urlencode "categoria_id=1" --data-urlencode "precio=1" --data-urlencode "stock=1")

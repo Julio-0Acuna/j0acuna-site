@@ -25,10 +25,10 @@ function cb_rubro(): array
 function cb_nota(): string
 {
     $r = cb_rubro();
-    return demo_nota($r['rubro_nombre'], $r['versiones']['multi']['plan']);
+    return demo_nota($r['rubro_nombre'], $r['versiones']['multi']['plan'], 'Cotización');
 }
 
-/** WhatsApp con la nota de pedido de prueba. */
+/** WhatsApp con la nota de cotización de prueba. */
 function cb_wa(string $texto): string
 {
     return demo_wa($texto . "\n" . cb_nota());
@@ -118,7 +118,7 @@ function cb_coincide_texto(array $p, string $q): bool
     return true;
 }
 
-/** Configuración del carrito en el navegador (_comun/js/carrito.js). El código va en el nombre. */
+/** Configuración del carrito en el navegador (_comun/js/carrito.js), con textos de cotización. El código va en el nombre. */
 function cb_config_carrito(): array
 {
     $n = cb();
@@ -133,6 +133,12 @@ function cb_config_carrito(): array
         'numero' => DEMO_WHATSAPP,
         'comunas' => $n['comunas_despacho'],
         'catalogo' => $catalogo,
+        'textos' => [
+            'saludo' => 'Hola, quiero cotizar en {negocio}:',
+            'agregado' => 'Agregado a la cotización: {producto}',
+            'ver_pedido' => 'Ver tu cotización ({n} repuestos)',
+            'ver_pedido_uno' => 'Ver tu cotización (1 repuesto)',
+        ],
     ];
 }
 

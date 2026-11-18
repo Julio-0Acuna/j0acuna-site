@@ -22,10 +22,10 @@ function pg_rubro(): array
 function pg_nota(): string
 {
     $r = pg_rubro();
-    return demo_nota($r['rubro_nombre'], $r['versiones']['multi']['plan']);
+    return demo_nota($r['rubro_nombre'], $r['versiones']['multi']['plan'], 'Cotización');
 }
 
-/** WhatsApp con la nota de pedido de prueba. */
+/** WhatsApp con la nota de cotización de prueba. */
 function pg_wa(string $texto): string
 {
     return demo_wa($texto . "\n" . pg_nota());
@@ -90,7 +90,7 @@ function pg_desde(array $p): int
     return min($p['variantes']);
 }
 
-/** Configuración del carrito en el navegador (_comun/js/carrito.js). */
+/** Configuración del carrito en el navegador (_comun/js/carrito.js), con textos de cotización. */
 function pg_config_carrito(): array
 {
     $n = pg();
@@ -105,6 +105,13 @@ function pg_config_carrito(): array
         'numero' => DEMO_WHATSAPP,
         'comunas' => $n['comunas_despacho'],
         'catalogo' => $catalogo,
+        'textos' => [
+            'saludo' => 'Hola, quiero cotizar en {negocio}:',
+            'retiro' => 'Entrega: retiro en la tienda',
+            'agregado' => 'Agregado a la cotización: {producto}',
+            'ver_pedido' => 'Ver tu cotización ({n} productos)',
+            'ver_pedido_uno' => 'Ver tu cotización (1 producto)',
+        ],
     ];
 }
 

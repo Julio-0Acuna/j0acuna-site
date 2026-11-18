@@ -99,7 +99,7 @@ debe_contener    "$SIMPLE" '$24.990'
 debe_contener    "$SIMPLE" 'City car y hatchback 1.2–1.6 · 2012–2020'
 debe_contener    "$SIMPLE" 'name="patente"'
 debe_contener    "$SIMPLE" '<option value="Conchalí">Conchalí · $2.500</option>'
-debe_contener    "$SIMPLE" '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20repuestos%20de%20auto%20%E2%80%93%20Simple-page%29'
+debe_contener    "$SIMPLE" '%28Cotizaci%C3%B3n%20de%20prueba%20desde%20la%20demo%20de%20repuestos%20de%20auto%20%E2%80%93%20Simple-page%29'
 debe_contener    "$SIMPLE" 'href="tel:+56973537642"'
 R=$(curl -s -o /dev/null -w "%{http_code} %{redirect_url}" --data-urlencode "patente=kx-pl 47" --data-urlencode "repuesto=pastillas de freno delanteras" --data-urlencode "entrega=retiro" "$BASE$SIMPLE")
 case "$R" in "303 https://wa.me/56973537642?text="*Repuesto%3A%20pastillas%20de%20freno%20delanteras*Patente%3A%20KX%C2%B7PL%C2%B747*Entrega%3A%20retiro%20en%20el%20mes%C3%B3n*Simple-page%29) pasa "la patente se normaliza (KX·PL·47) y arma el WhatsApp con repuesto, retiro y la nota";; *) falla "cotiza con patente: $R";; esac
@@ -145,7 +145,10 @@ done
 debe_contener    "${MULTI}cotizar.php" 'name="entrega" value="despacho"'
 debe_contener    "${MULTI}cotizar.php" '<option value="Santiago">Santiago · $2.990</option>'
 debe_contener    "$MULTI" 'id="demo-carrito-config"'
-debe_contener    "$MULTI" '(Pedido de prueba desde la demo de repuestos de auto – Multi-page)'
+debe_contener    "$MULTI" '(Cotización de prueba desde la demo de repuestos de auto – Multi-page)'
+# Carrito común con textos de cotización (el mensaje lo arma carrito.js con estos textos)
+debe_contener    "$MULTI" '"saludo":"Hola, quiero cotizar en {negocio}:"'
+debe_contener    "${MULTI}cotizar.php" '"ver_pedido":"Ver tu cotización ({n} repuestos)"'
 debe_contener    "$MULTI" '"CB-2101 Pastillas de freno delanteras cerámicas","variantes":{"Juego eje delantero":24990}'
 debe_contener    "$MULTI" '/demos/repuestos/multi/calibre.js?v='
 debe_responder   "${MULTI}calibre.js" 200
@@ -168,7 +171,9 @@ debe_responder   "${TIENDA}data/tienda.sqlite" 403
 debe_responder   "${TIENDA}reset.php" 404
 no_debe_contener "${TIENDA}config.php" 'dueno123'
 debe_contener    "$TIENDA" 'Pastillas de freno delanteras cerámicas'
-debe_contener    "$TIENDA" 'CD-1101'
+debe_contener    "$TIENDA" '<span class="cd-sku">CD-1101</span>'
+no_debe_contener "$TIENDA" 'CD-1101 · '
+debe_contener    "$TIENDA" 'City car, hatchback · 1.2–1.6 · 2012–2020</span>'
 debe_contener    "$TIENDA" 'En bodega: 38'
 debe_contener    "$TIENDA" 'Quedan 3'
 debe_contener    "$TIENDA" 'Por patente'
@@ -189,6 +194,14 @@ no_debe_contener "${TIENDA}?tipo=city&anio=2015&cc=1.2" 'Batería 12 V 90 Ah par
 debe_contener    "${TIENDA}?q=cd1101" 'Pastillas de freno delanteras cerámicas</h3>'
 no_debe_contener "${TIENDA}?q=cd1101" 'Batería 12 V 60 Ah</h3>'
 debe_contener    "${TIENDA}?q=CD-4201" 'Batería 12 V 60 Ah</h3>'
+debe_contener    "${TIENDA}?q=cd+4201" 'Batería 12 V 60 Ah</h3>'
+debe_contener    "${TIENDA}?q=freno+pastillas" 'Pastillas de freno delanteras para SUV</h3>'
+no_debe_contener "${TIENDA}?q=freno+pastillas" 'Par de discos de freno ventilados 280 mm</h3>'
+# Destacados con prefijo en el id: ningún id se repite en la portada
+REPETIDOS=$(curl -s "$BASE$TIENDA" | grep -oE ' id="[^"]+"' | sort | uniq -d | wc -l)
+[ "$REPETIDOS" = "0" ] && pasa "portada sin ids repetidos" || falla "portada con $REPETIDOS ids repetidos"
+# Columna de categorías: «Para talleres» solo para talleres asociados (m_categorias_visibles)
+no_debe_contener "$TIENDA" 'cat=talleres#menu'
 debe_contener    "${TIENDA}?cat=encendido" 'Juego de 4 bujías de iridio'
 debe_contener    "${TIENDA}?r=ingresar" 'cliente@demo.cl'
 debe_contener    "${TIENDA}?r=ingresar" 'mayorista@demo.cl'
@@ -238,21 +251,36 @@ CHECK=$(curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout")
 printf '%s' "$CHECK" | grep -qF 'Día de despacho o retiro' && pasa "checkout pide el día de despacho" || falla "checkout sin selector de día"
 printf '%s' "$CHECK" | grep -qF 'Despacho en camioneta' && printf '%s' "$CHECK" | grep -qF 'Retiro en bodega' && pasa "checkout con «Despacho en camioneta» y «Retiro en bodega»" || falla "checkout sin textos del rubro"
 printf '%s' "$CHECK" | grep -qF 'Desde las 09:00' && pasa "horas «Desde las …»" || falla "horas sin el texto del rubro"
-printf '%s' "$CHECK" | grep -qF 'escribe la patente o el VIN' && pasa "la ayuda pide la patente o el VIN en la nota" || falla "checkout sin ayuda de patente"
+printf '%s' "$CHECK" | grep -qF 'escribe la patente o el VIN' && falla "la ayuda aún pide la patente en la nota" || pasa "la patente ya no se pide en la nota"
+printf '%s' "$CHECK" | grep -qF 'Tu vehículo</p>' && pasa "checkout con el título «Tu vehículo»" || falla "checkout sin el título de los datos del vehículo"
+for c in patente vehiculo anio motor vin; do
+  printf '%s' "$CHECK" | grep -qF "name=\"extra[$c]\"" && pasa "checkout pide extra[$c] (checkout_campos)" || falla "checkout sin el campo extra[$c]"
+done
 FECHA=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | head -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
 DOMINGOS=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | while read -r d; do date -d "$d" +%u; done | grep -c '^7$')
 [ -n "$FECHA" ] && [ "$DOMINGOS" = "0" ] && pasa "días ofrecidos sin domingos (primero: $FECHA)" || falla "días ofrecidos: primero '$FECHA', domingos $DOMINGOS"
 HOY=$(TZ=America/Santiago date +%F)
 printf '%s' "$CHECK" | grep -qF "option value=\"$HOY\"" && falla "ofrece despacho hoy (dias_min = 1)" || pasa "no ofrece despacho el mismo día"
 T=$(printf '%s' "$CHECK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=2020-01-06" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir")
+# Datos del vehículo válidos: patente y VIN opcionales (se normalizan: "kx-pl 47" → KXPL47)
+AUTO=(--data-urlencode "extra[patente]=kx-pl 47" --data-urlencode "extra[vehiculo]=SUV mediano" --data-urlencode "extra[anio]=2017" --data-urlencode "extra[motor]=2.0 bencina")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=2020-01-06" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" "${AUTO[@]}")
 case "$R" in 422*) pasa "un día fuera de la lista se rechaza (422)";; *) falla "día inválido aceptado: $R";; esac
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=19:00" --data-urlencode "pago=al_recibir")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=19:00" --data-urlencode "pago=al_recibir" "${AUTO[@]}")
 case "$R" in 422*) pasa "una hora fuera del horario se rechaza (422)";; *) falla "hora inválida aceptada: $R";; esac
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Narnia" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Narnia" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir" "${AUTO[@]}")
 case "$R" in 422*) pasa "despacho a una comuna sin cobertura se rechaza (422)";; *) falla "comuna inválida aceptada: $R";; esac
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Cerrillos" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Patente KXPL47, recibe Juan")
-case "$R" in 303*r=pedido*) pasa "checkout crea el pedido ($R)";; *) falla "checkout: $R";; esac
+# Sin los datos del vehículo: 422 con el error de cada campo requerido (patente y VIN son opcionales)
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir")
+case "$R" in 422*) pasa "pedido sin datos del vehículo se rechaza (422)";; *) falla "pedido sin datos del vehículo aceptado: $R";; esac
+for t in 'Completa «Vehículo».' 'Completa «Año».' 'Completa «Motor».'; do
+  grep -qF "$t" "$TMP/ultima.html" && pasa "error del campo extra: $t" || falla "falta el error: $t"
+done
+grep -qF 'id="err-extra_patente"' "$TMP/ultima.html" && falla "la patente (opcional) dio error vacía" || pasa "la patente es opcional"
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=al_recibir" --data-urlencode "extra[patente]=AEIO12" --data-urlencode "extra[vin]=123" --data-urlencode "extra[vehiculo]=SUV" --data-urlencode "extra[anio]=2017" --data-urlencode "extra[motor]=2.0")
+case "$R" in 422*) grep -qF 'no tiene el formato chileno' "$TMP/ultima.html" && grep -qF 'El VIN tiene 17 letras y números' "$TMP/ultima.html" && pasa "patente con vocales y VIN corto: 422 con sus errores" || falla "patente o VIN inválidos sin mensaje";; *) falla "patente o VIN inválidos aceptados: $R";; esac
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Cerrillos" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Recibe Juan" --data-urlencode "extra[vin]=1hg-cm82633a004352" "${AUTO[@]}")
+case "$R" in 303*r=pedido*) pasa "checkout crea el pedido con los datos del vehículo ($R)";; *) falla "checkout: $R";; esac
 PEDIDO_URL="${R#* }"
 PAGINA=$(curl -s -b "$J1" "$PEDIDO_URL")
 CODIGO=$(printf '%s' "$PAGINA" | grep -oE 'CR-[0-9]+' | head -1)
@@ -262,7 +290,11 @@ printf '%s' "$PAGINA" | grep -qF ', desde las 10:00' && pasa "el pedido muestra 
 printf '%s' "$PAGINA" | grep -qF 'Enviar resumen por WhatsApp' && pasa "pedido ofrece enviar resumen por WhatsApp" || falla "pedido sin botón de WhatsApp"
 printf '%s' "$PAGINA" | grep -qF '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20repuestos%20de%20auto%20%E2%80%93%20Plataforma%20web%29' && pasa "resumen con la nota de prueba" || falla "resumen sin la nota de prueba"
 printf '%s' "$PAGINA" | grep -qF 'a%20las%2010%3A00' && pasa "resumen con el día y la hora" || falla "resumen sin la hora"
-printf '%s' "$PAGINA" | grep -qF 'Nota%3A%20Patente%20KXPL47' && pasa "resumen con la nota del cliente (patente)" || falla "resumen sin la nota del cliente"
+printf '%s' "$PAGINA" | grep -qF 'Nota%3A%20Recibe%20Juan' && pasa "resumen con la nota del cliente" || falla "resumen sin la nota del cliente"
+for x in 'Patente%3A%20KXPL47' 'Veh%C3%ADculo%3A%20SUV%20mediano' 'A%C3%B1o%3A%202017' 'Motor%3A%202.0%20bencina' 'VIN%3A%201HGCM82633A004352'; do
+  printf '%s' "$PAGINA" | grep -qF "$x" && pasa "WhatsApp con $x" || falla "WhatsApp sin $x"
+done
+printf '%s' "$PAGINA" | grep -qF '<dt>Patente</dt><dd>KXPL47</dd>' && pasa "la página del pedido muestra la patente normalizada" || falla "la página del pedido sin la patente"
 # 2 × $24.990 = $49.980 + despacho a Cerrillos $2.990 = $52.970
 printf '%s' "$PAGINA" | grep -qF '$52.970' && pasa "total con despacho a Cerrillos (\$52.970)" || falla "total del pedido inesperado"
 
@@ -270,7 +302,7 @@ printf '%s' "$PAGINA" | grep -qF '$52.970' && pasa "total con despacho a Cerrill
 T=$(csrf "$J1" "$TIENDA")
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID" --data-urlencode "cantidad=1" > /dev/null
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=prueba")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=prueba" "${AUTO[@]}")
 case "$R" in 303*r=pago*) pasa "pago de prueba lleva a la pantalla simulada";; *) falla "pago de prueba: $R";; esac
 curl -s -b "$J1" "$BASE${TIENDA}?r=pago" | grep -qF 'PAGO DE PRUEBA' && pasa "pantalla de pago marcada como prueba" || falla "pantalla de pago sin aviso"
 T=$(csrf "$J1" "${TIENDA}?r=pago")
@@ -292,6 +324,9 @@ PANEL=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel&ver=pedidos")
 printf '%s' "$PANEL" | grep -qF "$CODIGO" && pasa "el dueño ve $CODIGO en el panel" || falla "el dueño no ve el pedido"
 printf '%s' "$PANEL" | grep -qF 'Cliente Prueba' && pasa "el panel muestra al cliente" || falla "el panel no muestra al cliente"
 printf '%s' "$PANEL" | grep -qF ' · para el ' && pasa "el panel muestra el día de cada despacho" || falla "el panel sin el día del despacho"
+printf '%s' "$PANEL" | grep -qF 'Patente: KXPL47 · Vehículo: SUV mediano · Año: 2017 · Motor: 2.0 bencina · VIN: 1HGCM82633A004352' && pasa "el panel muestra los datos del vehículo (Etiqueta: valor)" || falla "el panel sin los datos del vehículo"
+printf '%s' "$PANEL" | grep -qF 'Patente: BBCD12' && pasa "el panel muestra el vehículo de los pedidos de ejemplo (seed)" || falla "pedidos de ejemplo sin datos del vehículo"
+curl -s -b "$J1" "$BASE${TIENDA}?r=cuenta" | grep -qF 'Patente: KXPL47' && pasa "Mi cuenta muestra el vehículo de cada pedido" || falla "Mi cuenta sin los datos del vehículo"
 RESUMEN=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel")
 printf '%s' "$RESUMEN" | grep -qF 'Ventas de hoy' && pasa "panel con ventas del día" || falla "panel sin ventas del día"
 printf '%s' "$RESUMEN" | grep -qF 'Stock bajo: Zapatas de freno traseras (3)' && pasa "panel avisa stock bajo" || falla "panel sin aviso de stock bajo"
@@ -313,6 +348,7 @@ TALLER=$(curl -s -b "$J3" "$BASE$TIENDA")
 printf '%s' "$TALLER" | grep -qF 'Caja de 24 filtros de aceite rosca 3/4-16' && pasa "el taller ve los packs por caja" || falla "el taller no ve los packs"
 printf '%s' "$TALLER" | grep -qF '<strong>$20.990</strong>' && printf '%s' "$TALLER" | grep -qF '<s aria-label="Precio normal">$24.990</s> <span class="t-etiqueta">Precio taller</span>' && pasa "el taller ve precio taller (\$20.990 en vez de \$24.990)" || falla "el taller sin precio taller"
 printf '%s' "$TALLER" | grep -qF 'Precio taller activo' && pasa "aviso de precio taller activo" || falla "sin aviso de precio taller"
+printf '%s' "$TALLER" | grep -qF 'cat=talleres#menu">Para talleres</a>' && pasa "el taller ve la categoría «Para talleres» en la columna" || falla "el taller no ve la categoría «Para talleres»"
 J4="$TMP/nuevo-taller.txt"
 T=$(csrf "$J4" "${TIENDA}?r=registro")
 post "$J4" "${TIENDA}?r=registro" --data-urlencode "csrf=$T" --data-urlencode "nombre=Taller Prueba" --data-urlencode "email=taller$RANDOM$RANDOM@demo.cl" --data-urlencode "clave=prueba1234" --data-urlencode "tipo=mayorista" --data-urlencode "empresa=Mecanica de Prueba" > /dev/null
@@ -324,10 +360,11 @@ curl -s -b "$J4" "$BASE$TIENDA" | grep -qF 'Caja de 24 filtros de aceite' && pas
 
 # Panel: crear un producto con una foto de la galería (sin código ni compatibilidad: queda como universal)
 T=$(csrf "$J2" "${TIENDA}?r=panel_producto")
-R=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=Producto de Prueba" --data-urlencode "descripcion=Creado por el test" --data-urlencode "categoria_id=1" --data-urlencode "precio=12345" --data-urlencode "precio_mayorista=10000" --data-urlencode "stock=5" --data-urlencode "foto=1613214150384-14921ff659b2" --data-urlencode "visible=1")
+R=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=Producto de Prueba" --data-urlencode "codigo=CD-7777" --data-urlencode "descripcion=Creado por el test" --data-urlencode "categoria_id=1" --data-urlencode "precio=12345" --data-urlencode "precio_mayorista=10000" --data-urlencode "stock=5" --data-urlencode "foto=1613214150384-14921ff659b2" --data-urlencode "visible=1")
 case "$R" in 303*) pasa "el dueño crea un producto";; *) falla "crear producto: $R";; esac
 curl -s "$BASE$TIENDA" | grep -qF 'Producto de Prueba</h3>' && pasa "el producto nuevo aparece en la tienda" || falla "el producto nuevo no aparece"
 curl -s "$BASE${TIENDA}?patente=GZWX38" | grep -qF 'Producto de Prueba</h3>' && pasa "un producto sin compatibilidad se muestra para cualquier vehículo" || falla "producto sin compatibilidad oculto"
+curl -s "$BASE${TIENDA}?q=cd7777" | grep -qF 'Producto de Prueba</h3>' && pasa "el código puesto en el panel se busca sin guion (cd7777)" || falla "el código del panel no se encuentra"
 R=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=Foto ajena" --data-urlencode "categoria_id=1" --data-urlencode "precio=1" --data-urlencode "stock=1" --data-urlencode "foto=https://ejemplo.invalid/foto.jpg")
 case "$R" in 422*) pasa "foto fuera de la galería se rechaza";; *) falla "foto ajena aceptada: $R";; esac
 R=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=$(printf 'x%.0s' $(seq 1 81))" --data-urlencode "categoria_id=1" --data-urlencode "precio=1" --data-urlencode "stock=1")

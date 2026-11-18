@@ -66,6 +66,19 @@ return [
         'cerrado' => [7, '2026-12-08', '2026-12-25', '2027-01-01'],
         'horas' => ['09:00', '18:00'],
     ],
+    // Datos del vehículo en el checkout: con la patente o el VIN revisamos que todo calce antes de despachar.
+    // Se validan en el servidor y salen en el pedido, el panel y el WhatsApp ("Patente: BBCD12").
+    'checkout_campos' => [
+        ['nombre' => 'patente', 'etiqueta' => 'Patente', 'requerido' => false, 'normalizar' => 'patente', 'max' => 6,
+            'patron' => '/^([A-Z]{2}\d{4}|[BCDFGHJKLPRSTVWXYZ]{4}\d{2})$/', 'ayuda' => 'Ej.: BBCD12 o AB1234',
+            'error' => 'Esa patente no tiene el formato chileno: 4 letras y 2 números (BBCD12) o 2 letras y 4 números (AB1234).'],
+        ['nombre' => 'vehiculo', 'etiqueta' => 'Vehículo', 'max' => 40, 'ayuda' => 'Marca y modelo, como aparecen en el padrón'],
+        ['nombre' => 'anio', 'etiqueta' => 'Año', 'tipo' => 'numero', 'min' => 1970, 'max' => (int) date('Y') + 1],
+        ['nombre' => 'motor', 'etiqueta' => 'Motor', 'max' => 20, 'ayuda' => 'Cilindrada y combustible, ej.: 1.6 bencina'],
+        ['nombre' => 'vin', 'etiqueta' => 'VIN', 'requerido' => false, 'normalizar' => 'patente', 'max' => 17,
+            'patron' => '/^[A-HJ-NPR-Z0-9]{17}$/', 'ayuda' => '17 caracteres: está en el padrón y al pie del parabrisas',
+            'error' => 'El VIN tiene 17 letras y números (sin I, O ni Q).'],
+    ],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Repuestos: sin menú QR ni modelos 3D.
     'menu_qr' => false,
@@ -108,7 +121,7 @@ return [
         'retiro_texto' => 'Sin costo. Te avisamos cuando esté listo en el mesón de retiro.',
         'despacho_titulo' => 'Despacho en camioneta',
         'fecha_titulo' => 'Día de despacho o retiro',
-        'fecha_ayuda' => 'Despachamos de lunes a sábado en dos rutas, mañana y tarde. En la nota escribe la patente o el VIN y revisamos que todo calce antes de cargar la camioneta.',
+        'fecha_ayuda' => 'Despachamos de lunes a sábado en dos rutas, mañana y tarde.',
         'hora_titulo' => 'Desde qué hora',
         'hora_cualquiera' => 'Cualquier hora (09:00 a 18:00)',
         'hora_entrega_fecha' => 'Desde las {hora}',
@@ -116,6 +129,12 @@ return [
         'pedido_titulo' => '¡Pedido en bodega!',
         'pedido_exito_prueba' => '¡Pago de prueba aprobado! Ya estamos preparando tu pedido en bodega.',
         'pedido_exito_al_recibir' => '¡Pedido recibido! Pagas al recibir, en tu taller, tu casa o en bodega.',
+        // Tarjeta de producto propia (vistas/_producto.php) y checkout. El código va solo en su sello ("CD-1101").
+        'producto_codigo' => '{codigo}',
+        'producto_agregar' => 'Agregar al carro',
+        'producto_agregar_aria' => 'Agregar {producto} al carro',
+        'producto_agotado' => 'Agotado · consúltanos',
+        'checkout_campos_titulo' => 'Tu vehículo',
     ],
 
     'cuentas_prueba' => [

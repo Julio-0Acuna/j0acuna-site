@@ -70,6 +70,8 @@
 .vr-burbuja { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--vr-amarillo); color: var(--vr-negro); font: 800 .8rem/22px var(--t-fuente); text-align: center; }
 .vr-salir button { background: none; border: 0; color: var(--vr-gris); font: inherit; font-size: .88rem; text-decoration: underline; cursor: pointer; min-height: 44px; padding: 0 8px; }
 @media (max-width: 560px) { .vr-accion > span:not(.vr-burbuja) { display: none; } .vr-logo__texto { font-size: 1.45rem; } .vr-logo__texto small { letter-spacing: .2em; white-space: nowrap; } .vr-logo__rayas i { height: 24px; width: 6px; } .vr-accion { padding: 6px 10px; } }
+/* Con sesión iniciada caben cuenta, reserva y "Salir" junto al logo a 375 px. */
+@media (max-width: 400px) { .vr-cabecera__fila { column-gap: 8px; } .vr-acciones { gap: 2px; } .vr-accion { padding: 6px 8px; } .vr-salir button { padding: 0 4px; } }
 .vr-cats { background: #fff; border-bottom: 3px solid var(--vr-negro); }
 .vr-cats__fila { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
 .vr-cats__fila::-webkit-scrollbar { display: none; }
@@ -168,6 +170,10 @@
 .vr .t-caja h2 { font-size: clamp(1.3rem, 3vw, 1.6rem); }
 .vr .t-panel__sub { font-size: clamp(1.5rem, 4vw, 2rem); }
 .vr .t-caja legend { font: 800 1.3rem/1.1 var(--t-fuente-titulos); text-transform: uppercase; }
+/* Ficha del auto (checkout_campos del motor): con su título, separada de la fecha y en dos columnas desde 720 px. */
+.vr .t-campos-extra { display: grid; gap: 0 16px; align-items: start; margin: 6px 0 0; padding-top: 16px; border-top: 1px solid var(--t-borde); }
+.vr .t-campos-extra > .t-subtitulo { margin: 0 0 12px; font: 800 1.1rem/1.1 var(--t-fuente-titulos); text-transform: uppercase; }
+@media (min-width: 720px) { .vr .t-campos-extra { grid-template-columns: 1fr 1fr; } .vr .t-campos-extra > .t-subtitulo { grid-column: 1 / -1; } }
 .vr .t-opcion { border-radius: var(--t-radio); }
 .vr .t-opcion:has(input:checked) { border-color: var(--vr-negro); background: var(--t-acento-suave); }
 .vr .t-campo input, .vr .t-campo select, .vr .t-campo textarea { border-radius: 3px; }

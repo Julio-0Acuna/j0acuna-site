@@ -60,24 +60,19 @@ function rp_cc(float $cc): string
 }
 
 /**
- * Lee el código y la compatibilidad del inicio de la descripción de un producto de la Plataforma:
- *   "CD-1101 · City car, hatchback · 1.2–1.6 · 2012–2020 · texto"  o  "CD-7001 · Universal · texto".
- * Devuelve ['codigo' => '', 'compat' => null|array, 'universal' => bool, 'texto' => resto].
+ * Lee la compatibilidad del inicio de la descripción de un producto de la Plataforma (el código va en su
+ * propio campo, productos.codigo):  "City car, hatchback · 1.2–1.6 · 2012–2020 · texto"  o  "Universal · texto".
+ * Devuelve ['compat' => null|array, 'universal' => bool, 'texto' => resto].
  * Sin ese formato (ej. un producto nuevo del panel), el producto se trata como universal.
  */
 function rp_compat_leer(string $descripcion): array
 {
-    $r = ['codigo' => '', 'compat' => null, 'universal' => true, 'texto' => $descripcion];
-    if (!preg_match('/^([A-Z]{2}-\d{4})\s*·\s*(.*)$/us', $descripcion, $m)) {
-        return $r;
-    }
-    $r['codigo'] = $m[1];
-    $r['texto'] = $m[2];
-    if (preg_match('/^Universal\s*·\s*(.*)$/us', $m[2], $u)) {
+    $r = ['compat' => null, 'universal' => true, 'texto' => $descripcion];
+    if (preg_match('/^Universal\s*·\s*(.*)$/us', $descripcion, $u)) {
         $r['texto'] = $u[1];
         return $r;
     }
-    if (!preg_match('/^([^·]+?)\s*·\s*(\d[.,]\d)\s*[–-]\s*(\d[.,]\d)\s*·\s*(\d{4})\s*[–-]\s*(\d{4})\s*·\s*(.*)$/us', $m[2], $c)) {
+    if (!preg_match('/^([^·]+?)\s*·\s*(\d[.,]\d)\s*[–-]\s*(\d[.,]\d)\s*·\s*(\d{4})\s*[–-]\s*(\d{4})\s*·\s*(.*)$/us', $descripcion, $c)) {
         return $r;
     }
     $nombres = rp_normalizar_texto($c[1]);

@@ -88,7 +88,7 @@ debe_contener    "$SIMPLE" 'id="presupuesto"'
 debe_contener    "$SIMPLE" '<small>desde</small> $219.990'
 debe_contener    "$SIMPLE" 'aria-label="100.000 kilómetros"'
 debe_contener    "$SIMPLE" 'name="patente"'
-debe_contener    "$SIMPLE" '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20taller%20mec%C3%A1nico%20%E2%80%93%20Simple-page%29'
+debe_contener    "$SIMPLE" '%28Cotizaci%C3%B3n%20de%20prueba%20desde%20la%20demo%20de%20taller%20mec%C3%A1nico%20%E2%80%93%20Simple-page%29'
 debe_contener    "$SIMPLE" 'href="tel:+56973537642"'
 debe_contener    "${SIMPLE}?servicio=embrague" '<option value="embrague" selected>'
 R=$(curl -s -o /dev/null -w "%{http_code} %{redirect_url}" --data-urlencode "patente=abcd-12" --data-urlencode "modelo=Sedan mediano" --data-urlencode "anio=2015" --data-urlencode "km=84.000" --data-urlencode "servicio=frenos" --data-urlencode "problema=Chirria al frenar" "$BASE$SIMPLE")
@@ -113,7 +113,12 @@ done
 debe_contener    "${MULTI}reserva.php" 'name="entrega" value="despacho"'
 debe_contener    "${MULTI}reserva.php" '<option value="Vitacura">Vitacura · $4.990</option>'
 debe_contener    "$MULTI" 'id="demo-carrito-config"'
-debe_contener    "$MULTI" '(Pedido de prueba desde la demo de taller mecánico – Multi-page)'
+debe_contener    "$MULTI" '(Reserva de prueba desde la demo de taller mecánico – Multi-page)'
+# Carrito común con textos de reserva (el mensaje lo arma carrito.js con estos textos)
+debe_contener    "$MULTI" '"saludo":"Hola, quiero reservar hora en {negocio}:"'
+debe_contener    "${MULTI}reserva.php" '"retiro":"Entrega: llevo el auto al taller"'
+debe_contener    "${MULTI}reserva.php" '"despacho":"Entrega: retiro del auto en {direccion}, {comuna}"'
+debe_contener    "${MULTI}reserva.php" '"total":"Total desde: {total}"'
 debe_contener    "$MULTI" '"Mantención 10.000 km","variantes":{"Auto":79990,"SUV":94990,"Camioneta":99990}'
 grep -q 'Require all denied' demos/taller/plataforma/data/.htaccess && pasa 'data/.htaccess niega todo' || falla 'data/.htaccess no niega'
 grep -q 'Require all denied' demos/taller/plataforma/vistas/.htaccess && pasa 'vistas/.htaccess niega todo' || falla 'vistas/.htaccess no niega'
@@ -138,6 +143,9 @@ debe_contener    "$TIENDA" '¿Tu empresa tiene flota?'
 no_debe_contener "$TIENDA" 'Mantención de furgón 10.000 km'
 debe_contener    "${TIENDA}?q=frenos" 'Pastillas de freno delanteras'
 no_debe_contener "${TIENDA}?q=frenos" 'Cámara para auto'
+# Búsqueda por palabras sueltas, en cualquier orden (el taller no usa códigos de producto)
+debe_contener    "${TIENDA}?q=aceite+cambio" 'Cambio de aceite y filtro</h3>'
+no_debe_contener "${TIENDA}?q=aceite+cambio" 'Pastillas de freno delanteras</h3>'
 debe_contener    "${TIENDA}?r=ingresar" 'cliente@demo.cl'
 debe_contener    "${TIENDA}?r=ingresar" 'mayorista@demo.cl'
 debe_contener    "${TIENDA}?r=ingresar" 'dueno@demo.cl'
@@ -173,31 +181,56 @@ PID=$(printf '%s' "$INICIO" | grep -oE 'name="producto_id" value="[0-9]+"' | hea
 T=$(printf '%s' "$INICIO" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
 R=$(post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID" --data-urlencode "cantidad=1")
 case "$R" in 303*) pasa "agregar un servicio a la reserva ($R)";; *) falla "agregar al carrito: $R";; esac
-curl -s -b "$J1" "$BASE${TIENDA}?r=carrito" | grep -qF '<strong>Cambio de aceite y filtro</strong>' && pasa "el carrito tiene el servicio" || falla "carrito vacío"
+CARRO=$(curl -s -b "$J1" "$BASE${TIENDA}?r=carrito")
+printf '%s' "$CARRO" | grep -qF '<strong>Cambio de aceite y filtro</strong>' && pasa "el carrito tiene el servicio" || falla "carrito vacío"
+printf '%s' "$CARRO" | grep -qF 'Tu reserva</h1>' && printf '%s' "$CARRO" | grep -qF 'Elegir día y hora' && pasa "carrito con textos de reserva (config textos)" || falla "carrito sin los textos de reserva"
 
 # Checkout: día de la hora calculado en el servidor (sin domingos ni feriados)
 CHECK=$(curl -s -b "$J1" -c "$J1" "$BASE${TIENDA}?r=checkout")
 printf '%s' "$CHECK" | grep -qF 'Día de tu hora' && pasa "checkout pide el día de la hora" || falla "checkout sin selector de día"
 printf '%s' "$CHECK" | grep -qF 'Llevo mi auto al taller' && pasa "checkout con «Llevo mi auto al taller»" || falla "checkout sin texto de retiro del rubro"
+for t in 'Reservar hora</h1>' '¿Dónde dejas el auto?' 'Confirmar reserva' 'Tu auto</p>' '¿Qué le notas al auto?' 'Pagar en el taller'; do
+  printf '%s' "$CHECK" | grep -qF "$t" && pasa "checkout de reserva: $t" || falla "checkout sin el texto: $t"
+done
+for c in patente vehiculo anio km; do
+  printf '%s' "$CHECK" | grep -qF "name=\"extra[$c]\"" && pasa "checkout pide extra[$c] (checkout_campos)" || falla "checkout sin el campo extra[$c]"
+done
+printf '%s' "$CHECK" | grep -qF 'En la nota escribe la patente' && falla "la ayuda aún pide la patente en la nota" || pasa "la patente ya no se pide en la nota"
 FECHA=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | head -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
 DOMINGOS=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | while read -r d; do date -d "$d" +%u; done | grep -c '^7$')
 [ -n "$FECHA" ] && [ "$DOMINGOS" = "0" ] && pasa "días ofrecidos sin domingos (primero: $FECHA)" || falla "días ofrecidos: primero '$FECHA', domingos $DOMINGOS"
 T=$(printf '%s' "$CHECK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=2020-01-06" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir")
+# Ficha del auto válida (la patente se normaliza: "abcd-12" → ABCD12; el kilometraje acepta puntos)
+AUTO=(--data-urlencode "extra[patente]=abcd-12" --data-urlencode "extra[vehiculo]=Sedan mediano" --data-urlencode "extra[anio]=2015" --data-urlencode "extra[km]=84.000")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=2020-01-06" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" "${AUTO[@]}")
 case "$R" in 422*) pasa "un día fuera de la lista se rechaza (422)";; *) falla "día inválido aceptado: $R";; esac
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=03:00" --data-urlencode "pago=al_recibir")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=03:00" --data-urlencode "pago=al_recibir" "${AUTO[@]}")
 case "$R" in 422*) pasa "una hora fuera del horario se rechaza (422)";; *) falla "hora inválida aceptada: $R";; esac
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Macul" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Patente ABCD12 sedan 2015 84000 km")
-case "$R" in 303*r=pedido*) pasa "checkout crea la reserva ($R)";; *) falla "checkout: $R";; esac
+# Sin la ficha del auto: 422 con el error de cada campo junto a él
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir")
+case "$R" in 422*) pasa "reserva sin la ficha del auto se rechaza (422)";; *) falla "reserva sin ficha del auto aceptada: $R";; esac
+for t in 'id="err-extra_patente"' 'Escribe la patente con sus 6 caracteres' 'Completa «Vehículo».' 'Completa «Año».' 'Completa «Kilometraje».'; do
+  grep -qF "$t" "$TMP/ultima.html" && pasa "error del campo extra: $t" || falla "falta el error: $t"
+done
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" --data-urlencode "extra[patente]=AB-12" --data-urlencode "extra[vehiculo]=Sedan" --data-urlencode "extra[anio]=1850" --data-urlencode "extra[km]=muchos")
+case "$R" in 422*) grep -qF 'Escribe la patente con sus 6 caracteres' "$TMP/ultima.html" && grep -qF '«Año» debe ser un número entre 1970 y' "$TMP/ultima.html" && grep -qF '«Kilometraje» debe ser un número' "$TMP/ultima.html" && pasa "patente corta, año 1850 y kilometraje sin números: 422 con sus errores" || falla "errores de formato sin mensaje";; *) falla "ficha inválida aceptada: $R";; esac
+grep -qF 'value="AB-12"' "$TMP/ultima.html" && pasa "el checkout conserva lo escrito en la ficha" || falla "el checkout pierde lo escrito en la ficha"
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=despacho" --data-urlencode "direccion_id=0" --data-urlencode "calle=Calle de Prueba 123" --data-urlencode "comuna=Macul" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir" --data-urlencode "nota=Vibra el volante" "${AUTO[@]}")
+case "$R" in 303*r=pedido*) pasa "checkout crea la reserva con la ficha del auto ($R)";; *) falla "checkout: $R";; esac
 PEDIDO_URL="${R#* }"
 PAGINA=$(curl -s -b "$J1" "$PEDIDO_URL")
 CODIGO=$(printf '%s' "$PAGINA" | grep -oE 'VR-[0-9]+' | head -1)
 [ -n "$CODIGO" ] && pasa "página de la reserva muestra $CODIGO" || falla "página de la reserva sin código"
 printf '%s' "$PAGINA" | grep -qF '¡Hora reservada!' && pasa "título propio del rubro (¡Hora reservada!)" || falla "sin el título del rubro"
 printf '%s' "$PAGINA" | grep -qF 'Enviar resumen por WhatsApp' && pasa "reserva ofrece enviar resumen por WhatsApp" || falla "reserva sin botón de WhatsApp"
-printf '%s' "$PAGINA" | grep -qF '%28Pedido%20de%20prueba%20desde%20la%20demo%20de%20taller%20mec%C3%A1nico%20%E2%80%93%20Plataforma%20web%29' && pasa "resumen con la nota de prueba" || falla "resumen sin la nota de prueba"
+printf '%s' "$PAGINA" | grep -qF '%28Reserva%20de%20prueba%20desde%20la%20demo%20de%20taller%20mec%C3%A1nico%20%E2%80%93%20Plataforma%20web%29' && pasa "resumen con la nota de reserva de prueba" || falla "resumen sin la nota de prueba"
+printf '%s' "$PAGINA" | grep -qF "Reserva $CODIGO" && pasa "la página dice «Reserva $CODIGO» (config textos)" || falla "la página no dice «Reserva $CODIGO»"
 printf '%s' "$PAGINA" | grep -qF 'a%20las%2010%3A00' && pasa "resumen con el día y la hora" || falla "resumen sin la hora"
-printf '%s' "$PAGINA" | grep -qF 'Nota%3A%20Patente%20ABCD12' && pasa "resumen con la nota del cliente (patente)" || falla "resumen sin la nota del cliente"
+printf '%s' "$PAGINA" | grep -qF 'Nota%3A%20Vibra%20el%20volante' && pasa "resumen con la nota del cliente" || falla "resumen sin la nota del cliente"
+for x in 'Patente%3A%20ABCD12' 'Veh%C3%ADculo%3A%20Sedan%20mediano' 'A%C3%B1o%3A%202015' 'Kilometraje%3A%2084000'; do
+  printf '%s' "$PAGINA" | grep -qF "$x" && pasa "WhatsApp con $x" || falla "WhatsApp sin $x"
+done
+printf '%s' "$PAGINA" | grep -qF '<dt>Patente</dt><dd>ABCD12</dd>' && pasa "la página de la reserva muestra la patente normalizada" || falla "la página de la reserva sin la patente"
 # $39.990 + retiro a domicilio en Macul $5.990 = $45.980
 printf '%s' "$PAGINA" | grep -qF '$45.980' && pasa "total con retiro a domicilio en Macul (\$45.980)" || falla "total de la reserva inesperado"
 
@@ -205,7 +238,7 @@ printf '%s' "$PAGINA" | grep -qF '$45.980' && pasa "total con retiro a domicilio
 T=$(csrf "$J1" "$TIENDA")
 post "$J1" "${TIENDA}?r=carrito" --data-urlencode "csrf=$T" --data-urlencode "accion=agregar" --data-urlencode "producto_id=$PID" --data-urlencode "cantidad=1" > /dev/null
 T=$(csrf "$J1" "${TIENDA}?r=checkout")
-R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=prueba")
+R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$FECHA" --data-urlencode "pago=prueba" "${AUTO[@]}")
 case "$R" in 303*r=pago*) pasa "pago de prueba lleva a la pantalla simulada";; *) falla "pago de prueba: $R";; esac
 curl -s -b "$J1" "$BASE${TIENDA}?r=pago" | grep -qF 'PAGO DE PRUEBA' && pasa "pantalla de pago marcada como prueba" || falla "pantalla de pago sin aviso"
 T=$(csrf "$J1" "${TIENDA}?r=pago")
@@ -227,6 +260,10 @@ PANEL=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel&ver=pedidos")
 printf '%s' "$PANEL" | grep -qF "$CODIGO" && pasa "el dueño ve $CODIGO en el panel" || falla "el dueño no ve la reserva"
 printf '%s' "$PANEL" | grep -qF 'Cliente Prueba' && pasa "el panel muestra al cliente" || falla "el panel no muestra al cliente"
 printf '%s' "$PANEL" | grep -qF ' · para el ' && pasa "el panel muestra el día de cada reserva" || falla "el panel sin el día de la reserva"
+printf '%s' "$PANEL" | grep -qF 'Patente: ABCD12 · Vehículo: Sedan mediano · Año: 2015 · Kilometraje: 84000' && pasa "el panel muestra la ficha del auto (Etiqueta: valor)" || falla "el panel sin la ficha del auto"
+printf '%s' "$PANEL" | grep -qF 'Patente: PQRS78' && pasa "el panel muestra la ficha de las reservas de ejemplo (seed)" || falla "reservas de ejemplo sin ficha del auto"
+printf '%s' "$PANEL" | grep -qF '>Reservas<' && pasa "panel con la pestaña «Reservas»" || falla "panel sin la pestaña «Reservas»"
+curl -s -b "$J1" "$BASE${TIENDA}?r=cuenta" | grep -qF 'Patente: ABCD12' && pasa "Mi cuenta muestra la ficha del auto de cada reserva" || falla "Mi cuenta sin la ficha del auto"
 RESUMEN=$(curl -s -b "$J2" "$BASE${TIENDA}?r=panel")
 printf '%s' "$RESUMEN" | grep -qF 'Ventas de hoy' && pasa "panel con ventas del día" || falla "panel sin ventas del día"
 printf '%s' "$RESUMEN" | grep -qF 'Stock bajo: Pre-revisión técnica (3)' && pasa "panel avisa cupos bajos" || falla "panel sin aviso de cupos bajos"
