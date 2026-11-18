@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Pruebas de los ejemplos por rubro (demos/): levanta `php -S` con el router y revisa con curl.
 # Incluye el flujo de la Plataforma web con cookies: registro → login → carrito → pedido → panel del dueño.
-# Uso: bash tests/demos.sh
+# Uso: bash tests/demos.sh  (con agentes en paralelo: DEMOS_PORT=81xx DEMOS_PORT2=81yy bash tests/demos.sh)
 cd "$(dirname "$0")/.." || exit 1
 
-PORT=8098
+PORT=${DEMOS_PORT:-8098}
 # Segundo servidor: tienda de prueba del motor con fecha de entrega y textos propios (fuera de demos/).
-PORT2=8089
+PORT2=${DEMOS_PORT2:-8089}
 BASE="http://127.0.0.1:$PORT"
 TIENDA="/demos/pizzeria/plataforma/"
 # Ruta absoluta: el router hace chdir a la carpeta de cada página.
