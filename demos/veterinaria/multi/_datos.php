@@ -1,0 +1,111 @@
+<?php
+declare(strict_types=1);
+
+// Clínica Veterinaria Ciprés (Ñuñoa): negocio ficticio de la versión Multi-page.
+// Médicos, precios y reseñas inventados. Fotos: IDs de Unsplash (ver demos/veterinaria/CREDITOS.md).
+// Los textos no recetan ni dan dosis: los medicamentos los indica el médico después de evaluar.
+return [
+    'nombre' => 'Clínica Veterinaria Ciprés',
+    'corto' => 'Ciprés',
+    'categoria' => 'Clínica veterinaria',
+    'comuna' => 'Ñuñoa',
+    'eslogan' => 'Especialidades veterinarias en Ñuñoa',
+    'nota' => 4.8,
+    'horario' => [
+        1 => ['09:00', '21:00'],
+        2 => ['09:00', '21:00'],
+        3 => ['09:00', '21:00'],
+        4 => ['09:00', '21:00'],
+        5 => ['09:00', '21:00'],
+        6 => ['09:00', '18:00'],
+        7 => ['10:00', '14:00'],
+    ],
+    // Domingo: solo urgencias (no se reservan horas).
+    'sin_reservas' => [7],
+    'bloques' => ['09:00 – 11:00', '11:00 – 13:00', '15:00 – 17:00', '17:00 – 19:00', '19:00 – 21:00'],
+    'especies' => ['Perro', 'Gato', 'Conejo', 'Cuy', 'Hurón', 'Ave', 'Otra especie'],
+    // Visita a domicilio: costo por comuna (ida y vuelta del equipo).
+    'comunas_domicilio' => [
+        'Ñuñoa' => 9990,
+        'Providencia' => 11990,
+        'La Reina' => 11990,
+        'Macul' => 11990,
+        'Peñalolén' => 13990,
+        'Santiago' => 13990,
+        'Las Condes' => 14990,
+    ],
+    'resenas' => [
+        ['Francisca L.', 5, 'Reservé dermatología por la web con los datos de mi perrita y al llegar ya tenían todo. La doctora Lagos nos explicó el tratamiento por escrito.', 'hace 4 días'],
+        ['Matías C.', 5, 'Mi gato odia salir de la casa, pero la sala de espera solo para gatos hace la diferencia. Volvió tranquilo y con el informe en el correo.', 'hace 3 semanas'],
+        ['Rocío V.', 4, 'Excelente atención un domingo en la mañana por una urgencia. No son 24 horas, así que de noche hay que ir a otro lado; lo dicen claro en la web.', 'hace 2 meses'],
+    ],
+    'fotos' => [
+        'hero' => '1694875464499-334d2dc113a1',
+        'lobby' => '1648775507324-b48dd3791fa5',
+        'ficha' => '1758691461990-03b49d969495',
+        'espera' => '1629909614456-6b1c5c94cecc',
+        'pabellon' => '1551076805-e1869033e561',
+        'laboratorio' => '1602052577122-f73b9710adba',
+        'cierre' => '1727419780738-8b9e85ab9ca6',
+    ],
+    'categorias' => [
+        'general' => ['Medicina general y vacunas', 'Controles, vacunas, desparasitación, certificados y telemedicina.'],
+        'felinos' => ['Medicina felina', 'Sala de espera y box solo para gatos, sin ladridos ni apuro.'],
+        'dermatologia' => ['Dermatología', 'Picazón, alergias, oídos y piel, con estudio en el mismo día.'],
+        'cardiologia' => ['Cardiología', 'Soplos, controles del corazón y chequeos de mascotas mayores.'],
+        'imagenologia' => ['Imagenología y laboratorio', 'Ecografía, radiografía y exámenes con resultados en el día.'],
+        'odontologia' => ['Odontología', 'Limpieza dental con anestesia y cuidado de encías.'],
+        'cirugia' => ['Cirugía y esterilización', 'Pabellón propio, monitoreo y hospitalización de día.'],
+        'exoticos' => ['Exóticos', 'Conejos, cuyes, hurones y aves, con médicos que los conocen.'],
+    ],
+    // id => datos. variantes: [nombre => precio desde]. firma: aparece en el inicio.
+    'servicios' => [
+        'consulta' => ['cat' => 'general', 'nombre' => 'Consulta de medicina general', 'desc' => 'Examen físico completo, revisión del carnet e indicaciones por escrito en tu correo.', 'foto' => '1770836037289-e00e5f351d11', 'alt' => 'Veterinaria revisando la guata de un perro salchicha recostado en la camilla', 'duracion' => '30 min', 'variantes' => ['Única' => 28000], 'firma' => true],
+        'vacuna' => ['cat' => 'general', 'nombre' => 'Vacuna anual', 'desc' => 'Revisión previa y la vacuna que corresponde: séxtuple u óctuple para perros, triple felina para gatos, y antirrábica.', 'foto' => '1770836037275-38b44e4b101f', 'alt' => 'Manos con guantes vacunando a un perro en la pata delantera', 'duracion' => '20 min', 'variantes' => ['Perro' => 24000, 'Gato' => 23000, 'Antirrábica' => 15000], 'firma' => false],
+        'cachorro' => ['cat' => 'general', 'nombre' => 'Primer control de cachorro o gatito', 'desc' => 'Revisión completa, carnet nuevo, plan de vacunas y una charla sobre alimentación y crianza.', 'foto' => '1772374553478-6d47ca3d22ed', 'alt' => 'Gatito atigrado sentado sobre el hombro de su dueña', 'duracion' => '45 min', 'variantes' => ['Única' => 32000], 'firma' => false],
+        'desparasitacion' => ['cat' => 'general', 'nombre' => 'Desparasitación con control', 'desc' => 'Control de peso y el antiparasitario que indique el médico, interno y externo.', 'foto' => '1632236542159-809925d85fc0', 'alt' => 'Cachorro tendido en el piso mientras le dan algo con una jeringa sin aguja', 'duracion' => '20 min', 'variantes' => ['Hasta 10 kg' => 15000, '10 a 25 kg' => 18000, 'Más de 25 kg' => 22000], 'firma' => false],
+        'certificado' => ['cat' => 'general', 'nombre' => 'Certificado de salud para viaje', 'desc' => 'Examen y certificado para viajar dentro o fuera de Chile. Te orientamos con los trámites.', 'foto' => '1758691461990-03b49d969495', 'alt' => 'Médico con delantal escribiendo en una ficha clínica sobre un portapapeles', 'duracion' => '30 min', 'variantes' => ['Única' => 35000], 'firma' => false],
+        'telemedicina' => ['cat' => 'general', 'nombre' => 'Telemedicina por videollamada', 'desc' => 'Para controles y dudas que no necesitan examen físico. No reemplaza la atención de una urgencia.', 'foto' => '1602857052438-7e9f27da2648', 'alt' => 'Estetoscopio negro y plateado sobre una mesa blanca', 'duracion' => '20 min', 'variantes' => ['Única' => 18000], 'firma' => false],
+        'felina' => ['cat' => 'felinos', 'nombre' => 'Consulta felina', 'desc' => 'En el box para gatos: luz baja, feromonas en el ambiente y manejo suave, sin apuro.', 'foto' => '1733783506192-653df6185a7d', 'alt' => 'Gato blanco de pelo largo sostenido con suavidad por una veterinaria con guantes', 'duracion' => '40 min', 'variantes' => ['Única' => 32000], 'firma' => true],
+        'gato-senior' => ['cat' => 'felinos', 'nombre' => 'Chequeo del gato mayor', 'desc' => 'Consulta, presión arterial y perfil de sangre para gatos de más de 8 años.', 'foto' => '1733783489145-f3d3ee7a9ccf', 'alt' => 'Gato blanco con los ojos cerrados mientras lo examinan con guantes', 'duracion' => '1 h', 'variantes' => ['Única' => 69000], 'firma' => false],
+        'dermatologia' => ['cat' => 'dermatologia', 'nombre' => 'Consulta dermatológica', 'desc' => 'Evaluación de piel, pelaje y oídos con citología en el mismo día cuando hace falta.', 'foto' => '1675430426271-d74b542f21e4', 'alt' => 'Mujer cepillando a un perrito blanco envuelto en una manta a cuadros', 'duracion' => '45 min', 'variantes' => ['Única' => 38000], 'firma' => true],
+        'citologia' => ['cat' => 'dermatologia', 'nombre' => 'Citología de oído o piel', 'desc' => 'Muestra y lectura al microscopio para saber qué hay detrás de la picazón.', 'foto' => '1611173622933-91942d394b04', 'alt' => 'Perrito pomerania con una toalla rosada en la cabeza mientras lo peinan', 'duracion' => '20 min', 'variantes' => ['Única' => 22000], 'firma' => false],
+        'cardiologia' => ['cat' => 'cardiologia', 'nombre' => 'Consulta cardiológica', 'desc' => 'Auscultación, presión y electrocardiograma para perros y gatos con soplo o de edad.', 'foto' => '1587300003388-59208cc962cb', 'alt' => 'Perro blanco y café de pelo largo mirando a la cámara con la lengua afuera', 'duracion' => '45 min', 'variantes' => ['Única' => 42000], 'firma' => true],
+        'ecocardio' => ['cat' => 'cardiologia', 'nombre' => 'Ecocardiograma', 'desc' => 'Ecografía del corazón con informe escrito del cardiólogo.', 'foto' => '1619590694371-7eed5838e880', 'alt' => 'Labrador de cara canosa echado en una alfombra', 'duracion' => '40 min', 'variantes' => ['Única' => 65000], 'firma' => false],
+        'ecografia' => ['cat' => 'imagenologia', 'nombre' => 'Ecografía abdominal', 'desc' => 'Ecografía completa del abdomen con informe el mismo día.', 'foto' => '1770836037183-e0b4471fe2c0', 'alt' => 'Veterinaria haciendo una ecografía a un perro recostado de espaldas', 'duracion' => '40 min', 'variantes' => ['Única' => 48000], 'firma' => true],
+        'radiografia' => ['cat' => 'imagenologia', 'nombre' => 'Radiografía', 'desc' => 'Dos proyecciones con lectura del médico. Más proyecciones, a cotizar.', 'foto' => '1608469926865-b2d2200bb2f6', 'alt' => 'Perro grande de pelo dorado descansando con la cabeza en el piso', 'duracion' => '30 min', 'variantes' => ['Única' => 38000], 'firma' => false],
+        'sangre' => ['cat' => 'imagenologia', 'nombre' => 'Perfil de sangre completo', 'desc' => 'Hemograma y perfil bioquímico procesados en nuestro laboratorio, con resultados en el día.', 'foto' => '1602052577122-f73b9710adba', 'alt' => 'Laboratorio luminoso con microscopio y equipos de análisis sobre el mesón', 'duracion' => '15 min', 'variantes' => ['Única' => 45000], 'firma' => false],
+        'dental' => ['cat' => 'odontologia', 'nombre' => 'Limpieza dental con anestesia', 'desc' => 'Exámenes previos, limpieza con ultrasonido, pulido y control a los 7 días.', 'foto' => '1770836037949-c5e8db65aa86', 'alt' => 'Veterinaria con guantes revisando los dientes de un perro salchicha negro', 'duracion' => 'Medio día', 'variantes' => ['Gato' => 95000, 'Perro hasta 10 kg' => 110000, 'Perro de más de 10 kg' => 140000], 'firma' => true],
+        'control-dental' => ['cat' => 'odontologia', 'nombre' => 'Control dental', 'desc' => 'Revisión de dientes y encías con plan de cuidado en casa.', 'foto' => '1646483420147-6b940b15436e', 'alt' => 'Perrito blanco mordiendo un hueso masticable', 'duracion' => '20 min', 'variantes' => ['Única' => 25000], 'firma' => false],
+        'esterilizacion-gato' => ['cat' => 'cirugia', 'nombre' => 'Esterilización de gatos', 'desc' => 'Evaluación previa, cirugía con monitoreo, traje quirúrgico y control a los 10 días.', 'foto' => '1663476753068-f9c1a3c6e419', 'alt' => 'Gato atigrado con un collar isabelino transparente', 'duracion' => 'Medio día', 'variantes' => ['Gato' => 55000, 'Gata' => 85000], 'firma' => false],
+        'esterilizacion-perro' => ['cat' => 'cirugia', 'nombre' => 'Esterilización de perros', 'desc' => 'Exámenes previos, cirugía con anestesia inhalatoria y monitoreo, y control a los 10 días.', 'foto' => '1551076805-e1869033e561', 'alt' => 'Pabellón quirúrgico blanco con mesa de operaciones y lámpara', 'duracion' => 'Medio día', 'variantes' => ['Macho hasta 15 kg' => 95000, 'Hembra hasta 15 kg' => 125000, 'Macho de más de 15 kg' => 120000, 'Hembra de más de 15 kg' => 160000], 'firma' => true],
+        'hospital-dia' => ['cat' => 'cirugia', 'nombre' => 'Hospitalización de día', 'desc' => 'Observación, suero y cuidados durante el día. Te mandamos fotos y novedades por WhatsApp.', 'foto' => '1688565631957-0306970fdd74', 'alt' => 'Bandeja con instrumental quirúrgico ordenado sobre un paño', 'duracion' => 'Hasta las 21:00', 'variantes' => ['Única' => 48000], 'firma' => false],
+        'exoticos' => ['cat' => 'exoticos', 'nombre' => 'Consulta de exóticos', 'desc' => 'Revisión completa, alimentación y ambiente, con médicos que conocen a cada especie.', 'foto' => '1612267168669-679c961c5b31', 'alt' => 'Tres cuyes de pelo café y blanco sobre una manta rosada', 'duracion' => '40 min', 'variantes' => ['Conejo o cuy' => 35000, 'Ave' => 35000, 'Hurón' => 38000], 'firma' => true],
+        'conejo' => ['cat' => 'exoticos', 'nombre' => 'Control de dientes y uñas de conejo', 'desc' => 'Revisión de dientes, que crecen toda la vida, y corte de uñas sin estrés.', 'foto' => '1591382386627-349b692688ff', 'alt' => 'Conejo café de orejas caídas sobre una manta blanca', 'duracion' => '20 min', 'variantes' => ['Única' => 25000], 'firma' => false],
+        'aves' => ['cat' => 'exoticos', 'nombre' => 'Control de aves', 'desc' => 'Peso, plumaje, pico y uñas para periquitos, catitas y loros.', 'foto' => '1540979129101-fef4ab23dbd6', 'alt' => 'Periquito celeste parado sobre una baranda blanca', 'duracion' => '20 min', 'variantes' => ['Única' => 22000], 'firma' => false],
+    ],
+    // Equipo médico (ficticio).
+    'equipo' => [
+        ['nombre' => 'Dra. Valentina Soto', 'cargo' => 'Directora médica · Medicina interna', 'bio' => 'Fundó Ciprés para que cada especialidad compartiera una misma ficha. 15 años de profesión.', 'dias' => 'Lun a vie', 'foto' => '1694875464499-334d2dc113a1', 'alt' => 'Veterinaria con delantal blanco abrazando a un perrito chihuahua'],
+        ['nombre' => 'Dra. Camila Ortiz', 'cargo' => 'Medicina felina', 'bio' => 'Atiende solo gatos y lo nota cualquiera que haya traído uno asustado. Diplomada en medicina felina.', 'dias' => 'Mar, jue y sáb', 'foto' => '1721907043535-3624243c6d74', 'alt' => 'Veterinaria con pijama clínico celeste abrazando a un gato blanco y gris'],
+        ['nombre' => 'Dra. Antonia Reyes', 'cargo' => 'Exóticos', 'bio' => 'Conejos, cuyes, hurones y aves. Tiene dos conejos y una catita en la casa.', 'dias' => 'Mié, vie y sáb', 'foto' => '1673865641073-4479f93a7776', 'alt' => 'Veterinaria con delantal blanco sonriendo y apuntando hacia un lado'],
+        ['nombre' => 'Dr. Ignacio Pérez', 'cargo' => 'Cardiología', 'bio' => 'Ecocardiografía y seguimiento de mascotas mayores. Responde los informes el mismo día.', 'dias' => 'Mar y jue', 'foto' => '1758691463582-11aea602cd4a', 'alt' => 'Veterinario sonriente con anteojos, delantal blanco y estetoscopio'],
+        ['nombre' => 'Dra. Fernanda Lagos', 'cargo' => 'Dermatología', 'bio' => 'Alergias, otitis y piel. Le gusta explicar el tratamiento con una hoja escrita a mano.', 'dias' => 'Lun, mié y vie', 'foto' => '1659353888906-adb3e0041693', 'alt' => 'Veterinaria con delantal blanco y estetoscopio, de brazos cruzados'],
+    ],
+    'instalaciones' => [
+        ['Sala de espera para perros', 'Amplia, con agua fresca y piso antideslizante.', '1629909614456-6b1c5c94cecc', 'Sala de espera luminosa con sillones turquesa y mesón de madera'],
+        ['Recepción y sala felina', 'Los gatos esperan aparte, lejos de los ladridos.', '1648775507324-b48dd3791fa5', 'Recepción blanca y moderna con un árbol en el centro'],
+        ['Pabellón', 'Monitoreo de anestesia y equipo dedicado a cirugía.', '1551076805-e1869033e561', 'Pabellón quirúrgico blanco con mesa y lámpara de operaciones'],
+        ['Laboratorio', 'Resultados de sangre en el día, sin enviar muestras afuera.', '1602052577122-f73b9710adba', 'Laboratorio con microscopio y equipos de análisis'],
+    ],
+    'preguntas' => [
+        ['¿Cómo reservo una hora?', 'En «Especialidades» agrega lo que necesitas y en «Tu reserva» completa el nombre, la especie y la edad de tu mascota, el día y el bloque. Se abre WhatsApp con todo escrito y te confirmamos en menos de una hora dentro del horario.'],
+        ['¿Atienden urgencias? ¿Son 24 horas?', 'Atendemos urgencias sin hora en todo nuestro horario: lunes a viernes de 9:00 a 21:00, sábado de 9:00 a 18:00 y domingo de 10:00 a 14:00. No somos 24 horas: de noche te indicamos por teléfono el hospital veterinario de turno más cercano.'],
+        ['¿Puedo elegir al médico?', 'Sí. En la reserva puedes elegir a un profesional o dejar «sin preferencia» para tomar la primera hora disponible del día.'],
+        ['¿Me pueden indicar un medicamento por WhatsApp?', 'No. Los medicamentos y sus dosis los indica el médico después de evaluar a tu mascota, en consulta o por telemedicina cuando corresponde.'],
+        ['¿Cómo funciona la visita a domicilio?', 'Un médico y un asistente van a tu casa para controles, vacunas y mascotas mayores o muy nerviosas. El costo depende de la comuna y se suma al servicio.'],
+        ['¿Qué llevo a la primera consulta?', 'El carnet de vacunas si lo tienes, exámenes anteriores y, si es gato, una transportadora cerrada. Llega diez minutos antes para abrir su ficha.'],
+        ['¿Los precios son finales?', 'Son precios «desde» por especie o tamaño. Si el médico ve que hace falta un examen o un procedimiento adicional, te lo explica y lo cotiza antes de hacerlo.'],
+        ['¿Cómo pago?', 'Efectivo, débito, crédito o transferencia. Entregamos boleta o factura.'],
+    ],
+];

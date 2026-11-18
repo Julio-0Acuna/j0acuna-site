@@ -1,0 +1,322 @@
+/*
+ * Veterinaria Cascabel (Simple-page): veterinaria de barrio cálida.
+ * Crema, terracota y amarillo mostaza; letras redondeadas (Fredoka), texto en Nunito Sans,
+ * notas a mano (Nanum Pen Script), carnet de vacunas con stickers y huellas como separadores.
+ */
+.vc {
+  --vc-crema: #fbf3e6;
+  --vc-papel: #fffaf2;
+  --vc-terracota: #b44a28;
+  --vc-terracota-osc: #8f3618;
+  --vc-mostaza: #f2b440;
+  --vc-mostaza-suave: #fbe3a8;
+  --vc-rosa: #f6d9c9;
+  --vc-cacao: #3b2418;
+  --vc-cacao-suave: #6b5144;
+  --vc-salvia: #5d7a4e;
+  --vc-borde: rgba(59, 36, 24, .14);
+  --vc-radio: 22px;
+  --demo-tinta: var(--vc-cacao);
+  --demo-suave: var(--vc-cacao-suave);
+  --demo-borde: var(--vc-borde);
+  --demo-radio: 20px;
+  --demo-fuente-titulos: "Fredoka", "Nunito Sans", sans-serif;
+  --demo-foco: var(--vc-terracota);
+  margin: 0;
+  background: var(--vc-crema);
+  color: var(--vc-cacao);
+  font: 400 17px/1.6 "Nunito Sans", system-ui, sans-serif;
+  padding-bottom: 66px;
+}
+.vc h1, .vc h2, .vc h3, .vc h4 { font-family: "Fredoka", sans-serif; font-weight: 600; line-height: 1.12; margin: 0 0 12px; letter-spacing: -.01em; }
+.vc h2 { font-size: clamp(1.9rem, 6.4vw, 3rem); }
+.vc h3 { font-size: 1.3rem; }
+.vc p { margin: 0 0 14px; }
+:where(.vc) a { color: var(--vc-terracota); }
+.vc-envoltura { width: min(1180px, 100% - 32px); margin-inline: auto; }
+.vc-sobre { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: .85rem; letter-spacing: .12em; text-transform: uppercase; color: var(--vc-terracota); margin: 0 0 8px !important; }
+.vc-mano { font-family: "Nanum Pen Script", cursive; font-size: 1.55rem; line-height: 1.05; color: var(--vc-terracota); }
+.vc-mano--grande { font-size: clamp(1.8rem, 6vw, 2.4rem); }
+.vc-pequeno { font-size: .9rem; color: var(--vc-cacao-suave); }
+
+/* ---------- Botones */
+.vc-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 12px 24px; border-radius: 999px; border: 2px solid var(--vc-terracota);
+  background: var(--vc-terracota); color: #fff8ef !important; text-decoration: none;
+  font: 600 1.05rem/1.1 "Fredoka", sans-serif; cursor: pointer;
+  box-shadow: 0 4px 0 var(--vc-terracota-osc); transition: transform .15s, box-shadow .15s;
+}
+.vc-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--vc-terracota-osc); }
+.vc-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--vc-terracota-osc); }
+.vc-btn--chico { min-height: 44px; padding: 8px 16px; font-size: .98rem; }
+.vc-btn--claro { background: var(--vc-papel); color: var(--vc-cacao) !important; border-color: var(--vc-cacao); box-shadow: 0 4px 0 var(--vc-cacao); }
+.vc-btn--claro:hover { box-shadow: 0 6px 0 var(--vc-cacao); }
+.vc-btn--crema { background: var(--vc-crema); color: var(--vc-cacao) !important; border-color: var(--vc-crema); box-shadow: 0 4px 0 rgba(0, 0, 0, .25); }
+.vc-btn--cacao { background: var(--vc-cacao); border-color: var(--vc-cacao); box-shadow: 0 4px 0 #1c0f08; }
+.vc-btn--borde { background: transparent; border-color: currentColor; color: var(--vc-crema) !important; box-shadow: none; }
+.vc-btn--bloque { width: 100%; }
+.vc-btn svg { flex: none; }
+.vc-acciones { display: flex; flex-wrap: wrap; gap: 14px; margin: 22px 0 0; }
+.vc-enlace { font-family: "Fredoka", sans-serif; font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--vc-mostaza); padding-bottom: 2px; }
+.vc-enlace:hover { border-color: var(--vc-terracota); }
+
+/* ---------- Cabecera */
+.vc-top { position: sticky; top: 0; z-index: 50; background: rgba(251, 243, 230, .92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--vc-borde); }
+.vc-top__fila { display: flex; align-items: center; gap: 16px; min-height: 70px; }
+.vc-marca { display: flex; align-items: center; gap: 10px; color: var(--vc-cacao) !important; text-decoration: none; margin-right: auto; }
+.vc-marca__sello svg { display: block; color: var(--vc-cacao); transform-origin: 50% 10%; }
+.vc-marca:hover .vc-marca__sello svg { animation: vc-tilin .7s ease-in-out; }
+@keyframes vc-tilin { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(14deg); } 60% { transform: rotate(-10deg); } }
+.vc-marca__nombre { display: grid; font: 700 1.55rem/1 "Fredoka", sans-serif; letter-spacing: -.02em; }
+.vc-marca__nombre small { font: 600 .72rem/1.4 "Nunito Sans", sans-serif; letter-spacing: .02em; color: var(--vc-cacao-suave); }
+.vc-nav { display: none; gap: 4px; }
+.vc-nav a { color: var(--vc-cacao); text-decoration: none; font-weight: 700; font-size: .95rem; padding: 8px 12px; border-radius: 999px; }
+.vc-nav a:hover { background: var(--vc-mostaza-suave); }
+@media (min-width: 980px) { .vc-nav { display: flex; } }
+@media (max-width: 420px) { .vc-top .vc-btn--chico span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } .vc-top .vc-btn--chico { padding: 8px 12px; } }
+
+/* ---------- Portada */
+.vc-hero { padding: 32px 0 56px; overflow: hidden; }
+.vc-hero__grid { display: grid; gap: 40px; align-items: center; }
+@media (min-width: 900px) { .vc-hero__grid { grid-template-columns: 1.05fr .95fr; gap: 56px; } .vc-hero { padding: 56px 0 80px; } }
+.vc-etiqueta { display: inline-flex; align-items: center; gap: 8px; background: var(--vc-papel); border: 1.5px dashed var(--vc-terracota); color: var(--vc-terracota); padding: 6px 14px; border-radius: 999px; font: 600 .9rem/1.2 "Fredoka", sans-serif; }
+.vc-hero h1 { font-size: clamp(2.7rem, 11vw, 5.2rem); font-weight: 700; line-height: .98; letter-spacing: -.035em; margin: 18px 0 18px; }
+.vc-hero h1 span { display: block; color: var(--vc-terracota); }
+.vc-hero__bajada { font-size: 1.15rem; max-width: 34em; color: var(--vc-cacao-suave); }
+.vc-estado-linea { display: flex; align-items: center; gap: 10px; font-weight: 700; margin: 0; }
+.vc-estado { width: 12px; height: 12px; border-radius: 50%; background: #c23b2a; box-shadow: 0 0 0 4px rgba(194, 59, 42, .18); flex: none; }
+.vc-estado.is-abierto { background: #3f8a3a; box-shadow: 0 0 0 4px rgba(63, 138, 58, .2); }
+.vc-hero__urgencia { margin: 20px 0 0 !important; font-size: .95rem; padding: 10px 14px; border-left: 4px solid var(--vc-mostaza); background: rgba(242, 180, 64, .14); border-radius: 0 12px 12px 0; }
+
+.vc-hero__foto { position: relative; max-width: 520px; margin: 0 auto; width: 100%; padding: 0 0 40px; }
+.vc-mancha { position: absolute; inset: 6% -6% 12% 8%; background: var(--vc-mostaza); border-radius: 46% 54% 38% 62% / 52% 40% 60% 48%; transform: rotate(-8deg); }
+.vc-blob { position: relative; margin: 0; aspect-ratio: 8 / 9; border-radius: 58% 42% 46% 54% / 50% 44% 56% 50%; overflow: hidden; box-shadow: 0 30px 60px rgba(59, 36, 24, .18); }
+.vc-blob img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block; }
+.vc-carnet-mini {
+  position: absolute; left: -4px; bottom: 0; width: min(230px, 60%);
+  background: var(--vc-papel); border-radius: 16px; padding: 14px 16px 12px; transform: rotate(-4deg);
+  box-shadow: 0 16px 34px rgba(59, 36, 24, .22); border-top: 10px solid var(--vc-terracota); font-size: .9rem;
+}
+.vc-carnet-mini__titulo { font: 600 .72rem/1 "Fredoka", sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--vc-terracota); margin: 0 0 6px !important; }
+.vc-carnet-mini__nombre { font: 700 1.35rem/1 "Fredoka", sans-serif; margin: 0 0 8px !important; }
+.vc-carnet-mini__nombre small { font: 600 .8rem "Nunito Sans", sans-serif; color: var(--vc-cacao-suave); }
+.vc-carnet-mini ul { list-style: none; margin: 0 0 4px; padding: 0; display: grid; gap: 3px; }
+.vc-carnet-mini li span { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--vc-salvia); color: #fff; font-size: .7rem; margin-right: 4px; }
+.vc-firma { font-family: "Nanum Pen Script", cursive; font-size: 1.45rem; color: #2f4aa0; margin: 0 !important; text-align: right; transform: rotate(-3deg); }
+.vc-sticker {
+  position: absolute; right: 2%; top: 4%; width: 104px; height: 104px; border-radius: 50%;
+  background: var(--vc-terracota); color: var(--vc-crema); display: grid; place-content: center; text-align: center;
+  transform: rotate(12deg); box-shadow: 0 10px 24px rgba(143, 54, 24, .35); margin: 0 !important;
+  outline: 2px dashed rgba(251, 243, 230, .7); outline-offset: -8px;
+}
+.vc-sticker span { font: 400 1.35rem/1 "Nanum Pen Script", cursive; }
+.vc-sticker strong { font: 700 1.6rem/1 "Fredoka", sans-serif; }
+
+/* ---------- Promesas */
+.vc-promesas { background: var(--vc-cacao); color: var(--vc-crema); }
+.vc-promesas ul { list-style: none; margin: 0 auto; padding: 18px 0; display: grid; gap: 10px 28px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .vc-promesas ul { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1040px) { .vc-promesas ul { grid-template-columns: repeat(4, auto); justify-content: space-between; } }
+.vc-promesas li { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.vc-promesas svg { color: var(--vc-mostaza); flex: none; }
+
+/* ---------- Secciones */
+.vc-seccion { padding: 68px 0; }
+@media (min-width: 900px) { .vc-seccion { padding: 96px 0; } }
+.vc-seccion--papel { background: var(--vc-papel); }
+.vc-seccion--rosa { background: var(--vc-rosa); }
+.vc-seccion--terracota { background: var(--vc-terracota); color: var(--vc-crema); }
+.vc-encabezado { max-width: 680px; margin-bottom: 34px; }
+.vc-encabezado p:last-child { color: var(--vc-cacao-suave); font-size: 1.08rem; }
+.vc-encabezado--centro { margin-inline: auto; text-align: center; }
+.vc-encabezado--claro .vc-sobre { color: var(--vc-mostaza); }
+.vc-encabezado--claro p:last-child { color: rgba(251, 243, 230, .88); }
+
+/* ---------- Servicios */
+.vc-destacados { display: grid; gap: 22px; }
+@media (min-width: 760px) { .vc-destacados { grid-template-columns: repeat(3, 1fr); } }
+.vc-destacado { background: var(--vc-papel); border-radius: var(--vc-radio); overflow: hidden; border: 1.5px solid var(--vc-borde); display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; }
+.vc-destacado:hover { transform: translateY(-4px) rotate(-.4deg); box-shadow: 0 18px 40px rgba(59, 36, 24, .14); }
+.vc-destacado__foto { position: relative; aspect-ratio: 5 / 4; overflow: hidden; }
+.vc-destacado__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vc-cinta { position: absolute; left: 14px; top: 14px; background: var(--vc-mostaza); color: var(--vc-cacao); font: 600 .82rem/1 "Fredoka", sans-serif; padding: 7px 12px; border-radius: 999px; }
+.vc-destacado__texto { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
+.vc-destacado__texto p { color: var(--vc-cacao-suave); }
+.vc-destacado__texto .vc-enlace { margin-top: auto; align-self: flex-start; }
+.vc-desde { font: 700 1.5rem/1 "Fredoka", sans-serif; color: var(--vc-cacao); }
+.vc-desde small { font: 600 .8rem "Nunito Sans", sans-serif; color: var(--vc-cacao-suave); text-transform: uppercase; letter-spacing: .06em; }
+
+.vc-tarifario { margin: 56px 0 0; background: var(--vc-papel); border: 2px dashed rgba(180, 74, 40, .35); border-radius: 28px; padding: 22px 18px 8px; }
+@media (min-width: 700px) { .vc-tarifario { padding: 30px 34px 14px; } }
+.vc-tarifario__cabeza { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin-bottom: 6px; }
+.vc-tarifario__cabeza h3 { font-size: 1.5rem; margin: 0; }
+.vc-servicios { list-style: none; margin: 0; padding: 0; display: grid; column-gap: 44px; }
+@media (min-width: 900px) { .vc-servicios { grid-template-columns: 1fr 1fr; } }
+.vc-servicio {
+  display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; align-content: start;
+  padding: 16px 0; border-bottom: 1px dashed var(--vc-borde);
+}
+@media (min-width: 560px) { .vc-servicio { grid-template-columns: auto 1fr auto; align-items: center; } }
+.vc-servicio__icono { width: 46px; height: 46px; align-self: start; border-radius: 16px; display: grid; place-items: center; background: var(--vc-mostaza-suave); color: var(--vc-terracota); }
+.vc-servicio__texto h3 { font-size: 1.12rem; margin: 2px 0 4px; }
+.vc-servicio__texto p { font-size: .94rem; color: var(--vc-cacao-suave); margin: 0; }
+.vc-servicio__pie { grid-column: 2; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 4px 0 0 !important; }
+@media (min-width: 560px) { .vc-servicio__pie { grid-column: auto; flex-direction: column; align-items: flex-end; gap: 6px; margin: 0 !important; } }
+.vc-servicio__pie .vc-desde { font-size: 1.25rem; }
+.vc-servicio__pedir { font: 600 .92rem/1 "Fredoka", sans-serif; text-decoration: none; background: var(--vc-cacao); color: var(--vc-crema) !important; padding: 9px 16px; border-radius: 999px; min-height: 40px; display: inline-flex; align-items: center; white-space: nowrap; }
+.vc-servicio__pedir:hover { background: var(--vc-terracota); }
+.vc-nota-medica { margin: 24px 0 0 !important; font-size: .92rem; color: var(--vc-cacao-suave); display: flex; gap: 10px; align-items: flex-start; }
+.vc-nota-medica::before { content: "!"; flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--vc-cacao); color: var(--vc-crema); font-weight: 800; font-size: .8rem; margin-top: 2px; }
+
+/* ---------- Carnet de vacunas */
+.vc-libreta {
+  display: grid; gap: 0; background: var(--vc-papel); border-radius: 26px;
+  box-shadow: 0 30px 60px rgba(143, 54, 24, .16), 0 0 0 10px var(--vc-terracota); position: relative; margin: 10px 4px 0;
+}
+@media (min-width: 860px) {
+  .vc-libreta { grid-template-columns: 1fr 1fr; }
+  .vc-libreta::after { content: ""; position: absolute; top: 18px; bottom: 18px; left: 50%; width: 28px; transform: translateX(-50%); background: linear-gradient(90deg, transparent, rgba(59, 36, 24, .1), transparent); pointer-events: none; }
+}
+.vc-pagina { padding: 28px 22px; background-image: repeating-linear-gradient(0deg, transparent 0 37px, rgba(180, 74, 40, .08) 37px 38px); }
+@media (min-width: 860px) { .vc-pagina { padding: 36px 40px; } }
+.vc-pagina + .vc-pagina { border-top: 2px dashed var(--vc-borde); }
+@media (min-width: 860px) { .vc-pagina + .vc-pagina { border-top: 0; } }
+.vc-pagina h3 { display: flex; align-items: center; gap: 10px; font-size: 1.6rem; color: var(--vc-terracota); }
+.vc-pagina ul { list-style: none; margin: 0 0 18px; padding: 0; }
+.vc-vacuna { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: center; padding: 14px 0; border-bottom: 1px dashed var(--vc-borde); }
+@media (min-width: 480px) { .vc-vacuna { grid-template-columns: auto 1fr auto; } }
+.vc-vacuna__sticker {
+  width: 68px; height: 50px; border-radius: 6px; background: #fff; border: 1.5px solid var(--vc-borde);
+  display: grid; place-content: center; text-align: center; transform: rotate(-4deg);
+  box-shadow: 0 2px 0 rgba(59, 36, 24, .12); position: relative; overflow: hidden;
+}
+.vc-vacuna__sticker::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 8px; background: var(--vc-salvia); }
+.vc-vacuna:nth-child(2) .vc-vacuna__sticker { transform: rotate(3deg); }
+.vc-vacuna:nth-child(2) .vc-vacuna__sticker::before { background: var(--vc-terracota); }
+.vc-vacuna:nth-child(3) .vc-vacuna__sticker::before { background: var(--vc-mostaza); }
+.vc-vacuna__sticker b { font: 700 .95rem/1 "Fredoka", sans-serif; margin-top: 6px; letter-spacing: .04em; }
+.vc-vacuna__sticker small { font-size: .6rem; color: var(--vc-cacao-suave); letter-spacing: .1em; }
+.vc-vacuna h4 { margin: 0; font-size: 1.12rem; }
+.vc-vacuna p { margin: 0; font-size: .92rem; color: var(--vc-cacao-suave); }
+.vc-vacuna .vc-vacuna__precio { grid-column: 2; font: 700 1.2rem/1 "Fredoka", sans-serif; color: var(--vc-cacao) !important; }
+@media (min-width: 480px) { .vc-vacuna .vc-vacuna__precio { grid-column: auto; } }
+
+.vc-primer { display: grid; gap: 30px; margin-top: 56px; align-items: center; }
+@media (min-width: 900px) { .vc-primer { grid-template-columns: 360px 1fr; gap: 56px; } }
+.vc-primer__fotos { position: relative; height: 280px; max-width: 360px; width: 100%; margin: 0 auto; }
+.vc-primer__fotos img { position: absolute; object-fit: cover; border-radius: 50%; border: 8px solid var(--vc-papel); box-shadow: 0 16px 34px rgba(59, 36, 24, .18); }
+.vc-primer__a { width: 230px; height: 230px; left: 0; top: 0; }
+.vc-primer__b { width: 170px; height: 170px; right: 0; bottom: 0; }
+.vc-primer h3 { font-size: clamp(1.5rem, 4.5vw, 2rem); }
+.vc-pasos { list-style: none; margin: 18px 0 26px; padding: 0; display: grid; gap: 14px; }
+.vc-pasos li { display: flex; gap: 14px; align-items: flex-start; }
+.vc-pasos__num { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--vc-terracota); color: var(--vc-crema); display: grid; place-items: center; font: 700 1rem/1 "Fredoka", sans-serif; }
+.vc-pasos div { display: grid; gap: 2px; }
+.vc-pasos strong { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 1.08rem; }
+.vc-pasos div span { color: var(--vc-cacao-suave); font-size: .96rem; }
+
+/* ---------- Esterilización */
+.vc-ester { display: grid; gap: 36px; align-items: center; }
+@media (min-width: 900px) { .vc-ester { grid-template-columns: .85fr 1.15fr; gap: 64px; } }
+.vc-ester__foto { margin: 0; border-radius: 200px 200px 28px 28px; overflow: hidden; aspect-ratio: 7 / 8; border: 8px solid rgba(251, 243, 230, .2); max-width: 460px; width: 100%; justify-self: center; }
+.vc-ester__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vc-precios { margin: 0 0 18px; display: grid; gap: 0; background: var(--vc-crema); color: var(--vc-cacao); border-radius: 20px; padding: 6px 20px; }
+@media (min-width: 560px) { .vc-precios { grid-template-columns: 1fr 1fr; column-gap: 28px; } }
+.vc-precios div { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--vc-borde); }
+.vc-precios dt { font-weight: 700; }
+.vc-precios dd { margin: 0; font: 700 1.15rem/1.2 "Fredoka", sans-serif; color: var(--vc-terracota); white-space: nowrap; }
+.vc-ester__nota { font-size: .92rem; color: rgba(251, 243, 230, .88); }
+
+/* ---------- Reserva */
+.vc-reserva { display: grid; gap: 36px; align-items: start; }
+@media (min-width: 960px) { .vc-reserva { grid-template-columns: .8fr 1.2fr; gap: 64px; } .vc-reserva__intro { position: sticky; top: 100px; } }
+.vc-reserva__datos { list-style: none; margin: 22px 0; padding: 0; display: grid; gap: 10px; }
+.vc-reserva__datos li { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; }
+.vc-reserva__datos svg { color: var(--vc-terracota); flex: none; margin-top: 2px; }
+.vc-reserva__nota { font-size: .88rem; color: var(--vc-cacao-suave); background: var(--vc-crema); border-radius: 12px; padding: 10px 14px; }
+.vc-ficha { background: #fff; border-radius: 28px; padding: 24px 20px; box-shadow: 0 24px 60px rgba(59, 36, 24, .14); border: 1.5px solid var(--vc-borde); position: relative; }
+@media (min-width: 600px) { .vc-ficha { padding: 34px 36px; } }
+.vc-ficha::before { content: ""; position: absolute; left: 50%; top: -14px; width: 120px; height: 28px; transform: translateX(-50%) rotate(-2deg); background: rgba(242, 180, 64, .75); border-radius: 4px; }
+.vc-ficha__titulo { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px; font: 700 1.45rem/1.1 "Fredoka", sans-serif; margin: 0 0 18px !important; padding-bottom: 14px; border-bottom: 2px dashed var(--vc-borde); }
+.vc-ficha__grid { display: grid; gap: 0 18px; }
+@media (min-width: 600px) { .vc-ficha__grid { grid-template-columns: 1fr 1fr; } .vc-campo--ancho { grid-column: 1 / -1; } }
+.vc-campo { display: grid; gap: 6px; margin: 0 0 16px; min-width: 0; border: 0; padding: 0; }
+.vc-campo label, .vc-campo legend { font-weight: 800; font-size: .95rem; padding: 0; }
+.vc-campo small { font-weight: 400; color: var(--vc-cacao-suave); }
+.vc-campo input, .vc-campo select, .vc-campo textarea {
+  font: inherit; width: 100%; min-height: 50px; padding: 11px 14px; color: var(--vc-cacao);
+  background: var(--vc-papel); border: 2px solid var(--vc-borde); border-radius: 14px;
+}
+.vc-campo input:focus, .vc-campo select:focus, .vc-campo textarea:focus { border-color: var(--vc-terracota); outline: none; box-shadow: 0 0 0 4px rgba(180, 74, 40, .16); }
+.vc-campo [aria-invalid="true"] { border-color: #b3261e; }
+.vc-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.vc-chips legend { width: 100%; margin-bottom: 6px; }
+.vc-chip { position: relative; cursor: pointer; }
+.vc-chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.vc-chip span { display: inline-flex; align-items: center; min-height: 46px; padding: 10px 18px; border-radius: 999px; border: 2px solid var(--vc-borde); background: var(--vc-papel); font-weight: 700; }
+.vc-chip input:checked + span { background: var(--vc-cacao); color: var(--vc-crema); border-color: var(--vc-cacao); }
+.vc-chip input:focus-visible + span { outline: 3px solid var(--vc-terracota); outline-offset: 2px; }
+.vc-chips .vc-error { width: 100%; }
+.vc-error { color: #b3261e; font-size: .88rem; font-weight: 700; margin: 2px 0 0 !important; }
+.vc-alerta { background: #fde4dd; color: #7d1f12; padding: 10px 14px; border-radius: 12px; font-weight: 700; }
+.vc-ficha__pequeno { font-size: .88rem; color: var(--vc-cacao-suave); }
+
+/* ---------- La clínica */
+.vc-clinica { display: grid; gap: 40px; align-items: center; }
+@media (min-width: 900px) { .vc-clinica { grid-template-columns: 1fr 1fr; gap: 64px; } }
+.vc-clinica__fotos { position: relative; padding-bottom: 60px; }
+.vc-clinica__fotos figure { margin: 0; overflow: hidden; }
+.vc-clinica__fotos img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vc-clinica__a img { object-position: 20% 50%; }
+.vc-clinica__a { border-radius: var(--vc-radio) var(--vc-radio) var(--vc-radio) 120px; aspect-ratio: 5 / 4; width: 88%; }
+.vc-clinica__b { position: absolute; right: 0; bottom: 0; width: 44%; aspect-ratio: 1; border-radius: 50%; border: 8px solid var(--vc-crema); }
+.vc-clinica__texto > p:not(.vc-mano) { color: var(--vc-cacao-suave); }
+.vc-cifras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 26px 0 0; }
+.vc-cifras div { background: var(--vc-papel); border-radius: 16px; padding: 14px; border: 1.5px solid var(--vc-borde); }
+.vc-cifras dt { font-size: .78rem; font-weight: 700; color: var(--vc-cacao-suave); line-height: 1.25; }
+.vc-cifras dd { margin: 4px 0 0; font: 700 clamp(1.3rem, 4.5vw, 1.8rem)/1 "Fredoka", sans-serif; color: var(--vc-terracota); }
+
+/* ---------- Horario y urgencias */
+.vc-horario { display: grid; gap: 22px; }
+@media (min-width: 860px) { .vc-horario { grid-template-columns: 1fr 1fr; } }
+.vc-tarjeta { background: #fff; border-radius: var(--vc-radio); padding: 26px; border: 1.5px solid var(--vc-borde); }
+.vc-tarjeta .vc-encabezado { margin-bottom: 14px; }
+.vc-tabla-horario { margin: 16px 0; font-size: 1.05rem; }
+.vc-tabla-horario div { padding: 8px 0; border-bottom: 1px dashed var(--vc-borde); }
+.vc-tarjeta--urgencia { background: var(--vc-mostaza); border-color: transparent; }
+.vc-tarjeta--urgencia .vc-sobre { color: var(--vc-cacao); }
+.vc-tarjeta--urgencia h3 { font-size: clamp(1.5rem, 4.5vw, 2rem); }
+
+/* ---------- Google */
+.vc .demo-google__intro h2 { font-size: clamp(1.9rem, 6.4vw, 3rem); }
+.vc .demo-google__perfil, .vc .demo-google__resena { border-radius: 20px; }
+
+/* ---------- Cierre */
+.vc-cierre { position: relative; color: var(--vc-crema); min-height: 460px; display: grid; align-items: end; overflow: hidden; }
+.vc-cierre__foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+.vc-cierre::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(59, 36, 24, .1) 20%, rgba(59, 36, 24, .88) 100%); z-index: 1; }
+.vc-cierre__texto { position: relative; z-index: 2; padding: 120px 0 56px; }
+.vc-cierre .vc-mano { color: var(--vc-mostaza); margin: 0 0 4px; }
+.vc-cierre h2 { max-width: 15em; font-size: clamp(2rem, 7vw, 3.6rem); }
+
+/* ---------- Pie */
+.vc-pie { background: var(--vc-cacao); color: rgba(251, 243, 230, .86); padding: 48px 0 30px; font-size: .95rem; }
+.vc-pie a { color: var(--vc-crema); }
+.vc-pie__grid { display: grid; gap: 28px; margin-bottom: 20px; }
+@media (min-width: 800px) { .vc-pie__grid { grid-template-columns: 1.4fr 1fr 1fr; } }
+.vc-pie__marca { display: flex; align-items: center; gap: 10px; font: 700 1.6rem/1 "Fredoka", sans-serif; color: var(--vc-crema); }
+.vc-pie__marca svg { color: var(--vc-crema); }
+.vc-pie__titulo { font: 600 .82rem/1 "Fredoka", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--vc-mostaza); }
+.vc-pie__horario { font-size: .92rem; max-width: 280px; }
+
+/* ---------- Barra inferior en el celular */
+.vc-barra { position: fixed; left: 0; right: 0; bottom: 0; z-index: 80; display: grid; grid-template-columns: repeat(3, 1fr); background: var(--vc-cacao); border-top: 3px solid var(--vc-mostaza); }
+.vc-barra a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 62px; color: var(--vc-crema); text-decoration: none; font: 600 .78rem/1 "Fredoka", sans-serif; }
+.vc-barra a:first-child { background: var(--vc-terracota); }
+@media (min-width: 900px) { .vc-barra { display: none; } .vc { padding-bottom: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .vc-btn, .vc-destacado { transition: none; }
+  .vc-marca:hover .vc-marca__sello svg { animation: none; }
+}

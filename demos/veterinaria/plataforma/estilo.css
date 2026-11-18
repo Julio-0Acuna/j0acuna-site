@@ -1,0 +1,200 @@
+/*
+ * Hocico (Plataforma web): pet shop con clínica veterinaria y tienda online.
+ * Rosa chicle, amarillo pelota y azul tinta sobre crema; letras gruesas redondeadas (Bagel Fat One)
+ * y texto en Be Vietnam Pro; fotos de estudio con fondos de color y baldosas redondeadas.
+ */
+.ho {
+  --ho-crema: #fff6ec;
+  --ho-tinta: #1d1a3a;
+  --ho-tinta-2: #2c2858;
+  --ho-chicle: #ff5c8a;
+  --ho-chicle-suave: #ffdbe6;
+  --ho-sol: #ffcf3f;
+  --ho-sol-suave: #fff0bf;
+  --ho-menta: #bfeedd;
+  --ho-lila: #ded8ff;
+  --t-fondo: var(--ho-crema);
+  --t-superficie: #ffffff;
+  --t-tinta: var(--ho-tinta);
+  --t-suave: #5c587a;
+  --t-borde: #eedfd2;
+  --t-acento: var(--ho-chicle);
+  --t-acento-tinta: var(--ho-tinta);
+  --t-acento-suave: var(--ho-chicle-suave);
+  --t-radio: 24px;
+  --t-radio-chico: 14px;
+  --t-sombra: 0 10px 30px rgba(29, 26, 58, .07);
+  --t-fuente: "Be Vietnam Pro", system-ui, sans-serif;
+  --t-fuente-titulos: "Bagel Fat One", "Be Vietnam Pro", sans-serif;
+  --t-ancho: 1220px;
+  --demo-foco: var(--ho-tinta);
+  font-size: 16px;
+}
+.ho h1, .ho h2, .ho h3 { font-weight: 400; letter-spacing: -.01em; }
+.ho h3 { font-family: var(--t-fuente); font-weight: 700; letter-spacing: -.01em; }
+.ho-ancho { width: min(var(--t-ancho), 100% - 32px); margin-inline: auto; }
+:where(.ho) a { color: var(--ho-tinta); }
+
+/* ---------- Botones del motor con el estilo de la tienda */
+.ho .t-btn { border-radius: 999px; min-height: 48px; padding: 10px 22px; border-width: 2px; border-color: var(--ho-tinta); font-weight: 700; }
+.ho .t-btn--primario { background: var(--ho-chicle); border-color: var(--ho-chicle); color: var(--ho-tinta); box-shadow: 0 4px 0 var(--ho-tinta); transition: transform .15s, box-shadow .15s; }
+.ho .t-btn--primario:hover { filter: none; transform: translateY(-2px); box-shadow: 0 6px 0 var(--ho-tinta); }
+.ho .t-btn--primario:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--ho-tinta); }
+.ho .t-btn--wa { background: #128c4a; border-color: #128c4a; color: #fff; }
+.ho-btn-grande { min-height: 56px !important; padding: 12px 28px !important; font-size: 1.05rem; }
+.ho-btn-borde { background: transparent; }
+.ho-btn-borde:hover { background: #fff; }
+
+/* ---------- Cinta y cabecera */
+.ho-cinta { margin: 0; background: var(--ho-chicle); color: var(--ho-tinta); font-size: .85rem; font-weight: 600; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 14px; padding: 8px 16px; text-align: center; }
+.ho-cinta a { color: var(--ho-tinta); font-weight: 800; }
+.ho-cinta__sep { font-size: .7rem; }
+@media (max-width: 700px) { .ho-cinta span:nth-child(n+2) { display: none; } .ho-cinta a { display: none; } }
+.ho-cabecera { background: var(--ho-crema); position: sticky; top: 0; z-index: 50; border-bottom: 2px solid var(--ho-tinta); }
+.ho-cabecera__fila { display: grid; grid-template-columns: auto 1fr; grid-template-areas: "logo acciones" "buscar buscar"; gap: 10px 16px; align-items: center; padding: 12px 0; }
+@media (min-width: 900px) { .ho-cabecera__fila { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "logo buscar acciones"; gap: 28px; padding: 14px 0; } }
+.ho-logo { grid-area: logo; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ho-tinta); }
+.ho-logo__nariz { transition: transform .3s; }
+.ho-logo:hover .ho-logo__nariz { transform: rotate(-8deg) scale(1.06); }
+.ho-logo__texto { display: grid; font: 400 2rem/.9 "Bagel Fat One", sans-serif; letter-spacing: -.01em; color: var(--ho-tinta); }
+.ho-logo__texto small { font: 700 .66rem/1.6 "Be Vietnam Pro", sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--t-suave); }
+.ho-buscar { grid-area: buscar; display: flex; align-items: center; background: #fff; border: 2px solid var(--ho-tinta); border-radius: 999px; padding: 4px 4px 4px 18px; max-width: 620px; width: 100%; justify-self: center; }
+.ho-buscar:focus-within { box-shadow: 0 0 0 4px var(--ho-chicle-suave); }
+.ho-buscar input { flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; min-height: 42px; outline: none; color: var(--ho-tinta); }
+.ho-buscar button { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--ho-sol); color: var(--ho-tinta); display: grid; place-items: center; cursor: pointer; }
+.ho-acciones { grid-area: acciones; display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.ho-accion { position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 8px 14px; border-radius: 999px; text-decoration: none; color: var(--ho-tinta) !important; font-weight: 700; font-size: .95rem; }
+.ho-accion:hover, .ho-accion.is-activo { background: #fff; }
+.ho-accion--carrito { background: var(--ho-tinta); color: var(--ho-crema) !important; }
+.ho-accion--carrito:hover, .ho-accion--carrito.is-activo { background: var(--ho-tinta-2); }
+.ho-burbuja { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: var(--ho-chicle); color: var(--ho-tinta); display: inline-grid; place-items: center; font-size: .78rem; font-weight: 800; }
+.ho-salir button { border: 0; background: none; font: inherit; font-size: .88rem; color: var(--t-suave); text-decoration: underline; cursor: pointer; padding: 8px 6px; min-height: 44px; }
+@media (max-width: 560px) { .ho-accion span:not(.ho-burbuja) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } .ho-accion { padding: 8px 12px; } .ho-logo__texto { font-size: 1.7rem; } }
+.ho-cats { background: var(--ho-tinta); }
+.ho-cats__fila { display: flex; gap: 6px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+.ho-cats__fila::-webkit-scrollbar { display: none; }
+.ho-cats a { flex: none; color: var(--ho-crema); text-decoration: none; font-weight: 600; font-size: .9rem; padding: 7px 14px; border-radius: 999px; white-space: nowrap; }
+.ho-cats a:hover { background: rgba(255, 246, 236, .12); }
+.ho-cats a.is-activo { background: var(--ho-crema); color: var(--ho-tinta); }
+.ho-cats__refugio { border: 1.5px solid var(--ho-sol); color: var(--ho-sol) !important; }
+.ho-principal { padding-top: 24px; }
+.ho-modo-refugio { background: var(--ho-sol); border-radius: 16px; padding: 12px 16px; margin: 0 0 16px; }
+
+/* ---------- Portada */
+.ho-hero { display: grid; gap: 34px; align-items: center; padding: 8px 0 36px; }
+@media (min-width: 960px) { .ho-hero { grid-template-columns: 1.05fr .95fr; gap: 48px; padding: 20px 0 56px; } }
+.ho-chip { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 14px; background: #fff; border: 2px solid var(--ho-tinta); border-radius: 999px; padding: 5px 14px; font-weight: 700; font-size: .88rem; }
+.ho-chip span { width: 10px; height: 10px; border-radius: 50%; background: #d0342c; }
+.ho-chip.is-abierto span { background: #1f9d55; }
+.ho-hero h1 { font-size: clamp(2.8rem, 10vw, 4.7rem); line-height: .95; margin: 0 0 18px; }
+.ho-hero h1 span { display: block; color: var(--ho-chicle); -webkit-text-stroke: 0; }
+.ho-hero__texto > p:not(.ho-chip) { font-size: 1.12rem; color: var(--t-suave); max-width: 33em; }
+.ho-hero__acciones { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 18px; }
+.ho-confianza { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; font-weight: 600; font-size: .92rem; }
+.ho-confianza li { display: flex; align-items: center; gap: 8px; }
+.ho-confianza li::before { content: ""; width: 18px; height: 18px; border-radius: 50%; background: var(--ho-menta) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m6.5 12.5 3.5 3.5 7.5-8' fill='none' stroke='%231d1a3a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 13px no-repeat; }
+
+.ho-hero__collage { position: relative; display: grid; grid-template-columns: 1.25fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; height: 440px; max-width: 560px; width: 100%; justify-self: center; }
+@media (min-width: 960px) { .ho-hero__collage { height: 520px; } }
+.ho-baldosa { margin: 0; overflow: hidden; border-radius: 32px; border: 2px solid var(--ho-tinta); }
+.ho-baldosa img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s; }
+.ho-baldosa:hover img { transform: scale(1.05); }
+.ho-baldosa--a { grid-row: span 2; border-radius: 160px 160px 32px 32px; }
+.ho-baldosa--b { border-radius: 32px 32px 32px 90px; }
+.ho-baldosa--c { border-radius: 50%; }
+.ho-ticket { position: absolute; left: -10px; bottom: 26px; margin: 0; display: grid; gap: 1px; background: #fff; border: 2px solid var(--ho-tinta); border-radius: 18px; padding: 12px 16px; box-shadow: 5px 5px 0 var(--ho-tinta); transform: rotate(-3deg); max-width: 230px; }
+.ho-ticket span { font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--t-suave); }
+.ho-ticket strong { font: 400 1.25rem/1.15 "Bagel Fat One", sans-serif; }
+.ho-ticket small { font-weight: 600; color: var(--t-suave); }
+.ho-sello { position: absolute; right: -8px; top: -12px; width: 88px; height: 88px; border-radius: 50%; margin: 0; display: grid; place-content: center; text-align: center; background: var(--ho-sol); border: 2px solid var(--ho-tinta); font: 400 1.05rem/1 "Bagel Fat One", sans-serif; transform: rotate(12deg); animation: ho-balanceo 6s ease-in-out infinite; }
+@keyframes ho-balanceo { 0%, 100% { transform: rotate(12deg); } 50% { transform: rotate(4deg); } }
+
+.ho-accesos { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); margin: 0 0 28px; }
+@media (min-width: 900px) { .ho-accesos { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
+.ho-acceso { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 112px; padding: 14px; border-radius: 26px; border: 2px solid var(--ho-tinta); text-decoration: none; color: var(--ho-tinta) !important; transition: transform .15s, box-shadow .15s; }
+.ho-acceso:hover { transform: translateY(-3px); box-shadow: 0 5px 0 var(--ho-tinta); }
+.ho-acceso--rosa { background: var(--ho-chicle-suave); }
+.ho-acceso--sol { background: var(--ho-sol-suave); }
+.ho-acceso--menta { background: var(--ho-menta); }
+.ho-acceso--lila { background: var(--ho-lila); }
+.ho-acceso__texto { display: grid; gap: 2px; }
+.ho-acceso__texto strong { font: 400 1.45rem/1 "Bagel Fat One", sans-serif; }
+.ho-acceso__texto span { font-size: .85rem; font-weight: 600; color: #3f3b62; }
+.ho-acceso__foto { flex: none; width: 74px; height: 74px; border-radius: 50%; overflow: hidden; border: 2px solid var(--ho-tinta); }
+@media (min-width: 900px) { .ho-acceso__foto { width: 88px; height: 88px; } }
+.ho-acceso__foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-width: 420px) { .ho-acceso { flex-direction: column-reverse; align-items: flex-start; } }
+
+.ho-pasos { list-style: none; margin: 0 0 18px; padding: 18px; display: grid; gap: 14px; background: var(--ho-tinta); color: var(--ho-crema); border-radius: 28px; }
+@media (min-width: 860px) { .ho-pasos { grid-template-columns: repeat(3, 1fr); padding: 22px 26px; gap: 24px; } }
+.ho-pasos li { display: flex; gap: 14px; align-items: flex-start; }
+.ho-pasos__num { flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--ho-sol); color: var(--ho-tinta); display: grid; place-items: center; font: 400 1.2rem/1 "Bagel Fat One", sans-serif; }
+.ho-pasos div { display: grid; gap: 2px; }
+.ho-pasos strong { font-size: 1.05rem; }
+.ho-pasos div span { color: rgba(255, 246, 236, .78); font-size: .92rem; }
+.ho-aviso-farmacia { margin: 0 0 30px; padding: 12px 16px; border-radius: 16px; background: #fff; border: 2px dashed #c9b9aa; font-size: .92rem; }
+
+.ho-refugio { display: grid; overflow: hidden; border-radius: 30px; border: 2px solid var(--ho-tinta); background: var(--ho-sol); margin: 0 0 28px; }
+@media (min-width: 900px) { .ho-refugio { grid-template-columns: .9fr 1.1fr; } }
+.ho-refugio__foto { width: 100%; height: 100%; min-height: 240px; object-fit: cover; display: block; }
+.ho-refugio__texto { padding: 26px; }
+@media (min-width: 900px) { .ho-refugio__texto { padding: 40px 44px; } }
+.ho-refugio__sobre { font-weight: 800; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 6px; }
+.ho-refugio h2 { font-size: clamp(1.8rem, 5vw, 2.6rem); }
+.ho-refugio p { margin: 0 0 18px; }
+
+/* ---------- Catálogo del motor */
+.ho .t-seccion > h2, .ho .t-catalogo__cabeza h2 { font-size: clamp(2rem, 6vw, 2.8rem); }
+.ho .t-carrusel { grid-auto-columns: minmax(240px, 78%); }
+@media (min-width: 720px) { .ho .t-carrusel { grid-auto-columns: minmax(250px, 1fr); } }
+.ho .t-buscar input { border: 2px solid var(--ho-tinta); }
+.ho .t-chips a { border: 2px solid var(--ho-tinta); background: #fff; }
+.ho .t-chips a.is-activo { background: var(--ho-tinta); color: var(--ho-crema); }
+.ho .t-categoria__titulo { font-family: "Bagel Fat One", sans-serif; font-weight: 400; font-size: 1.6rem; display: flex; align-items: center; gap: 10px; }
+.ho .t-categoria__titulo::before { content: ""; width: 14px; height: 14px; border-radius: 50%; background: var(--ho-chicle); border: 2px solid var(--ho-tinta); }
+.ho .t-producto { border: 2px solid var(--ho-tinta); border-radius: 26px; box-shadow: none; transition: transform .15s, box-shadow .15s; }
+.ho .t-producto:hover { transform: translateY(-3px); box-shadow: 0 6px 0 var(--ho-tinta); }
+.ho .t-producto__foto { border-bottom: 2px solid var(--ho-tinta); background: var(--ho-sol-suave); }
+.ho .t-grilla > .t-producto:nth-child(3n+2) .t-producto__foto { background: var(--ho-chicle-suave); }
+.ho .t-grilla > .t-producto:nth-child(3n) .t-producto__foto { background: var(--ho-menta); }
+.ho .t-sello { background: var(--ho-sol); color: var(--ho-tinta); border: 2px solid var(--ho-tinta); left: 12px; top: 12px; font-size: .78rem; }
+.ho .t-sello--mayorista { background: var(--ho-lila); }
+.ho .t-producto__cuerpo h3 { font-size: 1.05rem; line-height: 1.25; }
+.ho .t-producto__precio strong { font: 400 1.45rem/1 "Bagel Fat One", sans-serif; }
+.ho .t-producto__stock { color: #b4235a; }
+.ho .t-etiqueta { background: var(--ho-lila); }
+.ho .t-aviso-mayorista { background: var(--ho-tinta); border-radius: 26px; }
+.ho .t-aviso-mayorista h3 { font-family: "Bagel Fat One", sans-serif; font-weight: 400; font-size: 1.6rem; }
+
+/* ---------- Cuenta, checkout, panel */
+.ho .t-caja { border: 2px solid var(--ho-tinta); box-shadow: none; border-radius: 24px; }
+.ho .t-caja legend, .ho .t-pagina h1 { font-family: "Bagel Fat One", sans-serif; font-weight: 400; }
+.ho .t-opcion { border-width: 2px; border-radius: 16px; }
+.ho .t-opcion:has(input:checked) { border-color: var(--ho-tinta); background: var(--ho-chicle-suave); }
+.ho .t-campo input, .ho .t-campo select, .ho .t-campo textarea { border-width: 2px; border-radius: 14px; }
+.ho .t-lineas { border: 2px solid var(--ho-tinta); border-radius: 24px; }
+.ho .t-kpi { border: 2px solid var(--ho-tinta); border-radius: 20px; }
+.ho .t-kpi strong { font: 400 1.6rem/1.1 "Bagel Fat One", sans-serif; }
+.ho .t-pestanas a.is-activo { border-color: var(--ho-chicle); }
+.ho .t-tabla-envoltura { border: 2px solid var(--ho-tinta); }
+
+/* ---------- Google */
+.ho .demo-google__intro h2 { font-size: clamp(2rem, 6vw, 2.8rem); font-weight: 400; }
+.ho .demo-google__perfil, .ho .demo-google__resena, .ho .demo-google__mapa { border: 2px solid var(--ho-tinta); border-radius: 24px; box-shadow: none; }
+
+/* ---------- Pie */
+.ho-pie { background: var(--ho-tinta); color: rgba(255, 246, 236, .82); padding: 50px 0 28px; font-size: .93rem; border-top: 2px solid var(--ho-tinta); }
+.ho-pie a { color: var(--ho-crema); }
+.ho-pie__grid { display: grid; gap: 28px; margin-bottom: 22px; }
+@media (min-width: 900px) { .ho-pie__grid { grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 40px; } }
+.ho-pie__logo { color: var(--ho-chicle) !important; font-size: 2.4rem; margin: 0 0 10px; }
+.ho-pie__logo small { color: rgba(255, 246, 236, .7); }
+.ho-pie__titulo { font-weight: 800; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ho-sol); margin: 0 0 8px; }
+.ho-pie ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.ho-pie__horario { max-width: 280px; }
+.ho-pie__nota { font-size: .85rem; margin-top: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ho-sello { animation: none; }
+  .ho .t-btn--primario, .ho .t-producto, .ho-acceso, .ho-baldosa img { transition: none; }
+}
