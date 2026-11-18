@@ -124,3 +124,12 @@ t('tarjeta de proyecto escapa titulo y enlaza al detalle', function () {
     contiene($h, 'href="/proyecto/restaurante-a"');
     contiene($h, 'data-categoria="restaurantes"');
 });
+
+t('catalogo: barberia, veterinaria y repuestos de auto como rubros propios', function () {
+    $slugs = array_column(portfolio_rubros_catalogo(), 'slug');
+    foreach (['peluqueria', 'barberia', 'veterinaria', 'repuestos'] as $s) {
+        ok(in_array($s, $slugs, true), "falta $s");
+    }
+    $pelu = array_values(array_filter(portfolio_rubros_catalogo(), static fn ($r) => $r['slug'] === 'peluqueria'))[0];
+    ok(!in_array('barberia', $pelu['alias'], true), 'barberia no debe ser alias de peluqueria');
+});
