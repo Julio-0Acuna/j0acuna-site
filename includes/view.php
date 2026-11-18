@@ -162,10 +162,10 @@ function portfolio_rubros_catalogo(): array
         $r('almacen', 'Almacén', 'comercio', 'photo-1542838132-92c53300491e', ['minimarket', 'almacen-minimarket']),
         $r('ferreteria', 'Ferretería', 'comercio', 'photo-1426927308491-6380b6a9936f'),
         $r('peluqueria', 'Peluquería', 'servicios', 'photo-1562322140-8baeececf3df', ['salon-de-belleza']),
-        // Agregados el 18/11 a pedido de Julio. Sin foto hasta que su agente elija una de Unsplash.
-        $r('barberia', 'Barbería', 'servicios', ''),
-        $r('veterinaria', 'Veterinaria', 'servicios', '', ['clinica-veterinaria', 'pet-shop']),
-        $r('repuestos', 'Repuestos de auto', 'comercio', '', ['repuestos-auto', 'tienda-de-repuestos']),
+        // Agregados el 18/11 a pedido de Julio (fotos elegidas por el agente de cada rubro).
+        $r('barberia', 'Barbería', 'servicios', 'photo-1599011176306-4a96f1516d4d'),
+        $r('veterinaria', 'Veterinaria', 'servicios', 'photo-1654895716780-b4664497420d', ['clinica-veterinaria', 'pet-shop']),
+        $r('repuestos', 'Repuestos de auto', 'comercio', 'photo-1613214150384-14921ff659b2', ['repuestos-auto', 'tienda-de-repuestos']),
     ];
 }
 

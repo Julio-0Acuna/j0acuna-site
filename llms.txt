@@ -38,11 +38,22 @@ Español y portugués.
   - Inteligencia artificial: https://j0acuna.site/proyectos/ia
   - Formación y estudio: https://j0acuna.site/proyectos/formacion
 - Ejemplos por rubro (sitios de demostración de negocios ficticios): https://j0acuna.site/demos/
+  - Almacen: https://j0acuna.site/demos/almacen/
+  - Barberia: https://j0acuna.site/demos/barberia/
+  - Botilleria: https://j0acuna.site/demos/botilleria/
   - Carniceria: https://j0acuna.site/demos/carniceria/
+  - China: https://j0acuna.site/demos/china/
+  - Ferreteria: https://j0acuna.site/demos/ferreteria/
   - Panaderia: https://j0acuna.site/demos/panaderia/
   - Pasteleria: https://j0acuna.site/demos/pasteleria/
+  - Peluqueria: https://j0acuna.site/demos/peluqueria/
+  - Peruana: https://j0acuna.site/demos/peruana/
   - Pizzeria: https://j0acuna.site/demos/pizzeria/
+  - Repuestos: https://j0acuna.site/demos/repuestos/
   - Sushi: https://j0acuna.site/demos/sushi/
+  - Taller: https://j0acuna.site/demos/taller/
+  - Variada: https://j0acuna.site/demos/variada/
+  - Veterinaria: https://j0acuna.site/demos/veterinaria/
 - Blog con guías para negocios: https://j0acuna.site/blog
   - Cómo aparecer en Google Maps con tu negocio, paso a paso: https://j0acuna.site/blog/aparecer-en-google-maps-perfil-de-empresa
   - Cómo vender en PedidosYa y Uber Eats sin perder tu margen: https://j0acuna.site/blog/como-vender-en-pedidosya-y-uber-eats

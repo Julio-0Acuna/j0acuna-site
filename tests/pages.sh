@@ -201,7 +201,11 @@ debe_contener   /restaurantes  'href="/demos/pizzeria/simple/"'
 debe_contener   /restaurantes  'href="/demos/pizzeria/multi/"'
 debe_contener   /restaurantes  'href="/demos/pizzeria/plataforma/"'
 debe_contener   /restaurantes  'src="/assets/img/mini/demos/pizzeria/img/simple.webp"'
-debe_contener   /restaurantes  'Pronto:'
+# Los 16 rubros del catálogo ya tienen sus 3 versiones: ninguno queda "pronto" y todos enlazan su página.
+no_debe_contener /restaurantes 'Pronto:'
+for rubro in pizzeria sushi pasteleria panaderia carniceria peruana china variada taller botilleria almacen ferreteria peluqueria barberia veterinaria repuestos; do
+  debe_contener /demos/ "href=\"/demos/$rubro/\""
+done
 debe_contener   /restaurantes  'images.unsplash.com/photo-1424847651672-bf20a4b0982b'
 debe_contar_exacto /restaurantes 'class="stair stair-' 4
 debe_contener   /restaurantes  'href="/servicios#menu-qr-3d"'
