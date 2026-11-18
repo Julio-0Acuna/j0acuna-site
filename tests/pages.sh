@@ -105,7 +105,16 @@ debe_contener   /servicios  'Lenguajes y tecnologías que uso'
 no_debe_contener /servicios 'class="service-card'
 no_debe_contener /proyectos 'class="path-card'
 no_debe_contener /proyectos/restaurantes 'class="project-card'
-debe_contener   /proyectos/restaurantes '<a class="tile'
+# 18/11: proyectos en vitrina (propuesta A elegida por Julio), con los rubros arriba en /proyectos.
+debe_contener   /proyectos/restaurantes 'data-pv'
+debe_contener   /proyectos  'src="/assets/js/proyectos.js"'
+debe_contener   /proyectos  'id="t-rubros"'
+no_debe_contener /proyectos 'noindex'
+no_debe_contener /proyectos 'propuestas/'
+html_proy=$(curl -s "$BASE/proyectos")
+pos_rubros=$(printf '%s' "$html_proy" | grep -bo 'id="t-rubros"' | head -1 | cut -d: -f1)
+pos_h1=$(printf '%s' "$html_proy" | grep -bo '<h1' | head -1 | cut -d: -f1)
+if [ -n "$pos_rubros" ] && [ -n "$pos_h1" ] && [ "$pos_rubros" -lt "$pos_h1" ]; then pasa '/proyectos: Ejemplos por rubro va antes del portafolio'; else falla '/proyectos: Ejemplos por rubro debe ir antes del H1 del portafolio'; fi
 no_debe_contener /restaurantes 'class="service-card'
 no_debe_contener /restaurantes 'class="project-card'
 debe_contener   /restaurantes  'class="stairs"'
@@ -136,7 +145,7 @@ debe_contener   /proyecto/restaurante-a  'El problema'
 debe_contener   /proyecto/restaurante-a  'Don Ramón</'
 no_debe_contener /proyecto/restaurante-a 'href="assets/'
 no_debe_contener /proyecto/restaurante-a 'src="assets/'
-debe_contener   /proyecto/gestion-b      'Cliente confidencial'
+debe_contener   /proyecto/gestion-b      '<dd>Confidencial</dd>'
 no_debe_contener /proyecto/gestion-b     'El problema'
 debe_responder  /proyecto/oculto        404
 no_debe_contener /restaurantes 'Apps de delivery'
@@ -166,7 +175,7 @@ no_debe_contener /restaurantes 'Sistemas a medida'
 no_debe_contener /proyecto/intranet-agencia           'MAVT'
 no_debe_contener /proyecto/paneles-duenos-restaurantes 'MAVT'
 no_debe_contener /proyecto/marca-propia-agencia       'MAVT'
-debe_contener   /proyecto/sistema-pedidos-multi-app   'Desarrollado para MAVT'
+debe_contener   /proyecto/sistema-pedidos-multi-app   'MAVT, agencia de restaurantes en Brasil'
 debe_responder  /sitemap.xml  200
 debe_responder  /robots.txt   200
 debe_responder  /favicon.svg  200
@@ -203,7 +212,7 @@ debe_contener   /servicios  'en mi hosting'
 debe_responder  /assets/img/servicios/tienda-online.webp 200
 # Proyectos: muchos ejemplos con imagen a la vista, en miniatura
 debe_contar     /proyectos  'src="/assets/img/mini/projects/' 15
-debe_contar_exacto /proyectos/formacion '<a class="tile' 9
+debe_contar_exacto /proyectos/formacion '<article class="pa-p' 9
 debe_contener   /proyectos/ia 'src="/assets/img/mini/projects/saturnus-aura.webp"'
 # Restaurantes: las 3 versiones de la pizzería, foto de encabezado y escalera con 4 niveles
 debe_contener   /restaurantes  'href="/demos/pizzeria/simple/"'
