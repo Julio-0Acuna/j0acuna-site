@@ -2,7 +2,10 @@
 titulo: ¿Página web para mi negocio o solo Instagram? Cómo decidir
 descripcion: ¿Página web para mi negocio o solo Instagram? Lo que hace bien cada uno, sus límites y cuándo conviene sumar una web con tu propio dominio .cl.
 palabra_clave: página web para mi negocio o solo Instagram
+palabras_clave: página web o Instagram, necesito página web, página web para mi negocio, Instagram para negocios, página web propia, enlace en la bio de Instagram, página web para emprendedores
+tema: Páginas web
 fecha: 2026-11-17
+# Dominio .cl: $9.990 por año, exento de IVA (https://www.nic.cl/dominios/tarifas.html, tarifas vigentes desde el 1/11/2023), revisado el 18/11/2026.
 imagen: assets/img/projects/suitechile-cl.webp
 imagen_alt: Página de inicio del sitio web de una inmobiliaria, con secciones de servicios y botón para agendar una cita
 resumen: Lo que Instagram hace bien, lo que no puede hacer y en qué momento un negocio necesita su propia página web.
@@ -44,12 +47,30 @@ Te conviene sumar una página si te pasa alguna de estas cosas:
 
 La combinación que recomiendo es simple. Instagram para mostrar y conversar, la página como el lugar donde está todo ordenado y el enlace de la bio apuntando a la página. Ahí el cliente encuentra la carta o el catálogo, el horario, el mapa y un botón de WhatsApp para pedir o cotizar. Si sumas tu Perfil de Empresa en Google, cubres también a la gente que te busca en el mapa.
 
-Para partir no necesitas un sitio grande. Una página de una sola sección con tu dominio .cl, que cuesta alrededor de $10.000 al año más IVA en NIC Chile, responde las preguntas que hoy te hacen por mensaje. Puedes ver cómo se ve en [estos ejemplos de una pizzería](/demos/pizzeria/), que van desde una página simple hasta una tienda con cuentas de clientes. Con el tiempo, si lo necesitas, se le agregan secciones o un carrito de pedidos.
+Para partir no necesitas un sitio grande. Una página de una sola sección con tu dominio .cl, que cuesta $9.990 al año en NIC Chile (exento de IVA), responde las preguntas que hoy te hacen por mensaje. Puedes ver cómo se ve en [estos ejemplos de una pizzería](/demos/pizzeria/), que van desde una página simple hasta una tienda con cuentas de clientes. Con el tiempo, si lo necesitas, se le agregan secciones o un carrito de pedidos.
 
-Cuando trabajo contigo, el dominio queda a tu nombre y la página queda alojada en mi hosting. Así tu dirección web es tuya, pase lo que pase con cualquier red social.
+Cuando trabajo contigo, el dominio queda a tu nombre y la página queda alojada en mi hosting. Así tu dirección web es tuya, pase lo que pase con cualquier red social. Qué es cada cosa y cuánto cuesta lo expliqué en [dominio .cl y hosting](/blog/dominio-cl-y-hosting).
 
 ## Un error que veo seguido
 
-Tener una página y no enlazarla en ningún lado. Si la web no aparece en la bio de Instagram, en tu Perfil de Empresa en Google, en la firma del correo ni en el QR del mesón, la gente no llega a ella. Revisa esos lugares el mismo día que la publiques. Si quieres ver con más detalle qué incluye cada opción, está en [servicios](/servicios).
+Tener una página y no enlazarla en ningún lado. Si la web no aparece en la bio de Instagram, en tu Perfil de Empresa en Google, en la firma del correo ni en el QR del mesón, la gente no llega a ella. Revisa esos lugares el mismo día que la publiques. Si quieres ver con más detalle qué incluye cada opción, está en [servicios](/servicios#web-menu), y si estás partiendo con un negocio chico, te puede servir [página web para pymes y emprendedores](/blog/pagina-web-para-pymes-santiago).
+
+## Preguntas frecuentes
+
+### ¿Puedo vender solo por Instagram?
+
+Sí, sobre todo al principio o si cada venta se conversa igual. El problema aparece cuando creces: la información se pierde entre publicaciones, no controlas cómo apareces en Google y la cuenta depende de las reglas de la plataforma.
+
+### ¿Qué pongo en el enlace de la bio?
+
+Tu página web. Desde ahí el cliente encuentra la carta o el catálogo, el horario, el mapa y el botón de WhatsApp, todo en un solo lugar.
+
+### ¿Cuánto cuesta tener mi propio dominio?
+
+Un dominio .cl cuesta $9.990 al año en NIC Chile, exento de IVA. A eso se suma el hosting y la mantención de la página.
+
+### ¿Una página web reemplaza a Instagram?
+
+No. Se complementan: Instagram para mostrar el día a día y conversar, la página para que te encuentren en Google y para tener todo ordenado.
 
 Si tienes dudas sobre tu caso, mándame tu Instagram y te digo con franqueza si hoy te conviene una página o si todavía puedes esperar. Escríbeme desde [contacto](/contacto) o por WhatsApp.

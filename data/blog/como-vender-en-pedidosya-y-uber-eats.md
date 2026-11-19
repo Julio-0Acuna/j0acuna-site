@@ -2,6 +2,8 @@
 titulo: Cómo vender en PedidosYa y Uber Eats sin perder tu margen
 descripcion: Cómo vender en PedidosYa y Uber Eats paso a paso, qué preparar antes de postular, qué preguntar sobre comisiones y cómo cuidar tu menú en la app.
 palabra_clave: cómo vender en PedidosYa y Uber Eats
+palabras_clave: vender en Uber Eats, vender en PedidosYa, registrar restaurante en PedidosYa, comisiones de apps de delivery, apps de delivery para restaurantes, Rappi, fotos para apps de delivery, dark kitchen
+tema: Restaurantes y delivery
 fecha: 2026-11-17
 imagen: assets/img/projects/sistema-pedidos-multi-app.webp
 imagen_alt: Pantalla de cocina que ordena los pedidos de dos apps de delivery en columnas de nuevos, en preparación y listos
@@ -49,10 +51,30 @@ Y revisa los números cada mes: qué platos se venden, cuáles no se mueven, qu�
 
 Cada app tiene su propia forma de recibir pedidos, normalmente una aplicación en una tablet o un celular. Con dos o tres apps, más los pedidos de WhatsApp, el mesón se llena de pantallas y alguien tiene que estar mirando todas al mismo tiempo.
 
-Se puede juntar todo en una sola pantalla de cocina, con comanda impresa y aviso sonoro. Ojo con un detalle: para que los pedidos de PedidosYa o Uber Eats lleguen a un sistema propio, la app tiene que autorizar a un integrador a conectarse con ella. No es algo que alguien pueda prometerte de antemano, porque depende de cada app y de sus condiciones. Yo construí una plataforma así en Brasil, conectada de forma oficial a dos apps de delivery de allá (está en [mis proyectos](/proyectos)); en Chile, la conexión se arma según lo que cada app permita.
+Se puede juntar todo en una sola pantalla de cocina, con comanda impresa y aviso sonoro. Ojo con un detalle: para que los pedidos de PedidosYa o Uber Eats lleguen a un sistema propio, la app tiene que autorizar a un integrador a conectarse con ella. No es algo que alguien pueda prometerte de antemano, porque depende de cada app y de sus condiciones. Yo construí una plataforma así en Brasil, conectada de forma oficial a dos apps de delivery de allá (está en [mis proyectos](/proyecto/sistema-pedidos-multi-app)); en Chile, la conexión se arma según lo que cada app permita. Los tres niveles, desde un carrito por WhatsApp hasta la pantalla única, los ordené en [sistema de pedidos para restaurantes](/blog/sistema-de-pedidos-para-restaurantes).
 
 ## No dependas solo de las apps
 
-Las apps te traen clientes nuevos, pero esos clientes llegan por la app. Cuando alguien ya te conoce y quiere repetir, lo ideal es que pueda pedirte directo, por WhatsApp o desde tu página, sin comisión de por medio. Un volante en la bolsa con tu número o con el QR de tu carta ayuda a eso; revisa antes que no choque con las condiciones de la app con la que trabajas.
+Las apps te traen clientes nuevos, pero esos clientes llegan por la app. Cuando alguien ya te conoce y quiere repetir, lo ideal es que pueda pedirte directo, por WhatsApp o desde tu página, sin comisión de por medio. Un volante en la bolsa con tu número o con el QR de tu carta ayuda a eso; revisa antes que no choque con las condiciones de la app con la que trabajas. Qué debe tener esa página lo explico en [página web para restaurantes](/blog/pagina-web-para-restaurantes), y en [los ejemplos de sushi](/demos/sushi/) puedes ver una carta con pedido directo funcionando.
 
-Te ayudo con el alta del local, el menú, las fotos y la revisión de tus números, y lo tienes detallado en [servicios](/servicios). Si me cuentas en qué apps estás y qué te está costando, lo vemos por WhatsApp o desde [contacto](/contacto).
+Te ayudo con el alta del local, el menú, las fotos y la revisión de tus números, y lo tienes detallado en [servicios](/servicios#apps-delivery).
+
+## Preguntas frecuentes
+
+### ¿Cuánto cobran de comisión Uber Eats y PedidosYa?
+
+Depende del acuerdo que tengas con cada app y del tipo de servicio, por ejemplo si reparte la app o tu propio repartidor. Pide el detalle por escrito al ejecutivo comercial antes de firmar.
+
+### ¿Puedo tener precios distintos en la app y en el local?
+
+Muchos locales lo hacen para cubrir la comisión. Antes de hacerlo, revisa las condiciones de cada app sobre diferencias de precio.
+
+### ¿Se pueden juntar los pedidos de varias apps en una sola pantalla?
+
+Técnicamente sí, pero cada app tiene que autorizar la conexión con un sistema propio. Mientras eso no ocurra, cada una se atiende en su tablet.
+
+### ¿Qué platos conviene subir a la app?
+
+Los que aguantan el trayecto en moto y llegan bien. Un menú más corto que el del local, con buenas fotos, suele rendir más que la carta completa.
+
+Si me cuentas en qué apps estás y qué te está costando, lo vemos por WhatsApp o desde [contacto](/contacto).

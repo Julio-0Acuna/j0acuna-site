@@ -2,6 +2,8 @@
 titulo: Menú digital QR para restaurantes, qué revisar antes de imprimir
 descripcion: Qué debe tener un menú digital QR para restaurantes, opciones gratis o de pago, errores comunes y cómo se ven los platos en 3D con la cámara.
 palabra_clave: menú digital QR para restaurantes
+palabras_clave: menú QR, carta digital, carta QR, menú digital, menú con código QR, menú en 3D, realidad aumentada para restaurantes, menú QR gratis
+tema: Restaurantes y delivery
 fecha: 2026-11-17
 imagen: demos/pizzeria/img/multi.webp
 imagen_alt: Sitio de varias páginas de una pizzería napolitana de ejemplo, con acceso al menú y a reservas
@@ -40,7 +42,7 @@ Si quieres que el cliente también pueda pedir para llevar, la misma carta puede
 
 Hay una opción que todavía sorprende a la gente: ver el plato en 3D antes de pedirlo. En la carta aparece un botón junto a ciertos platos. Al tocarlo, el cliente puede girar la pizza o el postre en la pantalla y, en celulares compatibles, ponerlo sobre su propia mesa usando la cámara, como si ya estuviera servido. Esto ya existe y lo ofrezco como parte del menú digital.
 
-No hace falta tener toda la carta en 3D. Rinde más en los platos de la casa, en los que quieres vender más o en los que cuesta imaginar solo por el nombre. Puedes probarlo en [el ejemplo de pizzería de varias páginas](/demos/pizzeria/), donde algunos platos tienen el botón "Ver en 3D".
+No hace falta tener toda la carta en 3D. Rinde más en los platos de la casa, en los que quieres vender más o en los que cuesta imaginar solo por el nombre. Puedes probarlo en [el menú de la pizzería de varias páginas](/demos/pizzeria/multi/menu.php), donde algunos platos tienen el botón "Ver en 3D". Los ejemplos de [sushi](/demos/sushi/) y [comida china](/demos/china/) también tienen platos en 3D.
 
 ## Errores comunes con el código QR
 
@@ -55,6 +57,24 @@ Otros que se repiten bastante:
 
 ## Cuánto cuesta y por dónde partir
 
-Las plataformas gratuitas o de pocos miles de pesos al mes son una buena prueba: te enteras de si tus clientes usan el QR antes de invertir más. Cuando la carta crece, cuando quieres recibir pedidos o cuando te molesta mostrar la marca de otro, conviene pasar el menú a tu propia página. En [la sección para restaurantes](/restaurantes) tienes las opciones ordenadas de la más simple a la más completa.
+Las plataformas gratuitas o de pocos miles de pesos al mes son una buena prueba: te enteras de si tus clientes usan el QR antes de invertir más. Cuando la carta crece, cuando quieres recibir pedidos o cuando te molesta mostrar la marca de otro, conviene pasar el menú a tu propia página. En [la sección para restaurantes](/restaurantes) tienes las opciones ordenadas de la más simple a la más completa, y en [página web para restaurantes](/blog/pagina-web-para-restaurantes) explico qué más debería tener la página donde vive tu carta. El detalle del servicio está en [menú QR y platos en 3D](/servicios#menu-qr-3d).
+
+## Preguntas frecuentes
+
+### ¿Qué pasa con el QR si cambio los precios?
+
+Nada. Si el código apunta a tu propia página, cambias los precios en el panel y el mismo QR muestra la carta actualizada, sin reimprimir.
+
+### ¿El menú en 3D funciona en todos los celulares?
+
+Girar el plato en la pantalla funciona en la mayoría de los celulares actuales. Verlo sobre la mesa con la cámara (realidad aumentada) depende de que el teléfono sea compatible.
+
+### ¿Tengo que sacar la carta impresa?
+
+No conviene. Deja un par de cartas físicas para quien no quiera o no pueda usar el celular.
+
+### ¿Un menú QR gratis me sirve?
+
+Para probar si tus clientes usan el QR, sí. Cuando la carta crece o quieres recibir pedidos, te conviene tenerla en tu propio dominio.
 
 Si quieres ver cómo quedaría tu carta, con o sin platos en 3D, mándame la que usas hoy y lo conversamos. Me encuentras por WhatsApp o en [contacto](/contacto).

@@ -2,6 +2,8 @@
 titulo: Página web para restaurantes en Chile
 descripcion: Qué debe tener la página web de un restaurante en Chile para recibir pedidos y aparecer en Google.
 palabra_clave: página web para restaurantes
+tema: Páginas web
+destacado: true
 fecha: 2026-11-10
 imagen: demos/pizzeria/img/multi.webp
 imagen_alt: Sitio de una pizzería

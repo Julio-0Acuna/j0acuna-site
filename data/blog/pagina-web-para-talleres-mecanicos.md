@@ -2,6 +2,8 @@
 titulo: Qué debe tener una página web para talleres mecánicos
 descripcion: Qué debe tener una página web para talleres mecánicos. Servicios, marcas, hora por WhatsApp, Google Maps y reseñas, más los errores comunes.
 palabra_clave: página web para talleres mecánicos
+palabras_clave: página web para taller mecánico, sitio web para taller, reservar hora en taller, agenda online para taller, taller mecánico en Google Maps, presupuesto por WhatsApp para taller, marketing para talleres mecánicos
+tema: Reservas y servicios
 fecha: 2026-11-17
 imagen: assets/img/projects/obrascivilesmys-cl.webp
 imagen_alt: Página de inicio del sitio de una empresa de servicios, con menú de secciones y botón para solicitar cotización
@@ -35,7 +37,9 @@ En un taller, buena parte de la primera conversación se va en preguntar lo mism
 
 Con eso ya puedes responder con un valor aproximado o con una hora para revisarlo, sin cinco mensajes de ida y vuelta. Pide solo los datos que vas a usar; Chile tiene una nueva ley de datos personales y no tiene sentido guardar información que no necesitas.
 
-Si el taller crece, se puede pasar a algo más completo, con agenda de horas disponibles, órdenes de trabajo en PDF y un historial por patente para saber qué se le hizo a cada auto la última vez. Eso ya es un sistema a medida, y tiene sentido cuando el cuaderno y las planillas empiezan a quedar cortos.
+Así funciona la reserva en [Vértice Garage](/demos/taller/multi/), un taller ficticio que armé como ejemplo: el cliente elige los servicios, anota patente, modelo, año y kilometraje, escoge día y bloque, y la solicitud llega por WhatsApp. En [los tres ejemplos de taller](/demos/taller/) puedes comparar esa versión con una página simple y con una agenda online con tienda de accesorios. Las dos formas de recibir reservas las comparo en [reserva de horas online](/blog/reserva-de-horas-online).
+
+Si el taller crece, se puede pasar a algo más completo, con agenda de horas disponibles, órdenes de trabajo en PDF y un historial por patente para saber qué se le hizo a cada auto la última vez. Eso ya es un sistema a medida, y tiene sentido cuando el cuaderno y las planillas empiezan a quedar cortos; lo explico en [sistemas a medida e inteligencia artificial](/blog/sistemas-a-medida-e-inteligencia-artificial).
 
 ## Aparecer cuando buscan un taller cerca
 
@@ -45,7 +49,7 @@ El primero es el Perfil de Empresa en Google, con la categoría correcta, el hor
 
 El segundo es tu página, con el nombre de tu comuna y tus servicios escritos de forma natural, por ejemplo "taller de frenos y suspensión en San Bernardo". Si tienes varios servicios fuertes, darle una sección propia a cada uno ayuda a que Google entienda qué haces y a que el cliente encuentre al tiro lo que busca.
 
-Las reseñas pesan mucho en este rubro. Cuando entregas un auto y el cliente se va conforme, mándale por WhatsApp el enlace para dejar su opinión. Es buen momento, porque todavía tiene fresco el trabajo.
+Las reseñas pesan mucho en este rubro. Cuando entregas un auto y el cliente se va conforme, mándale por WhatsApp el enlace para dejar su opinión. Es buen momento, porque todavía tiene fresco el trabajo. Lo demás que influye en Google está en [posicionamiento web para negocios locales](/blog/posicionamiento-web-seo-negocios-locales).
 
 ## Errores comunes en páginas de talleres
 
@@ -57,6 +61,24 @@ También pasa con los precios de referencia que nunca se actualizan. Si los publ
 
 Y la página lenta, cargada de animaciones, que en el celular tarda en abrir. Quien la está mirando probablemente está parado al lado del auto y con poca paciencia.
 
-Puedes ver sitios de empresas de servicios que ya están funcionando en [proyectos](/proyectos), y en [servicios](/servicios) está el detalle de lo que incluye una página para tu negocio y la configuración del Perfil de Empresa en Google.
+Puedes ver sitios de empresas de servicios que ya están funcionando en [proyectos](/proyectos), y en [servicios](/servicios#web-menu) está el detalle de lo que incluye una página para tu negocio y la configuración del Perfil de Empresa en Google.
+
+## Preguntas frecuentes
+
+### ¿Conviene publicar precios en la página de un taller?
+
+Sí, como referencia: valores «desde» para los servicios más comunes, con la fecha de actualización. Ayudan a que el cliente se decida y bajan las consultas, siempre que los mantengas al día.
+
+### ¿Puedo recibir solicitudes de hora con la patente y el modelo del auto?
+
+Sí. Un formulario corto arma el mensaje con patente, modelo, año, kilometraje y el problema, y te llega por WhatsApp listo para responder.
+
+### ¿Sirve para lubricentros, vulcanizaciones o talleres de desabolladura?
+
+Sí. Cambian los servicios y los datos que pides, pero la lógica es la misma: qué haces, dónde estás, cuándo atiendes y cómo pedir hora.
+
+### ¿Necesito una agenda online para el taller?
+
+No para partir. Si recibes pocas solicitudes al día, la hora por WhatsApp funciona bien. La agenda online conviene cuando hay varios mecánicos o muchas reservas.
 
 Si tienes un taller y quieres saber cómo apareces hoy en internet, escríbeme por WhatsApp o desde [contacto](/contacto). Te digo qué te falta y por dónde partir.

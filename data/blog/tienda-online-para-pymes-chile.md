@@ -2,7 +2,11 @@
 titulo: Tienda online para pymes en Chile, qué decidir antes de partir
 descripcion: Guía para armar una tienda online para pymes en Chile. Precios de mercado, medios de pago, despacho, boletas y errores que se repiten al empezar.
 palabra_clave: tienda online para pymes en Chile
+palabras_clave: tienda online, tienda virtual, e-commerce para pymes, crear una tienda online, vender por internet en Chile, tienda online con precios mayoristas, comercio electrónico, tienda online propia
+tema: Tiendas y plataformas
 fecha: 2026-11-17
+# Rangos de mercado: GoDaddy Chile, publicado el 30/10/2025 (https://www.godaddy.com/resources/latam/clientes/cuanto-cuesta-pagina-web-chile), revisado el 18/11/2026.
+# Dominio .cl: $9.990 por año, exento de IVA (https://www.nic.cl/dominios/tarifas.html), revisado el 18/11/2026.
 imagen: assets/img/projects/ridelsip-cl.webp
 imagen_alt: Página de inicio de la tienda online de una constructora, con menú de modelos, materiales, carrito y botón para cotizar
 resumen: Las decisiones que conviene tomar antes de abrir una tienda online, desde el catálogo y los pagos hasta el despacho, las boletas y lo que cuesta en Chile.
@@ -12,7 +16,7 @@ Abrir una tienda online para pymes en Chile ya no requiere un equipo de sistemas
 
 ## ¿Necesitas una tienda o te basta con un catálogo?
 
-Esta pregunta ahorra plata. Una tienda completa, con pago en línea y cuentas de clientes, tiene sentido si vendes productos con precio fijo, tienes el stock más o menos ordenado y alguien puede preparar pedidos a diario. Si en cambio cada venta requiere conversar (medidas, productos a pedido, cotizaciones), te puede servir más un catálogo con precios de referencia y un botón para pedir por WhatsApp o solicitar cotización.
+Esta pregunta ahorra plata. Una tienda completa, con pago en línea y cuentas de clientes, tiene sentido si vendes productos con precio fijo, tienes el stock más o menos ordenado y alguien puede preparar pedidos a diario. Si en cambio cada venta requiere conversar (medidas, productos a pedido, cotizaciones), te puede servir más un catálogo con precios de referencia y un botón para pedir por WhatsApp o solicitar cotización. Lo expliqué con ejemplos por rubro en [catálogo online para almacenes, botillerías y ferreterías](/blog/catalogo-online-almacenes-botillerias-ferreterias).
 
 Hay un caso intermedio que se da harto: negocios que venden al detalle y también a mayoristas, con precios distintos para cada uno. Eso se resuelve con cuentas de clientes que el dueño aprueba a mano, de modo que el precio mayorista solo lo ve quien corresponde.
 
@@ -20,7 +24,7 @@ Hay un caso intermedio que se da harto: negocios que venden al detalle y tambié
 
 Según un artículo de GoDaddy Chile de octubre de 2025, una tienda online parte en $500.000 y puede llegar a $2.000.000 si es compleja. Como referencia, el mismo artículo ubica una página básica entre $150.000 y $500.000, y una web de negocio más elaborada entre $500.000 y $2.000.000.
 
-A eso súmale lo que se paga todos los años o todos los meses. El dominio .cl cuesta alrededor de $10.000 al año más IVA en NIC Chile, y después vienen el hosting, la mantención y la comisión que cobra la pasarela de pago por cada transacción.
+A eso súmale lo que se paga todos los años o todos los meses. El dominio .cl cuesta $9.990 al año en NIC Chile, exento de IVA, y después vienen el hosting, la mantención y la comisión que cobra la pasarela de pago por cada transacción.
 
 También existen plataformas de tiendas que se pagan con una suscripción mensual. Sirven para partir rápido. A cambio, pagas mientras exista la tienda, dependes de los planes y límites que ellos definan, y llevarte la tienda a otro lado más adelante no siempre es simple. Una tienda propia cuesta más al principio y te da más control sobre cómo funciona y cuánto pagas cada mes.
 
@@ -51,6 +55,24 @@ Con los datos de clientes pasa algo parecido. Chile tiene una nueva ley de datos
 
 ## Ejemplos para mirar antes de decidir
 
-En [proyectos](/proyectos) puedes ver tiendas reales, como la de una constructora que vende casas prefabricadas y paneles, con carrito y despacho calculado según la dirección. En [servicios](/servicios) está el detalle de lo que incluye una tienda con cuentas de clientes, precios para mayoristas y panel del dueño.
+Entre mis proyectos está [una tienda real](/proyecto/ridelsip-cl), la de una constructora que vende casas prefabricadas y paneles, con carrito y despacho calculado según la dirección. También armé tiendas de ejemplo para negocios ficticios en cada rubro, donde puedes entrar como cliente, mayorista o dueño: por ejemplo la carnicería [Kilo Justo](/demos/carniceria/plataforma/) o la distribuidora [Bodega Surtido](/demos/almacen/plataforma/). En [servicios](/servicios#tienda-online) está el detalle de lo que incluye una tienda con cuentas de clientes, precios para mayoristas y panel del dueño, y si dudas entre tienda, plataforma o app, lee [página web, plataforma web o app](/blog/pagina-web-plataforma-web-o-app).
+
+## Preguntas frecuentes
+
+### ¿Cuánto demora hacer una tienda online?
+
+De cuatro a seis semanas, desde que están listos el catálogo, las fotos y las decisiones de pago y despacho.
+
+### ¿Puedo vender a mayoristas con otro precio?
+
+Sí. Los mayoristas crean su cuenta, tú la apruebas y desde ahí ven sus precios. El resto de los clientes ve el precio normal.
+
+### ¿Qué medios de pago puedo usar?
+
+Pago al recibir, transferencia o pago en línea con el proveedor que elijas. Compara comisiones y plazos de abono antes de decidir.
+
+### ¿Me conviene una tienda propia o una plataforma con suscripción mensual?
+
+La suscripción sirve para partir rápido, pero pagas mientras exista la tienda y dependes de sus planes. Una tienda propia cuesta más al principio y te da más control sobre cómo funciona y cuánto pagas cada mes.
 
 Si estás pensando en vender en línea, cuéntame qué vendes y cómo lo vendes hoy. Te digo si te conviene partir con una tienda completa o con algo más simple que puedas ampliar después. Escríbeme desde [contacto](/contacto) o por WhatsApp.

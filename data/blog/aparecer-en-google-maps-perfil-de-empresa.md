@@ -2,7 +2,10 @@
 titulo: Cómo aparecer en Google Maps con tu negocio, paso a paso
 descripcion: Cómo aparecer en Google Maps con tu negocio usando el Perfil de Empresa de Google. Crearlo, verificarlo, completarlo y conseguir reseñas reales.
 palabra_clave: cómo aparecer en Google Maps con tu negocio
+palabras_clave: Perfil de Empresa en Google, aparecer en Google Maps, Google Mi Negocio, ficha de Google Maps, verificar negocio en Google, reseñas en Google, SEO local, aparecer en el mapa de Google
+tema: Google y SEO
 fecha: 2026-11-17
+# Factores locales y «no puedes pagar por un mejor ranking local»: https://support.google.com/business/answer/7091?hl=es-419, consultado el 18/11/2026.
 imagen: assets/img/og/og-restaurantes.jpg
 imagen_alt: Portada con el texto Más ventas para tu local, web, menú digital y apps de delivery
 resumen: Cómo crear y verificar tu Perfil de Empresa en Google, qué datos completar y por qué las reseñas y tener los mismos datos en todas partes importan.
@@ -54,6 +57,30 @@ No compres reseñas ni ofrezcas descuentos a cambio de cinco estrellas. Las pol�
 
 ## Lo que la ficha no hace sola
 
-El perfil es la puerta de entrada, pero lo que puedes contar ahí es limitado. Una página web propia, con tu carta o tus servicios y tu dirección escritos de forma que Google los entienda, complementa la ficha y le da al cliente un lugar donde terminar de decidir. Si quieres ayuda con las dos cosas, lo tienes explicado en [servicios](/servicios), y en [proyectos](/proyectos) puedes ver sitios que ya están funcionando.
+El perfil es la puerta de entrada, pero lo que puedes contar ahí es limitado. Una página web propia, con tu carta o tus servicios y tu dirección escritos de forma que Google los entienda, complementa la ficha y le da al cliente un lugar donde terminar de decidir. Lo que hace que esa página aparezca en las búsquedas de tu zona lo expliqué en [posicionamiento web para negocios locales](/blog/posicionamiento-web-seo-negocios-locales).
+
+Las páginas de ejemplo que armé para cada rubro traen una sección «Encuéntranos en Google» con el mapa y un botón para dejar reseña; puedes verla en [la pizzería de una página](/demos/pizzeria/simple/#google). Si quieres ayuda con el perfil y con la página, lo tienes explicado en [servicios](/servicios#google-perfil), y en [proyectos](/proyectos) puedes ver sitios que ya están funcionando.
+
+## Preguntas frecuentes
+
+### ¿El Perfil de Empresa en Google es gratis?
+
+Sí. Crearlo, verificarlo y mantenerlo no tiene costo. Lo que se paga aparte, si quieres, son los anuncios.
+
+### ¿Puedo aparecer en Google Maps si no tengo local a la calle?
+
+Sí. Si atiendes a domicilio y no recibes público, puedes ocultar la dirección e indicar las comunas que cubres.
+
+### ¿Puedo pagarle a Google para salir primero en el mapa?
+
+No. Google dice en su centro de ayuda que no se puede solicitar ni pagar por un mejor ranking local. Lo que sí influye es una ficha completa, la categoría correcta y las reseñas.
+
+### ¿Google Mi Negocio y el Perfil de Empresa son lo mismo?
+
+Sí. Perfil de Empresa en Google es el nombre actual de lo que antes se llamaba Google Mi Negocio.
+
+### ¿Cada cuánto tengo que actualizar la ficha?
+
+Cada vez que cambie algo (horario, teléfono, dirección) y antes de cada feriado. Subir fotos nuevas de vez en cuando y responder las reseñas ayuda a que la ficha se vea cuidada.
 
 Si no sabes si tu ficha está bien armada, mándame el enlace por WhatsApp o escríbeme desde [contacto](/contacto) y te digo qué le falta.

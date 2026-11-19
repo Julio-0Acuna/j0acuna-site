@@ -2,6 +2,8 @@
 titulo: Pedidos por WhatsApp para restaurantes, sin pagar comisión
 descripcion: Cómo ordenar los pedidos por WhatsApp para restaurantes con un carrito en tu web, cobros, despacho por comuna y sin pagar comisión por venta.
 palabra_clave: pedidos por WhatsApp para restaurantes
+palabras_clave: pedidos por WhatsApp, carrito de compras con WhatsApp, WhatsApp Business para restaurantes, pedidos online sin comisión, delivery propio, menú con pedido por WhatsApp, sistema de pedidos por WhatsApp
+tema: Restaurantes y delivery
 fecha: 2026-11-17
 imagen: demos/pizzeria/img/simple.webp
 imagen_alt: Página de una pizzería de ejemplo con botones para pedir por WhatsApp y para llamar
@@ -24,7 +26,7 @@ La solución más práctica es que el cliente arme el pedido en tu página y que
 4. Al confirmar, se abre WhatsApp con un mensaje ya escrito que trae el detalle, el total, el nombre, la dirección y la forma de pago.
 5. El cliente lo envía y a ti te llega completo, listo para pasarlo a cocina.
 
-No hay comisión por venta porque no hay intermediario: el pedido llega directo a tu número. Puedes probar cómo funciona en [estos ejemplos de pizzería](/demos/pizzeria/), donde el carrito termina en un mensaje de WhatsApp.
+No hay comisión por venta porque no hay intermediario: el pedido llega directo a tu número. Puedes probar cómo funciona en [la pizzería de varias páginas](/demos/pizzeria/multi/), un ejemplo con negocio ficticio donde el carrito termina en un mensaje de WhatsApp. Lo mismo sirve fuera de los restaurantes: en [la panadería de ejemplo](/demos/panaderia/multi/) el carrito arma un encargo de pan.
 
 ## Configura bien WhatsApp Business
 
@@ -50,6 +52,24 @@ Al recibir pedidos vas a guardar nombres, teléfonos y direcciones. Chile tiene 
 
 ## WhatsApp y las apps de delivery pueden convivir
 
-No tienes que elegir entre una cosa y la otra. Las apps te muestran a gente que todavía no te conoce. WhatsApp sirve para que los que ya te conocen te pidan directo y tú no pagues comisión por cada pedido. Hay muchos locales que usan las dos. Si quieres ver todas las opciones juntas, en [restaurantes](/restaurantes) están ordenadas de lo más simple a lo más completo.
+No tienes que elegir entre una cosa y la otra. Las apps te muestran a gente que todavía no te conoce. WhatsApp sirve para que los que ya te conocen te pidan directo y tú no pagues comisión por cada pedido. Hay muchos locales que usan las dos. Si quieres ver todas las opciones juntas, en [restaurantes](/restaurantes) están ordenadas de lo más simple a lo más completo. Y cuando los pedidos ya no caben en un celular, en [sistema de pedidos para restaurantes](/blog/sistema-de-pedidos-para-restaurantes) explico los siguientes pasos, hasta tener todo en una sola pantalla de cocina.
+
+## Preguntas frecuentes
+
+### ¿WhatsApp cobra por recibir pedidos?
+
+La aplicación WhatsApp Business es gratis para recibir y responder mensajes de tus clientes. El carrito de tu página tampoco cobra comisión por venta.
+
+### ¿Necesito una tienda online para recibir pedidos por WhatsApp?
+
+No. Basta con una carta en tu página que tenga carrito. La tienda online, con cuentas de clientes y pago en línea, conviene cuando el volumen crece. El detalle está en [pedidos directos](/servicios#pedidos-directos).
+
+### ¿Puedo cobrar en línea si el pedido llega por WhatsApp?
+
+Puedes pedir transferencia y revisar que llegó antes de preparar, o mandar un enlace de pago de tu proveedor. Si quieres que el cliente pague al confirmar, eso ya es una tienda online.
+
+### ¿Cómo calculo el despacho por comuna?
+
+Define un costo por comuna (o por zonas) y un monto mínimo si corresponde. La página lo suma solo cuando el cliente elige dónde recibir.
 
 Si hoy recibes pedidos por WhatsApp y se te desordenan, cuéntame cómo trabajas y te propongo cómo armar el carrito para tu carta. Escríbeme desde [contacto](/contacto) o directo al WhatsApp.

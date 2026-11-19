@@ -23,6 +23,11 @@ if ($post === null) {
 
 $migas = [['Blog', '/blog'], [$post['titulo'], blog_url($post)]];
 $relacionados = blog_related($post, blog_posts());
+$jsonld = [jsonld_blogposting($post, $site), jsonld_breadcrumbs($migas)];
+$faqs = blog_faqs($post['cuerpo']);
+if ($faqs) {
+    $jsonld[] = jsonld_faq($faqs);
+}
 $mensaje = 'Hola Julio, leí tu artículo «' . $post['titulo'] . '» y quiero conversar sobre mi negocio.';
 $wa = site_wa($site, $mensaje);
 
@@ -31,7 +36,7 @@ render_partial('head', [
     'description' => $post['descripcion'] !== '' ? $post['descripcion'] : $post['resumen'],
     'og_image' => $post['imagen'] !== '' ? $post['imagen'] : 'assets/img/og/og-inicio.jpg',
     'canonical' => blog_url($post),
-    'jsonld' => [jsonld_blogposting($post, $site), jsonld_breadcrumbs($migas)],
+    'jsonld' => $jsonld,
     'extra_head' => $css,
 ]);
 render_partial('nav', ['site' => $site, 'actual' => 'blog']);
@@ -43,7 +48,7 @@ render_partial('nav', ['site' => $site, 'actual' => 'blog']);
         <a href="/">Inicio</a><span aria-hidden="true">/</span><a href="/blog">Blog</a>
       </nav>
       <h1><?= e($post['titulo']) ?></h1>
-      <p class="blog-meta"><?= e(blog_fecha($post['fecha'])) ?> · <?= (int) $post['minutos'] ?> min de lectura · <?= e($site['profile']['name']) ?></p>
+      <p class="blog-meta"><?= e(blog_fecha($post['fecha'])) ?> · <?= (int) $post['minutos'] ?> min de lectura · <?= e($site['profile']['name']) ?><?php if ($post['tema'] !== ''): ?> · <a class="blog-chip" href="<?= e(blog_tema_url($post['tema_slug'])) ?>"><?= e($post['tema']) ?></a><?php endif; ?></p>
     </div>
   </header>
 
@@ -82,13 +87,7 @@ render_partial('nav', ['site' => $site, 'actual' => 'blog']);
         <div class="blog-lista">
           <?php foreach ($relacionados as $p): ?>
             <a class="blog-item rv" href="<?= e(blog_url($p)) ?>">
-              <span class="blog-item-media">
-                <?php if ($p['imagen'] !== ''): ?>
-                  <img src="<?= e(asset($p['imagen'])) ?>" alt="<?= e($p['imagen_alt']) ?>" loading="lazy" width="1200" height="750">
-                <?php else: ?>
-                  <span class="tile-placeholder" aria-hidden="true"><?= e(mb_strtoupper(mb_substr($p['titulo'], 0, 2))) ?></span>
-                <?php endif; ?>
-              </span>
+              <?= blog_item_media($p) ?>
               <strong><?= e($p['titulo']) ?></strong>
               <span class="blog-resumen"><?= e($p['resumen']) ?></span>
             </a>

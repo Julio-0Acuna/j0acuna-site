@@ -2,7 +2,11 @@
 titulo: ¿Cuánto cuesta una página web para un restaurante en Chile?
 descripcion: Cuánto cuesta una página web para un restaurante en Chile, con rangos de precio del mercado, gastos anuales y qué preguntar antes de contratar.
 palabra_clave: cuánto cuesta una página web para un restaurante
+palabras_clave: precio página web restaurante, cuánto cuesta una página web en Chile, valor de una página web, precio tienda online Chile, costo de mantención de una página web, cuánto cuesta un dominio .cl, presupuesto página web
+tema: Restaurantes y delivery
 fecha: 2026-11-17
+# Rangos de mercado: GoDaddy Chile, «cuánto cuesta una página web en Chile», publicado el 30/10/2025 (https://www.godaddy.com/resources/latam/clientes/cuanto-cuesta-pagina-web-chile), revisado el 18/11/2026.
+# Dominio .cl: $9.990 por año, exento de IVA (https://www.nic.cl/dominios/tarifas.html, tarifas vigentes desde el 1/11/2023), revisado el 18/11/2026.
 imagen: demos/pizzeria/img/plataforma.webp
 imagen_alt: Tienda online de una pizzería de ejemplo, con menú, carrito y acceso para clientes
 resumen: Los rangos de precio que se manejan en Chile, los gastos que vuelven cada año y las preguntas que conviene hacer antes de pagar por la web de tu local.
@@ -36,7 +40,7 @@ Para ver la diferencia en concreto, armé [estos ejemplos de una pizzería](/dem
 
 El desarrollo se paga una vez, pero la página necesita algunas cosas para seguir en línea.
 
-El dominio .cl cuesta alrededor de $10.000 al año más IVA en NIC Chile. Es barato, pero si se te olvida renovarlo, la página deja de verse y los correos con ese dominio dejan de llegar. Después está el hosting, que es el servidor donde vive la página, y la mantención: respaldos, actualizaciones, el certificado de seguridad (el candado que aparece junto a la dirección) y los cambios que vayas pidiendo durante el año.
+El dominio .cl cuesta $9.990 al año en NIC Chile, exento de IVA. Es barato, pero si se te olvida renovarlo, la página deja de verse y los correos con ese dominio dejan de llegar. Después está el hosting, que es el servidor donde vive la página, y la mantención: respaldos, actualizaciones, el certificado de seguridad (el candado que aparece junto a la dirección) y los cambios que vayas pidiendo durante el año.
 
 Pregunta siempre qué incluye el pago anual y qué se cobra aparte. Muchas sorpresas vienen de ahí.
 
@@ -50,7 +54,7 @@ No necesitas saber de programación para evaluar una cotización. Con estas preg
 - ¿Qué pasa si dejo de pagar la mantención? ¿Me entregan los archivos?
 - ¿Incluye configurar el Perfil de Empresa en Google o eso va por separado?
 
-En mi caso, el dominio .cl se registra a nombre del cliente y la página queda alojada en mi hosting, con respaldos y certificado. El nombre siempre es tuyo y yo me hago cargo de que la página funcione.
+En mi caso, el dominio .cl se registra a nombre del cliente y la página queda alojada en mi hosting, con respaldos y certificado. El nombre siempre es tuyo y yo me hago cargo de que la página funcione. Si quieres entender bien qué pagas en cada parte, lo expliqué en [dominio .cl y hosting](/blog/dominio-cl-y-hosting).
 
 ## Errores comunes al presupuestar
 
@@ -60,6 +64,24 @@ El error contrario también pasa: elegir lo más barato y terminar con una pági
 
 Hay otro que casi nadie considera, el tiempo propio. Para que la página quede bien vas a tener que mandar la carta al día, los horarios, el logo y fotos. Si eso tarda tres semanas en llegar, el proyecto también se atrasa tres semanas.
 
-Y antes de firmar, mira lo que ya hizo la persona que vas a contratar. Revisa sus [proyectos anteriores](/proyectos), fíjate si siguen en línea y si cargan rápido en el celular.
+Y antes de firmar, mira lo que ya hizo la persona que vas a contratar. Revisa sus [proyectos anteriores](/proyectos), fíjate si siguen en línea y si cargan rápido en el celular. Qué debe tener la página de un local, más allá del precio, lo ordené en [página web para restaurantes](/blog/pagina-web-para-restaurantes).
+
+## Preguntas frecuentes
+
+### ¿Cuánto cuesta mantener una página web al año?
+
+Hay que sumar el dominio .cl ($9.990 al año en NIC Chile), el hosting y la mantención. Los dos últimos dependen de quién te haga la página y de qué incluya; pide que te lo detallen por escrito.
+
+### ¿Cuánto demora hacer la página de un restaurante?
+
+Una página simple toma alrededor de una semana; un sitio de varias páginas, de dos a tres semanas; una tienda online, de cuatro a seis. El paso a paso está en [creación de páginas web en Chile](/blog/creacion-de-paginas-web-chile).
+
+### ¿Por qué hay tanta diferencia de precio entre una cotización y otra?
+
+Porque dentro de «una página» caben trabajos muy distintos: plantilla o diseño a medida, carta en PDF o como página, con o sin carrito, con o sin panel para editar. Compara qué incluye cada propuesta, no solo el total.
+
+### ¿Conviene partir con la tienda completa?
+
+Casi nunca. Partir con una página con la carta y pedidos por WhatsApp, y sumar cuentas y pagos cuando haya volumen, suele salir más barato.
 
 Si me cuentas qué vende tu local, cómo recibes pedidos hoy y qué te gustaría resolver, te digo qué versión te sirve y qué todavía no hace falta. Puedes escribirme por WhatsApp o desde la página de [contacto](/contacto).
