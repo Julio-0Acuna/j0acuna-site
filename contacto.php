@@ -122,9 +122,9 @@ $campo = static function (string $nombre, string $etiqueta, string $tipo, array 
             <?php if ($wa !== ''): ?>
               <li><a href="<?= e($wa) ?>" target="_blank" rel="noopener"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><use href="#i-wa"/></svg></span><span><small>WhatsApp</small><?= e($site['links']['whatsapp']) ?></span></a></li>
             <?php endif; ?>
-            <li><a href="mailto:<?= e($site['links']['email']) ?>"><span class="ico" aria-hidden="true"><?php render_partial('icono', ['icono' => 'correo', 'tam' => 22]); ?></span><span><small>Correo</small><?= e($site['links']['email']) ?></span></a></li>
-            <li><a href="<?= e($site['links']['linkedin']) ?>" target="_blank" rel="noopener"><span class="ico" aria-hidden="true"><?php render_partial('icono', ['icono' => 'persona', 'tam' => 22]); ?></span><span><small>LinkedIn</small>Julio Acuña</span></a></li>
-            <li><a href="<?= e($site['links']['github']) ?>" target="_blank" rel="noopener"><span class="ico" aria-hidden="true"><?php render_partial('icono', ['icono' => 'codigo', 'tam' => 22]); ?></span><span><small>GitHub</small>Julio-0Acuna</span></a></li>
+            <li><a href="mailto:<?= e($site['links']['email']) ?>"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><use href="#i-mail"/></svg></span><span><small>Correo</small><?= e($site['links']['email']) ?></span></a></li>
+            <li><a href="<?= e($site['links']['linkedin']) ?>" target="_blank" rel="noopener"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><use href="#i-li"/></svg></span><span><small>LinkedIn</small>Julio Acuña</span></a></li>
+            <li><a href="<?= e($site['links']['github']) ?>" target="_blank" rel="noopener"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><use href="#i-gh"/></svg></span><span><small>GitHub</small>Julio-0Acuna</span></a></li>
           </ul>
           <p class="contact-place"><span class="badge"><i aria-hidden="true"></i><?= e($site['profile']['ciudad']) ?>, Chile</span> Atiendo negocios de <?= e($site['profile']['area']) ?>, también a distancia.</p>
         </aside>

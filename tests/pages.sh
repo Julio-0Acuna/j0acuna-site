@@ -76,6 +76,10 @@ debe_responder  /contacto  200
 debe_contener   /contacto  'Cómo trabajo'
 debe_contener   /contacto  '"@type":"ProfessionalService"'
 debe_contener   /contacto  'https://wa.me/56973537642'
+# Contacto: cada canal con el logo de su plataforma (no íconos genéricos).
+debe_contar     /contacto  '<use href="#i-li"/>' 2
+debe_contar     /contacto  '<use href="#i-gh"/>' 2
+debe_contar     /contacto  '<use href="#i-mail"/>' 2
 debe_responder  /llms.txt   200
 debe_responder  /robots.txt 200
 no_debe_contener / 'href="assets/'
