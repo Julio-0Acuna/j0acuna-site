@@ -40,6 +40,8 @@
 .cd .t-btn { border-radius: 8px; font-family: var(--tecnica); font-weight: 700; letter-spacing: .02em; }
 .cd .t-btn--primario, .cd-btn-verde { background: var(--verde); border-color: var(--verde); color: #fff; }
 .cd .t-btn--primario:hover, .cd-btn-verde:hover { background: var(--verde-oscuro); border-color: var(--verde-oscuro); filter: none; color: #fff; }
+.cd .cd-btn-3d { width: 100%; justify-content: center; border-radius: 8px; border: 1.5px solid var(--neumatico); color: var(--neumatico); font-family: var(--tecnica); font-weight: 700; letter-spacing: .02em; }
+.cd .cd-btn-3d:hover { background: var(--neumatico); color: #fff; }
 .cd :where(a, button):focus-visible { outline: 3px solid var(--refrigerante); outline-offset: 2px; }
 
 /* Banda de rodado y cabecera */

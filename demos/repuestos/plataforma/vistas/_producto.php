@@ -55,6 +55,9 @@ $calza_con ??= null;
           <button class="t-btn t-btn--primario" type="submit" aria-label="<?= m_e(m_texto('producto_agregar_aria', null, ['producto' => $p['nombre']])) ?>"><?= m_e(m_texto('producto_agregar')) ?></button>
         </form>
       <?php endif; ?>
+      <?php if (($p['modelo3d'] ?? '') !== '' && $p['foto'] !== ''): ?>
+        <?= demo_boton_3d(['id' => $p['id'], 'nombre' => $p['nombre'], 'modelo' => $p['modelo3d'], 'foto' => $p['foto'], 'objeto' => 'producto'], 't-btn-3d cd-btn-3d', m_texto('producto_ver_3d')) ?>
+      <?php endif; ?>
     </div>
   </div>
 </article>

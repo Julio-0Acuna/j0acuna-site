@@ -64,7 +64,7 @@ tn_abrir('catalogo', $titulo, 'Catálogo de ' . $n['nombre'] . ', minimarket 24 
         <h2 class="tn-grupo__titulo" id="pasillo-<?= demo_e($slug) ?>-titulo"><span class="tn-grupo__num"><?= demo_e($num) ?></span><?= demo_e($nombre) ?></h2>
         <div class="tn-grilla">
           <?php foreach ($productos as $id => $p): ?>
-          <?= tn_producto($id, $p, ['buscable' => true, 'oculto' => !$coincide($p)]) ?>
+          <?= tn_producto($id, $p, ['buscable' => true, 'oculto' => !$coincide($p), 'con_3d' => true]) ?>
           <?php endforeach; ?>
         </div>
       </section>
@@ -72,4 +72,4 @@ tn_abrir('catalogo', $titulo, 'Catálogo de ' . $n['nombre'] . ', minimarket 24 
     </div>
   </div>
 </main>
-<?php tn_cerrar(['buscador']);
+<?php tn_cerrar(['buscador', '3d']);

@@ -39,6 +39,8 @@
 .on .t-btn--primario { background: var(--on-violeta); border-color: var(--on-violeta); box-shadow: 0 10px 22px -12px rgba(91, 63, 214, .9); }
 .on .t-btn--primario:hover { background: var(--on-violeta-osc); border-color: var(--on-violeta-osc); filter: none; }
 .on .t-btn--wa { box-shadow: 0 10px 22px -12px rgba(18, 140, 74, .9); }
+.on .t-btn-3d { border-radius: 999px; min-height: 48px; padding: 10px 22px; font-weight: 600; border: 1.5px solid var(--on-violeta); color: var(--on-violeta); }
+.on .t-btn-3d:hover { background: var(--on-violeta); color: #fff; }
 .on-btn-grande { min-height: 56px !important; padding: 14px 30px !important; font-size: 1.05rem; }
 .on-btn-suave { background: #fff; border-color: var(--on-borde); color: var(--on-tinta); }
 .on-btn-claro { background: var(--on-lila); border-color: var(--on-lila); color: var(--on-tinta); }

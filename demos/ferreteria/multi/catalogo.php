@@ -53,6 +53,9 @@ pg_abrir('catalogo', 'Pinturas y terminaciones', 'Catálogo de ' . $n['nombre'] 
           <h3><?= demo_e($p['nombre']) ?></h3>
           <p class="pg-producto__desc"><?= demo_e($p['desc']) ?></p>
           <?= pg_agregar($id, $p) ?>
+          <?php if (($p['modelo'] ?? '') !== ''): ?>
+          <?= demo_boton_3d(['id' => $id, 'nombre' => $p['nombre'], 'modelo' => $p['modelo'], 'foto' => $p['foto'], 'objeto' => 'producto'], 'pg-btn-3d') ?>
+          <?php endif; ?>
         </li>
         <?php endforeach; ?>
       </ul>
@@ -65,4 +68,4 @@ pg_abrir('catalogo', 'Pinturas y terminaciones', 'Catálogo de ' . $n['nombre'] 
     </aside>
   </div>
 </main>
-<?php pg_cerrar(['buscador']);
+<?php pg_cerrar(['buscador', '3d']);

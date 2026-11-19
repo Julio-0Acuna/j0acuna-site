@@ -120,4 +120,4 @@ cb_abrir('inicio', 'Frenos y suspensión en Santiago', 'Demo de página web de v
     </div>
   </div>
 </main>
-<?php cb_cerrar();
+<?php cb_cerrar(['3d']);

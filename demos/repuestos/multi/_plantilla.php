@@ -178,6 +178,7 @@ function cb_ficha(string $id, array $p, bool $visible = true): void
     <h3><?= demo_e($p['nombre']) ?></h3>
     <p class="cb-ficha__medida"><?= demo_e($p['medida']) ?></p>
     <p class="cb-ficha__calza"><span class="cb-ficha__etiqueta">Calza</span> <?= demo_e(cb_compat_texto($c)) ?></p>
+    <?php if (($p['modelo'] ?? '') !== ''): ?><?= demo_boton_3d(['id' => $id, 'nombre' => $p['nombre'], 'modelo' => $p['modelo'], 'foto' => cb()['categorias'][$p['cat']][2], 'objeto' => 'producto'], 'cb-btn-3d') ?><?php endif; ?>
   </div>
   <?= cb_agregar($id, $p) ?>
 </li>
@@ -280,7 +281,7 @@ function cb_titular(string $sobre, string $titulo, string $bajada): void
 }
 
 /** Cierra la página: pie, configuración del carrito y scripts. */
-function cb_cerrar(): void
+function cb_cerrar(array $scripts = []): void
 {
     $n = cb();
     $config = json_encode(cb_config_carrito(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
@@ -307,7 +308,7 @@ function cb_cerrar(): void
 </footer>
 <script type="application/json" id="demo-carrito-config"><?= $config ?></script>
 <?php
-    demo_scripts(['carrito']);
+    demo_scripts(array_merge($scripts, ['carrito']));
     echo '<script src="', demo_e(demo_asset(CB_BASE . 'calibre.js')), '" defer></script>', "\n";
     echo "</body>\n</html>\n";
 }

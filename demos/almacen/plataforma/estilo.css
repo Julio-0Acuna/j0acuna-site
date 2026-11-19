@@ -153,6 +153,8 @@
 .bs .t-seccion > h2, .bs .t-catalogo__cabeza h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
 .bs .t-destacados h2::before, .bs .t-catalogo__cabeza h2::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 10px; background: var(--bs-rojo); transform: rotate(45deg) translateY(-3px); }
 .bs .t-btn { border-radius: 8px; font-weight: 700; }
+.bs .t-btn-3d { border-radius: 8px; font-weight: 700; border-color: var(--bs-marino); color: var(--bs-marino); }
+.bs .t-btn-3d:hover { background: var(--bs-marino); color: #fff; }
 .bs .t-btn--primario { background: var(--bs-marino); border-color: var(--bs-marino); }
 .bs .t-btn--primario:hover { filter: none; background: var(--bs-marino-2); }
 .bs .t-btn--primario, .bs a.t-btn--primario { color: #fff; }

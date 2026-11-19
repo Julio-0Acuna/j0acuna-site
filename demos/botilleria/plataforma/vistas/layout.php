@@ -101,7 +101,7 @@ bot_edad(['clave' => $clave, 'negocio' => $cfg['negocio']['nombre'], 'clase' => 
     <?php demo_aviso_pie($cfg['rubro']); ?>
   </div>
 </footer>
-<?php demo_scripts(!empty($cfg['menu_qr']) && $vista === 'inicio' ? ['qr'] : []); ?>
+<?php demo_scripts($vista === 'inicio' ? array_merge(!empty($cfg['menu_qr']) ? ['qr'] : [], ['3d']) : []); ?>
 <script src="<?= m_e(demo_asset(DEMO_URL_COMUN . 'js/tienda.js')) ?>" defer></script>
 <?= bot_edad_script() ?>
 

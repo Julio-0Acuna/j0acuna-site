@@ -407,7 +407,8 @@ function demo_modelo_url(string $modelo): string
 /**
  * Botón "Ver en 3D" de un plato. Lo maneja js/menu3d.js: abre <model-viewer> con RA
  * o, si el .glb aún no existe, la foto con "Modelo 3D en preparación".
- * $p: id, nombre, modelo (ej. 'pizza'), foto (id de Unsplash o URL).
+ * $p: id, nombre, modelo (ej. 'pizza'), foto (id de Unsplash o URL) y, fuera de la comida,
+ * objeto ('producto': el visor dice "producto" y "a tamaño real" en vez de "plato" y "tu mesa").
  */
 function demo_boton_3d(array $p, string $clase = '', string $texto = 'Ver en 3D'): string
 {
@@ -416,6 +417,7 @@ function demo_boton_3d(array $p, string $clase = '', string $texto = 'Ver en 3D'
         . ' data-3d-nombre="' . demo_e($p['nombre']) . '"'
         . ' data-3d-foto="' . demo_e(demo_foto($p['foto'], 900)) . '"'
         . ' data-3d-id="' . demo_e((string) $p['id']) . '"'
+        . (!empty($p['objeto']) ? ' data-3d-objeto="' . demo_e($p['objeto']) . '"' : '')
         . ' aria-haspopup="dialog">'
         . '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 2.8 20 7.2v9.6L12 21.2 4 16.8V7.2zM4 7.2l8 4.6 8-4.6M12 11.8v9.4"/></svg>'
         . '<span>' . demo_e($texto) . '</span></button>';

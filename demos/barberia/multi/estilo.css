@@ -175,6 +175,9 @@
   font: 600 .74rem/1 var(--eg-grabado); letter-spacing: .16em; text-transform: uppercase; cursor: pointer;
 }
 .eg-agregar button:hover { background: var(--eg-bronce); color: var(--eg-noche); }
+.eg-btn-3d { margin-top: 10px; min-height: 44px; padding: 8px 18px; border: 1px solid var(--eg-linea); border-radius: 2px; color: var(--eg-crema); font: 600 .72rem/1 var(--eg-grabado); letter-spacing: .16em; text-transform: uppercase; }
+.eg-btn-3d:hover { border-color: var(--eg-bronce); background: transparent; color: var(--eg-bronce-claro); }
+@media (min-width: 720px) { .eg-item__accion:has(.eg-btn-3d) { display: grid; justify-items: end; } }
 
 /* El ritual */
 .eg-pasos { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 22px; }

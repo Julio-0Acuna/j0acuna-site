@@ -37,6 +37,8 @@
 .an .t-btn:hover { background: var(--an-negro); color: #fff; border-color: var(--an-negro); }
 .an .t-btn--primario { background: var(--an-naranja); color: var(--an-negro); border-color: var(--an-naranja); }
 .an .t-btn--primario:hover { filter: none; background: var(--an-negro); color: var(--an-naranja); border-color: var(--an-negro); }
+.an .an-btn-3d { width: 100%; justify-content: center; border: 2px solid var(--an-negro); border-radius: 0; color: var(--an-negro); font: 600 .8rem/1 var(--an-mono); letter-spacing: .06em; text-transform: uppercase; }
+.an .an-btn-3d:hover { background: var(--an-negro); color: var(--an-naranja); }
 .an .t-btn--wa { background: #13703f; border-color: #13703f; color: #fff; }
 .an .t-btn--wa:hover { background: #0e5a32; border-color: #0e5a32; color: #fff; }
 .an .t-enlace { color: var(--t-suave); }

@@ -5,6 +5,8 @@
  * - Si falta: muestra la foto con "Modelo 3D en preparación".
  * - En computador (sin RA): "Abre esta página en tu celular para verlo en tu mesa" + QR.
  * Requiere demo.js (QR) y el script de model-viewer 4.4.0 con SRI en la página.
+ * Rubros que no son de comida: data-3d-objeto="producto" en el botón o en un contenedor cambia
+ * "plato"/"tu mesa" por "producto"/"tamaño real".
  */
 (function () {
   'use strict';
@@ -12,6 +14,32 @@
   var existe = new Map();
   var dialogo = null;
   var ultimoBoton = null;
+
+  // Objetos planos (tijeras, peineta...): se ven mejor desde arriba que con la cámara de frente.
+  var ORBITAS = {
+    tijeras: '20deg 35deg auto',
+    peineta: '20deg 35deg auto',
+    afeitadora: '20deg 40deg auto',
+    rodillo: '20deg 40deg auto',
+    bujia: '20deg 55deg auto',
+    hueso: '20deg 55deg auto'
+  };
+
+  function nombreModelo(url) {
+    var m = /([^\/?#]+)\.glb(?:[?#]|$)/.exec(url || '');
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
+  function textos(btn) {
+    var cont = btn.closest ? btn.closest('[data-3d-objeto]') : null;
+    var objeto = (cont && cont.getAttribute('data-3d-objeto')) || 'plato';
+    var esPlato = objeto === 'plato';
+    return {
+      objeto: objeto,
+      lugar: esPlato ? 'sobre tu mesa' : 'a tamaño real',
+      botonRA: esPlato ? 'Ver en tu mesa' : 'Ver en tu espacio'
+    };
+  }
 
   function modeloExiste(url) {
     if (!existe.has(url)) {
@@ -59,26 +87,32 @@
     return d;
   }
 
-  function pieComputador(pie, id) {
+  function pieComputador(pie, datos) {
+    var t = datos.textos;
     pie.innerHTML = '';
-    pie.appendChild(el('p', {}, 'Abre esta página en tu celular para verlo en tu mesa: escanea el código con la cámara.'));
+    pie.appendChild(el('p', {}, (t.objeto === 'plato'
+      ? 'Abre esta página en tu celular para verlo en tu mesa'
+      : 'Abre esta página en tu celular para verlo a tamaño real') + ': escanea el código con la cámara.'));
     var codigo = el('div', { 'class': 'demo-qr__codigo' });
     pie.appendChild(codigo);
-    var url = location.pathname + location.search + '#ver3d-' + id;
-    if (!(window.Demo && window.Demo.qr(codigo, url, 'Código QR para ver este plato en tu celular'))) {
+    var url = location.pathname + location.search + '#ver3d-' + datos.id;
+    if (!(window.Demo && window.Demo.qr(codigo, url, 'Código QR para ver este ' + t.objeto + ' en tu celular'))) {
       codigo.appendChild(el('a', { href: url }, 'Enlace para el celular'));
     }
   }
 
   function mostrarFoto(escena, pie, datos) {
+    var t = datos.textos;
     var img = el('img', { src: datos.foto, alt: datos.nombre, width: '900', height: '675' });
     escena.appendChild(img);
     escena.appendChild(el('p', { 'class': 'demo-3d__preparacion', role: 'status' }, 'Modelo 3D en preparación'));
     pie.innerHTML = '';
-    pie.appendChild(el('p', {}, 'Muy pronto podrás girar este plato y verlo sobre tu mesa con la cámara del celular.'));
+    pie.appendChild(el('p', {}, 'Muy pronto podrás girar este ' + t.objeto + ' y verlo ' + t.lugar + ' con la cámara del celular.'));
   }
 
   function mostrarModelo(escena, pie, datos) {
+    var t = datos.textos;
+    var orbita = ORBITAS[nombreModelo(datos.modelo)];
     var mv = el('model-viewer', {
       src: datos.modelo,
       alt: 'Modelo 3D de ' + datos.nombre,
@@ -91,32 +125,35 @@
       'touch-action': 'pan-y',
       loading: 'eager'
     });
-    var boton = el('button', { slot: 'ar-button', type: 'button', 'class': 'demo-3d__mesa' }, 'Ver en tu mesa');
+    if (orbita) { mv.setAttribute('camera-orbit', orbita); }
+    var boton = el('button', { slot: 'ar-button', type: 'button', 'class': 'demo-3d__mesa' }, t.botonRA);
     mv.appendChild(boton);
     escena.appendChild(mv);
     pie.innerHTML = '';
-    pie.appendChild(el('p', {}, 'Gira el plato con el dedo o el mouse.'));
+    pie.appendChild(el('p', {}, 'Gira el ' + t.objeto + ' con el dedo o el mouse.'));
 
     var decidir = function () {
       var puedeRA = typeof mv.canActivateAR === 'boolean' ? mv.canActivateAR : pareceCelular();
-      if (!puedeRA) { pieComputador(pie, datos.id); }
+      if (!puedeRA) { pieComputador(pie, datos); }
     };
     if (window.customElements && customElements.get('model-viewer')) {
       mv.addEventListener('load', decidir, { once: true });
       setTimeout(decidir, 2500);
     } else if (!pareceCelular()) {
-      pieComputador(pie, datos.id);
+      pieComputador(pie, datos);
     }
   }
 
   function abrir(btn) {
     ultimoBoton = btn;
     dialogo = dialogo || crearDialogo();
+    var t = textos(btn);
     var datos = {
       modelo: btn.getAttribute('data-3d-modelo'),
-      nombre: btn.getAttribute('data-3d-nombre') || 'Plato',
+      nombre: btn.getAttribute('data-3d-nombre') || (t.objeto.charAt(0).toUpperCase() + t.objeto.slice(1)),
       foto: btn.getAttribute('data-3d-foto') || '',
-      id: btn.getAttribute('data-3d-id') || ''
+      id: btn.getAttribute('data-3d-id') || '',
+      textos: t
     };
     dialogo.querySelector('#demo-3d-titulo').textContent = datos.nombre + ' en 3D';
     var escena = dialogo.querySelector('.demo-3d__escena');

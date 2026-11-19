@@ -101,7 +101,7 @@ return [
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Barbería: sin menú QR ni modelos 3D.
     'menu_qr' => false,
-    'modelos3d' => [],
+    'modelos3d' => ['pomada', 'frasco', 'tijeras', 'afeitadora'],
 
     'textos' => [
         'titulo_inicio' => 'Reserva tu hora en Filo',

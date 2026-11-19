@@ -71,7 +71,7 @@ demo_aviso($cfg['rubro']);
   </nav>
 </header>
 
-<main id="contenido" class="t-principal vr-principal">
+<main id="contenido" class="t-principal vr-principal" data-3d-objeto="producto">
   <?php if ($usuario && $usuario['tipo'] === 'mayorista' && $usuario['estado'] === 'pendiente'): ?>
     <p class="demo-mensaje demo-mensaje--info">Tu cuenta de flota está pendiente de aprobación. Mientras tanto ves los precios normales.</p>
   <?php elseif (m_es_mayorista($usuario)): ?>
@@ -106,7 +106,7 @@ demo_aviso($cfg['rubro']);
   </div>
   <div class="vr-ancho"><?php demo_aviso_pie($cfg['rubro']); ?></div>
 </footer>
-<?php demo_scripts(); ?>
+<?php demo_scripts($vista === 'inicio' ? ['3d'] : []); ?>
 <script src="<?= m_e(demo_asset(DEMO_URL_COMUN . 'js/tienda.js')) ?>" defer></script>
 </body>
 </html>

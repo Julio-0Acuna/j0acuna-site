@@ -162,6 +162,8 @@
   font: 600 .74rem/1 "Libre Franklin", sans-serif; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; border-radius: 2px;
 }
 .co-agregar button:hover { background: var(--co-tinto); color: #fff; }
+.co-btn-3d { margin-top: 10px; min-height: 42px; padding: 8px 16px; border: 1px solid var(--co-filete); border-radius: 2px; color: var(--co-tinto); font: 600 .74rem/1 "Libre Franklin", sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+.co-btn-3d:hover { border-color: var(--co-tinto); background: transparent; }
 .co-tinto .co-agregar__precio { color: var(--co-ocre-claro); }
 .co-tinto .co-agregar button { background: var(--co-ocre); border-color: var(--co-ocre); color: var(--co-tinto); min-height: 48px; padding: 10px 22px; }
 .co-tinto .co-agregar button:hover { background: var(--co-ocre-claro); }

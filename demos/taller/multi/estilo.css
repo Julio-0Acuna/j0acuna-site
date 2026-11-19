@@ -223,6 +223,9 @@
 .vg-agregar__precio { font: 500 1.08rem/1.2 var(--mono); color: var(--cian); }
 .vg-agregar button { min-height: 44px; padding: 0 18px; border: 1px solid var(--cian); border-radius: 6px; background: transparent; color: var(--cian); font: 600 .82rem/1 "Geist", sans-serif; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
 .vg-agregar button:hover { background: var(--cian); color: #03161b; }
+.vg-btn-3d { width: 100%; justify-content: center; margin-top: 10px; min-height: 44px; border: 1px solid var(--linea-2); border-radius: 6px; color: var(--tinta); font: 600 .78rem/1 "Geist", sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.vg-btn-3d:hover { border-color: var(--cian); color: var(--cian); background: transparent; }
+@media (min-width: 760px) { .vg-servicio__accion:has(.vg-btn-3d) { flex-direction: column; justify-content: center; } }
 .vg-aviso-reserva { margin-top: 44px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 24px; border: 1px solid rgba(53, 214, 245, .45); border-radius: 8px; background: linear-gradient(90deg, rgba(53, 214, 245, .1), transparent); }
 .vg-aviso-reserva p { margin: 0; }
 .vg-aviso-reserva .vg-reserva-btn__num { margin-left: 4px; }

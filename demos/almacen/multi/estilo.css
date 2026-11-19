@@ -159,6 +159,8 @@
 .tn-agregar select { width: 100%; min-height: 40px; padding: 6px 10px; border: 1.5px solid var(--tn-borde); border-radius: 10px; background: #fff; font: inherit; font-size: .9rem; color: var(--tn-tinta); }
 .tn-agregar button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; border: 0; border-radius: 10px; background: var(--tn-azul); color: #fff; font: 700 .95rem/1 var(--tn-grotesca); cursor: pointer; transition: background .15s; }
 .tn-agregar button:hover { background: var(--tn-azul-osc); }
+.tn-btn-3d { width: 100%; justify-content: center; margin-top: 8px; min-height: 44px; border: 1.5px solid var(--tn-borde); border-radius: 10px; color: var(--tn-azul); font: 700 .9rem/1 var(--tn-grotesca); }
+.tn-btn-3d:hover { border-color: var(--tn-azul); background: var(--tn-gris); }
 @media (max-width: 420px) { .tn-prod__cuerpo { padding: 10px; } .tn-etiqueta__precio { font-size: 1.25rem; } .tn-prod__desc { display: none; } }
 
 /* ---------- Banda de despacho */

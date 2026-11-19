@@ -41,6 +41,8 @@
 .ho .t-btn--primario:hover { filter: none; transform: translateY(-2px); box-shadow: 0 6px 0 var(--ho-tinta); }
 .ho .t-btn--primario:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--ho-tinta); }
 .ho .t-btn--wa { background: #128c4a; border-color: #128c4a; color: #fff; }
+.ho .t-btn-3d { border-radius: 999px; min-height: 48px; padding: 10px 22px; border: 2px solid var(--ho-tinta); color: var(--ho-tinta); font-weight: 700; }
+.ho .t-btn-3d:hover { background: var(--ho-chicle); }
 .ho-btn-grande { min-height: 56px !important; padding: 12px 28px !important; font-size: 1.05rem; }
 .ho-btn-borde { background: transparent; }
 .ho-btn-borde:hover { background: #fff; }

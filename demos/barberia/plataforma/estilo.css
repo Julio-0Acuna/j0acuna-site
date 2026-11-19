@@ -33,6 +33,8 @@
 .fb h3 { font-size: 1.55rem; line-height: 1.05; }
 .fb .t-btn { text-transform: uppercase; letter-spacing: .06em; font-size: .88rem; border-width: 2px; }
 .fb .t-btn--primario:hover { background: #1832b0; border-color: #1832b0; filter: none; }
+.fb .t-btn-3d { text-transform: uppercase; letter-spacing: .06em; font-size: .88rem; border: 2px solid var(--t-tinta); border-radius: 0; color: var(--t-tinta); }
+.fb .t-btn-3d:hover { background: var(--t-tinta); color: #fff; }
 .fb .t-caja { border: 2px solid var(--t-tinta); }
 .fb .t-producto { border: 2px solid var(--t-tinta); transition: transform .2s, box-shadow .2s; }
 .fb .t-producto:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--t-acento); }

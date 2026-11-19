@@ -73,4 +73,4 @@ cb_abrir('catalogo', 'Catálogo de frenos y suspensión', 'Catálogo de ' . $n['
     </div>
   </div>
 </main>
-<?php cb_cerrar();
+<?php cb_cerrar(['3d']);

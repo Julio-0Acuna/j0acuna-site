@@ -161,6 +161,8 @@
 .mz-agregar__precio small { font: 600 .7rem/1 var(--mz-sans); letter-spacing: .14em; text-transform: uppercase; color: var(--mz-suave); }
 .mz-agregar button { min-height: 46px; padding: 10px 22px; border: 1.5px solid var(--mz-tinta); border-radius: 999px; background: transparent; color: var(--mz-tinta); font: 600 .85rem/1 var(--mz-sans); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
 .mz-agregar button:hover { background: var(--mz-tinta); color: var(--mz-crema); }
+.mz-btn-3d { margin-top: 12px; min-height: 46px; padding: 10px 20px; border: 1.5px solid var(--mz-linea); color: var(--mz-tinta); font: 600 .8rem/1 var(--mz-sans); letter-spacing: .1em; text-transform: uppercase; }
+.mz-btn-3d:hover { border-color: var(--mz-tinta); background: transparent; }
 
 /* ---------- Método */
 .mz-metodo__grid { display: grid; gap: 44px; align-items: center; }

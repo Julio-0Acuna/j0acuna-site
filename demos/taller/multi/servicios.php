@@ -55,7 +55,9 @@ vg_abrir('servicios', 'Servicios y precios', 'Servicios de ' . $n['nombre'] . ' 
             <h3><?= demo_e($s['nombre']) ?></h3>
             <p><?= demo_e($s['desc']) ?></p>
           </div>
-          <div class="vg-servicio__accion"><?= vg_agregar($id, $s) ?></div>
+          <div class="vg-servicio__accion"><?= vg_agregar($id, $s) ?>
+            <?php if (($s['modelo'] ?? '') !== ''): ?><?= demo_boton_3d(['id' => $id, 'nombre' => $s['nombre'], 'modelo' => $s['modelo'], 'foto' => $s['foto'], 'objeto' => 'producto'], 'vg-btn-3d') ?><?php endif; ?>
+          </div>
         </li>
         <?php endforeach; ?>
       </ul>
@@ -68,4 +70,4 @@ vg_abrir('servicios', 'Servicios y precios', 'Servicios de ' . $n['nombre'] . ' 
     </aside>
   </div>
 </main>
-<?php vg_cerrar(['buscador']);
+<?php vg_cerrar(['buscador', '3d']);

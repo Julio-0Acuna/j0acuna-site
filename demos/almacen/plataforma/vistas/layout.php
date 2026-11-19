@@ -90,7 +90,7 @@ demo_aviso($cfg['rubro']);
   </nav>
 </header>
 
-<main id="contenido" class="t-principal bs-principal">
+<main id="contenido" class="t-principal bs-principal" data-3d-objeto="producto">
   <?php if ($usuario && $usuario['tipo'] === 'mayorista' && $usuario['estado'] === 'pendiente'): ?>
     <p class="demo-mensaje demo-mensaje--info">Tu cuenta de negocio está pendiente de aprobación. Mientras tanto ves los precios de tienda.</p>
   <?php elseif ($esNegocio): ?>
@@ -131,7 +131,7 @@ demo_aviso($cfg['rubro']);
   </div>
   <div class="bs-ancho"><?php demo_aviso_pie($cfg['rubro']); ?></div>
 </footer>
-<?php demo_scripts(); ?>
+<?php demo_scripts($vista === 'inicio' ? ['3d'] : []); ?>
 <script src="<?= m_e(demo_asset(DEMO_URL_COMUN . 'js/tienda.js')) ?>" defer></script>
 </body>
 </html>

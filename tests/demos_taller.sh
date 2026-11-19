@@ -56,6 +56,8 @@ for img in simple multi plataforma; do debe_responder "$RUBRO/img/$img.webp" 200
 
 # --- Reglas comunes a las 3 versiones (y a todas las páginas de la Multi-page)
 PAGINAS="$SIMPLE $MULTI ${MULTI}servicios.php ${MULTI}taller.php ${MULTI}preguntas.php ${MULTI}contacto.php ${MULTI}reserva.php $TIENDA ${TIENDA}?r=ingresar ${TIENDA}?r=registro ${TIENDA}?r=carrito"
+# Páginas con productos en 3D (bloque «Modelos 3D» más abajo); en las demás, nada de model-viewer.
+CON_3D=" ${MULTI}servicios.php $TIENDA "
 for p in $PAGINAS; do
   debe_responder   "$p" 200
   debe_contener    "$p" 'Sitio de demostración hecho por <a href="https://j0acuna.site">Julio Acuña</a> · negocio ficticio'
@@ -66,9 +68,11 @@ for p in $PAGINAS; do
   no_debe_contener "$p" 'AutoRepair'
   no_debe_contener "$p" 'AggregateRating'
   no_debe_contener "$p" 'application/ld+json'
-  # Taller: sin menú QR ni 3D
-  no_debe_contener "$p" 'model-viewer'
-  no_debe_contener "$p" 'demo-3d-btn'
+  # Taller: sin menú QR; 3D solo en las páginas con productos (CON_3D)
+  case "$CON_3D" in *" $p "*) ;; *)
+    no_debe_contener "$p" 'model-viewer'
+    no_debe_contener "$p" 'demo-3d-btn' ;;
+  esac
   no_debe_contener "$p" 'data-demo-qr'
 done
 
@@ -328,6 +332,27 @@ if grep -qiE 'fatal|warning|deprecated|notice' "$TMP/server.log"; then
 else
   pasa "sin errores de PHP en el registro del servidor"
 fi
+
+# --- Modelos 3D (demos/_comun/3d/, ver tests/demos_3d.sh): botón «Ver en 3D» con el estilo del rubro,
+# model-viewer 4.4.0 con SRI, menu3d.js y data-3d-objeto="producto" (el visor no habla de «plato»). La Simple-page, sin 3D.
+debe_contener    "${MULTI}servicios.php" 'data-3d-modelo="/demos/_comun/3d/neumatico.glb"'
+debe_contener    "${MULTI}servicios.php" 'class="demo-3d-btn vg-btn-3d"'
+debe_contener    "${MULTI}servicios.php" 'data-3d-modelo="/demos/_comun/3d/bateria.glb"'
+debe_contener    "${MULTI}servicios.php" 'data-3d-modelo="/demos/_comun/3d/disco-freno.glb"'
+debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/neumatico.glb"'
+debe_contener    "$TIENDA" 'class="demo-3d-btn t-btn-3d"'
+debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/extintor.glb"'
+debe_contener    "${MULTI}servicios.php" '<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js" integrity="sha256-GLLnEQNapHBe4oFTClXcIzj/Be7T1wrhbVQQUoKnXtU=" crossorigin="anonymous"></script>'
+debe_contener    "${MULTI}servicios.php" '/demos/_comun/js/menu3d.js?v='
+debe_contener    "${MULTI}servicios.php" 'data-3d-objeto="producto"'
+debe_contener    "$TIENDA" '<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js" integrity="sha256-GLLnEQNapHBe4oFTClXcIzj/Be7T1wrhbVQQUoKnXtU=" crossorigin="anonymous"></script>'
+debe_contener    "$TIENDA" '/demos/_comun/js/menu3d.js?v='
+debe_contener    "$TIENDA" 'data-3d-objeto="producto"'
+for m in $(grep -rhoE "'modelo3?d?' => '[a-z0-9-]+'" "demos/taller/multi/_datos.php" "demos/taller/plataforma/seed.php" | sed -E "s/.*=> '([a-z0-9-]+)'/\1/" | sort -u); do
+  [ -f "demos/_comun/3d/$m.glb" ] && pasa "$m.glb existe" || falla "falta demos/_comun/3d/$m.glb"
+done
+no_debe_contener "$SIMPLE" 'model-viewer'
+no_debe_contener "$SIMPLE" 'demo-3d-btn'
 
 echo
 echo "$OK ok / $FAIL fallas"

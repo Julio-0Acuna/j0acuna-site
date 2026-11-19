@@ -110,7 +110,7 @@ demo_aviso($cfg['rubro']);
   </div>
   <div class="an-ancho"><?php demo_aviso_pie($cfg['rubro']); ?></div>
 </footer>
-<?php demo_scripts(); ?>
+<?php demo_scripts($vista === 'inicio' ? ['3d'] : []); ?>
 <script src="<?= m_e(demo_asset(DEMO_URL_COMUN . 'js/tienda.js')) ?>" defer></script>
 </body>
 </html>

@@ -55,7 +55,9 @@ mz_abrir('servicios', 'Servicios y precios', 'Servicios de ' . $n['nombre_largo'
             <p><?= demo_e($s['desc']) ?></p>
             <?php if ($s['min'] > 0): ?><p class="mz-meta"><span class="mz-dur"><?= demo_e(mz_duracion($s['min'])) ?></span></p><?php endif; ?>
           </div>
-          <div class="mz-servicio__accion"><?= mz_agregar($id, $s) ?></div>
+          <div class="mz-servicio__accion"><?= mz_agregar($id, $s) ?>
+            <?php if (($s['modelo'] ?? '') !== ''): ?><?= demo_boton_3d(['id' => $id, 'nombre' => $s['nombre'], 'modelo' => $s['modelo'], 'foto' => $s['foto'], 'objeto' => 'producto'], 'mz-btn-3d') ?><?php endif; ?>
+          </div>
         </li>
         <?php endforeach; ?>
       </ul>
@@ -68,4 +70,4 @@ mz_abrir('servicios', 'Servicios y precios', 'Servicios de ' . $n['nombre_largo'
     </aside>
   </div>
 </main>
-<?php mz_cerrar(['buscador']);
+<?php mz_cerrar(['buscador', '3d']);

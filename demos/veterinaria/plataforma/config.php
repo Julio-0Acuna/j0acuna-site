@@ -76,7 +76,7 @@ return [
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Veterinaria: sin menú QR ni modelos 3D.
     'menu_qr' => false,
-    'modelos3d' => [],
+    'modelos3d' => ['saco-alimento', 'hueso', 'cama-mascota'],
 
     'textos' => [
         'titulo_inicio' => 'Pet shop y clínica en Maipú',

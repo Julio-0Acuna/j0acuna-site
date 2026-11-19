@@ -137,6 +137,9 @@ function tn_producto(string $id, array $p, array $opc = []): string
     $html .= '<h3>' . demo_e($p['nombre']) . '</h3>';
     $html .= '<p class="tn-prod__desc">' . demo_e($p['desc']) . '</p>';
     $html .= tn_agregar($id, $p);
+    if (!empty($opc['con_3d']) && ($p['modelo'] ?? '') !== '') {
+        $html .= demo_boton_3d(['id' => $id, 'nombre' => $p['nombre'], 'modelo' => $p['modelo'], 'foto' => $p['foto'], 'objeto' => 'producto'], 'tn-btn-3d');
+    }
     return $html . '</div></article>';
 }
 

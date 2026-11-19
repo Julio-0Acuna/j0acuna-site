@@ -160,6 +160,8 @@
 .pd-agregar { display: flex; gap: 8px; width: 100%; margin: 0; }
 .pd-agregar select { min-height: 44px; min-width: 64px; padding: 6px 8px; font: inherit; font-weight: 700; border: 1.5px solid var(--t-borde); border-radius: var(--t-radio-chico); background: #fff; font-family: var(--pd-mono); }
 .pd-agregar .t-btn { flex: 1; }
+.pd .pd-btn-3d { width: 100%; justify-content: center; border-radius: var(--t-radio-chico); border: 1.5px solid var(--pd-verde); color: var(--pd-verde); font-weight: 700; }
+.pd .pd-btn-3d:hover { background: var(--pd-lima); }
 .pd .t-btn--primario { background: var(--pd-verde); border-color: var(--pd-verde); color: var(--pd-lima-2); }
 .pd .t-btn--primario:hover { background: var(--pd-verde-2); border-color: var(--pd-verde-2); filter: none; }
 .pd .t-aviso-mayorista { background: var(--pd-verde); background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, .04) 0 2px, transparent 2px 48px); border-radius: 14px; padding: 26px; }

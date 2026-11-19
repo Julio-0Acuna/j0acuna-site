@@ -172,6 +172,8 @@
 .cb-agregar__precio { font: 800 1.3rem/1 var(--ancha); font-stretch: 115%; min-width: 100px; }
 .cb-agregar button { min-height: 44px; padding: 10px 18px; background: var(--tinta); color: #fff; border: 0; border-radius: 2px; font: 700 .9rem "Inter Tight", sans-serif; cursor: pointer; transition: background-color .15s ease; }
 .cb-agregar button:hover { background: var(--rojo); }
+.cb-btn-3d { margin-top: 10px; min-height: 40px; padding: 8px 14px; border: 1.5px solid var(--tinta); border-radius: 2px; color: var(--tinta); font: 700 .82rem "Inter Tight", sans-serif; }
+.cb-btn-3d:hover { background: var(--tinta); color: #fff; }
 @media (min-width: 760px) { .cb-agregar { justify-content: flex-end; } }
 
 /* Desgaste (inicio) */

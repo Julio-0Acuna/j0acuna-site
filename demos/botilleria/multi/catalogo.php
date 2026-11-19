@@ -66,6 +66,7 @@ co_abrir('catalogo', 'Vinos y destilados', 'Catálogo de ' . $n['nombre'] . ': t
               <h3><?= demo_e($p['nombre']) ?></h3>
               <p class="co-item__notas"><?= demo_e($p['notas']) ?></p>
               <?= co_agregar($id, $p) ?>
+              <?php if (($p['modelo'] ?? '') !== '' && $p['foto'] !== ''): ?><?= demo_boton_3d(['id' => $id, 'nombre' => $p['nombre'], 'modelo' => $p['modelo'], 'foto' => $p['foto'], 'objeto' => 'producto'], 'co-btn-3d') ?><?php endif; ?>
             </div>
           </li>
           <?php endforeach; ?>
@@ -85,4 +86,4 @@ co_abrir('catalogo', 'Vinos y destilados', 'Catálogo de ' . $n['nombre'] . ': t
     </aside>
   </div>
 </main>
-<?php co_cerrar(['qr', 'buscador']);
+<?php co_cerrar(['qr', 'buscador', '3d']);

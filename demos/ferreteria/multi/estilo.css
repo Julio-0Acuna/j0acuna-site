@@ -162,6 +162,8 @@ a.pg-chip:hover { transform: translateY(-4px); box-shadow: 0 2px 3px rgba(0, 0, 
 .pg-agregar__precio { font: 500 1.35rem/1 var(--serif); }
 .pg-agregar button { min-height: 44px; padding: 8px 18px; border-radius: 999px; border: 1.5px solid var(--tinta); background: var(--tinta); color: var(--tiza); font: 600 .95rem/1 "Familjen Grotesk", sans-serif; cursor: pointer; }
 .pg-agregar button:hover { background: var(--terracota); border-color: var(--terracota); }
+.pg-btn-3d { align-self: flex-start; margin-top: 10px; min-height: 44px; padding: 8px 16px; border: 1.5px solid var(--linea); color: var(--tinta); font: 600 .9rem/1 "Familjen Grotesk", sans-serif; }
+.pg-btn-3d:hover { border-color: var(--tinta); background: var(--papel); }
 
 /* Calculadora (inicio) */
 .pg-calcula { background: var(--papel); }

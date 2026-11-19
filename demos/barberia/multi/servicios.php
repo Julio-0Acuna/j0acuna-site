@@ -57,7 +57,9 @@ eg_abrir('servicios', 'Servicios y precios', 'Servicios y precios de ' . $n['nom
             <?php if ($s['dur'] !== ''): ?><p class="eg-meta"><?= demo_e($s['dur']) ?></p><?php endif; ?>
             <p><?= demo_e($s['desc']) ?></p>
           </div>
-          <div class="eg-item__accion"><?= eg_agregar($id, $s) ?></div>
+          <div class="eg-item__accion"><?= eg_agregar($id, $s) ?>
+            <?php if (($s['modelo'] ?? '') !== '' && !empty($s['foto'])): ?><?= demo_boton_3d(['id' => $id, 'nombre' => $s['nombre'], 'modelo' => $s['modelo'], 'foto' => $s['foto'], 'objeto' => 'producto'], 'eg-btn-3d') ?><?php endif; ?>
+          </div>
         </li>
         <?php endforeach; ?>
       </ul>
@@ -70,4 +72,4 @@ eg_abrir('servicios', 'Servicios y precios', 'Servicios y precios de ' . $n['nom
     </aside>
   </div>
 </main>
-<?php eg_cerrar(['buscador']);
+<?php eg_cerrar(['buscador', '3d']);

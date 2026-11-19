@@ -52,7 +52,7 @@ return [
     // id => pasillo, nombre, desc, foto, variantes [nombre => precio], antes (precio normal de la primera variante, si está en oferta)
     'productos' => [
         'arroz' => ['cat' => 'despensa', 'nombre' => 'Arroz grado 1', 'desc' => 'Grano largo, para todos los días.', 'foto' => '1586201375761-83865001e31c', 'variantes' => ['1 kg' => 1490, '5 kg' => 6990]],
-        'aceite' => ['cat' => 'despensa', 'nombre' => 'Aceite vegetal', 'desc' => 'Para freír y aliñar.', 'foto' => '1720468750623-39e9a09f5067', 'variantes' => ['1 L' => 2490, '5 L' => 10990]],
+        'aceite' => ['cat' => 'despensa', 'nombre' => 'Aceite vegetal', 'desc' => 'Para freír y aliñar.', 'foto' => '1720468750623-39e9a09f5067', 'variantes' => ['1 L' => 2490, '5 L' => 10990], 'modelo' => 'aceite'],
         'fideos' => ['cat' => 'despensa', 'nombre' => 'Fideos spaghetti', 'desc' => 'Paquete de 400 g, cocción en 9 minutos.', 'foto' => '1587287720536-ce7b84c23d35', 'variantes' => ['400 g' => 990], 'antes' => 1190],
         'lentejas' => ['cat' => 'despensa', 'nombre' => 'Lentejas', 'desc' => 'Lentejas pardinas, bolsa de 1 kg.', 'foto' => '1763368392508-3d4bddfdd20a', 'variantes' => ['1 kg' => 2290]],
         'porotos' => ['cat' => 'despensa', 'nombre' => 'Porotos tórtola', 'desc' => 'Para porotos con riendas o granados.', 'foto' => '1599249478506-ae175f801b1e', 'variantes' => ['1 kg' => 2690]],
@@ -60,8 +60,8 @@ return [
         'te' => ['cat' => 'despensa', 'nombre' => 'Té negro', 'desc' => 'En bolsitas.', 'foto' => '1585849835117-1446a1514ea6', 'variantes' => ['20 bolsitas' => 990, '100 bolsitas' => 2590]],
         'azucar' => ['cat' => 'despensa', 'nombre' => 'Azúcar', 'desc' => 'Granulada, bolsa de 1 kg.', 'foto' => '1770732851655-a789335a31c8', 'variantes' => ['1 kg' => 1290]],
 
-        'leche' => ['cat' => 'lacteos', 'nombre' => 'Leche entera', 'desc' => 'Larga vida, en caja.', 'foto' => '1550583724-b2692b85b150', 'variantes' => ['1 L' => 1190, 'Pack de 6' => 6490]],
-        'huevos' => ['cat' => 'lacteos', 'nombre' => 'Huevos de gallina', 'desc' => 'Huevos de campo, color.', 'foto' => '1502630039397-c104a63cc224', 'variantes' => ['6 un.' => 1890, '12 un.' => 3490, '30 un.' => 7990]],
+        'leche' => ['cat' => 'lacteos', 'nombre' => 'Leche entera', 'desc' => 'Larga vida, en caja.', 'foto' => '1550583724-b2692b85b150', 'variantes' => ['1 L' => 1190, 'Pack de 6' => 6490], 'modelo' => 'leche'],
+        'huevos' => ['cat' => 'lacteos', 'nombre' => 'Huevos de gallina', 'desc' => 'Huevos de campo, color.', 'foto' => '1502630039397-c104a63cc224', 'variantes' => ['6 un.' => 1890, '12 un.' => 3490, '30 un.' => 7990], 'modelo' => 'huevos'],
         'yogur' => ['cat' => 'lacteos', 'nombre' => 'Yogur natural', 'desc' => 'Sin azúcar, pote de 1 kg.', 'foto' => '1571212515416-fef01fc43637', 'variantes' => ['1 kg' => 2190]],
         'mantequilla' => ['cat' => 'lacteos', 'nombre' => 'Mantequilla', 'desc' => 'Con sal, pan de 250 g.', 'foto' => '1590912710024-6d51a6771abd', 'variantes' => ['250 g' => 2790]],
 
@@ -76,7 +76,7 @@ return [
         'manzanas' => ['cat' => 'frutas', 'nombre' => 'Manzanas rojas', 'desc' => 'Crujientes, por kilo.', 'foto' => '1560806887-1e4cd0b6cbd6', 'variantes' => ['1 kg' => 1590]],
         'limones' => ['cat' => 'frutas', 'nombre' => 'Limones', 'desc' => 'Para el jugo o el aliño.', 'foto' => '1590502593747-42a996133562', 'variantes' => ['½ kg' => 990, '1 kg' => 1790]],
 
-        'cola' => ['cat' => 'bebidas', 'nombre' => 'Bebida cola', 'desc' => 'Helada o al tiempo, como prefieras.', 'foto' => '1568657624422-1b8713e79461', 'variantes' => ['1,5 L' => 1890, '3 L' => 2790], 'antes' => 2190],
+        'cola' => ['cat' => 'bebidas', 'nombre' => 'Bebida cola', 'desc' => 'Helada o al tiempo, como prefieras.', 'foto' => '1568657624422-1b8713e79461', 'variantes' => ['1,5 L' => 1890, '3 L' => 2790], 'antes' => 2190, 'modelo' => 'bebida'],
         'agua' => ['cat' => 'bebidas', 'nombre' => 'Agua mineral', 'desc' => 'Botella de 1,6 L.', 'foto' => '1616118132534-381148898bb4', 'variantes' => ['Sin gas' => 1090, 'Con gas' => 1090]],
         'jugo' => ['cat' => 'bebidas', 'nombre' => 'Jugo de naranja', 'desc' => 'Néctar de naranja, 1,5 L.', 'foto' => '1621506289937-a8e4df240d0b', 'variantes' => ['1,5 L' => 1990]],
         'hielo' => ['cat' => 'bebidas', 'nombre' => 'Hielo en cubos', 'desc' => 'Bolsa de 2 kg, del congelador al despacho.', 'foto' => '1590430752967-d0e116909be1', 'variantes' => ['2 kg' => 1990]],

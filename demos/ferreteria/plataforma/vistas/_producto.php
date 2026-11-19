@@ -40,6 +40,9 @@ $porDia = ($p['categoria_slug'] ?? '') === 'arriendo';
           <button class="t-btn t-btn--primario" type="submit" aria-label="<?= m_e(m_texto('producto_agregar_aria', null, ['producto' => $p['nombre']])) ?>"><?= $porDia ? 'Arrendar' : m_e(m_texto('producto_agregar')) ?></button>
         </form>
       <?php endif; ?>
+      <?php if (($p['modelo3d'] ?? '') !== '' && $p['foto'] !== ''): ?>
+        <?= demo_boton_3d(['id' => $p['id'], 'nombre' => $p['nombre'], 'modelo' => $p['modelo3d'], 'foto' => $p['foto'], 'objeto' => 'producto'], 't-btn-3d an-btn-3d', m_texto('producto_ver_3d')) ?>
+      <?php endif; ?>
     </div>
     <?php if (!$agotado && (int) $p['stock'] <= 5): ?><p class="t-producto__stock"><?= m_e(m_texto('producto_quedan', null, ['n' => (int) $p['stock']])) ?></p><?php endif; ?>
   </div>

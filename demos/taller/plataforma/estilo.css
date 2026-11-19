@@ -36,6 +36,8 @@
 .vr .t-btn--primario:hover { filter: none; background: var(--vr-amarillo-2); transform: translateY(-1px); box-shadow: 0 4px 0 var(--vr-negro); }
 .vr .t-btn--primario:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--vr-negro); }
 .vr .t-btn--wa { font-family: var(--t-fuente-titulos); }
+.vr .t-btn-3d { font-family: var(--t-fuente-titulos); font-weight: 700; font-size: 1.02rem; letter-spacing: .04em; text-transform: uppercase; border: 2px solid var(--vr-negro); border-radius: var(--t-radio-chico); color: var(--vr-negro); }
+.vr .t-btn-3d:hover { background: var(--vr-amarillo); }
 .vr .t-enlace { color: var(--t-suave); }
 
 /* Barra de señalética */
