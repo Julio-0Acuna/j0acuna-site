@@ -4,9 +4,10 @@ descripcion: Soy Julio Acuña, mitad brasileño y mitad chileno. Antes de progra
 palabra_clave: desarrollador web en Santiago
 palabras_clave: Julio Acuña desarrollador web, creación de páginas web, analista programador, páginas web para negocios, desarrollador web en Chile, páginas web en Santiago
 tema: Mi historia
+destacado: true
 fecha: 2026-11-18
-imagen: assets/img/og/og-inicio.jpg
-imagen_alt: Portada del sitio de Julio Acuña, desarrollador web en Santiago
+imagen:
+imagen_alt:
 resumen: Nací en Brasil, llegué a Chile a los quince y antes de programar trabajé en un Burger King, de guardia, de pioneta y con maquinaria pesada. Hoy voy de local en local ofreciendo lo que sé hacer.
 borrador: false
 ---
