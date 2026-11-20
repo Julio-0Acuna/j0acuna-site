@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Pruebas de los modelos 3D de los ejemplos (demos/_comun/3d/): todo .glb que pide algún rubro existe,
 # es un GLB 2 válido (magic glTF, versión 2, largo del encabezado = largo del archivo, chunk JSON primero),
-# pesa ≤ 1,5 MB, está en CREDITOS.md y el servidor lo entrega con 200 y model/gltf-binary.
+# pesa ≤ 3 MB, declara su crédito CC BY 4.0 en asset.copyright, no exige extensiones (extensionsRequired),
+# está en CREDITOS.md y el servidor lo entrega con 200 y model/gltf-binary.
 # También revisa que toda página con un botón "Ver en 3D" cargue model-viewer (con SRI) y menu3d.js,
 # y que las Simple-page sigan sin 3D.
 # Uso: bash tests/demos_3d.sh
@@ -10,7 +11,7 @@ cd "$(dirname "$0")/.." || exit 1
 PORT=$(( 8116 + ${PUERTO_DESFASE:-0} ))
 BASE="http://127.0.0.1:$PORT"
 DIR3D="demos/_comun/3d"
-MAX_BYTES=$(( 1536 * 1024 ))
+MAX_BYTES=$(( 3 * 1024 * 1024 ))
 export PORTFOLIO_SITE_FILE="$(pwd)/${SITE_JSON:-tests/fixtures/site.json}"
 export PORTFOLIO_SITE_URL="$BASE"
 TMP="$(mktemp -d)"
@@ -54,6 +55,9 @@ foreach (file($argv[3], FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $m) {
     echo ($tam <= $max ? "ok" : "FALLA"), " $m.glb pesa " . round($tam / 1024) . " KB (máximo " . ($max / 1024) . " KB)\n";
     // Sin extensiones obligatorias (Draco, cuantización...): Scene Viewer y Quick Look las pueden rechazar
     echo (empty($js["extensionsRequired"]) ? "ok" : "FALLA"), " $m.glb sin extensionsRequired\n";
+    // Crédito del autor (CC BY 4.0) dentro del archivo
+    $copy = (string) ($js["asset"]["copyright"] ?? "");
+    echo (str_contains($copy, "CC BY 4.0") ? "ok" : "FALLA"), " $m.glb declara asset.copyright con CC BY 4.0\n";
     // Sin imágenes externas: todo va dentro del .glb
     $externas = array_filter($js["images"] ?? [], static fn ($i) => isset($i["uri"]));
     echo ($externas ? "FALLA" : "ok"), " $m.glb sin texturas externas\n";

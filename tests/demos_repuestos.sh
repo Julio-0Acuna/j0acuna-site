@@ -263,7 +263,7 @@ done
 FECHA=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | head -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
 DOMINGOS=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | while read -r d; do date -d "$d" +%u; done | grep -c '^7$')
 [ -n "$FECHA" ] && [ "$DOMINGOS" = "0" ] && pasa "días ofrecidos sin domingos (primero: $FECHA)" || falla "días ofrecidos: primero '$FECHA', domingos $DOMINGOS"
-HOY=$(TZ=America/Santiago date +%F)
+HOY=$(tools/php.sh -r 'date_default_timezone_set("America/Santiago"); echo date("Y-m-d");')
 printf '%s' "$CHECK" | grep -qF "option value=\"$HOY\"" && falla "ofrece despacho hoy (dias_min = 1)" || pasa "no ofrece despacho el mismo día"
 T=$(printf '%s' "$CHECK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
 # Datos del vehículo válidos: patente y VIN opcionales (se normalizan: "kx-pl 47" → KXPL47)

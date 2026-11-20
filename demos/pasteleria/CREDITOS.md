@@ -4,7 +4,7 @@ Fotos de [Unsplash](https://unsplash.com) (licencia Unsplash: uso comercial perm
 
 Revisado el 17/11/2026: las 63 URL responden 200 (anchos 600 y 1200). Cuando el autor no se pudo confirmar dice «no encontrado» (la foto sigue siendo de Unsplash). Los negocios (Pastelería Doña Elvira, Atelier Lúcuma y Merengue Club), sus productos, personas y reseñas son inventados.
 
-Modelo 3D esperado (todavía no existe): `demos/_comun/3d/torta.glb`, usado por las tortas de la Multi-page y la Plataforma; mientras falte, el botón «Ver en 3D» muestra la foto con «Modelo 3D en preparación».
+Modelo 3D: las tortas de la Multi-page y la Plataforma usan `demos/_comun/3d/torta.glb`: modelo realista CC BY 4.0; autor y cambios en la sección «Modelos 3D» de [los créditos de los ejemplos](/demos/creditos.php).
 
 ## Pastelería
 

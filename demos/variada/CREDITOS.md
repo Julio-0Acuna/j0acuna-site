@@ -4,7 +4,7 @@ Todas las fotos son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso 
 
 Revisado el 17/11/2026: las 55 URL responden 200. El autor es el que muestra Unsplash en su buscador; la columna «URL» es la foto enlazada.
 
-Modelo 3D: las hamburguesas de la Multi-page y la hamburguesa y el coffee break de la Plataforma web usan `demos/_comun/3d/hamburguesa.glb`, que todavía no existe (mientras tanto se ve la foto con «Modelo 3D en preparación»).
+Modelo 3D: las hamburguesas de la Multi-page y la hamburguesa y el coffee break de la Plataforma web usan `demos/_comun/3d/hamburguesa.glb`: modelo realista CC BY 4.0; autor y cambios en la sección «Modelos 3D» de [los créditos de los ejemplos](/demos/creditos.php).
 
 ## Simple-page · Picada Doña Ernestina (San Miguel)
 

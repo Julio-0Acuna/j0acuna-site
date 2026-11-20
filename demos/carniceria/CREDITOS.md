@@ -83,7 +83,7 @@ Revisado el 17/11/2026: todas las URL responden 200. Autor y página según la b
 
 ## Modelos 3D
 
-Las versiones Multi-page y Plataforma usan `demos/_comun/3d/carne.glb`, que todavía no existe (el botón «Ver en 3D» muestra la foto con «Modelo 3D en preparación»). El modelo que se agregue debe tener licencia de uso comercial y anotarse aquí con su autor y licencia.
+Las versiones Multi-page y Plataforma usan `demos/_comun/3d/carne.glb` en el botón «Ver en 3D»: modelo realista CC BY 4.0; autor y cambios en la sección «Modelos 3D» de [los créditos de los ejemplos](/demos/creditos.php).
 
 ## Fuentes (Google Fonts, licencia SIL Open Font)
 

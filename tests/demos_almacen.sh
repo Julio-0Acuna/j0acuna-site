@@ -229,7 +229,7 @@ printf '%s' "$CHECK" | grep -qF 'Pedido mínimo cumplido. Con $27.010 más, el r
 printf '%s' "$CHECK" | grep -qF 'Retiro en bodega' && printf '%s' "$CHECK" | grep -qF 'Reparto en camión' && pasa "checkout con «Retiro en bodega» y «Reparto en camión»" || falla "checkout sin textos de entrega del rubro"
 FECHA=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | head -1 | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
 DOMINGOS=$(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | while read -r d; do date -d "$d" +%u; done | grep -c '^7$')
-HOY=$(TZ=America/Santiago date +%Y-%m-%d)
+HOY=$(tools/php.sh -r 'date_default_timezone_set("America/Santiago"); echo date("Y-m-d");')
 [ -n "$FECHA" ] && [ "$DOMINGOS" = "0" ] && [ "$FECHA" != "$HOY" ] && pasa "días ofrecidos desde mañana y sin domingos (primero: $FECHA)" || falla "días ofrecidos: primero '$FECHA', domingos $DOMINGOS"
 T=$(printf '%s' "$CHECK" | grep -oE 'name="csrf" value="[0-9a-f]+"' | head -1 | sed -E 's/.*value="([0-9a-f]+)"/\1/')
 R=$(post "$J1" "${TIENDA}?r=checkout" --data-urlencode "csrf=$T" --data-urlencode "entrega=retiro" --data-urlencode "fecha_entrega=$HOY" --data-urlencode "cuando=10:00" --data-urlencode "pago=al_recibir")

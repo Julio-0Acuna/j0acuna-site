@@ -4,7 +4,7 @@ Todas las fotos son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso 
 
 Revisado el 18/11/2026: las 71 fotos responden 200 (con `w=600` y `w=1200`). El autor es el que muestra Unsplash en su buscador; la columna «URL» es la foto enlazada. Ninguna foto se repite entre las tres versiones.
 
-Modelo 3D: los platos con «Ver en 3D» (wantán frito, wantán en aceite de chile, sopa wantán y la bandeja de wantanes) usan `demos/_comun/3d/wantan.glb`, que todavía no existe (mientras tanto se ve la foto con «Modelo 3D en preparación»).
+Modelo 3D: los platos con «Ver en 3D» (wantán frito, wantán en aceite de chile, sopa wantán y la bandeja de wantanes) usan `demos/_comun/3d/wantan.glb`: modelo realista CC BY 4.0; autor y cambios en la sección «Modelos 3D» de [los créditos de los ejemplos](/demos/creditos.php).
 
 Fuentes (Google Fonts, licencia OFL): Young Serif y Rubik (Simple-page); Marcellus, Red Hat Text y Noto Serif TC solo con los caracteres usados (Multi-page); Archivo (Plataforma web).
 

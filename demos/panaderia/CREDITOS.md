@@ -4,7 +4,7 @@ Todas las fotos son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso 
 
 Revisado el 17/11/2026: todas las URL de imagen responden 200 (`curl -I`). Autor y página según el buscador de Unsplash ese día.
 
-Modelo 3D esperado (todavía no existe): `demos/_comun/3d/pan.glb`, usado por las hogazas, la baguette y el pan del día de la Multi-page y la Plataforma web.
+Modelo 3D: las hogazas, la baguette y el pan del día de la Multi-page y la Plataforma web usan `demos/_comun/3d/pan.glb`: modelo realista CC BY 4.0; autor y cambios en la sección «Modelos 3D» de [los créditos de los ejemplos](/demos/creditos.php).
 
 ## Simple-page · Panadería Las Tres Hornadas (Quinta Normal)
 

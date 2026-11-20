@@ -143,7 +143,7 @@ debe_contener    "${MULTI}pedido.php" 'data-carrito-form'
 debe_contener    "${MULTI}pedido.php" 'name="mayor" required data-carrito-extra="Edad"'
 debe_contener    "${MULTI}pedido.php" 'data-carrito-extra="Mensaje de la tarjeta"'
 # Las catas nunca quedan en el pasado: la primera fecha es posterior a hoy.
-HOY=$(TZ=America/Santiago date +%Y%m%d)
+HOY=$(tools/php.sh -r 'date_default_timezone_set("America/Santiago"); echo date("Ymd");')
 PRIMERA=$(tools/php.sh -r 'require "demos/botilleria/multi/_plantilla.php"; echo co_catas()[0]["fecha"]->format("Ymd");')
 [ "$PRIMERA" -gt "$HOY" ] && pasa "la próxima cata ($PRIMERA) es posterior a hoy ($HOY)" || falla "cata en el pasado: $PRIMERA"
 grep -q 'Require all denied' demos/botilleria/plataforma/data/.htaccess && pasa 'data/.htaccess niega todo' || falla 'data/.htaccess no niega'
@@ -227,7 +227,7 @@ DOMINGOS=0
 for f in $(printf '%s' "$CHECK" | grep -oE 'option value="[0-9]{4}-[0-9]{2}-[0-9]{2}"' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}'); do
   [ "$(date -d "$f" +%u)" = "7" ] && DOMINGOS=$((DOMINGOS + 1))
 done
-[ -n "$FECHA" ] && [ "$DOMINGOS" = "0" ] && [ "$(date -d "$FECHA" +%Y%m%d)" -gt "$(TZ=America/Santiago date +%Y%m%d)" ] && pasa "reparto desde mañana y sin domingos (primero: $FECHA)" || falla "días de reparto: primero '$FECHA', domingos $DOMINGOS"
+[ -n "$FECHA" ] && [ "$DOMINGOS" = "0" ] && [ "$(date -d "$FECHA" +%Y%m%d)" -gt "$HOY" ] && pasa "reparto desde mañana y sin domingos (primero: $FECHA)" || falla "días de reparto: primero '$FECHA', domingos $DOMINGOS"
 printf '%s' "$CHECK" | grep -qF 'Reparto en camión' && pasa "checkout con textos propios del rubro" || falla "checkout sin textos propios"
 # Mayoría de edad: casilla requerida del motor ('checkout_campos'), validada en el servidor.
 printf '%s' "$CHECK" | grep -qF '<input type="checkbox" id="extra-mayor" name="extra[mayor]" value="1" aria-describedby="ayuda-extra-mayor" required> Confirmo que soy mayor de 18 años</label>' && pasa "checkout con la casilla requerida «Confirmo que soy mayor de 18 años»" || falla "checkout sin la casilla de edad"
