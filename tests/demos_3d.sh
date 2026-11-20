@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 # Pruebas de los modelos 3D de los ejemplos (demos/_comun/3d/): todo .glb que pide algún rubro existe,
 # es un GLB 2 válido (magic glTF, versión 2, largo del encabezado = largo del archivo, chunk JSON primero),
-# pesa ≤ 3 MB, declara su crédito CC BY 4.0 en asset.copyright, no exige extensiones (extensionsRequired),
+# pesa ≤ 10 MB (texturas de hasta 4096 px; el mayor, vino-tinto, ronda los 9 MB), declara su crédito CC BY 4.0
+# en asset.copyright, no exige extensiones (extensionsRequired),
 # está en CREDITOS.md y el servidor lo entrega con 200 y model/gltf-binary.
 # También revisa que toda página con un botón "Ver en 3D" cargue model-viewer (con SRI) y menu3d.js,
-# y que las Simple-page sigan sin 3D.
+# y que las Simple-page sigan sin 3D. El visor (menu3d.js) usa la luz «C» (tone-mapping ACES) y la cámara ORBITA_BASE.
 # Uso: bash tests/demos_3d.sh
 cd "$(dirname "$0")/.." || exit 1
 
 PORT=$(( 8116 + ${PUERTO_DESFASE:-0} ))
 BASE="http://127.0.0.1:$PORT"
 DIR3D="demos/_comun/3d"
-MAX_BYTES=$(( 3 * 1024 * 1024 ))
+MAX_BYTES=$(( 10 * 1024 * 1024 ))
 export PORTFOLIO_SITE_FILE="$(pwd)/${SITE_JSON:-tests/fixtures/site.json}"
 export PORTFOLIO_SITE_URL="$BASE"
 TMP="$(mktemp -d)"
@@ -122,6 +123,9 @@ for r in $NO_COMIDA; do
   grep -qF 'data-3d-objeto="producto"' "$TMP/tienda.html" && pasa "/demos/$r/plataforma/ marca data-3d-objeto=producto" || falla "/demos/$r/plataforma/ sin data-3d-objeto=producto"
 done
 grep -qF "closest('[data-3d-objeto]')" demos/_comun/js/menu3d.js && pasa "menu3d.js lee data-3d-objeto" || falla "menu3d.js no lee data-3d-objeto"
+# Luz «C» y cámara inicial del visor
+grep -qF "'tone-mapping': 'aces'" demos/_comun/js/menu3d.js && pasa "menu3d.js usa tone-mapping ACES" || falla "menu3d.js sin 'tone-mapping': 'aces'"
+grep -qF "ORBITA_BASE" demos/_comun/js/menu3d.js && pasa "menu3d.js define ORBITA_BASE" || falla "menu3d.js sin ORBITA_BASE"
 
 echo
 echo "$OK ok / $FAIL fallas"

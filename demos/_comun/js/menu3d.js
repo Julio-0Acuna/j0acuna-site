@@ -15,14 +15,35 @@
   var dialogo = null;
   var ultimoBoton = null;
 
+  // Cámara inicial: un poco desde arriba y más cerca que el encuadre automático (92 %),
+  // con lente de 25° para que el producto llene el visor sin deformarse.
+  var ORBITA_BASE = '30deg 62deg 92%';
   // Objetos planos (tijeras, peineta...): se ven mejor desde arriba que con la cámara de frente.
+  // Los altos o anchos (botellas, extintor, disco...) van un poco más lejos que el 92 % para que,
+  // al girar, nunca toquen el borde del visor (revisado en el celular, con un 2 % de margen;
+  // model-viewer no aleja más allá de ~105 % salvo que se cambie max-camera-orbit).
   var ORBITAS = {
-    tijeras: '20deg 35deg auto',
-    peineta: '20deg 35deg auto',
-    afeitadora: '20deg 40deg auto',
-    rodillo: '20deg 40deg auto',
-    bujia: '20deg 55deg auto',
-    hueso: '20deg 55deg auto'
+    tijeras: '20deg 35deg 96%',
+    peineta: '20deg 35deg 96%',
+    afeitadora: '20deg 40deg 96%',
+    rodillo: '20deg 40deg 100%',
+    bujia: '20deg 55deg 100%',
+    hueso: '20deg 55deg 92%',
+    canasta: '30deg 62deg 96%',
+    ceviche: '30deg 62deg 96%',
+    shampoo: '30deg 62deg 96%',
+    aceite: '30deg 62deg 100%',
+    bateria: '30deg 62deg 100%',
+    frasco: '30deg 62deg 100%',
+    helado: '30deg 62deg 100%',
+    'vino-blanco': '30deg 62deg 100%',
+    'vino-tinto': '30deg 62deg 100%',
+    bebida: '30deg 62deg 104%',
+    'disco-freno': '30deg 62deg 104%',
+    extintor: '30deg 62deg 104%',
+    leche: '30deg 62deg 104%',
+    'saco-alimento': '30deg 62deg 104%',
+    secador: '30deg 62deg 104%'
   };
 
   function nombreModelo(url) {
@@ -121,11 +142,16 @@
       'ar-modes': 'webxr scene-viewer quick-look',
       'camera-controls': '',
       'auto-rotate': '',
-      'shadow-intensity': '1',
+      // Luz «C»: contraste fotográfico (ACES), algo más de exposición y sombra de contacto marcada.
+      'tone-mapping': 'aces',
+      exposure: '1.2',
+      'shadow-intensity': '1.8',
+      'shadow-softness': '0.25',
+      'field-of-view': '25deg',
+      'camera-orbit': orbita || ORBITA_BASE,
       'touch-action': 'pan-y',
       loading: 'eager'
     });
-    if (orbita) { mv.setAttribute('camera-orbit', orbita); }
     var boton = el('button', { slot: 'ar-button', type: 'button', 'class': 'demo-3d__mesa' }, t.botonRA);
     mv.appendChild(boton);
     escena.appendChild(mv);
