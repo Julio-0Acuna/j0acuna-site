@@ -6,7 +6,8 @@
 # está en CREDITOS.md y el servidor lo entrega con 200 y model/gltf-binary. Cada producto tiene su propio modelo
 # (ningún .glb lo comparten dos productos ni dos rubros).
 # También revisa que toda página con un botón "Ver en 3D" cargue model-viewer (con SRI) y menu3d.js,
-# y que las Simple-page sigan sin 3D. El visor (menu3d.js) usa la luz «C» (tone-mapping ACES) y la cámara ORBITA_BASE.
+# y que las Simple-page sigan sin 3D. El visor (menu3d.js) usa la luz «C» (tone-mapping ACES) y la cámara ORBITA_BASE,
+# y «Ver en tu mesa» no pide instalar nada: Quick Look en iPhone y el modo cámara de la página en Android.
 # Uso: bash tests/demos_3d.sh
 cd "$(dirname "$0")/.." || exit 1
 
@@ -140,6 +141,13 @@ grep -qF "closest('[data-3d-objeto]')" demos/_comun/js/menu3d.js && pasa "menu3d
 # Luz «C» y cámara inicial del visor
 grep -qF "'tone-mapping': 'aces'" demos/_comun/js/menu3d.js && pasa "menu3d.js usa tone-mapping ACES" || falla "menu3d.js sin 'tone-mapping': 'aces'"
 grep -qF "ORBITA_BASE" demos/_comun/js/menu3d.js && pasa "menu3d.js define ORBITA_BASE" || falla "menu3d.js sin ORBITA_BASE"
+# «Ver en tu mesa» sin instalar nada: Quick Look en iPhone y, en Android, el modo cámara de la página
+# (getUserMedia + giroscopio). Nunca Scene Viewer ni WebXR, que piden «Servicios de Google Play para RA».
+grep -qF "'ar-modes': 'quick-look'" demos/_comun/js/menu3d.js && pasa "menu3d.js: RA solo con Quick Look" || falla "menu3d.js sin 'ar-modes': 'quick-look'"
+grep -qE "'ar-modes': '[^']*(scene-viewer|webxr)" demos/_comun/js/menu3d.js && falla "menu3d.js todavía usa Scene Viewer o WebXR" || pasa "menu3d.js sin Scene Viewer ni WebXR"
+grep -qF "getUserMedia" demos/_comun/js/menu3d.js && grep -qF "'deviceorientation'" demos/_comun/js/menu3d.js \
+  && pasa "menu3d.js: modo cámara con getUserMedia y giroscopio" || falla "menu3d.js sin modo cámara"
+grep -qF ".demo-3d-camara {" demos/_comun/demo.css && pasa "demo.css: estilos del modo cámara" || falla "demo.css sin .demo-3d-camara"
 
 echo
 echo "$OK ok / $FAIL fallas"
