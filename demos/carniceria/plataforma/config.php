@@ -56,7 +56,7 @@ return [
     'horas_entrega' => ['10:00', '20:00'],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     'menu_qr' => true,
-    'modelos3d' => ['carne'],
+    'modelos3d' => ['carne', 'carne-lomo-liso', 'carne-filete', 'carne-punta-ganso'],
 
     'textos' => [
         'titulo_inicio' => 'Carnicería online en Quilicura',

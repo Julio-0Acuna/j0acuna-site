@@ -111,7 +111,7 @@ no_debe_contener "$SIMPLE" 'demo-3d-btn'
 # Multi-page: lista con QR, buscador, panes en 3D (model-viewer 4.4.0 con SRI), carrito
 debe_contener    "${MULTI}panes.php" "data-demo-qr=\"${MULTI}panes.php\""
 debe_contener    "${MULTI}panes.php" 'class="demo-3d-btn'
-debe_contener    "${MULTI}panes.php" 'data-3d-modelo="/demos/_comun/3d/pan.glb"'
+debe_contener    "${MULTI}panes.php" 'data-3d-modelo="/demos/_comun/3d/hogaza-rustica.glb"'
 debe_contener    "${MULTI}panes.php" '<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js" integrity="sha256-GLLnEQNapHBe4oFTClXcIzj/Be7T1wrhbVQQUoKnXtU=" crossorigin="anonymous"></script>'
 debe_contener    "${MULTI}panes.php" 'data-buscador'
 debe_coincidir   "${MULTI}panes.php?q=centeno" 'id="producto-centeno" data-buscable data-texto="[^"]*">'
@@ -132,7 +132,7 @@ SIN_SRI=$(for p in "$SIMPLE" "${MULTI}panes.php" "$MULTI" "$TIENDA"; do curl -s 
 debe_responder   "${TIENDA}data/tienda.sqlite" 403
 debe_responder   "${TIENDA}reset.php" 404
 debe_contener    "$TIENDA" 'class="demo-3d-btn'
-debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/pan.glb"'
+debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/hogaza-rustica.glb"'
 debe_contener    "$TIENDA" "data-demo-qr=\"${TIENDA}#menu\""
 debe_contener    "$TIENDA" 'Marraqueta (1 kg)'
 debe_contener    "$TIENDA" 'Así viaja tu pan'

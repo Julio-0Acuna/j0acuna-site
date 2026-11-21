@@ -93,7 +93,7 @@ no_debe_contener /demos/pizzeria/simple/ 'demo-3d-btn'
 # Multi-page: menú con QR, buscador, 3D (model-viewer 4.4.0 con SRI), carrito
 debe_contener    /demos/pizzeria/multi/menu.php 'data-demo-qr="/demos/pizzeria/multi/menu.php"'
 debe_contener    /demos/pizzeria/multi/menu.php 'class="demo-3d-btn'
-debe_contener    /demos/pizzeria/multi/menu.php 'data-3d-modelo="/demos/_comun/3d/pizza.glb"'
+debe_contener    /demos/pizzeria/multi/menu.php 'data-3d-modelo="/demos/_comun/3d/pizza-margherita.glb"'
 debe_contener    /demos/pizzeria/multi/menu.php '<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js" integrity="sha256-GLLnEQNapHBe4oFTClXcIzj/Be7T1wrhbVQQUoKnXtU=" crossorigin="anonymous"></script>'
 debe_contener    /demos/pizzeria/multi/menu.php 'data-buscador'
 debe_contener    '/demos/pizzeria/multi/menu.php?q=bufala' 'id="plato-bufala" data-buscable'

@@ -3,7 +3,8 @@
 # es un GLB 2 válido (magic glTF, versión 2, largo del encabezado = largo del archivo, chunk JSON primero),
 # pesa ≤ 10 MB (texturas de hasta 4096 px; el mayor, vino-tinto, ronda los 9 MB), declara su crédito CC BY 4.0
 # en asset.copyright, no exige extensiones (extensionsRequired),
-# está en CREDITOS.md y el servidor lo entrega con 200 y model/gltf-binary.
+# está en CREDITOS.md y el servidor lo entrega con 200 y model/gltf-binary. Cada producto tiene su propio modelo
+# (ningún .glb lo comparten dos productos ni dos rubros).
 # También revisa que toda página con un botón "Ver en 3D" cargue model-viewer (con SRI) y menu3d.js,
 # y que las Simple-page sigan sin 3D. El visor (menu3d.js) usa la luz «C» (tone-mapping ACES) y la cámara ORBITA_BASE.
 # Uso: bash tests/demos_3d.sh
@@ -35,10 +36,23 @@ sort -u "$TMP/pedidos.txt" -o "$TMP/pedidos.txt"
 N_PEDIDOS=$(wc -l < "$TMP/pedidos.txt" | tr -d ' ')
 [ "$N_PEDIDOS" -ge 30 ] && pasa "los rubros piden $N_PEDIDOS modelos distintos" || falla "solo $N_PEDIDOS modelos pedidos (¿cambió el formato de _datos/seed?)"
 
-# Los 10 platos que pedían los rubros de comida siguen en la lista
-for m in pizza sushi torta pan carne wantan ceviche hamburguesa helado calzone; do
+# Algunos platos de los rubros de comida siguen en la lista
+for m in pizza-margherita sushi-nigiri-salmon torta hogaza-rustica carne wantan-frito ceviche hamburguesa helado calzone; do
   grep -qx "$m" "$TMP/pedidos.txt" && pasa "un rubro pide $m.glb" || falla "ningún rubro pide $m.glb"
 done
+
+# Un modelo por producto: en un mismo archivo de datos ningún .glb se repite (serían dos productos con el mismo
+# modelo) y ningún .glb lo usan dos rubros. El mismo producto en la Multi-page y en la Plataforma sí comparte archivo.
+REPETIDOS=""
+for f in demos/*/multi/_datos.php demos/*/plataforma/seed.php; do
+  d=$(grep -oE "'modelo3?d?' => '[a-z0-9-]+'" "$f" | sed -E "s/.*=> '([a-z0-9-]+)'/\1/" | sort | uniq -d | tr '\n' ' ')
+  [ -n "$d" ] && REPETIDOS="$REPETIDOS $f: $d"
+done
+[ -z "$REPETIDOS" ] && pasa "ningún modelo 3D se repite entre dos productos del mismo archivo" || falla "modelos 3D repetidos:$REPETIDOS"
+EN_DOS_RUBROS=$(for d in demos/*/; do
+  cat "$d"multi/_datos.php "$d"plataforma/seed.php 2>/dev/null | grep -oE "'modelo3?d?' => '[a-z0-9-]+'" | sed -E "s/.*=> '([a-z0-9-]+)'/\1/" | sort -u
+done | sort | uniq -d | tr '\n' ' ')
+[ -z "$EN_DOS_RUBROS" ] && pasa "ningún modelo 3D lo usan dos rubros" || falla "modelos 3D en dos rubros: $EN_DOS_RUBROS"
 
 # --- Validez de cada .glb (PHP: lee el encabezado y el primer chunk)
 tools/php.sh -r '

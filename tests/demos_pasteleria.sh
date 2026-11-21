@@ -147,7 +147,7 @@ debe_responder   $R/plataforma/data/tienda.sqlite 403
 debe_responder   $R/plataforma/reset.php 404
 debe_responder   $R/plataforma/_encargo.php 404
 debe_contener    "$TIENDA" 'class="demo-3d-btn'
-debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/torta.glb"'
+debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/torta-arcoiris.glb"'
 debe_contener    "$TIENDA" "data-demo-qr=\"$TIENDA#menu\""
 debe_contener    "$TIENDA" 'Torta Frutilla Pop'
 no_debe_contener "$TIENDA" 'Brownies en bandeja'
@@ -279,7 +279,7 @@ curl -s -b "$J4" "$BASE$TIENDA" | grep -qF 'Brownies en bandeja' && pasa "el due
 
 # Panel: crear producto
 T=$(csrf "$J2" "${TIENDA}?r=panel_producto")
-RR=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=Torta de Prueba" --data-urlencode "descripcion=Creada por el test" --data-urlencode "categoria_id=1" --data-urlencode "precio=19990" --data-urlencode "precio_mayorista=15990" --data-urlencode "stock=5" --data-urlencode "foto=1621303837174-89787a7d4729" --data-urlencode "modelo3d=torta" --data-urlencode "visible=1")
+RR=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=Torta de Prueba" --data-urlencode "descripcion=Creada por el test" --data-urlencode "categoria_id=1" --data-urlencode "precio=19990" --data-urlencode "precio_mayorista=15990" --data-urlencode "stock=5" --data-urlencode "foto=1621303837174-89787a7d4729" --data-urlencode "modelo3d=torta-arcoiris" --data-urlencode "visible=1")
 case "$RR" in 303*) pasa "el dueño crea un producto";; *) falla "crear producto: $RR";; esac
 debe_contener "$TIENDA" 'Torta de Prueba'
 RR=$(post "$J2" "${TIENDA}?r=panel_producto" --data-urlencode "csrf=$T" --data-urlencode "nombre=$(printf 'x%.0s' $(seq 1 81))" --data-urlencode "categoria_id=1" --data-urlencode "precio=1" --data-urlencode "stock=1")

@@ -62,7 +62,7 @@ return [
     ],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     'menu_qr' => true,
-    'modelos3d' => ['hamburguesa'],
+    'modelos3d' => ['hamburguesa', 'coffee-break-15'],
 
     // Menú de la semana (portada): plato de fondo de la «Colación casera» según el día (1 = lunes).
     'semana' => [

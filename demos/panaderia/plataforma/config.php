@@ -53,7 +53,7 @@ return [
     'horas_entrega' => ['06:30', '20:00'],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     'menu_qr' => true,
-    'modelos3d' => ['pan'],
+    'modelos3d' => ['marraqueta', 'pan-amasado', 'pan-centeno-semillas', 'hogaza-rustica'],
 
     // Hoja de ruta del reparto (portada): [hora, texto].
     'ruta' => [

@@ -402,13 +402,13 @@ fi
 
 # --- Modelos 3D (demos/_comun/3d/, ver tests/demos_3d.sh): botón «Ver en 3D» con el estilo del rubro,
 # model-viewer 4.4.0 con SRI, menu3d.js y data-3d-objeto="producto" (el visor no habla de «plato»). La Simple-page, sin 3D.
-debe_contener    "${MULTI}catalogo.php" 'data-3d-modelo="/demos/_comun/3d/disco-freno.glb"'
+debe_contener    "${MULTI}catalogo.php" 'data-3d-modelo="/demos/_comun/3d/disco-freno-ventilado-280.glb"'
 debe_contener    "${MULTI}catalogo.php" 'class="demo-3d-btn cb-btn-3d"'
-debe_contener    "$MULTI" 'data-3d-modelo="/demos/_comun/3d/disco-freno.glb"'
+debe_contener    "$MULTI" 'data-3d-modelo="/demos/_comun/3d/disco-freno-ventilado-256.glb"'
 debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/bateria.glb"'
 debe_contener    "$TIENDA" 'class="demo-3d-btn t-btn-3d cd-btn-3d"'
-debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/bujia.glb"'
-debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/disco-freno.glb"'
+debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/bujias-iridio-juego-4.glb"'
+debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/disco-freno-ventilado-280.glb"'
 debe_contener    "${MULTI}catalogo.php" '<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js" integrity="sha256-GLLnEQNapHBe4oFTClXcIzj/Be7T1wrhbVQQUoKnXtU=" crossorigin="anonymous"></script>'
 debe_contener    "${MULTI}catalogo.php" '/demos/_comun/js/menu3d.js?v='
 debe_contener    "${MULTI}catalogo.php" 'data-3d-objeto="producto"'

@@ -56,7 +56,7 @@ return [
     'entrega' => ['modo' => 'fecha', 'dias_min' => 0, 'dias_max' => 6, 'horas' => ['12:00', '21:00']],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     'menu_qr' => true,
-    'modelos3d' => ['ceviche'],
+    'modelos3d' => ['ceviche', 'ceviche-mixto', 'ceviche-chicharron-calamar'],
 
     'textos' => [
         'titulo_inicio' => 'Comida peruana a domicilio y colaciones en Estación Central',

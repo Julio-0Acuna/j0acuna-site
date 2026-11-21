@@ -360,7 +360,7 @@ fi
 # model-viewer 4.4.0 con SRI, menu3d.js y data-3d-objeto="producto" (el visor no habla de «plato»). La Simple-page, sin 3D.
 debe_contener    "${MULTI}catalogo.php" 'data-3d-modelo="/demos/_comun/3d/vino-tinto.glb"'
 debe_contener    "${MULTI}catalogo.php" 'class="demo-3d-btn co-btn-3d"'
-debe_contener    "${MULTI}catalogo.php" 'data-3d-modelo="/demos/_comun/3d/vino-blanco.glb"'
+debe_contener    "${MULTI}catalogo.php" 'data-3d-modelo="/demos/_comun/3d/vino-sauvignon-blanc.glb"'
 debe_contener    "${MULTI}catalogo.php" 'data-3d-modelo="/demos/_comun/3d/copas.glb"'
 debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/vino-tinto.glb"'
 debe_contener    "$TIENDA" 'class="demo-3d-btn t-btn-3d pd-btn-3d"'

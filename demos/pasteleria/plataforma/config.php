@@ -60,7 +60,7 @@ return [
     ],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     'menu_qr' => true,
-    'modelos3d' => ['torta'],
+    'modelos3d' => ['torta-arcoiris', 'torta-rosas-frutilla', 'naked-frutillas', 'torta-red-velvet', 'torta-berries-sin-azucar'],
 
     'textos' => [
         'titulo_inicio' => 'Tortas a domicilio en Macul',

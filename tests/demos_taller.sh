@@ -335,16 +335,13 @@ fi
 
 # --- Modelos 3D (demos/_comun/3d/, ver tests/demos_3d.sh): botón «Ver en 3D» con el estilo del rubro,
 # model-viewer 4.4.0 con SRI, menu3d.js y data-3d-objeto="producto" (el visor no habla de «plato»). La Simple-page, sin 3D.
-debe_contener    "${MULTI}servicios.php" 'data-3d-modelo="/demos/_comun/3d/neumatico.glb"'
-debe_contener    "${MULTI}servicios.php" 'class="demo-3d-btn vg-btn-3d"'
-debe_contener    "${MULTI}servicios.php" 'data-3d-modelo="/demos/_comun/3d/bateria.glb"'
-debe_contener    "${MULTI}servicios.php" 'data-3d-modelo="/demos/_comun/3d/disco-freno.glb"'
+# Los servicios del taller no tienen 3D (no se compra un disco ni una batería suelta): la página no carga el visor
+no_debe_contener "${MULTI}servicios.php" 'demo-3d-btn'
+no_debe_contener "${MULTI}servicios.php" 'model-viewer'
 debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/neumatico.glb"'
 debe_contener    "$TIENDA" 'class="demo-3d-btn t-btn-3d"'
 debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/extintor.glb"'
-debe_contener    "${MULTI}servicios.php" '<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js" integrity="sha256-GLLnEQNapHBe4oFTClXcIzj/Be7T1wrhbVQQUoKnXtU=" crossorigin="anonymous"></script>'
-debe_contener    "${MULTI}servicios.php" '/demos/_comun/js/menu3d.js?v='
-debe_contener    "${MULTI}servicios.php" 'data-3d-objeto="producto"'
+no_debe_contener "${MULTI}servicios.php" '/demos/_comun/js/menu3d.js?v='
 debe_contener    "$TIENDA" '<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js" integrity="sha256-GLLnEQNapHBe4oFTClXcIzj/Be7T1wrhbVQQUoKnXtU=" crossorigin="anonymous"></script>'
 debe_contener    "$TIENDA" '/demos/_comun/js/menu3d.js?v='
 debe_contener    "$TIENDA" 'data-3d-objeto="producto"'

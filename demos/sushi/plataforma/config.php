@@ -53,7 +53,7 @@ return [
     'horas_entrega' => ['12:30', '23:30'],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     'menu_qr' => true,
-    'modelos3d' => ['sushi'],
+    'modelos3d' => ['sushi-combo-duo', 'sushi', 'sushi-california', 'sushi-salmon-palta', 'sushi-dragon-roll', 'sushi-ebi-furai', 'sushi-roll-masago', 'sushi-avocado-veggie', 'sushi-nigiri-salmon', 'sushi-nigiri-mix'],
 
     'textos' => [
         'titulo_inicio' => 'Sushi a domicilio en Las Condes',

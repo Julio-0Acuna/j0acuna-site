@@ -71,7 +71,7 @@ return [
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Catálogo con QR para la bodega del almacén (sin modelos 3D: no es un rubro de comida).
     'menu_qr' => true,
-    'modelos3d' => ['vino-tinto', 'vino-blanco', 'copas'],
+    'modelos3d' => ['vino-cabernet-sauvignon', 'vino-tinto', 'vino-sauvignon-blanc', 'espumante-brut', 'copas'],
 
     'textos' => [
         'titulo_inicio' => 'Distribuidora de bebidas en Pudahuel',

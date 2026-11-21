@@ -366,8 +366,10 @@ fi
 # model-viewer 4.4.0 con SRI, menu3d.js y data-3d-objeto="producto" (el visor no habla de «plato»). La Simple-page, sin 3D.
 debe_contener    "${MULTI}servicios.php" 'data-3d-modelo="/demos/_comun/3d/pomada.glb"'
 debe_contener    "${MULTI}servicios.php" 'class="demo-3d-btn eg-btn-3d"'
-debe_contener    "${MULTI}servicios.php" 'data-3d-modelo="/demos/_comun/3d/afeitadora.glb"'
-debe_contener    "${MULTI}servicios.php" 'data-3d-modelo="/demos/_comun/3d/tijeras.glb"'
+debe_contener    "${MULTI}servicios.php" 'data-3d-modelo="/demos/_comun/3d/aceite-barba-30ml.glb"'
+debe_contener    "${MULTI}servicios.php" 'data-3d-modelo="/demos/_comun/3d/frasco.glb"'
+# Los servicios (corte, afeitado) no tienen 3D: no se muestra un objeto que no es lo que se compra
+no_debe_contener "${MULTI}servicios.php" 'data-3d-modelo="/demos/_comun/3d/tijeras.glb"'
 debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/pomada.glb"'
 debe_contener    "$TIENDA" 'class="demo-3d-btn t-btn-3d"'
 debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/frasco.glb"'

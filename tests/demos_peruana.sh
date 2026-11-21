@@ -102,13 +102,13 @@ curl -s "$BASE$SIMPLE" | grep -qF "$ESPERADO" && pasa "el menú del día destaca
 # --- Multi-page: carta con QR, buscador, porciones, 3D (model-viewer 4.4.0 con SRI), carrito con extras
 debe_contener    "${MULTI}carta.php" 'data-demo-qr="/demos/peruana/multi/carta.php"'
 debe_contener    "${MULTI}carta.php" 'class="demo-3d-btn'
-debe_contener    "${MULTI}carta.php" 'data-3d-modelo="/demos/_comun/3d/ceviche.glb"'
+debe_contener    "${MULTI}carta.php" 'data-3d-modelo="/demos/_comun/3d/ceviche-muna.glb"'
 debe_contener    "${MULTI}carta.php" '<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js" integrity="sha256-GLLnEQNapHBe4oFTClXcIzj/Be7T1wrhbVQQUoKnXtU=" crossorigin="anonymous"></script>'
 debe_contener    "${MULTI}carta.php" 'data-buscador'
 debe_contener    "${MULTI}carta.php" '<option value="Para compartir">Para compartir · $25.900</option>'
 debe_contener    "${MULTI}carta.php?q=nikkei" 'id="plato-ceviche-nikkei" data-buscable'
 curl -s "$BASE${MULTI}carta.php?q=nikkei" | grep -F 'id="plato-lomo-saltado"' | grep -qF ' hidden>' && pasa "el buscador sin JS oculta lo que no coincide" || falla "el buscador sin JS no oculta"
-debe_contener    "$MULTI" 'data-3d-modelo="/demos/_comun/3d/ceviche.glb"'
+debe_contener    "$MULTI" 'data-3d-modelo="/demos/_comun/3d/ceviche-muna.glb"'
 debe_contener    "${MULTI}pedido.php" 'data-carrito-form'
 debe_contener    "${MULTI}pedido.php" 'data-carrito-extra="Picante"'
 debe_contener    "${MULTI}pedido.php" 'data-carrito-extra="Cubiertos"'

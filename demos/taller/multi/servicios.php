@@ -70,4 +70,4 @@ vg_abrir('servicios', 'Servicios y precios', 'Servicios de ' . $n['nombre'] . ' 
     </aside>
   </div>
 </main>
-<?php vg_cerrar(['buscador', '3d']);
+<?php vg_cerrar(['buscador']);

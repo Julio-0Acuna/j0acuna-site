@@ -350,7 +350,7 @@ fi
 debe_contener    "${MULTI}catalogo.php" 'data-3d-modelo="/demos/_comun/3d/tarro-pintura.glb"'
 debe_contener    "${MULTI}catalogo.php" 'class="demo-3d-btn pg-btn-3d"'
 debe_contener    "${MULTI}catalogo.php" 'data-3d-modelo="/demos/_comun/3d/rodillo.glb"'
-debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/taladro.glb"'
+debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/taladro-percutor-650w-maletin.glb"'
 debe_contener    "$TIENDA" 'class="demo-3d-btn t-btn-3d an-btn-3d"'
 debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/carretilla.glb"'
 debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/saco.glb"'

@@ -101,7 +101,7 @@ return [
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Peluquería: sin menú QR ni modelos 3D.
     'menu_qr' => false,
-    'modelos3d' => ['shampoo', 'frasco', 'peineta', 'tijeras', 'secador'],
+    'modelos3d' => ['shampoo-sin-sulfatos-500ml', 'acondicionador-nutritivo-500ml', 'aceite-argan-50ml', 'peineta'],
 
     'textos' => [
         'titulo_inicio' => 'Reserva tu hora online',

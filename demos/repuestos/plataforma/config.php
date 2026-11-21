@@ -82,7 +82,7 @@ return [
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Repuestos: sin menú QR ni modelos 3D.
     'menu_qr' => false,
-    'modelos3d' => ['bateria', 'disco-freno', 'bujia'],
+    'modelos3d' => ['disco-freno-ventilado-280', 'disco-freno-ventilado-256', 'bujias-iridio-juego-4', 'bujias-niquel-juego-4', 'bateria', 'bateria-12v-45ah', 'bateria-12v-90ah-diesel'],
 
     // Patentes de ejemplo (inventadas) que la demo reconoce. En una tienda real, la búsqueda por patente
     // se conecta a un servicio de consulta de patentes. Perfil genérico: tipo, año y motor, sin marcas.

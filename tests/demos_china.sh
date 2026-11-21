@@ -106,7 +106,7 @@ no_debe_contener "$SIMPLE" 'demo-3d-btn'
 # Multi-page: carta con QR, buscador, 3D del wantán (model-viewer 4.4.0 con SRI), carrito con campos extra
 debe_contener    "${MULTI}carta.php" "data-demo-qr=\"${MULTI}carta.php\""
 debe_contener    "${MULTI}carta.php" 'class="demo-3d-btn'
-debe_contener    "${MULTI}carta.php" 'data-3d-modelo="/demos/_comun/3d/wantan.glb"'
+debe_contener    "${MULTI}carta.php" 'data-3d-modelo="/demos/_comun/3d/wantan-frito.glb"'
 debe_contener    "${MULTI}carta.php" '<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js" integrity="sha256-GLLnEQNapHBe4oFTClXcIzj/Be7T1wrhbVQQUoKnXtU=" crossorigin="anonymous"></script>'
 debe_contener    "${MULTI}carta.php" 'data-buscador'
 debe_contener    "${MULTI}carta.php" 'Banquete para 6'
@@ -163,7 +163,7 @@ debe_responder   "${TIENDA}reset.php" 404
 debe_responder   "${TIENDA}config.php" 200
 no_debe_contener "${TIENDA}config.php" 'cuentas_prueba'
 debe_contener    "$TIENDA" 'class="demo-3d-btn'
-debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/wantan.glb"'
+debe_contener    "$TIENDA" 'data-3d-modelo="/demos/_comun/3d/wantan-frito.glb"'
 debe_contener    "$TIENDA" "data-demo-qr=\"${TIENDA}#menu\""
 debe_contener    "$TIENDA" 'Menú para 2'
 debe_contener    "$TIENDA" 'Menú para 4'

@@ -40,8 +40,8 @@ return [
         ['slug' => 'cerdo-agridulce', 'categoria' => 'carne', 'nombre' => 'Cerdo agridulce', 'descripcion' => 'Apanado, con pimentón, cebolla y piña.', 'precio' => 6790, 'precio_mayorista' => 5990, 'stock' => 40, 'foto' => '1654482921285-59834b69c0f4'],
         ['slug' => 'bowl-mongoliano', 'categoria' => 'carne', 'nombre' => 'Bowl mongoliano', 'descripcion' => 'Carne mongoliana sobre arroz graneado, para uno.', 'precio' => 5490, 'stock' => 30, 'foto' => '1662050890689-6f1e9183787f'],
 
-        ['slug' => 'wantan', 'categoria' => 'picar', 'nombre' => 'Wantán frito (10 u.)', 'descripcion' => 'Relleno de cerdo, crujiente, con salsa agridulce.', 'precio' => 3990, 'precio_mayorista' => 3490, 'stock' => 80, 'foto' => '1684255276125-97fa22ebb7e4', 'modelo3d' => 'wantan'],
-        ['slug' => 'sopa-wantan', 'categoria' => 'picar', 'nombre' => 'Sopa wantán', 'descripcion' => 'Caldo de pollo, wantanes de cerdo y camarón, repollo y cebollín.', 'precio' => 4490, 'stock' => 30, 'foto' => '1693860385571-98a2822424e6', 'modelo3d' => 'wantan'],
+        ['slug' => 'wantan', 'categoria' => 'picar', 'nombre' => 'Wantán frito (10 u.)', 'descripcion' => 'Relleno de cerdo, crujiente, con salsa agridulce.', 'precio' => 3990, 'precio_mayorista' => 3490, 'stock' => 80, 'foto' => '1684255276125-97fa22ebb7e4', 'modelo3d' => 'wantan-frito'],
+        ['slug' => 'sopa-wantan', 'categoria' => 'picar', 'nombre' => 'Sopa wantán', 'descripcion' => 'Caldo de pollo, wantanes de cerdo y camarón, repollo y cebollín.', 'precio' => 4490, 'stock' => 30, 'foto' => '1693860385571-98a2822424e6', 'modelo3d' => ''],
         ['slug' => 'arrollados', 'categoria' => 'picar', 'nombre' => 'Arrollados primavera (4 u.)', 'descripcion' => 'Repollo, zanahoria y cerdo, con salsa agridulce.', 'precio' => 4290, 'precio_mayorista' => 3690, 'stock' => 60, 'foto' => '1787273670681-b1886c2807a3'],
         ['slug' => 'camarones', 'categoria' => 'picar', 'nombre' => 'Camarones apanados (10 u.)', 'descripcion' => 'Con salsa agridulce y limón.', 'precio' => 6990, 'stock' => 25, 'foto' => ''],
 

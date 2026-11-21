@@ -76,7 +76,7 @@ return [
     'entrega' => ['horas' => wk_horas_servicio($horario, new DateTimeImmutable('now', new DateTimeZone(DEMO_ZONA_HORARIA)))],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     'menu_qr' => true,
-    'modelos3d' => ['wantan'],
+    'modelos3d' => ['wantan-frito', 'wantan'],
 
     'textos' => [
         'titulo_inicio' => 'Comida china a domicilio en Puente Alto',

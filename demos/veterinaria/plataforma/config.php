@@ -76,7 +76,7 @@ return [
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Veterinaria: sin menú QR ni modelos 3D.
     'menu_qr' => false,
-    'modelos3d' => ['saco-alimento', 'hueso', 'cama-mascota'],
+    'modelos3d' => ['saco-alimento', 'alimento-cachorro-3kg', 'alimento-perro-senior-10kg', 'alimento-perro-control-peso-12kg', 'hueso', 'cama-mascota', 'alimento-perro-adulto-20kg-pack-3'],
 
     'textos' => [
         'titulo_inicio' => 'Pet shop y clínica en Maipú',

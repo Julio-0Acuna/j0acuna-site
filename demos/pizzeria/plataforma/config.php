@@ -54,7 +54,7 @@ return [
     'horas_entrega' => ['12:30', '23:30'],
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     'menu_qr' => true,
-    'modelos3d' => ['pizza', 'calzone', 'helado'],
+    'modelos3d' => ['pizza-pepperoni', 'pizza-suprema', 'pizza-pollo-bbq', 'pizza-doble-queso', 'pizza-veggie', 'pizza-chilena', 'calzone', 'helado'],
 
     'textos' => [
         'titulo_inicio' => 'Pizza a domicilio en Maipú',

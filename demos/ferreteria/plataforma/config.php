@@ -74,7 +74,7 @@ return [
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Ferretería: sin menú QR ni modelos 3D.
     'menu_qr' => false,
-    'modelos3d' => ['taladro', 'carretilla', 'saco'],
+    'modelos3d' => ['saco', 'hormigon-saco-25kg', 'mortero-pega-saco-25kg', 'taladro-percutor-650w-maletin', 'carretilla'],
 
     'textos' => [
         'titulo_inicio' => 'Materiales de construcción en Quilicura',

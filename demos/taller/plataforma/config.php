@@ -72,7 +72,7 @@ return [
     'limites' => ['registros_por_hora' => 5, 'logins_fallidos' => 10, 'ventana_login' => 900],
     // Taller: sin menú QR ni modelos 3D.
     'menu_qr' => false,
-    'modelos3d' => ['neumatico', 'bateria', 'extintor', 'disco-freno'],
+    'modelos3d' => ['neumatico', 'extintor'],
 
     'textos' => [
         'titulo_inicio' => 'Reserva tu hora en La Florida',

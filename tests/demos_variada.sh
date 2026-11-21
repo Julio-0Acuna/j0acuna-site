@@ -104,7 +104,9 @@ no_debe_contener "$SIMPLE" 'Doble Palta'
 # --- Multi-page: carta con QR, buscador, estilos, hamburguesas en 3D (model-viewer 4.4.0 con SRI), comanda
 debe_contener    "${MULTI}carta.php" 'data-demo-qr="/demos/variada/multi/carta.php"'
 debe_contener    "${MULTI}carta.php" 'class="demo-3d-btn'
-debe_contener    "${MULTI}carta.php" 'data-3d-modelo="/demos/_comun/3d/hamburguesa.glb"'
+debe_contener    "${MULTI}carta.php" 'data-3d-modelo="/demos/_comun/3d/hamburguesa-tocino-cebolla.glb"'
+# Cada hamburguesa con 3D tiene su propio modelo: la casera (con papas) es solo de la Plataforma
+no_debe_contener "${MULTI}carta.php" 'data-3d-modelo="/demos/_comun/3d/hamburguesa.glb"'
 debe_contener    "${MULTI}carta.php" '<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js" integrity="sha256-GLLnEQNapHBe4oFTClXcIzj/Be7T1wrhbVQQUoKnXtU=" crossorigin="anonymous"></script>'
 debe_contener    "${MULTI}carta.php" 'data-buscador'
 debe_contener    "${MULTI}carta.php" '<option value="Chacarero">Chacarero · $7.790</option>'
@@ -112,8 +114,9 @@ debe_contener    "${MULTI}carta.php" 'Completos y as'
 debe_contener    "${MULTI}carta.php?q=chacarero" 'id="plato-churrasco" data-buscable'
 curl -s "$BASE${MULTI}carta.php?q=chacarero" | grep -F 'id="plato-barros-jarpa"' | grep -qF ' hidden>' && pasa "el buscador sin JS oculta lo que no coincide" || falla "el buscador sin JS no oculta"
 curl -s "$BASE${MULTI}carta.php?q=zzzz" | grep -F 'data-sin-resultados' | grep -qvF ' hidden' && pasa "búsqueda sin resultados muestra el aviso" || falla "búsqueda sin resultados sin aviso"
-N3D=$(curl -s "$BASE${MULTI}carta.php" | grep -oF 'data-3d-modelo="/demos/_comun/3d/hamburguesa.glb"' | wc -l)
-[ "$N3D" -ge 3 ] && pasa "$N3D hamburguesas con «Ver en 3D»" || falla "solo $N3D platos con 3D"
+N3D=$(curl -s "$BASE${MULTI}carta.php" | grep -oE 'data-3d-modelo="[^"]+"' | wc -l)
+N3D_DISTINTOS=$(curl -s "$BASE${MULTI}carta.php" | grep -oE 'data-3d-modelo="[^"]+"' | sort -u | wc -l)
+[ "$N3D" -ge 1 ] && [ "$N3D" -eq "$N3D_DISTINTOS" ] && pasa "$N3D plato(s) con «Ver en 3D», cada uno con su modelo" || falla "$N3D botones 3D y $N3D_DISTINTOS modelos distintos"
 debe_contener    "${MULTI}pedido.php" 'data-carrito-form'
 debe_contener    "${MULTI}pedido.php" 'data-carrito-extra="Pan"'
 debe_contener    "${MULTI}pedido.php" 'data-carrito-extra="Cubiertos y servilletas"'
