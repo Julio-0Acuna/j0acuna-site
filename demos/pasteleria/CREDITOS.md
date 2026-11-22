@@ -4,7 +4,7 @@ Fotos de [Unsplash](https://unsplash.com) (licencia Unsplash: uso comercial perm
 
 Revisado el 17/11/2026: las 63 URL responden 200 (anchos 600 y 1200). Cuando el autor no se pudo confirmar dice «no encontrado» (la foto sigue siendo de Unsplash). Los negocios (Pastelería Doña Elvira, Atelier Lúcuma y Merengue Club), sus productos, personas y reseñas son inventados.
 
-Modelo 3D: las tortas de la Multi-page y la Plataforma usan `demos/_comun/3d/torta.glb`: modelo realista CC BY 4.0; autor y cambios en la sección «Modelos 3D» de [los créditos de los ejemplos](/demos/creditos.php).
+Fotos y modelos 3D: cada comida o bebida con botón «Ver en 3D» tiene su propio modelo (`demos/_comun/3d/`, CC BY 4.0; autor, título y cambios en `demos/_comun/3d/CREDITOS.md`). Desde el 21/11/2026 su foto no es de Unsplash: es un render de ese mismo modelo (`demos/_comun/fotos3d/`), para que la foto y el 3D sean el mismo producto, con el mismo crédito que el modelo.
 
 ## Pastelería
 
@@ -15,7 +15,6 @@ Modelo 3D: las tortas de la Multi-page y la Plataforma usan `demos/_comun/3d/tor
 | 1515823662972-da6a2e4d3002 | Nathan Dumlao | https://unsplash.com/es/fotos/cafe-rodeado-de-cuatro-panes-horneados-z3em1GBRhvY | Plataforma: foto elegible en el panel |
 | 1519915028121-7d3463d20b13 | Alex Lvrs | https://unsplash.com/es/fotos/tarta-redonda-en-rodajas-con-nata-aX_ljOOyWJY | Simple-page: Pie de limón |
 | 1524351199678-941a58a3df50 | Tina Guina | https://unsplash.com/es/fotos/rebanadas-de-bizcocho-en-plato-negro-s8_7AqkzCWY | Multi-page: Cheesecake de maracuyá |
-| 1535141192574-5d4897c12636 | Alexandra Gornago | https://unsplash.com/es/fotos/fotografia-de-primer-plano-de-pastel-de-vainilla-de-3-niveles-con-coberturas-de-arandanos-y-fresas-_B7shfNUXEA | Multi-page: Frutos rojos y vainilla |
 | 1537029415773-e79d5d8e68d3 | Prince Abid | https://unsplash.com/es/fotos/pasteles-en-rodajas-en-plato-75chao-zJa4 | Simple-page: Queque casero cortado en rebanadas |
 | 1547414368-ac947d00b91d | Aliona Gumeniuk | https://unsplash.com/es/fotos/rebanada-de-pastel-de-caramelo-en-un-plato-negro-al-lado-del-tenedor-GAauSStia3s | Multi-page: Trozo de caramelo salado |
 | 1557310717-d6bea9f36682 | Ellie Ellien | https://unsplash.com/es/fotos/pila-de-galletas-de-chocolate-04yMqTmUeHQ | Plataforma: Galletas de avena y pasas (6 u.) |
@@ -30,7 +29,6 @@ Modelo 3D: las tortas de la Multi-page y la Plataforma usan `demos/_comun/3d/tor
 | 1583743089695-4b816a340f82 | SJ | https://unsplash.com/es/fotos/galletas-marrones-en-paquete-de-plastico-blanco-YDvfndOs4IQ | Plataforma: Galletas con chips a granel (bolsa 50 u.) |
 | 1597520595747-23260411dc4e | David Holifield | https://unsplash.com/es/fotos/tarta-floral-rosa-y-blanca-N5LQeJFX5pU | Plataforma: Torta Rosas de Frutilla |
 | 1599785209796-786432b228bc | Sara Cervera | https://unsplash.com/es/fotos/magdalena-con-glaseado-rosa-por-encima-FAnSK-gVGZU | Simple-page: Cupcakes de vainilla |
-| 1602351447937-745cb720612f | kaouther djouada | https://unsplash.com/es/fotos/bizcocho-de-mousse-de-chocolate-con-perlas-de-azucar-hcEDfkiVmMI | Multi-page: Chocolate 70 % y maqui |
 | 1604413191066-4dd20bedf486 | David Holifield | https://unsplash.com/es/fotos/tarta-floral-rosa-y-blanca-g5bgYkKa8y0 | Plataforma: Torta Menta Confeti |
 | 1606890737304-57a1ca8a5b62 | Jacob Thomas | https://unsplash.com/es/fotos/tarta-de-chocolate-con-cerezas-y-nata-6jHpcBPw7i8 | Simple-page: portada (selva negra) |
 | 1607478900766-efe13248b125 | Bryam Blanco | https://unsplash.com/es/fotos/cupcakes-con-glaseado-blanco-por-encima-nXKWLn8y9qE | Plataforma: portada (foto en el título) |
@@ -39,8 +37,6 @@ Modelo 3D: las tortas de la Multi-page y la Plataforma usan `demos/_comun/3d/tor
 | 1612845575953-f4b1e3d63160 | RUMEYSA AYDIN | https://unsplash.com/es/fotos/galletas-marrones-sobre-textil-blanco-rjf4FcmERGc | Plataforma: Galletas de almendra sin gluten (6 u.) |
 | 1620980776848-84ac10194945 | Oliver-Timm Haarmann | https://unsplash.com/es/fotos/tarta-de-fresas-y-arandanos-sobre-mesa-de-madera-marron-p6OLZPnq810 | Multi-page: Tartaleta de berries |
 | 1621303837174-89787a7d4729 | Katie Rosario | https://unsplash.com/es/fotos/pink-and-white-cake-on-white-ceramic-plate-QNyRp21hb5I | Plataforma: Torta Frutilla Pop; Plataforma: portada (foto en el título) |
-| 1621303837383-77d809baf08b | Katie Rosario | https://unsplash.com/es/fotos/pastel-marron-y-blanco-en-soporte-para-pastel-blanco-GpqZFk_XF-Q | Multi-page: Lúcuma, café y chocolate |
-| 1623428454614-abaf00244e52 | Mads Eneqvist | https://unsplash.com/es/fotos/un-pastel-de-bodas-blanco-con-fresas-y-flores-frescas-Xb5c2x6wJPc | Multi-page: Naked de berries |
 | 1624000961428-eeece184988b | Diliara Garifullina | https://unsplash.com/es/fotos/rebanadas-de-bizcocho-en-plato-de-ceramica-blanca-diVU8-tGO0U | Simple-page: Mil hojas manjar nuez |
 | 1631857455684-a54a2f03665f | Arjun MJ | https://unsplash.com/es/fotos/una-mesa-cubierta-con-muchos-pasteles-y-cupcakes-UEeiZeKFlks | Plataforma: Mesa dulce infantil (20 niños) |
 | 1634324040880-63dbf9a4e5ac | Eugene Krasnaok | https://unsplash.com/es/fotos/dos-postres-en-plato-blanco-con-fresas-y-arandanos-5nCTfEru3Do | Multi-page: Pavlova individual |
@@ -57,11 +53,7 @@ Modelo 3D: las tortas de la Multi-page y la Plataforma usan `demos/_comun/3d/tor
 | 1757520419300-1b5661560bc2 | sheri silver | https://unsplash.com/es/fotos/brownies-rectangulares-rociados-con-glaseado-blanco-dispuestos-en-bandeja--Wuii6E3rns | Plataforma: Brownies en bandeja (24 u.) |
 | 1760124056928-a9960b1b1dd2 | Karina Syrotiuk | https://unsplash.com/es/fotos/filas-de-macarons-de-colores-dispuestos-en-una-vitrina-F3_MMTa0Sf4 | Plataforma: Caja de 12 macarons |
 | 1761296152332-88ada22be48a | roam in color | https://unsplash.com/es/fotos/un-bizcocho-de-color-pastel-cortado-en-ocho-rebanadas-wP7mvol0tKg | Plataforma: Torta Arcoíris |
-| 1761637604365-d57cb1ab6f67 | Christian Agbede | https://unsplash.com/es/fotos/un-pequeno-pastel-de-merengue-cubierto-con-crema-batida-y-fresas-5tJ059Bh-zY | Multi-page: Pavlova de frutillas y rosa |
-| 1761637604698-0f9e9d3278ee | Christian Agbede | https://unsplash.com/es/fotos/un-pequeno-pastel-rosa-cubierto-con-frambuesa-y-glaseado-rojo--wOczGwXJOk | Multi-page: Pistacho y frambuesa |
-| 1761637604927-e3656dc81383 | Christian Agbede | https://unsplash.com/es/fotos/una-rebanada-de-pastel-en-capas-con-bayas-frescas-encima-AXF6s3IvEFw | Plataforma: Torta de berries sin azúcar añadida |
 | 1762922425478-7049c54bfbec | Jessie Maxwell | https://unsplash.com/es/fotos/varios-brownies-cuadrados-de-chocolate-espolvoreados-con-azucar-glas-JNdKjjB1FXk | Plataforma: Brownies sin gluten (caja 4) |
-| 1764269710986-0b69be00d7ca | Fotógrafo Samuel Cruz | https://unsplash.com/es/fotos/una-tarta-de-boda-blanca-de-tres-niveles-con-flores-GqmPjmfpmxo | Multi-page: Flores blancas |
 | 1765946026563-4f9db06eb328 | Jonathan Borba | https://unsplash.com/es/fotos/una-mesa-de-postres-montada-al-aire-libre-bajo-un-arbol-bBeuBlPumos | Plataforma: Mesa dulce para 30 personas |
 | 1765992314341-48ba688f8d49 | Shay Sumner | https://unsplash.com/es/fotos/primer-plano-de-una-tarta-de-merengue-con-picos-tostados-27yhtieFNTM | Multi-page: Tarta de limón de Pica |
 | 1767339300211-00be83435c63 | Stanley Kustamin | https://unsplash.com/es/fotos/galletas-recien-horneadas-con-pepitas-de-chocolate-en-una-rejilla-para-enfriar-QoAjF_FKG1s | Simple-page: Galletas con chips |

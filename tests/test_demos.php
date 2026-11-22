@@ -92,6 +92,18 @@ t('demo_boton_3d apunta al .glb en _comun/3d', function () {
     contiene($b, 'Ver en 3D');
 });
 
+t('demo_img: foto de fotos3d/ (render del modelo) en 540 y 1080 px, sin pasar por Unsplash', function () {
+    $f = '/demos/_comun/fotos3d/pizza-margherita.webp';
+    eq(demo_foto($f, 900), $f);
+    eq(demo_srcset($f), '/demos/_comun/fotos3d/pizza-margherita-540.webp 540w, /demos/_comun/fotos3d/pizza-margherita.webp 1080w');
+    $h = demo_img($f, 'Margherita', ['ancho' => 480, 'alto' => 360]);
+    contiene($h, 'src="/demos/_comun/fotos3d/pizza-margherita.webp"');
+    contiene($h, 'srcset="/demos/_comun/fotos3d/pizza-margherita-540.webp 540w');
+    no_contiene($h, 'unsplash');
+    eq(demo_srcset('/demos/cafeteria/img/simple.webp'), '');
+    contiene(demo_srcset('123-abc'), 'images.unsplash.com/photo-123-abc?w=480');
+});
+
 t('m_precio: mayorista aprobado paga precio mayorista; pendiente y particular no', function () {
     $p = ['precio' => 10000, 'precio_mayorista' => 8000];
     eq(m_precio($p, null), 10000);

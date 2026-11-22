@@ -4,7 +4,7 @@ Todas las fotos son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso 
 
 Revisado el 17/11/2026: las 61 URL responden 200. El autor es el que muestra Unsplash en su buscador; la columna «URL» es la foto enlazada.
 
-Modelo 3D: los platos con «Ver en 3D» usan `demos/_comun/3d/sushi.glb`: modelo realista CC BY 4.0; autor y cambios en la sección «Modelos 3D» de [los créditos de los ejemplos](/demos/creditos.php).
+Fotos y modelos 3D: cada comida o bebida con botón «Ver en 3D» tiene su propio modelo (`demos/_comun/3d/`, CC BY 4.0; autor, título y cambios en `demos/_comun/3d/CREDITOS.md`). Desde el 21/11/2026 su foto no es de Unsplash: es un render de ese mismo modelo (`demos/_comun/fotos3d/`), para que la foto y el 3D sean el mismo producto, con el mismo crédito que el modelo.
 
 ## Simple-page · Maki Neón (La Florida)
 
@@ -37,15 +37,9 @@ Modelo 3D: los platos con «Ver en 3D» usan `demos/_comun/3d/sushi.glb`: modelo
 | 1635452065566-9c89471bb86c | Airam Dato-on | https://images.unsplash.com/photo-1635452065566-9c89471bb86c | La barra: caja de pescado |
 | 1635321594488-2d38af11ed03 | Darren Ahmed Arceo | https://images.unsplash.com/photo-1635321594488-2d38af11ed03 | La barra: salón de madera |
 | 1681270507609-e2a5f21969b0 | Lucas Law | https://images.unsplash.com/photo-1681270507609-e2a5f21969b0 | La barra: plato de atún |
-| 1654238117310-3771f78c6d6b | Leviosa Hou | https://images.unsplash.com/photo-1654238117310-3771f78c6d6b | Carta: nigiri de salmón |
-| 1562707786-7d2b807961c4 | Jose Ruales | https://images.unsplash.com/photo-1562707786-7d2b807961c4 | Carta: nigiri de atún |
-| 1635451778386-e5778e66f61e | Airam Dato-on | https://images.unsplash.com/photo-1635451778386-e5778e66f61e | Carta: toro aburi |
 | 1648141294171-de1980517238 | Andrea Riezzo | https://images.unsplash.com/photo-1648141294171-de1980517238 | Carta: salmón aburi |
-| 1780236935125-0e730e303beb | Hoseung Han | https://images.unsplash.com/photo-1780236935125-0e730e303beb | Carta: caja de nigiri |
-| 1772285283419-b34f42b4a4df | MChe Lee | https://images.unsplash.com/photo-1772285283419-b34f42b4a4df | Carta: sashimi del día |
 | 1675870791718-a12568cfef43 | Mattia Occhi | https://images.unsplash.com/photo-1675870791718-a12568cfef43 | Carta: sashimi de salmón |
 | 1775889184887-9bc308c98aee | Jay | https://images.unsplash.com/photo-1775889184887-9bc308c98aee | Carta: chirashi |
-| 1791386809517-60f40f5372dd | Travis Palma | https://images.unsplash.com/photo-1791386809517-60f40f5372dd | Carta: temaki |
 | 1768326119773-05cae29f4106 | Sergio Mena Ferreira | https://images.unsplash.com/photo-1768326119773-05cae29f4106 | Carta: gyozas |
 | 1779453873118-0321c47aa1fd | Karthick Gislen | https://images.unsplash.com/photo-1779453873118-0321c47aa1fd | Carta: shoyu ramen |
 | 1629984164142-21c2039de926 | Minh Anh Nguyen | https://images.unsplash.com/photo-1629984164142-21c2039de926 | Carta: mochi |

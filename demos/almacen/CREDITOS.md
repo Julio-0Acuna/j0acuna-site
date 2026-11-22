@@ -2,6 +2,8 @@
 
 Fotos de los tres ejemplos del rubro almacén y minimarket (Almacén El Quitasol, Turno 24 y Bodega Surtido, todos negocios ficticios). Todas son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso comercial permitido, sin atribución obligatoria; se agradece igual). Se enlazan directamente desde `https://images.unsplash.com/photo-<ID>?w=…&q=70&auto=format` y no se guardan en el servidor.
 
+Fotos y modelos 3D: cada comida o bebida con botón «Ver en 3D» tiene su propio modelo (`demos/_comun/3d/`, CC BY 4.0; autor, título y cambios en `demos/_comun/3d/CREDITOS.md`). Desde el 21/11/2026 su foto no es de Unsplash: es un render de ese mismo modelo (`demos/_comun/fotos3d/`), para que la foto y el 3D sean el mismo producto, con el mismo crédito que el modelo.
+
 Ninguna muestra marcas ni etiquetas legibles. Se revisó cada foto en grande y se descartaron, entre otras, góndolas de supermercado con paquetes de marcas conocidas, fachadas de cadenas de tiendas de conveniencia, bicicletas de reparto con el logo de una empresa, bolsas de papas fritas, latas y frascos con etiqueta, bolsas de compras con el nombre de una tienda y refrigeradores con el letrero de una cadena. Los productos se fotografiaron sueltos o en envases sin etiqueta (frascos, botellas de vidrio, bidones lisos).
 
 Revisado el 18/11/2026: las 53 URL responden 200. Autor y página según Unsplash ese día. Para sumarlas al archivo general, copiar esta tabla en `demos/CREDITOS.md` bajo «## Almacén y minimarket».

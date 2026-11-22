@@ -4,7 +4,7 @@ Todas las fotos son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso 
 
 Revisado el 18/11/2026: las 51 URL responden 200. El autor es el que muestra Unsplash en su buscador; la columna «URL» es la foto enlazada.
 
-Modelo 3D: los ceviches con «Ver en 3D» (Multi-page y Plataforma web) usan `demos/_comun/3d/ceviche.glb`: modelo realista CC BY 4.0; autor y cambios en la sección «Modelos 3D» de [los créditos de los ejemplos](/demos/creditos.php).
+Fotos y modelos 3D: cada comida o bebida con botón «Ver en 3D» tiene su propio modelo (`demos/_comun/3d/`, CC BY 4.0; autor, título y cambios en `demos/_comun/3d/CREDITOS.md`). Desde el 21/11/2026 su foto no es de Unsplash: es un render de ese mismo modelo (`demos/_comun/fotos3d/`), para que la foto y el 3D sean el mismo producto, con el mismo crédito que el modelo.
 
 ## Simple-page · Picantería El Rocoto de Oro (Recoleta)
 
@@ -29,9 +29,6 @@ Modelo 3D: los ceviches con «Ver en 3D» (Multi-page y Plataforma web) usan `de
 | 1731570225640-7ddad4231679 | Martin Baron | https://images.unsplash.com/photo-1731570225640-7ddad4231679 | Capítulo «Del mar» y leche de tigre |
 | 1694440859324-3147496edd56 | Ali Olfian | https://images.unsplash.com/photo-1694440859324-3147496edd56 | Capítulo «Del fuego» (wok en llamas) |
 | 1650622053962-7510f5bbda65 | Andrea Huls Pareja | https://images.unsplash.com/photo-1650622053962-7510f5bbda65 | Capítulo «De la chacra» (ajíes en canastos) |
-| 1792685473673-59cfd1ac0183 | Emi Ymerai | https://images.unsplash.com/photo-1792685473673-59cfd1ac0183 | Ceviche Muña |
-| 1726514730572-7e0f664f60d2 | Alimentos Fotogénicos | https://images.unsplash.com/photo-1726514730572-7e0f664f60d2 | Ceviche nikkei |
-| 1726514734163-063c77ef810d | Alimentos Fotogénicos | https://images.unsplash.com/photo-1726514734163-063c77ef810d | Tiradito de ají amarillo |
 | 1761314037182-8ea3363cf3a3 | Diego Arenas de Rodrigo | https://images.unsplash.com/photo-1761314037182-8ea3363cf3a3 | Conchitas a la parmesana |
 | 1668724776332-a20685b85151 | HI! ESTUDIO | https://images.unsplash.com/photo-1668724776332-a20685b85151 | Lomo saltado al wok |
 | 1551326844-4df70f78d0e9 | Mae Mu | https://images.unsplash.com/photo-1551326844-4df70f78d0e9 | Chaufa de mariscos |

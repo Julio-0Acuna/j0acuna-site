@@ -4,7 +4,7 @@ Todas las fotos son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso 
 
 Revisado el 17/11/2026: todas las URL de imagen responden 200 (`curl -I`). Autor y página según el buscador de Unsplash ese día.
 
-Modelo 3D: las hogazas, la baguette y el pan del día de la Multi-page y la Plataforma web usan `demos/_comun/3d/pan.glb`: modelo realista CC BY 4.0; autor y cambios en la sección «Modelos 3D» de [los créditos de los ejemplos](/demos/creditos.php).
+Fotos y modelos 3D: cada comida o bebida con botón «Ver en 3D» tiene su propio modelo (`demos/_comun/3d/`, CC BY 4.0; autor, título y cambios en `demos/_comun/3d/CREDITOS.md`). Desde el 21/11/2026 su foto no es de Unsplash: es un render de ese mismo modelo (`demos/_comun/fotos3d/`), para que la foto y el 3D sean el mismo producto, con el mismo crédito que el modelo.
 
 ## Simple-page · Panadería Las Tres Hornadas (Quinta Normal)
 
@@ -32,11 +32,6 @@ Modelo 3D: las hogazas, la baguette y el pan del día de la Multi-page y la Plat
 | ID de la foto | Autor | Página en Unsplash | Dónde se usa |
 |---|---|---|---|
 | 1767065887348-6e76f3338c80 | Diego Arenas de Rodrigo | https://unsplash.com/photos/hands-holding-a-freshly-baked-loaf-of-sourdough-bread-smHpLKXZJA8 | Inicio: portada |
-| 1767065888377-e5ffb4e39645 | Diego Arenas de Rodrigo | https://unsplash.com/photos/a-rustic-loaf-of-sourdough-bread-on-a-wooden-board-guFjW-4kjCc | Hogaza de campo |
-| 1509440159596-0249088772ff | Wesual Click | https://unsplash.com/photos/rustic-bread-loaves-with-wheat-stalks-rsWZ-P9FbQ4 | Centeno y semillas |
-| 1620921592619-652411a0d01a | Vicky Ng | https://unsplash.com/photos/bread-on-brown-wooden-round-tray-JlwXPO7DStM | Aceitunas y romero |
-| 1590301157172-7ba48dd1c2b2 | Vicky Ng | https://unsplash.com/photos/bread-on-brown-wooden-table-yL9qjDDmmMU | Integral de molino |
-| 1677329175333-c08df2a3181d | Joost Crop | https://unsplash.com/photos/6x0BG2emMuU | Baguette de masa madre |
 | 1706954622635-939539dd9246 | blackieshoot | https://unsplash.com/photos/a-stack-of-sliced-bread-sitting-on-top-of-a-table-kCboaANmiSM | Molde multisemillas |
 | 1534620808146-d33bb39128b2 | Louise Lyshøj | https://unsplash.com/photos/sliced-breads-on-white-surface-WHJTaLqonkU | Molde de espelta |
 | 1623334044303-241021148842 | Conor Brown | https://unsplash.com/photos/a-bunch-of-croissants-that-are-on-a-table-sqkXyyj4WdE | Croissant de mantequilla |

@@ -4,6 +4,8 @@ Modelos del botón «Ver en 3D» de los ejemplos por rubro (`<model-viewer>` 4.4
 
 Fuente: la descarga de Sketchfab de mayor resolución disponible para cada modelo, hasta 4k (4096 px); algunos solo existen en 2k o 1k, y varios no tienen texturas. Cómo se prepararon (20/11/2026), con glTF-Transform 4.5.1 y Python: se juntaron las piezas y se llevaron a escala real en metros, centradas y apoyadas en el suelo (y = 0); se quitaron bases, fondos y piezas de escena que no son parte del producto; las mallas de los escaneos quedaron con hasta unos 60.000 triángulos; las texturas van en JPEG calidad 90, hasta 4096 px en color y mapa normal y hasta 2048 px en rugosidad/metal/oclusión (PNG solo donde hay transparencia). No se usa compresión que pida decodificadores extra (ni Draco, ni meshopt, ni KTX2, ni WebP), para que el visor, Scene Viewer (Android) y Quick Look (iPhone) los abran directo. Las marcas y logos legibles se taparon editando la textura. El campo `asset.copyright` de cada `.glb` repite su crédito.
 
+Las fotos de las comidas y bebidas con 3D en las cartas (`demos/_comun/fotos3d/`, desde el 21/11/2026) son renders de estos mismos modelos, para que foto y 3D sean el mismo producto: llevan el mismo crédito que su modelo.
+
 Los modelos low-poly anteriores (Kenney, Felipe Greboge, poly.pizza; CC0 y CC BY 3.0) y la primera versión realista con texturas de 1024 px quedaron en el historial de git.
 
 ## Modelos

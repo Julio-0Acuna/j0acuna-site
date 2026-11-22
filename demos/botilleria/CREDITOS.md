@@ -2,6 +2,8 @@
 
 Fotos de los tres ejemplos del rubro botillería (Botillería La Pasada, Cava Ocre y Palé Distribuidora, todos negocios ficticios). Todas son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso comercial permitido, sin atribución obligatoria; se agradece igual). Se enlazan directamente desde `https://images.unsplash.com/photo-<ID>?w=…&q=70&auto=format` y no se guardan en el servidor.
 
+Fotos y modelos 3D: cada comida o bebida con botón «Ver en 3D» tiene su propio modelo (`demos/_comun/3d/`, CC BY 4.0; autor, título y cambios en `demos/_comun/3d/CREDITOS.md`). Desde el 21/11/2026 su foto no es de Unsplash: es un render de ese mismo modelo (`demos/_comun/fotos3d/`), para que la foto y el 3D sean el mismo producto, con el mismo crédito que el modelo.
+
 Se eligieron fotos sin marcas ni etiquetas legibles: latas lisas, botellas sin etiqueta o con etiqueta en blanco, copas, hielo, bodegas y pallets. Se descartaron, por ejemplo, latas y botellas de cervezas y bebidas conocidas, estantes de destilados con etiquetas reconocibles, letreros de cadenas de tiendas y una foto de corchos con nombres de viñas. Ninguna foto muestra menores de edad.
 
 Revisado el 18/11/2026: todas las URL responden 200. Autor y página según la búsqueda de Unsplash de ese día. Para sumarlas al archivo general, copiar esta tabla en `demos/CREDITOS.md` bajo «## Botillería».
@@ -28,15 +30,10 @@ Revisado el 18/11/2026: todas las URL responden 200. Autor y página según la b
 | 1782179186167-8fe5542d0767 | Ting lee | https://unsplash.com/photos/cubitos-de-hielo-claros-esparcidos-sobre-una-superficie-azul-oscuro-Xh9wnw4c0xQ | Simple-page: promos (fondo de hielo) |
 | 1635674686922-521a81fb0e12 | pmv chamara | https://unsplash.com/photos/una-botella-de-vino-con-tapa-roja-nL-ak1pEXCs | Simple-page: Vino tinto reserva Carménère 750 ml |
 | 1615887023544-3a566f29d822 | Ambitious Studio* / Rick Barrett | https://unsplash.com/photos/vaso-transparente-sobre-mesa-blanca-TSkUCyCuVH4 | Multi-page: banda de destilados |
-| 1554230561-31bdc707b537 | Thomas Thompson | https://unsplash.com/photos/cinco-botellas-negras-verticales-KEWVZAwkLxQ | Multi-page: Cabernet Sauvignon gran reserva |
 | 1764764138818-0b22ab4d4023 | Raymond Petrik | https://unsplash.com/photos/caja-de-regalo-envuelta-con-cuerda-y-vegetacion-festiva-l6A1CggyaS4 | Multi-page: Caja de regalo con tarjeta |
-| 1553361371-9b22f78e8b1d | Lefteris kallergis | https://unsplash.com/photos/persona-que-vierte-vino-tinto-en-copa-de-vino-etWlaoFnTl4 | Multi-page: Carménère reserva |
 | 1598306442928-4d90f32c6866 | Chelsea Pridham | https://unsplash.com/photos/cata-de-vinos-con-queso-y-galletas-saladas-MMOXoxE_Gj0 | Multi-page: Carménère: la cepa que volvió |
 | 1609238000857-303bf54099b1 | Reagan M. | https://unsplash.com/photos/mesa-de-madera-marron-con-sillas-PlbfFjBg3ZQ | Multi-page: catas privadas |
-| 1662738221889-2344690f7dc1 | Ambitious Studio* / Rick Barrett | https://unsplash.com/photos/una-copa-de-vino-sobre-una-mesa-WT_r3dUwx6I | Multi-page: Chardonnay costero |
-| 1639770921770-2f63b6361c36 | Kelly Visel | https://unsplash.com/photos/un-grupo-de-copas-de-vino-sentadas-encima-de-una-mesa-CevdWRb2_dU | Multi-page: Copas de cristal para cata |
 | 1591496534942-8ea0cb46182b | James Coleman | https://unsplash.com/photos/botella-etiquetada-en-blanco-y-negro-sobre-textil-marron-yRSlEKUSgEA | Multi-page: Decantador de vidrio |
-| 1553703189-2f8ce8a11bcc | Ralph Darabos | https://unsplash.com/photos/botella-etiquetada-vacia-68eJgnkRckM | Multi-page: Ensamblaje de autor |
 | 1706106591925-8818b8bf7fc0 | Vinarija Perak | https://unsplash.com/photos/una-persona-que-vierte-una-copa-de-vino-en-una-copa-de-vino-oIEHykdZnN0 | Multi-page: Espumante brut; Multi-page: Espumantes para fin de año |
 | 1619143840338-98685ced6310 | Michelle McEwen | https://unsplash.com/photos/persona-sosteniendo-una-copa-de-vino-transparente-HPM3jVF8_as | Multi-page: Espumante rosé extra brut |
 | 1675370734208-120b43d3c7ac | Camara Negra | https://unsplash.com/photos/una-copa-de-vino-con-limones-y-una-ramita-de-romero-PmSk3XgSsDI | Multi-page: Gin de botánicos nativos; Multi-page: Pisco y gin de autor |
@@ -52,8 +49,6 @@ Revisado el 18/11/2026: todas las URL responden 200. Autor y página según la b
 | 1701252760183-295a928b3441 | Monika Grabkowska | https://unsplash.com/photos/un-vaso-de-whisky-encima-de-una-mesa-hopjk8Iq6wk | Multi-page: Ron añejo 7 años |
 | 1547595628-c61a29f496f0 | Kevin Kelly | https://unsplash.com/photos/el-licor-se-vierte-en-una-copa-de-vino-PPneSBqfCCU | Multi-page: Rosado de Cinsault |
 | 1669643219874-e2372fd75cc5 | Denley Photography | https://unsplash.com/photos/un-cuchillo-y-un-cuchillo-KFNMbc0EGYE | Multi-page: Sacacorchos de sommelier |
-| 1597905722448-a1df7c00000a | Steven Weeks | https://unsplash.com/photos/copa-de-vino-transparente-sobre-mesa-de-madera-marron-LeKzNXMPOoQ | Multi-page: Sauvignon Blanc |
-| 1610458034932-dc165f29499e | Thomas Franke | https://unsplash.com/photos/copa-de-vino-clara-con-vino-tinto-LQ5o5boYE-8 | Multi-page: Syrah costero |
 | 1603048004567-8109c99d4e7d | Gaby Yerden | https://unsplash.com/photos/fruta-naranja-en-rodajas-en-plato-redondo-de-madera-marron-D00IdrtZdDc | Multi-page: Vermut rojo artesanal |
 | 1767536196118-9f0592594dcc | Stefanie Jockschat | https://unsplash.com/photos/un-vaso-de-whisky-con-una-gran-esfera-de-hielo-tA0qT7dDCxk | Multi-page: Whisky de malta 12 años |
 | 1616118133103-baf54a4790c6 | charlesdeluvio | https://unsplash.com/photos/botella-de-plastico-transparente-con-tapa-azul-Z2NCX2qIIjg | Plataforma web: Agua mineral sin gas 1,6 L · pack 6 |

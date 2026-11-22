@@ -2,6 +2,8 @@
 
 Fotos de los tres ejemplos del rubro carnicería (Carnicería El Aromo, Veta Carnes Maduradas y Kilo Justo, todos negocios ficticios). Todas son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso comercial permitido, sin atribución obligatoria; se agradece igual). Se enlazan directamente desde `https://images.unsplash.com/photo-<ID>?w=…&q=70&auto=format` y no se guardan en el servidor. Ninguna muestra marcas ni logos legibles: se descartaron, por ejemplo, una vitrina de maduración con marca y fotos con precios en euros.
 
+Fotos y modelos 3D: cada comida o bebida con botón «Ver en 3D» tiene su propio modelo (`demos/_comun/3d/`, CC BY 4.0; autor, título y cambios en `demos/_comun/3d/CREDITOS.md`). Desde el 21/11/2026 su foto no es de Unsplash: es un render de ese mismo modelo (`demos/_comun/fotos3d/`), para que la foto y el 3D sean el mismo producto, con el mismo crédito que el modelo.
+
 Revisado el 17/11/2026: todas las URL responden 200. Autor y página según la búsqueda de Unsplash de ese día. Para sumarlas al archivo general, copiar esta tabla en `demos/CREDITOS.md` bajo «## Carnicería».
 
 | ID de la foto | Autor | Página en Unsplash | Dónde se usa |
@@ -31,7 +33,6 @@ Revisado el 17/11/2026: todas las URL responden 200. Autor y página según la b
 | 1600180786489-2e9a5b4041b5 | Usman Yousaf | https://unsplash.com/photos/yizdlpAds9c | Simple-page: tapapecho para cazuela |
 | 1612078894671-f11ba41d713e | Piret Ilver | https://unsplash.com/photos/92YG7We2xUU | Multi-page y Plataforma: hamburguesas |
 | 1615937662601-4724eceda00f | Madie Hamilton | https://unsplash.com/photos/l9vXx8aEYJ8 | Multi-page: La cámara (maestro carnicero) |
-| 1632154023554-c2975e9be348 | Llio Angharad | https://unsplash.com/photos/jkVToIbJsWA | Multi-page: T-bone 45 días |
 | 1565299524732-d2149c7eabf5 | Chad Montano | https://unsplash.com/photos/iSDSIrV9zEo | Multi-page: asado de tira |
 | 1690983329845-638ec321647d | Sergey Kotenev | https://unsplash.com/photos/cEJGctX_DgI | Multi-page: caja para 12 |
 | 1690983325551-b922137727be | Sergey Kotenev | https://unsplash.com/photos/CEsrs0WHOiw | Multi-page: caja para 4 |
@@ -43,13 +44,9 @@ Revisado el 17/11/2026: todas las URL responden 200. Autor y página según la b
 | 1788178941299-b206d3f4c4c6 | Alexander Van Steenberge | https://unsplash.com/photos/hl6rsgrR0Kk | Multi-page: cómo maduramos y La cámara |
 | 1592686092916-672fa9e86866 | Kyle Mackie | https://unsplash.com/photos/Xedxbjx7MFg | Multi-page: entraña |
 | 1690983320937-ca293f1d1d97 | Sergey Kotenev | https://unsplash.com/photos/qXrrbHUzmkE | Multi-page: franja de La cámara |
-| 1603048297172-c92544798d5a | Kyle Mackie | https://unsplash.com/photos/QH8SHBARVVk | Multi-page: lomo liso 21 días |
 | 1628497622763-36456bb4d56b | Stu Moffat | https://unsplash.com/photos/FtS1PZ-cppw | Multi-page: lomo liso para roast beef |
-| 1772285466464-8ccda2c3be92 | Magnus Jonasson | https://unsplash.com/photos/E5GBbE74cLc | Multi-page: lomo vetado 28 días |
 | 1624772398061-bbfa87ec6b5a | Amanda Lim | https://unsplash.com/photos/Y8C91gKAmLo | Multi-page: longaniza |
 | 1690983322840-3bde693e178d | Sergey Kotenev | https://unsplash.com/photos/hVw-2jXyfAg | Multi-page: portada (tomahawk) |
-| 1588347818036-558601350947 | Edson Saldaña | https://unsplash.com/photos/J88no2vCrTs | Multi-page: punta de ganso |
-| 1728042359930-c0145f0fd442 | Jakob Trost | https://unsplash.com/photos/SckH8spaAtk | Multi-page: reserva 60 días |
 | 1558394299-f2e6198506a6 | Josh Massey | https://unsplash.com/photos/eX210KFTYRM | Multi-page: sal de mar |
 | 1690618513975-324617013892 | Majid Akbari | https://unsplash.com/photos/SS5sGCpijWo | Multi-page: tomahawk 35 días |
 | 1611354574034-9655b5b72d59 | Luis Aleman | https://unsplash.com/photos/kWjYxJPBJr0 | Plataforma: asado de tira |

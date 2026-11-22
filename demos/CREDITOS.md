@@ -1,6 +1,6 @@
 # Créditos de las fotos de los ejemplos por rubro
 
-Todas las fotos son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso comercial permitido, sin atribución obligatoria; se agradece igual). Se enlazan directamente desde `https://images.unsplash.com/photo-<ID>?w=…&q=70&auto=format` y no se guardan en el servidor. Ninguna muestra marcas ni logos.
+Las fotos son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso comercial permitido, sin atribución obligatoria; se agradece igual), salvo las de las comidas y bebidas con botón «Ver en 3D», que son renders de su propio modelo (ver «Fotos de los productos con 3D», más abajo). Se enlazan directamente desde `https://images.unsplash.com/photo-<ID>?w=…&q=70&auto=format` y no se guardan en el servidor. Ninguna muestra marcas ni logos.
 
 Revisado el 17/11/2026: todas las URL responden 200. Cuando el autor no se pudo confirmar dice «no encontrado» (la foto sigue siendo de Unsplash).
 
@@ -22,14 +22,7 @@ Revisado el 17/11/2026: todas las URL responden 200. Cuando el autor no se pudo 
 | 1606313564200-e75d5e30476c | Pushpak Dsilva | https://unsplash.com/photos/chocolate-brownies-with-pouring-sauce-2UeBOL7UD34 | Simple-page: brownie |
 | 1424847651672-bf20a4b0982b | no encontrado | — | Simple-page: mesa compartida |
 | 1579751626657-72bc17010498 | Nik Owens | https://unsplash.com/photos/pizza-on-brown-wooden-table-40OJLYVWeeM | Multi-page: portada (horno) |
-| 1564936281291-294551497d81 | Louis Hansel | https://unsplash.com/photos/cooked-food-on-round-white-ceramic-plate-cC0_UO1Obg4 | Multi-page: Margherita |
-| 1595854341625-f33ee10dbf94 | Inna Gurina | https://unsplash.com/photos/pizza-with-green-leaf-vegetable-JspLKUauwSI | Multi-page: Bufala |
-| 1628840042765-356cda07504e | Fernando Andrade | https://unsplash.com/photos/pizza-with-pepperoni-and-ham-_P76trHTWDE | Multi-page: Diavola |
-| 1600628421055-4d30de868b8f | Klara Kulikova | https://unsplash.com/photos/person-holding-pizza-with-cheese-and-green-leaves-QATxlTPJImo | Multi-page: Crudo e rúcula |
-| 1593560708920-61dd98c46a4e | Saundarya Srinivasan | https://unsplash.com/photos/pizza-with-green-leaves-on-top-60nzTP7_hMQ | Multi-page: Verde |
 | 1571066811602-716837d681de | Masimo Grabar | https://unsplash.com/photos/baked-pizza-NzHRSLhc6Cs | Multi-page: Bismarck |
-| 1592417817098-8fd3d9eb14a5 | Luisa Brimble | https://unsplash.com/photos/sliced-tomato-and-green-leaf-vegetable-on-white-ceramic-plate-vIm26fn_QKg | Multi-page: Caprese |
-| 1571877227200-a0d98ea607e9 | Marianna OLE | https://unsplash.com/photos/white-and-brown-ceramic-cake-4El3DUkQs2g | Multi-page: Tiramisú |
 | 1586040140378-b5634cb4c8fc | Julie Martins | https://unsplash.com/photos/ice-cream-in-clear-glass-cup-DEQofwQEHlc | Multi-page y Plataforma: copa de helado |
 | 1599021456807-25db0f974333 | no encontrado | — | Multi-page: limonada de menta |
 | 1511920170033-f8396924c348 | Nathan Dumlao | https://unsplash.com/photos/flat-lay-photography-of-coffee-latte-ground-coffee-and-coffee-beans-Y3AqmbmtLQI | Multi-page: espresso |
@@ -60,6 +53,10 @@ Revisado el 17/11/2026: todas las URL responden 200. Cuando el autor no se pudo 
 | 1424847651672-bf20a4b0982b | no encontrado | — | Portafolio, página Restaurantes: foto del encabezado (revisada el 17/11/2026, responde 200) |
 
 Las imágenes de la página Servicios del portafolio son capturas de estas mismas demos (negocios ficticios), tomadas el 17/11/2026. La de «Encuéntranos en Google» muestra el mapa de Google incrustado, con su atribución visible.
+
+## Fotos de los productos con 3D
+
+Desde el 21/11/2026, la foto de cada comida y bebida que tiene botón «Ver en 3D» (97 productos de 10 rubros) es un render de su propio modelo, para que la foto de la carta y lo que se ve en 3D sean el mismo producto (antes eran fotos de Unsplash parecidas, pero no iguales). Están en `demos/_comun/fotos3d/`: `<modelo>.webp` (1080 px) y `<modelo>-540.webp`, con fondo de estudio claro, o `-oscuro` para los sitios de fondo oscuro (Multi-page de sushi, carnicería y comida peruana). Se hicieron con model-viewer 4.4.0 (el mismo visor del sitio) y Pillow. Son adaptaciones de los modelos CC BY 4.0 de la tabla de abajo y llevan el mismo crédito (autor, título y licencia de cada modelo).
 
 ## Modelos 3D
 

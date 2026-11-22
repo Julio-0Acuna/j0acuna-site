@@ -4,7 +4,7 @@ Todas las fotos son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso 
 
 Revisado el 18/11/2026: las 71 fotos responden 200 (con `w=600` y `w=1200`). El autor es el que muestra Unsplash en su buscador; la columna «URL» es la foto enlazada. Ninguna foto se repite entre las tres versiones.
 
-Modelo 3D: los platos con «Ver en 3D» (wantán frito, wantán en aceite de chile, sopa wantán y la bandeja de wantanes) usan `demos/_comun/3d/wantan.glb`: modelo realista CC BY 4.0; autor y cambios en la sección «Modelos 3D» de [los créditos de los ejemplos](/demos/creditos.php).
+Fotos y modelos 3D: cada comida o bebida con botón «Ver en 3D» tiene su propio modelo (`demos/_comun/3d/`, CC BY 4.0; autor, título y cambios en `demos/_comun/3d/CREDITOS.md`). Desde el 21/11/2026 su foto no es de Unsplash: es un render de ese mismo modelo (`demos/_comun/fotos3d/`), para que la foto y el 3D sean el mismo producto, con el mismo crédito que el modelo.
 
 Fuentes (Google Fonts, licencia OFL): Young Serif y Rubik (Simple-page); Marcellus, Red Hat Text y Noto Serif TC solo con los caracteres usados (Multi-page); Archivo (Plataforma web).
 
@@ -39,8 +39,6 @@ Fuentes (Google Fonts, licencia OFL): Young Serif y Rubik (Simple-page); Marcell
 | 1563245370-63ffc97abdbd | SJ | https://images.unsplash.com/photo-1563245370-63ffc97abdbd | Siu mai de cerdo y camarón |
 | 1779333277496-a5106680169c | Sunira Moses | https://images.unsplash.com/photo-1779333277496-a5106680169c | Xiao long bao |
 | 1782875976147-d4dcbe74d037 | Sudhan Chitgopkar | https://images.unsplash.com/photo-1782875976147-d4dcbe74d037 | Bao de cerdo char siu |
-| 1588166524938-1ee110d7dcef | charlesdeluvio | https://images.unsplash.com/photo-1588166524938-1ee110d7dcef | Wantán en aceite de chile |
-| 1781332147547-1f0edb2a78a4 | Zayed Ahmed Zadu | https://images.unsplash.com/photo-1781332147547-1f0edb2a78a4 | Wantán frito |
 | 1666278170490-2b2a71939340 | Luna Wang | https://images.unsplash.com/photo-1666278170490-2b2a71939340 | Sopa wantán cantonesa |
 | 1746183055178-e4d5889140f0 | Denny Ryanto | https://images.unsplash.com/photo-1746183055178-e4d5889140f0 | Tallarines con wantán |
 | 1765441012353-10fb4701a276 | Wenhao Wang | https://images.unsplash.com/photo-1765441012353-10fb4701a276 | Pato laqueado cantonés |

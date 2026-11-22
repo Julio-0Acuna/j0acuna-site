@@ -148,6 +148,36 @@ grep -qE "'ar-modes': '[^']*(scene-viewer|webxr)" demos/_comun/js/menu3d.js && f
 grep -qF "getUserMedia" demos/_comun/js/menu3d.js && grep -qF "'deviceorientation'" demos/_comun/js/menu3d.js \
   && pasa "menu3d.js: modo cámara con getUserMedia y giroscopio" || falla "menu3d.js sin modo cámara"
 grep -qF ".demo-3d-camara {" demos/_comun/demo.css && pasa "demo.css: estilos del modo cámara" || falla "demo.css sin .demo-3d-camara"
+# Modo cámara: el plano cercano de model-viewer es 1/500 del radio máximo de la órbita. Con un máximo fijo
+# de 100 m quedaba a 20 cm y el producto «desaparecía» al acercarlo: el máximo sigue a la distancia real.
+grep -qE "180deg 100m" demos/_comun/js/menu3d.js && falla "menu3d.js con max-camera-orbit fijo de 100 m" || pasa "menu3d.js sin max-camera-orbit fijo de 100 m"
+grep -qF "c.mv.maxCameraOrbit = " demos/_comun/js/menu3d.js && pasa "menu3d.js ajusta max-camera-orbit a la distancia" || falla "menu3d.js no ajusta max-camera-orbit"
+grep -qF "function escalaMaxima(" demos/_comun/js/menu3d.js && pasa "menu3d.js: al agrandar, la cámara no entra al producto" || falla "menu3d.js sin escalaMaxima"
+
+# Fotos de las comidas y bebidas con 3D = render de su propio modelo (demos/_comun/fotos3d/, 1080 y 540 px)
+DIRF=demos/_comun/fotos3d
+FALTAN_F=0
+for f in $(grep -rhoE "/demos/_comun/fotos3d/[a-z0-9-]+\.webp" --include='*.php' demos | sort -u); do
+  base="${f#/demos/_comun/fotos3d/}"; base="${base%.webp}"
+  [ -s "$DIRF/$base.webp" ] && [ -s "$DIRF/$base-540.webp" ] || { FALTAN_F=$((FALTAN_F + 1)); echo "    falta $DIRF/$base(.webp|-540.webp)"; }
+  modelo="${base%-oscuro}"
+  [ -f "$DIR3D/$modelo.glb" ] || { FALTAN_F=$((FALTAN_F + 1)); echo "    $base.webp sin modelo $modelo.glb"; }
+done
+[ "$FALTAN_F" = "0" ] && pasa "fotos3d: cada foto usada existe en 1080 y 540 px y tiene su modelo" || falla "$FALTAN_F fotos de fotos3d faltan o no tienen modelo"
+CON_UNSPLASH=0
+for r in pizzeria sushi pasteleria panaderia carniceria peruana china variada botilleria almacen; do
+  for a in demos/$r/multi/_datos.php demos/$r/plataforma/seed.php; do
+    [ -f "$a" ] || continue
+    n=$(grep -E "'(modelo|modelo3d)' => '[a-z0-9-]+'" "$a" | grep -cvF "'foto' => '/demos/_comun/fotos3d/")
+    CON_UNSPLASH=$((CON_UNSPLASH + n))
+    [ "$n" = "0" ] || echo "    $a: $n productos con 3D y foto que no es su render"
+  done
+done
+[ "$CON_UNSPLASH" = "0" ] && pasa "comida y bebida con 3D: la foto es el render de su modelo" || falla "$CON_UNSPLASH productos con 3D con otra foto"
+for f in $(grep -rhoE "'foto' => '/demos/_comun/fotos3d/[a-z0-9-]+\.webp'.*'(modelo|modelo3d)' => '[a-z0-9-]+'" --include='*.php' demos | sed -E "s#.*fotos3d/([a-z0-9-]+)\.webp'.*'(modelo|modelo3d)' => '([a-z0-9-]+)'.*#\1:\3#" | sort -u); do
+  foto="${f%%:*}"; modelo="${f##*:}"
+  [ "${foto%-oscuro}" = "$modelo" ] || falla "la foto $foto.webp no es del modelo $modelo"
+done
 
 echo
 echo "$OK ok / $FAIL fallas"

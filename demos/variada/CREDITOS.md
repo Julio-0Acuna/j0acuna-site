@@ -4,7 +4,7 @@ Todas las fotos son de [Unsplash](https://unsplash.com) (licencia Unsplash: uso 
 
 Revisado el 17/11/2026: las 55 URL responden 200. El autor es el que muestra Unsplash en su buscador; la columna «URL» es la foto enlazada.
 
-Modelo 3D: las hamburguesas de la Multi-page y la hamburguesa y el coffee break de la Plataforma web usan `demos/_comun/3d/hamburguesa.glb`: modelo realista CC BY 4.0; autor y cambios en la sección «Modelos 3D» de [los créditos de los ejemplos](/demos/creditos.php).
+Fotos y modelos 3D: cada comida o bebida con botón «Ver en 3D» tiene su propio modelo (`demos/_comun/3d/`, CC BY 4.0; autor, título y cambios en `demos/_comun/3d/CREDITOS.md`). Desde el 21/11/2026 su foto no es de Unsplash: es un render de ese mismo modelo (`demos/_comun/fotos3d/`), para que la foto y el 3D sean el mismo producto, con el mismo crédito que el modelo.
 
 ## Simple-page · Picada Doña Ernestina (San Miguel)
 
@@ -40,7 +40,6 @@ Modelo 3D: las hamburguesas de la Multi-page y la hamburguesa y el coffee break 
 | 1716834092510-3be5db563920 | David Foodphototasty | https://images.unsplash.com/photo-1716834092510-3be5db563920 | Barros Jarpa |
 | 1568901346375-23c9450c58cd | amirali mirhashemian | https://images.unsplash.com/photo-1568901346375-23c9450c58cd | Hamburguesa La Doble Palta |
 | 1607013251379-e6eecfffe234 | Eiliv Aceron | https://images.unsplash.com/photo-1607013251379-e6eecfffe234 | Hamburguesa Chacarera |
-| 1598182198871-d3f4ab4fd181 | amirali mirhashemian | https://images.unsplash.com/photo-1598182198871-d3f4ab4fd181 | Hamburguesa tocino y cebolla |
 | 1678033391562-6ff8c834d1d5 | Drew Dempsey | https://images.unsplash.com/photo-1678033391562-6ff8c834d1d5 | Completo |
 | 1699728088600-6d684acbeada | Yoad Shejtman | https://images.unsplash.com/photo-1699728088600-6d684acbeada | As |
 | 1743193711514-4f7bc5d78d4d | fellipe teixeira | https://images.unsplash.com/photo-1743193711514-4f7bc5d78d4d | Chorrillana |

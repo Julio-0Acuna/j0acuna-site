@@ -68,9 +68,15 @@ function demo_foto(string $id, int $ancho = 900): string
     return 'https://images.unsplash.com/photo-' . rawurlencode($id) . '?w=' . $ancho . '&q=70&auto=format&fit=crop';
 }
 
-/** srcset de una foto de Unsplash en varios anchos. */
+/** Fotos de los productos con 3D: render de su propio modelo, en 1080 px (<nombre>.webp) y 540 px (<nombre>-540.webp). */
+const DEMO_URL_FOTOS3D = DEMO_URL_COMUN . 'fotos3d/';
+
+/** srcset de una foto de Unsplash en varios anchos (o de una foto de fotos3d/ en sus dos tamaños). */
 function demo_srcset(string $id, array $anchos = [480, 900, 1400]): string
 {
+    if (str_starts_with($id, DEMO_URL_FOTOS3D) && str_ends_with($id, '.webp')) {
+        return substr($id, 0, -5) . '-540.webp 540w, ' . $id . ' 1080w';
+    }
     if (str_starts_with($id, 'https://') || str_starts_with($id, '/')) {
         return '';
     }

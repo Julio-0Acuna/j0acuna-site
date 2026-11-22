@@ -176,9 +176,14 @@
     altura: 0.4,      // m: teléfono sobre la mesa (persona sentada, teléfono a la altura del pecho)
     margen: 0.25,     // m: espacio mínimo entre el teléfono y la parte de arriba del producto
     lejos: 1.0,       // m: distancia máxima sobre la mesa al poner el producto
-    fovLargo: 65,     // grados que cubre el lado largo de la imagen de una cámara trasera típica
+    // Grados que cubre el lado largo de la imagen. La cámara principal de los Android de gama media
+    // y alta equivale a un 24–26 mm (67–72° en el lado largo de un sensor 4:3); 65° la agrandaba.
+    fovLargo: 68,
     suavizado: 0.35,  // 0..1: cuánto sigue al giroscopio en cada cuadro (filtra el temblor de la mano)
-    espera: 800       // ms: si el giroscopio no responde, se pone el producto con una pose fija
+    espera: 800,      // ms: si el giroscopio no responde, se pone el producto con una pose fija
+    escalaMin: 0.3,   // límites del tamaño con dos dedos
+    escalaMax: 3,
+    aire: 0.02        // m (en el tamaño real del producto): lo más cerca que llega la cámara al acercarlo
   };
   var camara = null;
 
@@ -242,14 +247,31 @@
     c.objeto = vec(h.x * d, -c.alturaTelefono, h.z * d);   // base del producto, con el teléfono en el origen
   }
 
+  // Del producto al teléfono, en las coordenadas del .glb (el producto girado con un dedo).
+  function relativo(c) {
+    return girarY(por(c.objeto, -1), -c.giro);
+  }
+
+  /*
+   * Agrandar el producto con dos dedos acerca la cámara a su base (es lo mismo que verlo más de cerca).
+   * Si la cámara entra en el producto, se ve cortado o desaparece: el tamaño máximo es el que la deja
+   * fuera de su caja, con CAMARA.aire de margen. Afuera = afuera en al menos uno de los tres ejes.
+   */
+  function escalaMaxima(c) {
+    if (!c.objeto || !c.medio) { return CAMARA.escalaMax; }
+    var rel = relativo(c), h = c.medio, m = CAMARA.aire;
+    var lim = Math.max(rel.y / (2 * h.y + m), Math.abs(rel.x) / (h.x + m), Math.abs(rel.z) / (h.z + m));
+    return limitar(lim, CAMARA.escalaMin, CAMARA.escalaMax);
+  }
+
   // Lleva la cámara de model-viewer a la pose del teléfono. model-viewer solo acepta una órbita
   // (theta, phi, radio) alrededor de un punto: se pone ese punto delante del teléfono, a la distancia
   // del producto, y la órbita que deja la cámara justo en el teléfono. El giro de la pantalla sobre su
   // propio eje (model-viewer siempre deja el cielo arriba) se hace rotando el visor con CSS.
   function moverCamara(c) {
     // El producto no se gira ni se escala: se mueve el teléfono al revés, en las coordenadas del .glb.
-    var rel = girarY(por(c.objeto, -1), -c.giro);
-    var ojo = suma(c.base, por(rel, 1 / c.escala));
+    var rel = relativo(c);
+    var ojo = suma(c.base, por(rel, 1 / Math.min(c.escala, escalaMaxima(c))));
     var f = girarY(c.adelante, -c.giro);
     var u = girarY(c.arriba, -c.giro);
     var radio = Math.max(largo(suma(c.centro, por(ojo, -1))), 0.05);
@@ -257,6 +279,15 @@
     var w = por(f, -1);   // del punto mirado hacia el teléfono
     var phi = Math.acos(limitar(w.y, -0.9998, 0.9998));
     var theta = Math.atan2(w.x, w.z);
+    // model-viewer pone el plano lejano de la cámara al doble del radio máximo de la órbita, y el cercano
+    // a 1/1000 del lejano: con un máximo fijo de 100 m, todo lo que quedaba a menos de 20 cm de la cámara
+    // se borraba y el producto «desaparecía» al acercarlo. El máximo sigue a la distancia real, con holgura
+    // (en potencias de 2, para no cambiarlo en cada cuadro), y se pone antes que la órbita.
+    var maximo = Math.pow(2, Math.ceil(Math.log(radio * 1.5) / Math.LN2));
+    if (maximo !== c.radioMaximo) {
+      c.radioMaximo = maximo;
+      c.mv.maxCameraOrbit = 'Infinity 180deg ' + maximo + 'm';
+    }
     c.mv.cameraTarget = mira.x.toFixed(5) + 'm ' + mira.y.toFixed(5) + 'm ' + mira.z.toFixed(5) + 'm';
     c.mv.cameraOrbit = theta.toFixed(5) + 'rad ' + phi.toFixed(5) + 'rad ' + radio.toFixed(5) + 'm';
     if (typeof c.mv.jumpCameraToGoal === 'function') { c.mv.jumpCameraToGoal(); }
@@ -289,7 +320,8 @@
       c.adelante = vec(0, -Math.sin(b), -Math.cos(b));
       c.arriba = vec(0, Math.cos(b), -Math.sin(b));
       c.dialogo.querySelector('.demo-3d-camara__botones button').hidden = true;  // «Poner aquí» no aplica
-      ayudaCamara(c, 'Gira el ' + c.textos.objeto + ' con un dedo; con dos, cambia su tamaño.');
+      c.sinGiroscopio = true;
+      ayudaCamara(c, 'Un dedo gira el ' + c.textos.objeto + '; dos, lo agrandan o achican.');
     }
     // «arriba» siempre perpendicular a «adelante»
     c.arriba = unitario(suma(c.arriba, por(c.adelante, -punto(c.arriba, c.adelante))));
@@ -317,6 +349,19 @@
       ? (Math.max(vw, vh) / 2) / tanMitad * Math.max(w / vw, h / vh)
       : (Math.max(w, h) / 2) / tanMitad;
     c.mv.fieldOfView = (2 * Math.atan((lado / 2) / focal) * 180 / Math.PI).toFixed(3) + 'deg';
+  }
+
+  /*
+   * Sin la RA de Google, la página no puede medir la distancia a la mesa: calcula el tamaño con el
+   * teléfono a c.alturaTelefono de ella (40 cm para un plato). Se dice en la ayuda, para que quien lo
+   * use sostenga el teléfono a esa altura y lo vea a tamaño real.
+   */
+  function textoColocar(c) {
+    var cm = Math.round(c.alturaTelefono * 20) * 5;   // múltiplo de 5 cm
+    var plato = c.textos.objeto === 'plato';
+    var lugar = plato ? 'tu mesa' : (c.alturaTelefono > 0.6 ? 'el suelo' : 'una mesa');
+    return 'Con el teléfono a unos ' + cm + ' cm de ' + lugar + ', apunta y toca «Poner aquí». ' +
+      'Un dedo gira el ' + c.textos.objeto + '; dos, lo agrandan o achican.';
   }
 
   function ayudaCamara(c, texto) {
@@ -364,7 +409,7 @@
         var d0 = Math.hypot(antes.x - otro.x, antes.y - otro.y);
         var d1 = Math.hypot(ahora.x - otro.x, ahora.y - otro.y);
         if (d0 > 10) {
-          c.escala = limitar(c.escala * d1 / d0, 0.3, 3);
+          c.escala = limitar(c.escala * d1 / d0, CAMARA.escalaMin, escalaMaxima(c));
           c.dialogo.querySelector('.demo-3d-camara__real').hidden = Math.abs(c.escala - 1) < 0.03;
         }
       }
@@ -401,7 +446,7 @@
       'shadow-softness': '0.5',
       'interaction-prompt': 'none',
       'min-camera-orbit': '-Infinity 0deg 0.001m',
-      'max-camera-orbit': 'Infinity 180deg 100m',
+      'max-camera-orbit': 'Infinity 180deg 4m',   // moverCamara lo ajusta a la distancia real
       'min-field-of-view': '1deg',
       'max-field-of-view': '170deg',
       'field-of-view': '60deg',
@@ -433,7 +478,7 @@
       inicio: performance.now(), listo: false, stream: null, raf: 0,
       lectura: null, giroscopio: false, adelante: null, arriba: null,
       objeto: null, giro: 0, escala: 1, alturaTelefono: CAMARA.altura,
-      centro: vec(0, 0, 0), base: vec(0, 0, 0)
+      centro: vec(0, 0, 0), base: vec(0, 0, 0), medio: null
     };
     camara = c;
     if (visor) { visor.removeAttribute('auto-rotate'); }
@@ -445,6 +490,12 @@
         c.giroscopio = true;
         c.adelante = null;
         c.objeto = null;
+        if (c.sinGiroscopio) {
+          // Llegó tarde (después de la pose fija): vuelve «Poner aquí» con sus instrucciones.
+          c.sinGiroscopio = false;
+          c.dialogo.querySelector('.demo-3d-camara__botones button').hidden = false;
+          if (c.stream && !c.fallo) { ayudaCamara(c, textoColocar(c)); }
+        }
       }
       c.lectura = { alpha: ev.alpha || 0, beta: ev.beta, gamma: ev.gamma };
     };
@@ -466,9 +517,11 @@
       var cen = mv.getBoundingBoxCenter();
       c.centro = vec(cen.x, cen.y, cen.z);
       c.base = vec(cen.x, cen.y - tam.y / 2, cen.z);
+      c.medio = vec(tam.x / 2, tam.y / 2, tam.z / 2);
       // Que el teléfono no quede encima de un producto alto o grande (botella, neumático...).
       c.alturaTelefono = Math.max(CAMARA.altura, tam.y + CAMARA.margen, Math.max(tam.x, tam.z) * 0.9);
       c.listo = true;
+      if (c.conInstrucciones) { ayudaCamara(c, textoColocar(c)); }   // con la altura de este producto
     }, { once: true });
     mv.addEventListener('error', function () {
       avisoCamara(c, 'No pudimos cargar el modelo 3D. Revisa tu conexión y vuelve a intentarlo.');
@@ -495,9 +548,8 @@
       var reproducir = video.play();
       if (reproducir && reproducir.catch) { reproducir.catch(function () {}); }
       if (c.giroscopio || !c.adelante) {
-        ayudaCamara(c, t.objeto === 'plato'
-          ? 'Apunta a tu mesa y toca «Poner aquí». Gira el plato con un dedo; con dos, cambia su tamaño.'
-          : 'Apunta a una mesa y toca «Poner aquí». Gira el producto con un dedo; con dos, cambia su tamaño.');
+        c.conInstrucciones = true;
+        ayudaCamara(c, textoColocar(c));
       }
     }).catch(function (err) {
       if (camara === c) { avisoCamara(c, textoErrorCamara(err)); }
