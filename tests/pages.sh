@@ -205,6 +205,7 @@ debe_contener   /servicios  'src="/assets/img/mini/demos/sushi/img/simple.webp"'
 debe_contener   /servicios  'href="/demos/'
 debe_contener   /servicios  'id="tienda-online"'
 debe_responder  /assets/img/mini/demos/repuestos/img/plataforma.webp 200
+for rubro in peluqueria-canina farmacia; do for v in simple multi plataforma; do debe_responder "/assets/img/mini/demos/$rubro/img/$v.webp" 200; done; done
 debe_responder  /assets/js/servicios.js 200
 debe_contener   /servicios  'src="/assets/img/servicios/menu-qr-3d.webp"'
 debe_contener   /servicios  'src="/assets/img/servicios/google-perfil.webp"'
@@ -223,9 +224,9 @@ debe_contener   /restaurantes  'href="/demos/pizzeria/simple/"'
 debe_contener   /restaurantes  'href="/demos/pizzeria/multi/"'
 debe_contener   /restaurantes  'href="/demos/pizzeria/plataforma/"'
 debe_contener   /restaurantes  'src="/assets/img/mini/demos/pizzeria/img/simple.webp"'
-# Los 16 rubros del catálogo ya tienen sus 3 versiones: ninguno queda "pronto" y todos enlazan su página.
+# Los 18 rubros del catálogo ya tienen sus 3 versiones: ninguno queda "pronto" y todos enlazan su página.
 no_debe_contener /restaurantes 'Pronto:'
-for rubro in pizzeria sushi pasteleria panaderia carniceria peruana china variada taller botilleria almacen ferreteria peluqueria barberia veterinaria repuestos; do
+for rubro in pizzeria sushi pasteleria panaderia carniceria peruana china variada taller botilleria almacen ferreteria peluqueria barberia veterinaria repuestos peluqueria-canina farmacia; do
   debe_contener /demos/ "href=\"/demos/$rubro/\""
 done
 debe_contener   /restaurantes  'images.unsplash.com/photo-1424847651672-bf20a4b0982b'

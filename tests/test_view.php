@@ -134,6 +134,22 @@ t('catalogo: barberia, veterinaria y repuestos de auto como rubros propios', fun
     ok(!in_array('barberia', $pelu['alias'], true), 'barberia no debe ser alias de peluqueria');
 });
 
+t('catalogo: peluqueria canina y farmacia (23/11) existen, con sus 3 versiones y sin 3D', function () {
+    $porSlug = array_column(portfolio_rubros(), null, 'slug');
+    foreach (['peluqueria-canina' => 'servicios', 'farmacia' => 'comercio'] as $s => $grupo) {
+        ok(isset($porSlug[$s]), "falta $s");
+        eq($porSlug[$s]['grupo'], $grupo);
+        ok($porSlug[$s]['disponible'], "$s no está disponible");
+        eq(count($porSlug[$s]['versiones']), 3);
+        $codigo = '';
+        foreach (glob(dirname(__DIR__) . "/demos/$s/{simple,multi,plataforma}/*.php", GLOB_BRACE) ?: [] as $f) {
+            $codigo .= file_get_contents($f);
+        }
+        ok(!str_contains($codigo, 'demo_boton_3d('), "$s no debe tener botón 3D");
+    }
+    eq(count(portfolio_rubros_catalogo()), 18);
+});
+
 t('pie: logo JA, redes con ícono y nombre accesible, sin nombre gigante', function () {
     ob_start();
     render_partial('head', ['title' => 'T', 'description' => 'D']);

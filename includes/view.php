@@ -166,6 +166,9 @@ function portfolio_rubros_catalogo(): array
         $r('barberia', 'Barbería', 'servicios', 'photo-1599011176306-4a96f1516d4d'),
         $r('veterinaria', 'Veterinaria', 'servicios', 'photo-1654895716780-b4664497420d', ['clinica-veterinaria', 'pet-shop']),
         $r('repuestos', 'Repuestos de auto', 'comercio', 'photo-1613214150384-14921ff659b2', ['repuestos-auto', 'tienda-de-repuestos']),
+        // Agregados el 23/11 a pedido de Julio, sin productos en 3D (fotos elegidas por el agente de cada rubro).
+        $r('peluqueria-canina', 'Peluquería canina', 'servicios', 'photo-1733964659477-35534815c626', ['spa-canino', 'peluqueria-mascotas']),
+        $r('farmacia', 'Farmacia', 'comercio', 'photo-1622230208995-0f26eba75875'),
     ];
 }
 

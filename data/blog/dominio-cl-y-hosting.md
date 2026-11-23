@@ -58,7 +58,7 @@ Un correo tipo contacto@tunegocio.cl da otra imagen que uno de una cuenta gratui
 
 ## Cómo lo trabajo yo
 
-El dominio .cl queda a tu nombre. La página queda alojada en mi hosting, con certificado de seguridad y respaldos, y me encargo de mantenerla funcionando. Así tienes una sola persona a quien escribirle si algo falla, y la dirección de tu negocio sigue siendo tuya pase lo que pase. Lo que incluye cada página está en [servicios](/servicios#web-menu), y los ejemplos que armé para 16 rubros están en [ejemplos por rubro](/demos/).
+El dominio .cl queda a tu nombre. La página queda alojada en mi hosting, con certificado de seguridad y respaldos, y me encargo de mantenerla funcionando. Así tienes una sola persona a quien escribirle si algo falla, y la dirección de tu negocio sigue siendo tuya pase lo que pase. Lo que incluye cada página está en [servicios](/servicios#web-menu), y los ejemplos que armé para 18 rubros están en [ejemplos por rubro](/demos/).
 
 ## Preguntas frecuentes
 

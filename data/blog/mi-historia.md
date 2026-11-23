@@ -41,7 +41,7 @@ Terminé la carrera y la práctica. Y no encontré trabajo.
 
 En vez de quedarme esperando una respuesta, empecé a ir de local en local ofreciendo lo que sé hacer: páginas web, tiendas online, menús con código QR, sistemas para recibir pedidos por WhatsApp y por las apps. Entro, saludo, cuento lo que hago y muestro ejemplos en el celular. No siempre me dicen que sí, y está bien. Cada conversación me enseña algo de cómo funciona un negocio de verdad.
 
-Para eso armé [ejemplos para 16 rubros](/demos/), desde pizzerías y botillerías hasta talleres mecánicos y veterinarias, cada uno en tres versiones. Quería que cualquier dueño pudiera ver, antes de gastar un peso, cómo se vería su propio negocio en internet.
+Para eso armé [ejemplos para 18 rubros](/demos/), desde pizzerías y botillerías hasta talleres mecánicos y veterinarias, cada uno en tres versiones. Quería que cualquier dueño pudiera ver, antes de gastar un peso, cómo se vería su propio negocio en internet.
 
 ## Por qué quiero trabajar con negocios chicos
 

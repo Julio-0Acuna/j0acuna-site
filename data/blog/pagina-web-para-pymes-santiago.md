@@ -32,7 +32,7 @@ Si estás emprendiendo, no partas por la tienda con cuentas de clientes. Parte c
 
 Eso te deja algo que Instagram no te da: un lugar propio, ordenado, que aparece en Google cuando alguien busca tu rubro en tu comuna. Si todavía dudas de si lo necesitas, lo conversé en [página web o solo Instagram](/blog/pagina-web-o-solo-instagram).
 
-En los [ejemplos por rubro](/demos/) hay una página simple para cada uno de los 16 rubros: la [Peluquería Yanet](/demos/peluqueria/simple/) o el [Taller Marisol](/demos/taller/simple/), por nombrar dos. Todos son negocios inventados, pero las páginas funcionan igual que las de un cliente.
+En los [ejemplos por rubro](/demos/) hay una página simple para cada uno de los 18 rubros: la [Peluquería Yanet](/demos/peluqueria/simple/) o el [Taller Marisol](/demos/taller/simple/), por nombrar dos. Todos son negocios inventados, pero las páginas funcionan igual que las de un cliente.
 
 ## Cuando la pyme crece
 
